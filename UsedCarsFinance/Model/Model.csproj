@@ -9,9 +9,8 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Model</RootNamespace>
     <AssemblyName>Model</AssemblyName>
-    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -31,11 +30,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.8.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -70,6 +70,23 @@
     <Compile Include="Credit\CreditInfo.cs" />
     <Compile Include="Credit\PartnerInfo.cs" />
     <Compile Include="Credit\ProcessUserInfo.cs" />
+    <Compile Include="Customer\Enterprise\Family\BasePeriod.cs" />
+    <Compile Include="Customer\Enterprise\Family\DeleteRecord.cs" />
+    <Compile Include="Customer\Enterprise\Organizate\BasePeriod.cs">
+      <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Customer\Enterprise\Organizate\BasicPropertiesPeriod.cs" />
+    <Compile Include="Customer\Enterprise\Organizate\ContactInformationPeriod.cs" />
+    <Compile Include="Customer\Enterprise\Organizate\DeleteRecord.cs" />
+    <Compile Include="Customer\Enterprise\Organizate\ExecutivesMajorParticipantPeriod.cs">
+      <ExcludeFromStyleCop>False</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Customer\Enterprise\Organizate\InstitutionsStatePeriod.cs" />
+    <Compile Include="Customer\Enterprise\Organizate\MainAssociatedEnterprisePerid.cs" />
+    <Compile Include="Customer\Enterprise\Organizate\MajorShareholdersPeriod.cs" />
+    <Compile Include="Customer\Enterprise\Organizate\OrganizateInfo.cs" />
+    <Compile Include="Customer\Enterprise\Organizate\SuperInstitutionPeriod.cs" />
+    <Compile Include="Customer\ValidAttribute.cs" />
     <Compile Include="Easyui.cs" />
     <Compile Include="ConvertHelper.cs" />
     <Compile Include="Finance\ApplicantInfo.cs" />
@@ -113,6 +130,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Customer\Pensonal\" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
