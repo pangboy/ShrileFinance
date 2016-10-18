@@ -1,0 +1,91 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>个人信息</title>
+    <meta charset="utf-8" />
+    <link href="../Content/easyui/themes/gray/easyui.css" rel="stylesheet" />
+    <link href="../Content/easyui/themes/icon.css" rel="stylesheet" />
+    <link href="../Content/form.css" rel="stylesheet" />
+    <script src="../Scripts/jquery/jquery.js"></script>
+    <script src="../Scripts/easyui/jquery.easyui.js"></script>
+    <script src="../Scripts/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../Scripts/usedcars.js"></script>
+    <script>
+		uc.form = new UCForm("#ff");
+
+        $(function () {
+            GetUserInfo();
+        });
+
+        function GetUserInfo() {
+            uc.form.LoadForm({
+                url: "../api/User/CurrentUser",
+                onLoadSuccess: function (data) {
+                    return data.user;
+                }
+            })
+        }
+        function Submit() {
+            var user = $("#ff").serializeJson();
+
+            uc.form.Submit({
+                method: "PUT",
+                url: "../api/User/Put",
+                data: user,
+                statusCode:{
+                    200: function(data){
+                        top.$.messager.show({ msg: "保存成功！" });
+                    }
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+    <form id="ff">
+        <fieldset>
+            <legend>用户信息</legend>
+
+            <div id="data">
+                <input name="UserId" type="hidden" />
+                <input name="RoleId" type="hidden" />
+            </div>
+
+            <div class="row">
+                <div>
+                    <label>姓名:</label>
+                    <input name="Name" class="easyui-textbox" data-options="required:true" />
+                </div>
+
+                <div>
+                    <label>帐号:</label>
+                    <input name="Username" class="easyui-textbox" data-options="disabled:true" />
+                </div>
+            </div>
+
+            <div class="row">
+				<div>
+					<label>手机:</label>
+					<input name="Mobile" class="easyui-textbox" data-options="validType:'Mobile'" />
+				</div>
+
+				<div>
+					<label>邮箱:</label>
+					<input name="Email" class="easyui-textbox" data-options="validType:'Email'" />
+				</div>
+            </div>
+
+            <div class="row">
+                <div>
+                    <label>备注:</label>
+                    <input name="Remarks" class="easyui-textbox" data-options="multiline:true,height:66,width:555" />
+                </div>
+            </div>
+        </fieldset>
+
+        <div id="btn">
+            <a id="save" class="easyui-linkbutton" href="javascript:void(0)" data-options="iconCls:'icon-save',onClick:Submit">保存</a>
+        </div>
+    </form>
+</body>
+</html>

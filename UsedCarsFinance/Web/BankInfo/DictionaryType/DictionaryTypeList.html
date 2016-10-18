@@ -1,0 +1,62 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>字典类型管理</title>
+    <meta charset="utf-8" />
+    <link href="../../Content/easyui/themes/gray/easyui.css" rel="stylesheet" />
+    <link href="../../Content/easyui/themes/icon.css" rel="stylesheet" />
+    <script src="../../Scripts/jquery/jquery.js"></script>
+    <script src="../../Scripts/easyui/jquery.easyui.js"></script>
+    <script src="../../Scripts/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../../Scripts/usedcars.js"></script>
+    <script>
+        uc.grid = new UCGrid("#dg");
+
+        function SetFilters(params) { }
+
+        function DictionaryTypeEdit() {
+        	var url = "BankInfo/DictionaryType/DictionaryTypeEdit.html?method=" + this.id;
+            if (this.id != "add") {
+                var row = uc.grid.GetSelected();
+
+                if (row) {
+                    url += "&DictionaryTypeId=" + row.BDT_ID;
+                }
+                else {
+                    return;
+                }
+            }
+            uc.ShowWindow("数据类型", url);
+        }
+    </script>
+</head>
+
+<body>
+    <table id="dg" class="easyui-datagrid" data-options="
+           height: 630,
+           toolbar: '#tb',
+           rownumbers: true,
+           singleSelect: true,
+           pagination: true,
+           pageSize: 20,
+           pageList: [20,30,40,50],
+           method: 'GET' ,
+           url: '../../api/DictionaryType/DictionaryTypeList',
+           onBeforeLoad: SetFilters,
+           loadMsg: '正在加载，请稍候...'
+           ">
+        <thead>
+            <tr>
+                <th data-options="field:'BDT_ID',width:100,align:'center'">字典标识</th>
+                <th data-options="field:'Name',width:200,align:'center'">类型名称</th>
+                <th data-options="field:'ParentName',width:200,align:'center'">父类型</th>
+            </tr>
+        </thead>
+    </table>
+
+    <div id="tb">
+        <a id="add" class="easyui-linkbutton" href="javascript:void(0)" data-options="onClick:DictionaryTypeEdit,iconCls:'icon-add',plain:true">添加类型</a>
+        <a id="mod" class="easyui-linkbutton" href="javascript:void(0)" data-options="onClick:DictionaryTypeEdit,iconCls:'icon-edit',plain:true">修改类型</a>
+    </div>
+</body>
+</html>

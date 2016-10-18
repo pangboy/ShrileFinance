@@ -1,0 +1,241 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>报文文件列表</title>
+    <meta charset="utf-8" />
+    <link href="../Content/easyui/themes/gray/easyui.css" rel="stylesheet" />
+    <link href="../Content/easyui/themes/icon.css" rel="stylesheet" />
+    <script src="../Scripts/jquery/jquery.js"></script>
+    <script src="../Scripts/easyui/jquery.easyui.js"></script>
+    <script src="../Scripts/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../Scripts/usedcars.js"></script>
+    <script>
+        uc.grid = new UCGrid("#dg");
+
+        function LoadMessageFile(record) {
+            $("#MessageFile").combobox('clear');
+            $("#MessageFile").combobox('loadData', {});
+            if (record.value != "　") {
+                $.ajax({
+                    method: "GET",
+                    url: "../api/MessageType/GetComListByFileType",
+                    data: { fileType: record.value },
+                    statusCode: {
+                        200: function (data) {
+                            $("#MessageFile").combobox("loadData", data);
+                        }
+                    }
+                });
+            }
+        }
+
+        function SetFilters(params) {
+            params.ServiceObj = $("#ServiceObj").combobox("getValue");
+            params.MessageFileId = $("#MessageFile").combobox("getValue");
+            params.FilesName = $("#FilesName").textbox("getValue");
+
+            if ($("#BeginTime").datebox("isValid")) {
+                params.BeginTime = $("#BeginTime").datebox("getValue");
+            }
+            if ($("#EndTime").datebox("isValid")) {
+                params.EndTime = $("#EndTime").datebox("getValue");
+            }
+        }
+
+        function Reload() {
+            uc.grid.Reload();
+        }
+
+        function ReportFilesEdit() {
+            var messageFileId = $("#MessageFile").combobox("getValue");
+            var serviceObj = $("#ServiceObj").combobox("getValue");
+            var url = "BankInfo/ReportList.html?method=" + this.id;
+
+            if (this.id == "add") {
+                var messageFileId = $("#MessageFile").combobox("getValue");
+                var serviceObj = $("#ServiceObj").combobox("getValue");
+                if (messageFileId != "" && serviceObj != "") {
+                    $.ajax({
+                        method: "POST",
+                        url: "../api/ReportFiles/Add",
+                        data: { serviceObj: serviceObj, messageFileId: messageFileId },
+                        statusCode: {
+                            200: function (data) {
+                                url += "&messageFileId=" + messageFileId; //文件ID
+                                url += "&fileId=" + data; //报文文件ID
+
+                                uc.ShowWindow("报文详情列表", url);
+                            }
+                        }
+                    });
+                } else {
+                    top.$.messager.show({ msg: "请选择下拉框选项！" });
+                }
+
+            }
+            if (this.id == "del") {
+                var row = uc.grid.GetSelected();
+                if (row) {
+                    if (row.ReportState != "已发送") {
+                        $.ajax({
+                            method: "GET",
+                            url: "../api/ReportFiles/GetByOperator?filesId=" + row.FileID,
+                            statusCode: {
+                                200: function (data) {
+                                    if (data) {
+                                        $.messager.confirm('确认', '确认删除该条报文文件吗?', function (r) {
+                                            if (r) {
+                                                $.ajax({
+                                                    method: "DELETE",
+                                                    url: "../api/ReportFiles/Delete?filesId=" + row.FileID,
+                                                    statusCode: {
+                                                        200: function (data) {
+                                                            uc.grid.Reload();
+                                                        }
+                                                    }
+                                                });
+                                            }
+                                        })
+                                    }
+                                    else {
+                                        top.$.messager.show({ msg: "只能删除该操作者下的记录！" });
+                                    }
+                                }
+                            }
+                        });
+                    }
+                    else {
+                        top.$.messager.show({ msg: "该报文已发送不能删除！" });
+                    }
+                }
+
+            }
+            else if (this.id == "mod" || this.id == "view") {
+                var row = uc.grid.GetSelected();
+                if (row) {
+                    $.ajax({
+                        method: "GET",
+                        url: "../api/ReportFiles/GetByOperator?filesId=" + row.FileID,
+                        statusCode: {
+                            200: function (data) {
+                                if (data) {
+                                    url += "&messageFileId=" + messageFileId; //文件ID
+                                    url += "&fileId=" + row.FileID //报文文件ID
+                                    uc.ShowWindow("报文详情列表", url);
+                                }
+                                else {
+                                    top.$.messager.show({ msg: "只能操作当前用户下的记录！" });
+                                }
+                            }
+                        }
+                    });
+                }
+                else {
+                    return;
+                }
+            }
+        }
+
+        function Submit() {
+            var row = uc.grid.GetSelected();
+            if (row) {
+                $.ajax({
+                    method: "GET",
+                    url: "../api/ReportFiles/GetByOperator?filesId=" + row.FileID,
+                    statusCode: {
+                        200: function (data) {
+                            if (data) {
+                                $.ajax({
+                                    method: "GET",
+                                    url: "../api/ReportFiles/SendReportFile",
+                                    data: { fileId: row.FileID },
+                                    statusCode: {
+                                        200: function (data) {
+                                            if (data == true) {
+                                                top.$.messager.show({ msg: "下载成功！" });
+                                                downLoadall(row.FileID)
+                                            }
+                                            else {
+                                                top.$.messager.show({ msg: "个人报文中空报文不能发送！" });
+                                            }
+
+                                        }
+                                    },
+                                });
+                            }
+                            else {
+                                top.$.messager.show({ msg: "只能操作当前用户下的记录！" });
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+        function downLoadall(reportFileID) {
+            var form = $("<form>");   //定义一个form表单
+            form.attr('style', 'display:none');   //在form表单中添加查询参数
+            form.attr('target', '');
+            form.attr('method', 'get');
+            form.attr('action', "../api/ReportFiles/GetFileTxt");
+            var input1 = $('<input>');
+            input1.attr('type', 'hidden');
+            input1.attr('name', 'reportFileID');
+            input1.attr('value', reportFileID);
+            $('body').append(form);  //将表单放置在web中
+            form.append(input1);   //将查询参数控件提交到表单上
+            form.submit();
+            Reload();
+        }
+    </script>
+</head>
+<body>
+    <table id="dg" class="easyui-datagrid" data-options="height: 630,toolbar: '#tb' , rownumbers:true,singleSelect: true, pagination: true, pageSize: 20, pageList: [10,20,30,40,50], method: 'GET',
+           url: '../api/ReportFiles/GetReportFilesData',
+           loadMsg: '正在加载，请稍候...',
+           onBeforeLoad: SetFilters,
+           ">
+        <thead>
+            <tr>
+                <th data-options="field:'FileID',hidden:true">FileID</th>
+                <th data-options="field:'ServiceObj',width:80,align:'center'">服务对象</th>
+                <th data-options="field:'FilesName',width:200,align:'center'">报文文件名称</th>
+                <th data-options="field:'FileName',width:200,align:'center'">文件种类</th>
+                <th data-options="field:'ReportState',width:80,align:'center'">状态</th>
+                <th data-options="field:'Operator',width:200,align:'center'">操作者</th>
+                <th data-options="field:'CreateTime',width:200,align:'center'">创建时间</th>
+                <th data-options="field:'SendTime',width:200,align:'center'">发送时间</th>
+                <th data-options="field:'ReportTextName',align:'center'">报文文档名称</th>
+                <th data-options="field:'Remarks',width:200,align:'center'">备注</th>
+            </tr>
+        </thead>
+    </table>
+    <div id="tb">
+        <div style="height:30px; width:auto;">
+            <label for="ServiceObj">服务对象:</label>
+            <select id="ServiceObj" class="easyui-combobox" data-options="width:200,onSelect:LoadMessageFile,editable:false">
+                <option>　</option>
+                <option value="1">企业</option>
+                <option value="2">个人</option>
+            </select>
+            <label for="MessageFile">文件种类:</label>
+            <select id="MessageFile" class="easyui-combobox" data-options="width:200,onSelect:uc.grid.Reload,editable:false"></select>
+            <label for="FilesName">报文文件名称:</label>
+            <input id="FilesName" class="easyui-textbox" data-options="onChange:uc.grid.Reload" />
+            <label for="BeginTime">创建时间 从:</label>
+            <input id="BeginTime" class="easyui-datebox" data-options="width:100,validType:'Date',onChange:uc.grid.Reload">
+            <label for="EndTime">至:</label>
+            <input id="EndTime" class="easyui-datebox" data-options="width:100,validType:'Date',onChange:uc.grid.Reload">
+            <a id="reset" class="easyui-linkbutton" href="javascript:void(0)" data-options="onClick:uc.grid.Reset,iconCls:'icon-reload',plain:true">重置</a>
+        </div>
+        <div style="height:30px;width:auto;">
+            <a id="add" class="easyui-linkbutton" href="javascript:void(0)" style="width: auto;height:25px; margin-top:3px;" data-options="onClick:ReportFilesEdit,iconCls:'icon-add',plain:true">创建</a>
+            <a id="mod" class="easyui-linkbutton" href="javascript:void(0)" style="width: auto;height:25px; margin-top:3px;" data-options="onClick:ReportFilesEdit,iconCls:'icon-edit',plain:true">修改</a>
+            <a id="save" class="easyui-linkbutton" href="javascript:void(0)" style="width: auto;height:25px; margin-top:3px;" data-options="onClick:Submit,iconCls:'icon-add',plain:true">下载</a>
+            <a id="del" class="easyui-linkbutton" href="javascript:void(0)" style="width: auto;height:25px; margin-top:3px;" data-options="onClick:ReportFilesEdit,iconCls:'icon-remove',plain:true">删除</a>
+            <a id="view" class="easyui-linkbutton" href="javascript:void(0)" style="width: auto;height:25px; margin-top:3px;" data-options="onClick:ReportFilesEdit,iconCls:'icon-search',plain:true">查看详情</a>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,148 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<title>已办列表</title>
+	<meta charset="utf-8" />
+	<link href="../Content/easyui/themes/gray/easyui.css" rel="stylesheet" />
+	<link href="../Content/easyui/themes/icon.css" rel="stylesheet" />
+	<script src="../Scripts/jquery/jquery.js"></script>
+	<script src="../Scripts/easyui/jquery.easyui.js"></script>
+	<script src="../Scripts/easyui/locale/easyui-lang-zh_CN.js"></script>
+	<script src="../Scripts/usedcars.js"></script>
+	<script>
+		uc.grid = new UCGrid("#dg");
+
+		function SetFilters(params) {
+			params.CurrentNode = $("#CurrentNode").combobox("getValue");
+			params.BeginTime = $("#BeginTime").datebox("getValue");
+			params.EndTime = $("#EndTime").datebox("getValue");
+			params.Status = $("#Status").combobox("getValue");
+			params.MainInfo = $("#MainInfo").textbox("getValue");
+			for (var p in params) {
+				if (params[p] == "") {
+					delete params[p];
+				}
+			}
+		}
+
+		function View() {
+			var url = "Flow/FrameView.html";
+
+			var row = uc.grid.GetSelected();
+
+			if (row) {
+			    url += "?instanceId=" + row.InstanceId + "&Status=0";
+			}
+			else {
+				return;
+			}
+
+			uc.ShowWindow("详情页", url);
+		}
+
+        // 流程撤回
+		function Revoke() {
+		    var row = uc.grid.GetSelected();
+		    if (row) {
+		        $.ajax({
+		            method: "GET",
+		            async: true,
+		            url: "../api/Instance/Revoke",
+		            data: { instanceId: row.InstanceId },
+		            statusCode: {
+		                200: function (data) {
+		                    $.messager.show({ msg: '流程撤回成功！' });
+		                },
+		                400: function (data) {
+		                    data = JSON.parse(data.responseText);
+		                    $.messager.show({ msg: data.Message }); 
+		                }
+		            }
+		        });
+		    }
+		}
+
+		//验证数据
+		function ValidData() {
+		    var a = /^(\d{4})-(\d{2})-(\d{2})$/
+		    if ($("#BeginTime").datebox("getValue") != "" || $("#EndTime").datebox("getValue") != "") {
+		        if (!(a.test($("#BeginTime").datebox("getValue")) && a.test($("#EndTime").datebox("getValue")))) {
+		            $.messager.show({ msg: "时间格式不正确!" });
+		            return false
+		        }
+		    }
+
+		    if ($("#BeginTime").datebox("getValue") > $("#EndTime").datebox("getValue")) {
+		        $.messager.show({ msg: "开始时间不能大于结束时间!" });
+		        return false;
+		    }
+
+		    return true;
+		}
+
+		function Search() {
+		    if (ValidData()) {
+		        uc.grid.Reload();
+		    }
+		}
+	</script>
+</head>
+<body>
+	<table id="dg" class="easyui-datagrid" data-options="
+        height: 630,
+        toolbar: '#tb',
+        rownumbers: true,
+        singleSelect: true,
+        pagination: true,
+        pageSize: 20,
+        pageList: [10,20,30,40,50],
+        method: 'GET',
+        url: '../api/Instance/DoneList',
+        onBeforeLoad: SetFilters,
+        loadMsg: '正在加载，请稍候...'
+        ">
+		<thead>
+			<tr>
+				<th data-options="field:'InstanceId',hidden:true">InstanceId</th>
+                <th data-options="field:'MainInfo',width:500,align:'center'">主要信息</th>
+				<th data-options="field:'FlowName',width:150,align:'center'">所处流程</th>
+				<th data-options="field:'CurrentNodeName',width:150,align:'center'">当前节点</th>
+				<th data-options="field:'CurrentUserName',width:100,align:'center'">当前操作者</th>
+				<th data-options="field:'ProcessUserName',width:100,align:'center'">上一个操作者</th>
+				<th data-options="field:'ProcessTime',width:150,align:'center'">处理时间</th>
+				<th data-options="field:'StartUserName',width:150,align:'center'">发起者</th>
+				<th data-options="field:'StartTime',width:150,align:'center'">发起时间</th>
+				<th data-options="field:'StatusDesc',width:150,align:'center'">状态</th>
+			</tr>
+		</thead>
+	</table>
+
+	<div id="tb">
+		<div>
+            <label for="MainInfo">主要信息:</label>
+            <input id="MainInfo" name="MainInfo" class="easyui-textbox" data-options="width:200,prompt: '输入车牌或客户姓名查询'" />
+			<label for="CurrentNode">当前节点:</label>
+			<select id="CurrentNode" name="CurrentNode" class="easyui-combobox" data-options="width:120,editable:false,method:'GET',url:'../api/Flow/NodeOption'"></select>
+			<label for="BeginTime">发起时间 从:</label>
+			<input id="BeginTime" name="BeginTime" class="easyui-datebox" data-options="width:100,validType:'Date'">
+			<label for="EndTime">至:</label>
+			<input id="EndTime" name="EndTime" class="easyui-datebox" data-options="width:100,validType:'Date'">
+			<label for="Status">流程状态:</label>
+			<select id="Status" name="Status" class="easyui-combobox" data-options="width:120,editable:false">
+				<option value="">全部</option>
+				<option value="1">正常</option>
+				<option value="2">完成</option>
+				<option value="3">终止</option>
+			</select>
+
+            <a id="search" class="easyui-linkbutton" href="javascript:void(0)" data-options="iconCls:'icon-search',onClick:Search">搜索</a>
+			<a id="reset" class="easyui-linkbutton" href="javascript:void(0)" data-options="onClick:uc.grid.Reset,iconCls:'icon-reload',plain:true">重置</a>
+		</div>
+
+		<div>
+            <a id="view" class="easyui-linkbutton" href="javascript:void(0)" data-options="onClick:View,iconCls:'icon-search',plain:true">查看</a>
+			<a id="revoke" class="easyui-linkbutton" href="javascript:void(0)" data-options="onClick:Revoke,iconCls:'icon-undo',plain:true">撤回</a>
+		</div>
+	</div>
+</body>
+</html>

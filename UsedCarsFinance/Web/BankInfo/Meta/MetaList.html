@@ -1,0 +1,70 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>数据元管理</title>
+    <meta charset="utf-8" />
+    <link href="../../Content/easyui/themes/gray/easyui.css" rel="stylesheet" />
+    <link href="../../Content/easyui/themes/icon.css" rel="stylesheet" />
+    <script src="../../Scripts/jquery/jquery.js"></script>
+    <script src="../../Scripts/easyui/jquery.easyui.js"></script>
+    <script src="../../Scripts/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../../Scripts/usedcars.js"></script>
+    <script>
+        uc.grid = new UCGrid("#dg");
+
+        function SetFilters(params) { }
+
+        function MetaEdit() {
+            var url = "BankInfo/Meta/MetaEdit.html?method=" + this.id;
+            if (this.id != "add") {
+                var row = uc.grid.GetSelected();
+                var type;
+                if (row) {
+                    if (row.TypeName == '企业') {
+                        type = 1;
+                    }
+                    else {
+                        type = 2;
+                    }
+                    url += "&MetaCode=" + row.MetaCode + "&Type=" + type;
+                }
+                else {
+                    return;
+                }
+            }
+            uc.ShowWindow("数据元", url);
+        }
+    </script>
+</head>
+
+<body>
+    <table id="dg" class="easyui-datagrid" data-options="
+           height: 630,
+           toolbar: '#tb',
+           rownumbers: true,
+           singleSelect: true,
+           pagination: true,
+           pageSize: 10,
+           pageList: [10,20,30,40,50],
+           method: 'GET' ,
+           url: '../../api/Meta/MetaList',
+           onBeforeLoad: SetFilters,
+           loadMsg: '正在加载，请稍候...'
+           ">
+        <thead>
+            <tr>
+                <th data-options="field:'MetaCode',width:100,align:'center'">数据元标识</th>
+                <th data-options="field:'Name',width:200,align:'center'">数据元名称</th>
+                <th data-options="field:'DataType',width:200,align:'center'">类型</th>
+                <th data-options="field:'DatasLength',width:200,align:'center'">长度</th>
+                <th data-options="field:'TypeName',width:200,align:'center'">服务对象</th>
+            </tr>
+        </thead>
+    </table>
+
+    <div id="tb">
+        <a id="add" class="easyui-linkbutton" href="javascript:void(0)" data-options="onClick:MetaEdit,iconCls:'icon-add',plain:true">添加数据元</a>
+        <a id="mod" class="easyui-linkbutton" href="javascript:void(0)" data-options="onClick:MetaEdit,iconCls:'icon-edit',plain:true">修改数据元</a>
+    </div>
+</body>
+</html>

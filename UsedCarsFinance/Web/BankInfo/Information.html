@@ -1,0 +1,475 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title></title>
+    <link href="../Content/easyui/themes/bootstrap/easyui.css" rel="stylesheet" />
+    <link href="../Content/easyui/themes/icon.css" rel="stylesheet" />
+    <link href="../Content/form-bootstrap.css" rel="stylesheet" />
+    <script src="../Scripts/jquery/jquery.js"></script>
+    <script src="../Scripts/easyui/jquery.easyui.js"></script>
+    <script src="../Scripts/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../Scripts/usedcars.js"></script>
+    <script src="JS/validType.js"></script>
+    <script src="JS/Method.js"></script>
+    <script src="JS/ValidEnterprise.js"></script>
+    <script>
+        uc.form = new UCForm("#content");
+        var data = uc.GetParams();
+        reportId = data.reportId;
+        messageTypeId = data.messageTypeId;
+        infoTypeId = data.infoTypeId;
+        recordID = typeof (data.recordID) == "undefined" ? 0 : data.recordID;
+        // 临时数据标识
+        TempInfoId = 0;
+        method = data.method;
+
+        // 个人infoTypeId集合
+        var infoTypeIdArray = [33, 34, 36, 37, 38, 39, 40, 41];
+
+        $(function () {
+            GetPageInfo();
+
+            // 定时保存草稿数据
+            AutoSaveData();
+
+            
+        })
+
+        window.onload = function () {
+            if (infoTypeIdArray.join(',').indexOf(infoTypeId) == -1) {
+                // 绑定事件(企业)
+                BindInfoEventEnterprise(infoTypeId);
+            }
+
+            setTimeout(function () {
+                // "还款频率"
+                TermsFrequency();
+
+                // 账户拥有者信息提示
+                AcountMasterTip();
+            }, 2000);
+        }
+
+        //页面加载
+        function GetPageInfo() {
+            $.ajax({
+                async: false,
+                data: { InfoTypeId: infoTypeId },
+                method: "GET",
+                url: "../api/DynamicLoad/GetPageInfo",
+                statusCode: {
+                    200: function (data) {
+                        $("<h1>", { "style": "text-align:center" }).html(data.PageName).appendTo("#content");
+                        $(document).attr("title", data.Name);
+                        FieldSet(data.FieldsetList);
+                        $("<div>", { "id": "btn" }).append(
+                            $("<a>").attr({ "id": "temp", "class": "easyui-linkbutton", "data-options": "iconCls: 'icon-edit'", "margin": "0 auto", "onClick": "SaveAsTemp()" }).html("保存草稿"),
+                            $("<a>").attr({ "id": "clear", "class": "easyui-linkbutton", "data-options": "iconCls: 'icon-edit'", "margin": "0 auto", "onClick": "ClearTempRecord()" }).html("清空草稿"),
+                            $("<a>").attr({ "id": "submit", "class": "easyui-linkbutton", "data-options": "iconCls: 'icon-edit'", "margin": "0 auto", "onClick": "Submit()" }).html("提交"),
+                            $("<a>").attr({ "id": "cancle", "class": "easyui-linkbutton", "data-options": "iconCls: 'icon-redo'", "margin": "0 auto", "onclick": "Cancel()" }).html("取消")
+                         ).appendTo("#content")
+                        $.parser.parse("#btn");
+
+                        //借款人信息记录特有的
+                        if (infoTypeId == 1) {
+                            GetIndustry();//获取行业分类
+                            GetAdministration();//获取行政区划
+                        }
+                        else if (infoTypeId == 11) {
+                            GetLoan();
+                        }
+
+                        if (infoTypeId <= 32) {
+                            InfoType();
+                            //暂时隐藏标识变更段
+                            //$("#C").hide();
+                        }
+                        else {
+                            GetAddress();
+                            // $("#F").hide();
+                        }
+                        if (method == "mod" || method == "add") {
+                            LoadTempData();
+                        }
+                        if (method == "view") {
+                            LoadData();
+                        }
+                    }
+                }
+            });
+        }
+
+        //页面fieldset部分展示方法
+        function FieldSet(value) {
+            var section = "";
+            for (var i = 0; i < value.length; i++) {
+                section = $("<section>", { "id": value[i].ParagraphCode, "min": value[i].Min, "max": value[i].Max }).append(
+                    $("<h2>", { "html": value[i].Title }))
+                //必填段并且只显示一次的时候不需要展示+/-
+                if (value[i].Min == 1 && value[i].Max == 1) { }
+                else {
+                    section.append(
+                   $("<div>").attr({ "style": "background-color:#afe3fa;height:30px ;width:95%" }).append(
+                      $("<div>").attr({ "float": "right", "style": "width:100%" }).append(
+                          $("<a>").attr({ "style": "margin-top: 2px; margin-right: 10px; float: right; font-size: 24px; text-decoration: none", "id": value[i].ParagraphCode + "add", "onclick": "Add(this.id)", "href": "javascript:void(0)" }).text("+"),
+                          $("<a>").attr({ "style": " margin-right: 20px; float: right; font-size: 24px; text-decoration: none", "hidden": "hidden", "id": value[i].ParagraphCode + "minus", "onclick": "Minus(this)", "href": "javascript:void(0)" }).text("-")
+                )))
+                }
+
+                //判断段中是否有元素
+                if (value[i].ComponentList) {
+                    Component(value[i].ComponentList, value[i].ParagraphCode).appendTo(section)//将元素放到template模板中;
+                }
+                var templateId = "template" + value[i].ParagraphCode;//模板ID
+                $("#content").append(section);
+                // 获取临时数据标识
+                GetTempDataID();
+                if (method == "add" && TempInfoId == 0) {
+                    //当必填项时将template中的内容克隆到fieldset中
+                    if (value[i].Min > 0) {
+                        Add(templateId);
+                    }
+                }
+            }
+        }
+
+        //数据元信息展示
+        function Component(value, Segment) {
+            var str = $("<template>", { "id": "template" + Segment });
+            var j = 0;
+            for (var i = 0; i < value.length; i++) {
+                var validate = $(value[i].HtmlElement).attr({ "id": Segment + value[i].SegmentRulesId, "name": Segment + value[i].SegmentRulesId })
+
+                //combotree不需要设置data-options
+                if (value[i].HtmlelementId != 7 && value[i].HtmlelementId != 6) {
+                    if (value[i].DataType == "AN") {
+                        var options = "validType:['AN','length[1," + value[i].Length + "]']";
+                    }
+                    else if (value[i].DataType == "N") {
+                        var options = "validType:['N','length[1," + value[i].Length + "]']";
+                    }
+                    else {
+                        var options = "validType:['ANC','length[1," + value[i].Length + "]']";
+                    }
+                    if (value[i].HtmlelementId == 3) {
+                        options += ",multiline:true,height:88,width:880";
+                    }
+                    else if (value[i].HtmlelementId == 4 || value[i].HtmlelementId == 12) {
+                        options = "";
+                        options += "editable:false";
+                    }
+                    else if (value[i].HtmlelementId == 2) {
+                        options = "";
+                        options += "editable:false ,width:407.75, formatter:myformatter,parser:myparser";
+                    }
+                    if (value[i].IsRequired == "M")//判断数据元是否必填
+                    {
+                        options += ",required:true";
+                    }
+
+                    if (ArrayIndexValue(infoTypeIdArray, infoTypeId) == -1) {
+                        // 其他验证(企业)
+                        options = OtherValidEnterprise(value[i], options);
+                    }
+
+                    // 添加验证
+                    validate.attr({ "data-options": options });
+                }
+                // 一行两列
+                var temp;
+                // 多行文本框显示占两行
+                if (value[i].HtmlelementId == 5 || value[i].HtmlelementId == 3) {
+                    temp = "";
+                    temp = $("<div>", { "class": "row" }).appendTo(str);
+                    $("<div>", { "class": "col-12" }).append(
+                        $("<label>").html(value[i].MetaName + "：").append($("<a>", {
+                            "class": "easyui-tooltip",
+                            "style": "background:rgba(0, 0, 0, 0) url('InfoImg.png') no-repeat scroll 0 0",
+                            "title": value[i].Description
+                        }).html("　")),
+                        validate.attr({ "Meta_Code": value[i].MetaCode })
+                    ).appendTo(temp)
+                    j = 0;//j设置为0是为了下一个数据元从头开始
+                }
+                else {
+                    if (j % 2 == 0) {
+                        temp = "";
+                        temp = $("<div>", { "class": "row" }).appendTo(str)
+                    }
+                    $("<div>", { "class": "col-6" }).append(
+                        $("<label>").html(value[i].MetaName + "：").append($("<a>", {
+                            "class": "easyui-tooltip",
+                            "style": "background:rgba(0, 0, 0, 0) url('InfoImg.png') no-repeat scroll 0 0",
+                            "title": value[i].Description
+                        }).html("　")),
+                       validate.attr({ "Meta_Code": value[i].MetaCode })
+                    ).appendTo(temp)
+                    j++;
+                }
+            }
+            return str;
+        }
+
+        // 提交
+        function Submit() {
+            var data = {};
+            var section = $("#content").find("section");
+            //序列化数据
+            var temp;
+            for (var i = 0; i < section.length; i++) {
+                var fs = new Array();
+                temp = $(section[i]).attr("id");
+                var fieldset = $(section[i]).children("fieldset");
+                for (var j = 0; j < fieldset.length; j++) {
+                    fs.push($(fieldset[j]).serializeJson())
+                }
+                data[temp] = fs;
+            }
+            var str = JSON.stringify(data);
+            $("#content").children().children(":hidden").find(":input.validatebox-text").validatebox("disableValidation");
+            if (!$("#content").form("validate")) {
+                $.messager.show({ msg: "请填写剩下的必填内容!" });
+                return false;
+            }
+
+            // InfoValid(企业/个人)
+            if (infoTypeIdArray.join(',').indexOf(infoTypeId) == -1) {
+                // 验证事件(企业)
+                if (!InfoValidEnterprise()) {
+                    return false;
+                }
+            }
+
+            if (infoTypeId == 1)//借款人概况信息选择性必填判断
+            {
+                var bool = InfoType1();
+                if (bool == false)
+                    return bool;
+            }
+            if (infoTypeId == 2)//借款人资本构成信息选择性必填判断
+            {
+                if (_G > 0) {
+                    var bool = true;
+                    for (var i = 1; i <= _G; i++) {
+                        bool = InfoType2(i);
+                    }
+                    if (bool == false)
+                        return bool;
+                }
+            }
+            $.ajax({
+                async: true,
+                data: { value: str, InfoTypeId: infoTypeId, ReportId: reportId, recordID: recordID, messageTypeID: messageTypeId },
+                method: "POST",
+                url: "../api/DynamicLoad/PostMessageInfo",
+                statusCode: {
+                    200: function (data) {
+                        if (data == "") {
+                            // 禁用提交、保存草稿和清空草稿按钮
+                            $("#submit").linkbutton("disable");
+                            $("#temp").linkbutton("disable");
+                            $("#clear").linkbutton("disable");
+                            // 删除临时数据
+                            DeleteTempRecord();
+                            top.$.messager.show({ msg: "保存成功！" });
+                            setTimeout(function () {
+                                Cancel();
+                            }, 1000);
+                        }
+                    },
+                    500: function (data) {
+                        $.messager.alert('错误', data.responseJSON.ExceptionMessage);
+                    },
+                    400: function (data) {
+                        $.messager.alert('错误', data.responseJSON.Message, "info");
+                    }
+                }
+            });
+        }
+
+        // 定时服务
+        function AutoSaveData() {
+            setTimeout(function () {
+                $("#temp").click();
+                AutoSaveData();
+            }, 300000);
+        }
+
+        // 保存临时数据
+        function SaveAsTemp() {
+            // 获取临时数据标识
+            GetTempDataID();
+            var data = {};
+            var section = $("#content").find("section");
+            // 序列化数据
+            var temp;
+            for (var i = 0; i < section.length; i++) {
+                var fs = new Array();
+                temp = $(section[i]).attr("id");
+                var fieldset = $(section[i]).children("fieldset");
+                for (var j = 0; j < fieldset.length; j++) {
+                    fs.push($(fieldset[j]).serializeJson())
+                }
+                data[temp] = fs;
+            }
+            var str = JSON.stringify(data);
+            $("#content").children().children(":hidden").find(":input.validatebox-text").validatebox("disableValidation");
+            // 保存临时数据
+            $.ajax({
+                async: true,
+                data: { Context: str, InfoTypeId: infoTypeId, ReportId: reportId, TempInfoId: TempInfoId },
+                method: "POST",
+                url: "../api/TempRecord/SaveAsTemp",
+                statusCode: {
+                    200: function (data) {
+                        if (data == true) {
+                            top.$.messager.show({ msg: "草稿保存成功！" });
+                        }
+                        else {
+                            top.$.messager.show({ msg: data });
+                        }
+                    }
+                }
+            });
+        }
+        // 加载临时数据
+        function LoadTempData() {
+            // 加载临时数据
+            $.ajax({
+                async: true,
+                data: { InfoTypeId: infoTypeId, ReportId: reportId },
+                method: "Get",
+                url: "../api/TempRecord/GetTempRecord",
+                statusCode: {
+                    200: function (data) {
+                        if (data != null) {
+                            for (var item in data) {
+                                for (var i = 0; i < data[item].length; i++) {
+                                    Add($("#" + item).children("template").attr("id"));
+                                    $("#" + item + "_" + (i + 1)).form("load", data[item][i]);
+                                    if (infoTypeId <= 32) {
+                                        InfoType();
+                                    }
+                                }
+                            }
+                        }
+                        else {
+                            // 如果临时数据为空，加载正式数据
+                            LoadData();
+                        }
+                    }
+                }
+            });
+        }
+
+        // 获取临时数据标识
+        function GetTempDataID() {
+            // 获取临时数据标识，在保存草稿时用于判断草稿是否存在，以选择新增或删除草稿
+            $.ajax({
+                async: false,
+                data: { InfoTypeId: infoTypeId, ReportId: reportId },
+                method: "Get",
+                url: "../api/TempRecord/GetTempInfoId",
+                statusCode: {
+                    200: function (data) {
+                        if (data != null) {
+                            TempInfoId = data.TempInfoId;
+                        }
+                    }
+                }
+            });
+        }
+
+        // 删除临时数据
+        function DeleteTempRecord() {
+            $.ajax({
+                async: false,
+                data: { InfoTypeId: infoTypeId, ReportId: reportId },
+                method: "Get",
+                url: "../api/TempRecord/DeleteTemp",
+                statusCode: {
+                    200: function (data) {
+                        TempInfoId = 0;
+                    }
+                }
+            });
+        }
+
+        // 清空草稿
+        function ClearTempRecord() {
+            // 提示框
+            $.messager.confirm("操作提示", "“清空草稿”将清空该条记录的草稿，是否清空草稿？", function (data) {
+                if (data) {
+                    // 如果确认清空
+                    GetTempDataID();
+                    if (TempInfoId > 0) {
+                        DeleteTempRecord();
+                        window.location.reload();
+                    }
+                }
+            });
+        }
+
+        function Cancel() {
+            window.opener.location.href = window.opener.location.href;
+            window.close()
+        }
+        //时间数据的转换
+        function myformatter(date) {
+            var y = date.getFullYear();
+            var m = date.getMonth() + 1;
+            var d = date.getDate();
+            return y.toString() + (m < 10 ? ('0' + m) : m).toString() + (d < 10 ? ('0' + d) : d).toString();
+        }
+        function myparser(s) {
+            if (s != "") {
+                var y = s.substring(0, 4);
+                var m = s.substring(4, 6);
+                var d = s.substring(6, 8);
+                var s = Date.parse(y + "-" + m + "-" + d);
+                return new Date(s);
+            }
+            else {
+                return new Date();
+            }
+        }
+
+        //加载数据方法
+        function LoadData() {
+            $.ajax({
+                async: true,
+                data: { recordId: recordID },
+                method: "GET",
+                url: "../api/InformationRecord/GetInfoRecordInfo",
+                statusCode: {
+                    200: function (data) {
+                        for (var item in data) {
+                            for (var i = 0; i < data[item].length; i++) {
+                                Add($("#" + item).children("template").attr("id"));
+                                $("#" + item + "_" + (i + 1)).form("load", data[item][i]);
+                                if (infoTypeId <= 32) {
+                                    InfoType();
+                                }
+                            }
+                        }
+                        if (method == "view") {
+                            uc.form.DisableForm();
+                            $("[id*='add']").hide();
+                            $("[id*='minus']").hide();
+                            $("#submit").linkbutton("disable");
+                            // 禁用保存草稿和清空草稿按钮
+                            $("#temp").linkbutton("disable");
+                            $("#clear").linkbutton("disable");
+                        }
+                    }
+                }
+            });
+        }
+
+    </script>
+</head>
+<body>
+    <form class="container" id="content"></form>
+</body>
+</html>

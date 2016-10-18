@@ -1,0 +1,151 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<title>用户信息</title>
+	<meta charset="utf-8" />
+	<link href="../Content/easyui/themes/gray/easyui.css" rel="stylesheet" />
+	<link href="../Content/easyui/themes/icon.css" rel="stylesheet" />
+	<link href="../Content/form.css" rel="stylesheet" />
+	<script src="../Scripts/jquery/jquery.js"></script>
+	<script src="../Scripts/easyui/jquery.easyui.js"></script>
+	<script src="../Scripts/easyui/locale/easyui-lang-zh_CN.js"></script>
+	<script src="../Scripts/usedcars.js"></script>
+	<script>
+		uc.form = new UCForm("#userinfo_ff");
+
+		$(function () {
+			Init();
+
+			$.extend($.fn.validatebox.defaults.rules, {
+				//重复验证
+				checkUsernameRepeat: {
+					validator: function (value, param) {
+						var result = false;
+
+						$.ajax({
+							async: false,
+							data: { username: value },
+							type: "GET",
+							url: "../api/User/CheckUsername",
+							statusCode: {
+								200: function (data) {
+									result = true;
+								}
+							}
+						});
+
+						return result;
+					},
+					message: '用户名已使用!'
+				},
+				//帐号
+				checkUsernameFormat: {
+					validator: function (value) {
+						return /^[a-z\_]{1}\w{1,18}$/i.test(value);
+					},
+					message: "请输入正确的用户名，由字母、数字和下划线组成。不可以数字开头,长度在2-18位之间!"
+				}
+			});
+		});
+
+		function Init() {
+			var query = uc.GetParams();
+
+			if (query.method == "mod" || query.method == "view") {
+				if (query.method == "mod") {
+					$("input[textboxname='Username']").textbox("disable");
+				}
+				if (query.method == "view") {
+					$("#save").linkbutton("disable");
+
+					uc.form.DisableForm();
+				}
+
+				uc.form.LoadForm({
+					params: { userId: query.userId },
+					url: "../api/User/Get"
+				});
+			}
+		}
+
+		function Submit() {
+			var user = $("#userinfo").serializeJson();
+
+			uc.form.Submit({
+				url: "../api/User",
+				method: "auto",
+				data: user
+			});
+		}
+	</script>
+</head>
+
+<body>
+	<form id="userinfo_ff">
+		<fieldset id="userinfo">
+			<legend>用户信息</legend>
+
+			<div id="data">
+				<input name="UserId" type="hidden" />
+			</div>
+
+			<div class="row">
+				<div>
+					<label>帐号:</label>
+					<input name="Username" class="easyui-textbox" data-options="
+						required :true,
+						validType:['checkUsernameRepeat', 'checkUsernameFormat'],
+						delay:800
+					" />
+				</div>
+
+				<div>
+					<label>密码:</label>
+					<span>初始密码为 123456</span>
+				</div>
+			</div>
+
+			<div class="row">
+				<div>
+					<label>姓名:</label>
+					<input name="Name" class="easyui-textbox" data-options="required:true" />
+				</div>
+
+				<div>
+					<label>角色:</label>
+					<select name="RoleId" class="easyui-combobox" data-options="
+						method: 'GET',
+						url:'../api/Role/GetAll',
+						required:true,
+						editable:false
+					"></select>
+				</div>
+			</div>
+
+			<div class="row">
+				<div>
+					<label>手机:</label>
+					<input name="Mobile" class="easyui-textbox" data-options="validType:'Mobile'" />
+				</div>
+
+				<div>
+					<label>邮箱:</label>
+					<input name="Email" class="easyui-textbox" data-options="validType:'Email'" />
+				</div>
+			</div>
+
+			<div class="row">
+				<div>
+					<label>备注:</label>
+					<input name="Remarks" class="easyui-textbox" data-options="multiline:true,height:66,width:555" />
+				</div>
+			</div>
+		</fieldset>
+
+		<div id="btn">
+			<a href="javascript:void(0)" id="save" class="easyui-linkbutton" data-options="iconCls:'icon-save',onClick:Submit">保存</a>
+			<a href="javascript:void(0)" id="back" class="easyui-linkbutton" data-options="iconCls:'icon-redo',onClick:uc.form.Cancel">返回</a>
+		</div>
+	</form>
+</body>
+</html>

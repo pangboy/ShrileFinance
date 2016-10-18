@@ -1,0 +1,369 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>借款人概况信息记录</title>
+    <link href="../Content/easyui/themes/bootstrap/easyui.css" rel="stylesheet" />
+    <link href="../Content/easyui/themes/icon.css" rel="stylesheet" />
+    <link href="../Content/form-bootstrap.css" rel="stylesheet" />
+    <script src="../Scripts/jquery/jquery.js"></script>
+    <script src="../Scripts/easyui/jquery.easyui.js"></script>
+    <script src="../Scripts/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../Scripts/usedcars.js"></script>
+    <script src="JS/validType.js"></script>
+    <script src="JS/Method.js"></script>
+    <script>
+        uc.form = new UCForm("#content");
+        var temp = uc.GetParams();
+        var ReportId
+        var InfoTypeId;
+        var messageTypeId;
+        var recordID;
+        var method;
+
+        if (temp) {
+            InfoTypeId= temp.infoTypeId;
+            ReportId = temp.reportId;
+            messageTypeId = temp.messageTypeId;
+            method = temp.method;
+            recordID = temp.recordID;
+        }
+        $(function () {
+            GetInfoType(InfoTypeId);
+            LoadTemplate(InfoTypeId);
+            
+        })
+        //获取信息记录名称
+        function GetInfoType(InfoTypeId) {
+                $.ajax({
+                    async: true,
+                    data: { InfoTypeId: InfoTypeId },
+                    method: "GET",
+                    url: "../api/DynamicLoad/GetInfoType",
+                    statusCode: {
+                        200: function (data) {
+                            $("<h1>", { "style": "text-align:center" }).html(data.InfoName).appendTo("#content");
+                            $(document).attr("title", data.InfoName);//修改title值
+                        }
+                    }
+                });
+        }
+        var tempalte = {};
+        //动态加载页面
+        function LoadTemplate(InfoTypeId) {
+            $.ajax({
+                async: true,
+                data: { InfoTypeId: InfoTypeId },
+                method: "GET",
+                url: "../api/DynamicLoad/Get",
+                statusCode: {
+                    200: function (data) {
+                        if (data) {
+                            $(data).each(function () {
+                                var row = "";
+                                var c = "";//保存特殊的字段用于隐藏
+                                var a = this.ParagraphCode;
+                                var b = this.Status;//用于判断该段是否必填
+                                if (b != "M"&&b != "T") {//非必填项
+                                    if (a == "C") {//添加信息时C段隐藏，修改信息时候C段显示
+                                        str = $("<fieldset>", { "id": this.ParagraphCode, "hidden": "hidden" }).append(
+                                          $("<legend>").attr({ "style": "margin-bottom:0px;width:95%" }).html(this.ParagraphName)
+                                          );
+                                    }
+                                    else {
+                                        str = $("<fieldset>", { "id": this.ParagraphCode }).append(
+                                        $("<legend>").attr({ "style": "margin-bottom:0px;width:95%" }).html(this.ParagraphName));
+                                    }
+                                    $("<div>").attr({ "style": "background-color:#afe3fa;height:30px ;width:95%" }).append(
+                                        $("<div>").attr({ "float": "right", "style": "width:100%" }).append(
+                                        $("<a>").attr({ "style": "margin-top: 2px; margin-right: 10px; float: right; font-size: 24px; text-decoration: none", "id": a + "add", "onclick": "Add(this,tempalte)", "href": "javascript:void(0)" }).text("+"),
+                                        $("<a>").attr({ "style": " margin-right: 20px; float: right; font-size: 24px; text-decoration: none", "hidden": "hidden", "id": a + "minus", "onclick": "Minus(this)", "href": "javascript:void(0)" }).text("-")
+                                        )
+                                        ).appendTo(str);
+                                }
+                                else if (b == "T") {
+                                    str = $("<fieldset>", { "id": this.ParagraphCode, "myAttr": b }).append(
+                                       $("<legend>").attr({ "style": "margin-bottom:0px;width:95%" }).html(this.ParagraphName));
+                                    $("<div>").attr({ "style": "background-color:#afe3fa;height:30px ;width:95%" }).append(
+                                    $("<div>").attr({ "float": "right", "style": "width:100%" }).append(
+                                    $("<a>").attr({ "style": "margin-top: 2px; margin-right: 10px; float: right; font-size: 24px; text-decoration: none", "id": a + "add", "onclick": "Add(this,tempalte)", "href": "javascript:void(0)" }).text("+"),
+                                    $("<a>").attr({ "style": " margin-right: 20px; float: right; font-size: 24px; text-decoration: none", "hidden": "hidden", "id": a + "minus", "onclick": "Minus(this)", "href": "javascript:void(0)" }).text("-")
+                                    )
+                                    ).appendTo(str);
+                                }
+                                else {//必填项
+                                    str = $("<fieldset>", { "id": this.ParagraphCode,"myAttr":b }).append(
+                                   $("<legend>").html(this.ParagraphName)
+                                   );
+                                }
+                                $(this.Field).each(function (i) {
+                                    //隐藏信息类别和信息记录长度
+                                    if (this.BDI_Code == "7543" || this.BDI_Code == "4501")
+                                    {
+                                        row = $("<div>", { "class": "col-6", "hidden": "hidden", "style": "margin:5px,0" }).append(
+                                        $("<label>").text(this.DataName + "："));
+                                     
+                                        $(this.HtmlElement).attr({ "name": a + this.BDM_ID, "id": a + this.BDM_ID }).appendTo(row);
+                                        if (this.BDI_Code == "7543")//信息记录类别赋值
+                                        {
+                                            row.attr({ "Attr": "getAttr" }).children("input").attr({ "value": a })
+                                        }
+                                    }
+                                    else {
+                                        row = $("<div>", { "style": "margin:5px,0" }).append(
+                                        $("<label>").text(this.DataName + "："));
+                                        if (this.BDR_Status == "M")  $(this.HtmlElement).attr({"name": a + this.BDM_ID, "id": a + this.BDM_ID ,"required":true}).appendTo(row)
+                                            else $(this.HtmlElement).attr({ "name": a + this.BDM_ID, "id": a + this.BDM_ID }).appendTo(row)
+                                        //用于隐藏不是信息记录类别和信息记录长度
+                                        if (b != "M" )
+                                        {
+                                            row.attr({ "hidden": "hidden" })
+                                        }
+                                        if ($(this.HtmlElement).attr("data-options").indexOf("multiline") >= 0)//判断是否是多行显示
+                                        {
+                                            row.attr({ "class": "col-12" })
+                                        }
+                                        else {
+                                            row.attr({ "class": "col-6" })
+                                        }
+                                    }
+                                   row.appendTo(str)
+                                });
+                                tempalte[a] = str.children("div.col-6,div.col-12").clone(true);
+                                str.appendTo("#content");
+                            })
+                            $("<div>", {"id":"btn"}).append(
+                                  $("<a>").attr({ "id": "submit", "class": "easyui-linkbutton", "data-options": "iconCls: 'icon-edit'", "margin": "0 auto", "onclick": "Submit()" }).html("提交"),
+                                  $("<a>").attr({ "id": "cancle", "class": "easyui-linkbutton", "data-options": "iconCls: 'icon-redo'", "margin": "0 auto", "onclick": "Cancel()" }).html("取消")
+                                ).appendTo("#content")
+                            InfoType();//加载信息记录类型
+                            $.parser.parse();
+                            if (InfoTypeId == 1) {
+                                GetIndustry();//加载行业分类
+                                GetAdministration()//获取行政区划
+                            }
+                            if (InfoTypeId == 11) {
+                                GetLoan();
+                            }
+                            if (method == "mod" || method == "view")
+                                LoadData();
+                           
+                            }
+                    
+                        //if (method == "add") {
+                        //    AddT("add", tempalte);
+                        //}
+                    }
+                }
+            });
+        }
+
+        //时间数据的转换
+        function myformatter(date) {
+            var y = date.getFullYear();
+            var m = date.getMonth() + 1;
+            var d = date.getDate();
+            return y + (m < 10 ? ('0' + m) : m) + (d < 10 ? ('0' + d) : d);
+        }
+        function myparser(s) {
+            if (s != "") {
+                var y = s.substring(0, 4);
+                var m = s.substring(4, 6);
+                var d = s.substring(6, 8);
+                var s = Date.parse(y + "-" + m + "-" + d);
+                return new Date(s);
+            }
+            else {
+                return new Date();
+            }
+        }
+        //提交
+        function Submit() {
+            var B = new Array();
+            var C = new Array();
+            var D = new Array();
+            var E = new Array();
+            var F = new Array();
+            var G = new Array();
+            var H = new Array();
+            var I = new Array();
+            var data = {};
+            B.push($("#B").serializeJson());
+            data.B=B ;
+
+            //判断每一段是否是带必填项标志
+            if ($('#C').attr("myAttr") != undefined && _C == 0) {//带必填项标志
+                C.push($("#C").serializeJson())
+                data.C = C;
+            }
+            else {
+                if (_C > 0) {
+                    for (var i = 0; i < _C; i++) {
+                        C.push($("#C" + (i+1)).serializeJson())
+                    }
+                    data.C = C;
+                }
+            }
+            if ($('#D').attr("myAttr") != undefined && _D == 0) {//带必填项标志
+                D.push($("#D").serializeJson())
+                data.D = D;
+            }
+            else {
+                if (_D > 0) {
+                    for (var i = 0; i < _D; i++) {
+                        D.push($("#D" + (i + 1)).serializeJson())
+                    }
+                    data.D = D;
+                }
+            }
+            if ($('#E').attr("myAttr") != undefined && _E == 0) {
+                E.push($("#E").serializeJson())
+                data.E = E;
+            }
+            else {
+                if (_E > 0) {
+                    for (var i = 0; i < _E; i++) {
+                        E.push($("#E" + (i+1)).serializeJson())
+                    }
+                    data.E = E;
+                }
+            }
+            if ($('#F').attr("myAttr") != undefined && _F == 0) {
+                F.push($("#F").serializeJson())
+                data.F = F;
+            }
+            else {
+                if (_F > 0) {
+                    for (var i = 0; i < _F; i++) {
+                        F.push($("#F" + (i + 1)).serializeJson())
+                    }
+                    data.F = F;
+                }
+            }
+            if ($('#G').attr("myAttr") != undefined && _G == 0) {
+                G.push($("#G").serializeJson())
+                data.G = G;
+            }
+            else {
+                if (_G > 0) {
+                    for (var i = 0; i < _G; i++) {
+                        G.push($("#G" + (i+1)).serializeJson())
+                    }
+                    data.G = G;
+                }
+            }
+            if ($('#H').attr("myAttr") != undefined && _H == 0) {
+                H.push($("#H").serializeJson())
+                data.H = H
+            }
+            else {
+                if (_H > 0) {
+                    for (var i = 0; i < _H; i++) {
+                        H.push($("#H" + (i + 1)).serializeJson())
+                    }
+                    data.H = H
+                }
+            }
+            if ($('#I').attr("myAttr") != undefined && _I == 0) {
+                I.push($("#I").serializeJson())
+                data.I = I
+            }
+            else {
+                if (_I > 0) {
+                    for (var i = 0; i < _I; i++) {
+                        I.push($("#I" + (i + 1)).serializeJson())
+                    }
+                    data.I = I
+                }
+            }
+            var str = JSON.stringify(data);
+            $("#content").children().children(":hidden").find(":input.validatebox-text").validatebox("disableValidation");
+            if (!$("#content").form("validate")) {
+                $.messager.show({ msg: "请填写剩下的必填内容!" });
+                return false;
+            }
+            if (InfoTypeId == 1)//借款人概况信息选择性必填判断
+            {
+                var bool = InfoType1();
+                if(bool==false)
+                 return bool;
+            }
+            if (InfoTypeId == 2)//借款人资本构成信息选择性必填判断
+            {
+                if (_G > 0)
+                {
+                    var bool = true;
+                    for (var i = 1; i <= _G; i++) {
+                        bool = InfoType2(i);
+                    }
+                    if (bool == false)
+                        return bool;
+                }
+            }
+            $.ajax({
+                async: true,
+                data: { value: str, InfoTypeId: InfoTypeId, ReportId: ReportId, recordID: recordID },
+                method: "POST",
+                url: "../api/DynamicLoad/PostMessageInfo",
+                statusCode: {
+                    200: function (data) {
+                        if (data) {
+                            top.$.messager.show({ msg: "保存成功！" });
+                            Cancel();
+                        }
+                        else {
+                            top.$.messager.show({ msg: data});
+                        }
+                       
+                    }  
+                }
+            });
+        }
+
+        function Cancel() {
+            window.opener.location.href = window.opener.location.href;
+            window.close()
+
+        }
+        //加载数据方法
+        function LoadData(){
+            $.ajax({
+                async: true,
+                data: { recordId: recordID },
+                method: "GET",
+                url: "../api/InformationRecord/GetInfoRecordInfo",
+                statusCode: {
+                    200: function (data) {
+                        for (var item in data) {
+                            for (var i = 0; i < data[item].length; i++) {
+                                if ($("#" + item).attr("myattr") != 'M'&&$("#" + item).attr("myattr") != "T" ) {
+                                    Add($("#" + item).children("div:first").find("a:first"), tempalte);//非必填项中的多次添加
+                                    $("#" + item + (i+1)).form("load", data[item][i]);
+                                }
+                                else if ($("#" + item).attr("myattr") == "T") {
+                                    AddT(method,tempalte);//必填项中的多次添加
+                                    $("#" + item + (i + 1)).form("load", data[item][i]);
+                                }
+                                else {
+                                    $("#" + item).form("load", data[item][i]);
+                                }
+                            }
+                        }
+                        if (method == "view") {
+                            uc.form.DisableForm();
+                            $("[id*='add']").hide();
+                            $("[id*='minus']").hide();
+                            $("#submit").linkbutton("disable")
+                        }
+                        
+                    }
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+    <form class="container" id="content">
+    </form>
+</body>
+</html>

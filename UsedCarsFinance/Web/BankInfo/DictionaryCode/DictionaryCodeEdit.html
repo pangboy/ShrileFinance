@@ -1,0 +1,142 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>数据字典详情</title>
+    <meta charset="utf-8" />
+    <link href="../../Content/easyui/themes/gray/easyui.css" rel="stylesheet" />
+    <link href="../../Content/easyui/themes/icon.css" rel="stylesheet" />
+    <link href="../../Content/form.css" rel="stylesheet" />
+    <script src="../../Scripts/jquery/jquery.js"></script>
+    <script src="../../Scripts/easyui/jquery.easyui.js"></script>
+    <script src="../../Scripts/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../../Scripts/usedcars.js"></script>
+    <script>
+        uc.form = new UCForm("#ff");
+
+        $(function () {
+            Init();
+        });
+        // 页面初始化
+        function Init() {
+            var query = uc.GetParams(); //alert(query.typeId+"-"+query.code);
+            // 判断操作为修改还是查看
+            if (query.method == "mod" || query.method == "view") {
+                if (query.method == "mod") {
+                    $("select[comboname='DictionaryTypeId']").textbox("readonly");
+                    $("input[textboxname='Code']").textbox("disable");
+                } else if (query.method == "view") {
+                    $("#save").linkbutton("disable");
+
+                   // uc.form.DisableForm();
+                }
+                // 页面加载，向控制器传递参数
+                uc.form.LoadForm({
+                    params: { typeId: query.typeId, code: query.code },
+                    url: '../../api/DictionaryCode/Get'
+                });
+            }
+        }
+        // 表单提交准备工作
+        function Submit() {
+            var value = $("#dictionary").serializeJson();
+
+            var query = uc.GetParams();
+
+            var url = "../../api/DictionaryCode";
+            var method;
+            if (query.method == "add") {
+                url += "/Create";
+                method = "POST";
+            } else if (query.method == "mod") {
+                url += "/Modify";
+                method = "POST";
+
+                //value.Type = query.type;
+                //value.Code = query.code;
+
+                // 设置字典代码
+                value.Code = query.code;
+                
+            }
+           
+
+            $.ajax({
+                data: value,
+                method: method,
+                url: url,
+                statusCode: {
+                    200: function (data) {
+                        top.$.messager.show({ msg: "保存成功！" });
+                    }
+                },
+                error: function () {
+                    $("#save").linkbutton("enable");
+                }
+            });
+          
+        }
+        $.extend($.fn.validatebox.defaults.rules, {
+            //非汉字
+            ChN: {
+                validator: function (value, param) {
+                    var reg = /\u4e00-\u9fa5]*$/;
+                    return !reg.test(value); 
+                },
+                message: "不接收汉字！"
+            }
+        })
+    </script>
+</head>
+<body>
+    <form id="ff">
+        <fieldset id="dictionary">
+            <legend>数据字典信息</legend>
+
+            <div class="row">
+                <div>
+                    <label>字典类型:</label><!-- text(Name) + value(BDT_ID) -->
+                    <select name="DictionaryTypeId" class="easyui-combobox" data-options="
+                            method: 'GET',
+                            url: '../../api/DictionaryType/GetComList',
+                            valueField: 'value',
+                            textField: 'text',
+                            editable: false,
+                            required:true
+                    "></select>
+                </div>
+
+                <div>
+                    <label>字典代码:</label>
+                    <input name="Code" class="easyui-textbox" data-options="required:true,validType:'ChN'" />
+                </div>
+            </div>
+
+            <div class="row">
+                <div>
+                    <label>字典名称:</label>
+                    <input name="Name" class="easyui-textbox" data-options="required:true" />
+                </div>
+
+                <div>
+                    <label>字典父节点:</label>
+                    <!--<input name="ParentCode" class="easyui-textbox" data-options="validType:'Integer',required:true" />-->
+                    <select name="ParentCode" class="easyui-combobox" data-options="
+                            method: 'GET' ,
+                            url: '../../api/DictionaryCode/GetComList',
+                            valueField: 'value',
+                            textField: 'text',
+                            editable: false,
+                            
+                    "></select><!--panelHeight:100-->
+                </div>
+      
+            </div>
+        </fieldset>
+
+        <div id="btn">
+            <a href="javascript:void(0)" id="save" class="easyui-linkbutton" data-options="iconCls:'icon-save',onClick:Submit">保存</a>
+            <a href="javascript:void(0)" id="back" class="easyui-linkbutton" data-options="iconCls:'icon-redo',onClick:uc.form.Cancel">返回</a>
+        </div>
+    </form>
+</body>
+</html>

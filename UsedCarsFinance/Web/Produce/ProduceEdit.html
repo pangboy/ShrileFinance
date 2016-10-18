@@ -1,0 +1,302 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>产品维护</title>
+
+    <link href="../Content/easyui/themes/bootstrap/easyui.css" rel="stylesheet" />
+    <link href="../Content/easyui/themes/icon.css" rel="stylesheet" />
+    <link href="../Content/form-bootstrap.css" rel="stylesheet" />
+    <script src="../Scripts/jquery/jquery.js"></script>
+    <script src="../Scripts/easyui/jquery.easyui.js"></script>
+    <script src="../Scripts/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../Scripts/usedcars.js"></script>
+    <script>
+
+        uc.form = new UCForm(".container");
+
+        $(function () {
+            Init();
+
+            if ($("#AdditionalGPSCost").val() > 0) {
+                $("#GPScbox").attr('checked', 'checked');
+                $("#AdditionalGPSCost").textbox({ required: true });
+            } else {
+                $('#AdditionalGPSCost').textbox({ required: false });
+                $('#AdditionalGPSCost').textbox("readonly", true);
+            }
+
+            if ($("#AdditionalOtherCost").val() > 0) {
+                $("#Othercbox").attr('checked', 'checked');
+                $("#AdditionalOtherCost").textbox({ required: true });
+            } else {
+                $('#AdditionalOtherCost').textbox({ required: false });
+                $('#AdditionalOtherCost').textbox("readonly", true);
+            }
+
+            var InterestRate = $("#InterestRate").textbox('getValue');
+            if (InterestRate != "") {
+                var IRate = parseFloat(InterestRate);
+                $("#InterestRate").textbox('setValue', IRate.toFixed(2));
+            }
+
+            var Rate = $("#Rate").textbox('getValue');
+            if (Rate != "") {
+                var IRate = parseFloat(Rate);
+                $("#Rate").textbox('setValue', IRate.toFixed(2));
+            }
+        });
+
+        function Cbox1Checked() {
+            if ($("#GPScbox").is(":checked")) {
+                $("#AdditionalGPSCost").textbox({ required: true });
+                $("#AdditionalGPSCost").textbox("readonly", false);
+            }
+            else {
+                $("#AdditionalGPSCost").textbox('setValue', '0');
+                $("#AdditionalGPSCost").textbox({ required: false });
+                $("#AdditionalGPSCost").textbox("readonly", true);
+            }
+        }
+
+        function Cbox2Checked() {
+            if ($("#Othercbox").is(":checked")) {
+                $('#AdditionalOtherCost').textbox("readonly", false);
+                $("#AdditionalOtherCost").textbox({ required: true });
+            }
+            else {
+                $("#AdditionalOtherCost").textbox('setValue', '0');
+                $("#AdditionalOtherCost").textbox({ required: false });
+                $("#AdditionalOtherCost").textbox("readonly", true);
+            }
+        }
+
+        function Init() {
+            var query = uc.GetParams();
+
+            if (query.method == "mod" || query.method == "view") {
+                if (query.method == "mod") {
+
+                }
+                if (query.method == "view") {
+                    $("#save").linkbutton("disable");
+
+                    uc.form.DisableForm();
+                }
+
+                uc.form.LoadForm({
+                    params: { productID: query.ProduceId },
+                    url: "../api/Produce/Get"
+                });
+            }
+        }
+
+        var disction;
+
+        function toUppers() {
+            disction = true;
+            var CodeUpper = $("input[name='Code']").val().toUpperCase();
+            var ProduceId = $("input[name='ProduceId']").val();
+            var method = uc.GetParams().method;
+            $("input[name='Code']").val(CodeUpper);
+            $.ajax({
+                async: false,
+                type: "Get",
+                url: "../api/Produce/Option",
+                success: function (data) {
+                    for (var i = 0; i < data.length; i++) {
+                        if (method == "add") {
+                            if (CodeUpper == data[i].text && ProduceId == "") {
+                                top.$.messager.show({ msg: "产品代码重复！" });
+                                return disction = false;
+                            }
+                        }
+                        if (method == "mod") {
+                            if (CodeUpper == data[i].text && ProduceId != data[i].value) {
+                                top.$.messager.show({ msg: "产品代码重复！" });
+                                return disction = false;
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function Submit() {
+            if ($("#MinFinancingRatio").val() > 100) {
+                top.$.messager.show({ msg: "融资比例下限必须小于100！" });
+                return;
+            }
+            if ($("#MaxFinancingRatio").val() > 100) {
+                top.$.messager.show({ msg: "融资比例上限必须小于100！" });
+                return;
+            }
+            if ($("#CustomerBailRatio").val() > 100) {
+                top.$.messager.show({ msg: "客户保证金比例必须小于100！" });
+                return;
+            }
+            if ($("#FinalRatio").val() > 100) {
+                top.$.messager.show({ msg: "尾款比例必须小于100！" });
+                return;
+            }
+
+            if ($("#MinFinancingRatio").val() > $("#MaxFinancingRatio").val()) {
+                top.$.messager.show({ msg: "融资比例下限必须小于融资比例上限！" });
+                return;
+            }
+
+            toUppers();
+
+            if (disction) {
+                var produceInfo = $(".container").serializeJson();
+
+                uc.form.Submit({
+                    method: "auto",
+                    url: "../api/Produce",
+                    data: produceInfo
+                });
+            }
+        }
+    </script>
+</head>
+<body>
+    <form class="container">
+        <fieldset>
+            <legend>产品信息</legend>
+
+            <div class="hidden">
+                <input name="ProduceId" type="hidden" />
+            </div>
+
+            <div class="row">
+                <div class="col-6">
+                    <label>产品代码:</label>
+                    <input name="Code" class="easyui-textbox" data-options="required:true,validType:'length[0,100]'" />
+                </div>
+
+                <div class="col-6">
+                    <label>产品名称:</label>
+                    <input name="Name" class="easyui-textbox" data-options="required:true,validType:'length[0,100]'" />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6">
+                    <label>名义利率（年）:</label>
+                    <input id="InterestRate" name="InterestRate" class="easyui-textbox" data-options="required:true,validType:'Price'" /><span class="unit">%</span>
+                </div>
+
+                <div class="col-6">
+                    <label>费率（年）:</label>
+                    <input id="Rate" name="Rate" class="easyui-textbox" data-options="required:true,validType:'Price'" /><span class="unit">%</span>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6">
+                    <label>还款方式:</label>
+                    <select name="RepaymentMethod" class="easyui-combobox" data-options="required:true,editable:false">
+                        <option value="1">等额本息</option>
+                        <option value="2">月供提前付</option>
+                        <option value="3">一次性付息</option>
+                    </select>
+                </div>
+
+                <div class="col-6">
+                    <label>融资比例下限:</label>
+                    <input name="MinFinancingRatio" id="MinFinancingRatio" class="easyui-textbox" data-options="required:true,validType:'Integer'" /><span class="unit">%</span>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6">
+                    <label>融资比例上限:</label>
+                    <input name="MaxFinancingRatio" id="MaxFinancingRatio" class="easyui-textbox" data-options="required:true,validType:'Integer'" /><span class="unit">%</span>
+                </div>
+
+                <div class="col-6">
+                    <label>融资期限:</label>
+                    <input name="FinancingPeriods" class="easyui-textbox" data-options="required:true,validType:'Integer'" /><span class="unit">月</span>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6">
+                    <label>还款间隔:</label>
+                    <input name="RepaymentInterval" class="easyui-textbox" data-options="required:true,validType:'Integer'" /><span class="unit">月</span>
+                </div>
+
+                <div class="col-6">
+                    <label>客户保证金比例:</label>
+                    <input name="CustomerBailRatio" id="CustomerBailRatio" class="easyui-textbox" data-options="required:true,validType:'Integer'" /><span class="unit">%</span>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6">
+                    <label>客户手续费:</label>
+                    <input name="CustomerPoundage" id="CustomerPoundage" class="easyui-textbox" data-options="required:true,validType:'Price'" /><span class="unit">元</span>
+                </div>
+
+                <div class="col-6">
+                    <label>尾款比例:</label>
+                    <input name="FinalRatio" id="FinalRatio" class="easyui-textbox" data-options="required:true,validType:'Integer'" /><span class="unit">%</span>
+                </div>
+            </div>
+
+            <div class="row" id="ExtendPrice">
+                <div class="col-6">
+                    <label>GPS:</label>
+                    <input id="GPScbox" type="checkbox" onclick="Cbox1Checked()" class="easyui-validatebox"><span>是否收费</span>
+                    <input id="AdditionalGPSCost" name="AdditionalGPSCost" class="easyui-textbox" data-options="required:true,validType:'Price',width:338" /><span class="unit">元</span>
+                </div>
+                <div class="col-6">
+                    <label>其他:</label>
+                    <input id="Othercbox" type="checkbox" onclick="Cbox2Checked()" class="easyui-validatebox"><span>是否收费</span>
+                    <input id="AdditionalOtherCost" name="AdditionalOtherCost" class="easyui-textbox" data-options="required:true,validType:'Price',width:338" /><span class="unit">元</span>
+                </div>
+            </div>
+
+            <!--新增放款信息-->
+            <div class="row">
+                <div class="col-12">
+                    <label>放款信息:</label>
+                    <div class="col-3">
+                        <input id="IsVehiclePrice" name="IsVehiclePrice" type="checkbox" value="true" class="easyui-validatebox"><span>裸车价</span>
+                    </div>
+                    <div class="col-3">
+                        <input id="IsPurchaseTax" name="IsPurchaseTax" type="checkbox" value="true" class="easyui-validatebox"><span>购置税</span>
+                    </div>
+                    <div class="col-3">
+                        <input id="IsBusinessInsurance" name="IsBusinessInsurance" type="checkbox" value="true" class="easyui-validatebox"><span>商业险</span>
+                    </div>
+                    <div class="col-3">
+                        <input id="IsTafficCompulsoryInsurance" name="IsTafficCompulsoryInsurance" type="checkbox" value="true" class="easyui-validatebox"><span>交强险</span>
+                    </div>
+                    <div class="col-3">
+                        <input id="IsVehicleVesselTax" name="IsVehicleVesselTax" type="checkbox" value="true" class="easyui-validatebox"><span>车船税</span>
+                    </div>
+                    <div class="col-3">
+                        <input id="IsExtendedWarrantyInsurance" name="IsExtendedWarrantyInsurance" type="checkbox" value="true" class="easyui-validatebox"><span>延保险</span>
+                    </div>
+                    <div class="col-3">
+                        <input id="IsOther" name="IsOther" type="checkbox" value="true" class="easyui-validatebox"><span>其他</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12">
+                    <label>描述:</label>
+                    <input name="Remarks" class="easyui-textbox" data-options="multiline:true,height:66,width:900,validType:'length[0,200]'" />
+                </div>
+            </div>
+        </fieldset>
+
+        <div id="btn">
+            <a id="save" class="easyui-linkbutton" href="javascript:void(0)" data-options="iconCls:'icon-save',onClick:Submit">保存</a>
+            <a id="back" class="easyui-linkbutton" href="javascript:void(0)" data-options="iconCls:'icon-redo',onClick:uc.form.Cancel">返回</a>
+        </div>
+    </form>
+</body>
+</html>

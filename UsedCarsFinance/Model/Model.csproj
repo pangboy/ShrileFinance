@@ -1,0 +1,125 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{78D8115D-9CA8-49C9-A2C1-02DC3C7BA828}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Model</RootNamespace>
+    <AssemblyName>Model</AssemblyName>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="BankCredit\ComponentInfo.cs" />
+    <Compile Include="BankCredit\DictionaryTypeInfo.cs" />
+    <Compile Include="BankCredit\DictionaryCodeInfo.cs" />
+    <Compile Include="BankCredit\FieldsetInfo.cs" />
+    <Compile Include="BankCredit\HtmlElementInfo.cs" />
+    <Compile Include="BankCredit\InformationRecordInfo.cs" />
+    <Compile Include="BankCredit\InfoTypeInfo.cs" />
+    <Compile Include="BankCredit\MetaInfo.cs" />
+    <Compile Include="BankCredit\MessageInfo.cs" />
+    <Compile Include="BankCredit\PageInfo.cs" />
+    <Compile Include="BankCredit\ReportFilesInfo.cs" />
+    <Compile Include="BankCredit\MessageFileInfo.cs" />
+    <Compile Include="BankCredit\MessageFileTypeInfo.cs" />
+    <Compile Include="BankCredit\MessageTypeInfo.cs" />
+    <Compile Include="BankCredit\DataSegmentInfo.cs" />
+    <Compile Include="BankCredit\ReportInfo.cs" />
+    <Compile Include="BankCredit\RuleTypeInfo.cs" />
+    <Compile Include="BankCredit\SegmentRuleRelationInfo.cs" />
+    <Compile Include="BankCredit\SegmentRulesInfo.cs" />
+    <Compile Include="BankCredit\TempRecordInfo.cs" />
+    <Compile Include="Credit\AccountInfo.cs" />
+    <Compile Include="Credit\CityInfo.cs" />
+    <Compile Include="Credit\CreditInfo.cs" />
+    <Compile Include="Credit\PartnerInfo.cs" />
+    <Compile Include="Credit\ProcessUserInfo.cs" />
+    <Compile Include="Easyui.cs" />
+    <Compile Include="ConvertHelper.cs" />
+    <Compile Include="Finance\ApplicantInfo.cs" />
+    <Compile Include="Finance\BankInfo.cs" />
+    <Compile Include="Finance\BorrowInfo.cs" />
+    <Compile Include="Finance\Contractinfo.cs" />
+    <Compile Include="Finance\CreditExamineReportInfo.cs" />
+    <Compile Include="Finance\FinanceExtraInfo.cs" />
+    <Compile Include="Finance\FinanceInfo.cs" />
+    <Compile Include="Finance\FinanceNodeGroupInfo.cs" />
+    <Compile Include="Finance\OperatingInfo.cs" />
+    <Compile Include="Finance\ReviewInfo.cs" />
+    <Compile Include="Finance\VehicleInfo.cs" />
+    <Compile Include="Flow\ActionInfo.cs" />
+    <Compile Include="Flow\FlowData.cs" />
+    <Compile Include="Flow\FlowForm.cs" />
+    <Compile Include="Flow\FlowFormNode.cs" />
+    <Compile Include="Flow\FlowFormRole.cs" />
+    <Compile Include="Flow\InstanceInfo.cs" />
+    <Compile Include="Flow\LogInfo.cs" />
+    <Compile Include="Flow\NodeInfo.cs" />
+    <Compile Include="BankCredit\MetaComponentsInfo.cs" />
+    <Compile Include="Notice\ActionNoticeInfo.cs" />
+    <Compile Include="Notice\NoticeInfo.cs" />
+    <Compile Include="Mail.cs" />
+    <Compile Include="Produce\ProduceInfo.cs" />
+    <Compile Include="Sys\FileInfo.cs" />
+    <Compile Include="Sys\MenuInfo.cs" />
+    <Compile Include="Sys\Reference.cs" />
+    <Compile Include="Sys\ReferenceInfo.cs" />
+    <Compile Include="User\PermissionsInfo.cs" />
+    <Compile Include="Sys\OperationLogInfo.cs" />
+    <Compile Include="User\RoleInfo.cs" />
+    <Compile Include="Sys\DictionaryInfo.cs" />
+    <Compile Include="Sys\DictionaryTypeInfo.cs" />
+    <Compile Include="User\UserInfo.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Flow\FlowInfo.cs" />
+    <Compile Include="Vehicle\ConfigInfo.cs" />
+    <Compile Include="Vehicle\IVehicleInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

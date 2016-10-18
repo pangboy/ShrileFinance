@@ -1,0 +1,88 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>授信账号管理</title>
+	<meta charset="utf-8" />
+    <link href="../Content/easyui/themes/gray/easyui.css" rel="stylesheet" />
+    <link href="../Content/easyui/themes/icon.css" rel="stylesheet" />
+    <script src="../Scripts/jquery/jquery.js"></script>
+    <script src="../Scripts/easyui/jquery.easyui.js"></script>
+    <script src="../Scripts/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../Scripts/usedcars.js"></script>
+    <script>
+        uc.grid = new UCGrid("#dg");
+
+        function SetFilters(params) {
+            params.CreditId = $("#CreditName").combobox("getValue");
+        }
+
+        function CreditAccountEdit() {
+            var url = "Credit/CreditAccountEdit.html?method=" + this.id;
+
+            if (this.id != "add") {
+                var row = uc.grid.GetSelected();
+
+                if (row) {
+                    url += "&userId=" + row.UI_ID;
+                }
+                else {
+                    return;
+                }
+            }
+
+            uc.ShowWindow("授信账户信息", url);
+        }
+    </script>
+</head>
+<body>
+    <table id="dg" class="easyui-datagrid" data-options="
+           height:630,
+           toolbar: '#tb',
+           rownumbers:true,
+           singleSelect: true,
+           pagination: true,
+           pageSize: 20,
+           pageList: [10,20,30,40,50],
+           method: 'GET',
+           url: '../api/CreditAccount/List',
+           onBeforeLoad: SetFilters,
+           loadMsg: '正在加载，请稍候...',
+           ">
+        <thead>
+            <tr>
+                <th data-options="field:'UI_ID',hidden:true">UI_ID</th>
+                <th data-options="field:'CreditId',hidden:true">CreditId</th>
+                <th data-options="field:'Name',width:150,align:'center'">授信主体</th>
+                <th data-options="field:'RoleName',width:100,align:'center'">角色</th>
+                <th data-options="field:'Username',width:100,align:'center'">帐号</th>
+                <th data-options="field:'Realname',width:100,align:'center'">姓名</th>
+                <th data-options="field:'Email',width:200,align:'center'">邮箱</th>
+                <th data-options="field:'Mobile',width:100,align:'center'">手机</th>
+                <th data-options="field:'StatusDesc',width:100,align:'center'">状态</th>
+                <th data-options="field:'RegisterDate',width:150,align:'center'">注册日期</th>
+                <th data-options="field:'Remarks',align:'left'">备注</th>
+            </tr>
+        </thead>
+    </table>
+
+    <div id="tb">
+        <div>
+            <label for="CreditName">授信主体:</label>
+            <input id="CreditName" class="easyui-combobox" style="width: 200px" data-options="
+                method: 'GET',
+				url:'../api/Credit/Option',
+				editable:false
+             "/>
+            <a id="search" class="easyui-linkbutton" href="javascript:void(0)" data-options="onClick:uc.grid.Reload,iconCls:'icon-search',plain:true">搜索</a>
+            <a id="reset" class="easyui-linkbutton" href="javascript:void(0)" data-options="onClick:uc.grid.Reset,iconCls:'icon-reload',plain:true">重置</a>
+        </div>
+
+        <div>
+            <a id="add" class="easyui-linkbutton" href="javascript:void(0)" data-options="onClick:CreditAccountEdit,iconCls:'icon-add',plain:true">添加</a>
+            <a id="mod" class="easyui-linkbutton" href="javascript:void(0)" data-options="onClick:CreditAccountEdit,iconCls:'icon-edit',plain:true">修改</a>
+            <a id="view" class="easyui-linkbutton" href="javascript:void(0)" data-options="onClick:CreditAccountEdit,iconCls:'icon-search',plain:true">查看详情</a>
+        </div>
+    </div>
+</body>
+</html>

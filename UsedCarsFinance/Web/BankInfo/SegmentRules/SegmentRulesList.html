@@ -1,0 +1,73 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>段规则</title>
+    <meta charset="utf-8" />
+    <link href="../../Content/easyui/themes/gray/easyui.css" rel="stylesheet" />
+    <link href="../../Content/easyui/themes/icon.css" rel="stylesheet" />
+    <script src="../../Scripts/jquery/jquery.js"></script>
+    <script src="../../Scripts/easyui/jquery.easyui.js"></script>
+    <script src="../../Scripts/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../../Scripts/usedcars.js"></script>
+    <script>
+        uc.grid = new UCGrid("#dg");
+
+        function DictionaryEdit() {
+            var url = "BankInfo/SegmentRules/SegmentRulesEdit.html?method=" + this.id;
+            //var url = "SegmentRulesEdit.html?method=" + this.id;
+            if (this.id != "add") {
+                var row = uc.grid.GetSelected();
+
+                if (row) {
+                    url += "&BSR_ID=" + row.BSR_ID;
+                    url += "&MetaCode=" + row.MetaCode;
+                    //url += "&BDS_ID=" + row.BDS_ID;
+                }
+                else {
+                    return;
+                }
+            }
+           //window.open(url);
+           uc.ShowWindow("段规则", url);
+        }
+    </script>
+</head>
+
+<body>
+    <table id="dg" class="easyui-datagrid" data-options="
+        height: 630,
+        toolbar: '#tb',
+        rownumbers:true,
+        singleSelect: true,
+        pagination: true,
+        pageSize: 20,
+        pageList: [20,30,40,50],
+        method: 'GET',
+        url: '../../api/SegmentRule/PageList',
+        loadMsg: '正在加载，请稍候...',
+        ">
+        <thead>
+            <tr>
+                <th data-options="field:'BSR_ID',width:120,align:'center',hidden:true">段规则ID</th>
+                <th data-options="field:'ParagraphName',width:120,align:'center'">数据段名称</th>
+                <th data-options="field:'BDS_ID',width:120,align:'center',hidden:true">数据段ID</th>
+                <th data-options="field:'Name',width:120,align:'center'">元代码名称</th>
+                <th data-options="field:'MetaCode',width:120,align:'center',hidden:false">元代码ID</th>
+                <th data-options="field:'Position',width:120,align:'center'">位置</th>
+                <th data-options="field:'IsRequired',width:120,align:'center'">是否必填</th>
+                <th data-options="field:'Description',width:240,align:'center'">描述</th>
+                <th data-options="field:'EP',width:80,align:'center'">企业/个人</th>
+            </tr>
+        </thead>
+    </table>
+
+    <div id="tb">
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <a id="add" class="easyui-linkbutton" href="javascript:void(0)" data-options="onClick:DictionaryEdit,iconCls:'icon-add',plain:true">添加</a>
+        &nbsp;
+        <a id="mod" class="easyui-linkbutton" href="javascript:void(0)" data-options="onClick:DictionaryEdit,iconCls:'icon-edit',plain:true">修改</a>
+        &nbsp;
+        <a id="view" class="easyui-linkbutton" href="javascript:void(0)" data-options="onClick:DictionaryEdit,iconCls:'icon-search',plain:true">查看</a>
+    </div>
+</body>
+</html>

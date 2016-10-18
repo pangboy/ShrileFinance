@@ -1,0 +1,105 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title>权限分配</title>
+	<meta charset="utf-8" />
+	<link href="../Content/easyui/themes/gray/easyui.css" rel="stylesheet" />
+	<link href="../Content/easyui/themes/icon.css" rel="stylesheet" />
+	<script src="../Scripts/jquery/jquery.js"></script>
+	<script src="../Scripts/easyui/jquery.easyui.js"></script>
+	<script src="../Scripts/easyui/locale/easyui-lang-zh_CN.js"></script>
+	<script src="../Scripts/usedcars.js"></script>
+	<script>
+		function ChangeRole() {
+			$("#tree").tree("reload");
+		}
+
+		function SetFilters(node, param) {
+			var role = $("#role");
+
+			//首次加载多选框未渲染, 不能使用getValue方法.
+			param.roleId = (role.css("display") == "none") ? role.combobox("getValue") : "3";
+		}
+
+		function LoadFilter(data, p) {
+			var trees = [];
+
+			$(data).each(function () {
+				var tree = {
+					id: this.MenuId,
+					text: this.Name,
+					children: (this.Children.length > 0) ? [] : undefined
+				};
+
+				$(this.Children).each(function () {
+					tree.children.push({
+						id: this.MenuId,
+						text: this.Name,
+						checked: this.HasPermission
+					});
+				});
+
+				trees.push(tree);
+			});
+
+			return trees;
+		}
+
+		function Submit() {
+			var roleId = $("#role").combobox("getValue");
+			var trees = $("#tree").tree("getChecked", ["checked", "indeterminate"]);
+
+			if (roleId) {
+				var menus = [];
+
+				$(trees).each(function () {
+					menus.push(this.id);
+				});
+
+				$.ajax({
+					data: { RoleId: roleId, Menus: menus },
+					type: 'POST',
+					url: '../api/User/PermissionEdit',
+					statusCode: {
+						200: function (data) {
+							$.messager.show({ msg: "保存成功！" });
+						},
+						400: function () {
+							$.messager.show({ msg: "保存失败！" });
+						}
+					}
+				});
+			}
+			else {
+				$.messager.show({ msg: "请选择一个角色！" });
+			}
+		}
+	</script>
+</head>
+<body>
+	<div>
+		<label for="role">请选择角色:</label>
+		<select id="role" class="easyui-combobox" data-options="
+			url:'../api/Role/GetAll',
+			method: 'GET',
+            width:150,
+            singleSelect:true,
+            onSelect:ChangeRole,
+			editable:false,
+			value:3
+		"></select>
+
+		<a href="javascript:void(0)" id="save" class="easyui-linkbutton" data-options="onClick:Submit" style="margin-left:30px">保存</a>
+	</div>
+
+	<div style="margin-top:30px;">
+		<ul id="tree" class="easyui-tree" data-options="
+			url:'../api/Menu/Tree',
+			method:'GET',
+            checkbox:true,
+			loadFilter:LoadFilter,
+			onBeforeLoad:SetFilters
+        "></ul>
+	</div>
+</body>
+</html>

@@ -1,0 +1,159 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<title>用户管理</title>
+	<meta charset="utf-8" />
+	<link href="../Content/easyui/themes/gray/easyui.css" rel="stylesheet" />
+	<link href="../Content/easyui/themes/icon.css" rel="stylesheet" />
+	<script src="../Scripts/jquery/jquery.js"></script>
+	<script src="../Scripts/easyui/jquery.easyui.js"></script>
+	<script src="../Scripts/easyui/locale/easyui-lang-zh_CN.js"></script>
+	<script src="../Scripts/usedcars.js"></script>
+	<script>
+		uc.grid = new UCGrid("#dg");
+
+		function SetFilters(params) {
+			params.UR_ID = $("#RoleId").textbox("getValue");
+			params.RealName = $("#RealName").textbox("getValue");
+		}
+
+		function UserEdit() {
+			var url = "Account/UserEdit.html?method=" + this.id;
+
+			if (this.id != "add") {
+				var row = uc.grid.GetSelected();
+
+				if (row) {
+					url += "&userId=" + row.UI_ID;
+				}
+				else {
+					return;
+				}
+			}
+
+			uc.ShowWindow("用户信息", url);
+		}
+		function EnableUser() {
+			var row = uc.grid.GetSelected();
+
+			if (row) {
+				if (row.Status == 0) {
+					$.ajax({
+						async: true,
+						data: { userId: row.UI_ID },
+						type: "GET",
+						url: "../api/User/Enable",
+						statusCode: {
+							200: function (data) {
+								top.$.messager.show({ msg: "启用成功！" });
+
+								uc.grid.Reload();
+							}
+						}
+					});
+				} else {
+					top.$.messager.show({ msg: "该用户已启用！" });
+				}
+			}
+		}
+		function DisableUser() {
+			var row = uc.grid.GetSelected();
+
+			if (row) {
+				if (row.Status == 1) {
+					$.ajax({
+						async: true,
+						data: { userId: row.UI_ID },
+						type: "GET",
+						url: "../api/User/Disable",
+						statusCode: {
+							200: function (data) {
+								top.$.messager.show({ msg: "禁用成功！" });
+
+								uc.grid.Reload();
+							}
+						}
+					});
+				} else {
+					top.$.messager.show({ msg: "该用户已停用！" });
+				}
+			}
+		}
+		function ResetPassword() {
+			$.messager.confirm('确认', '确定重置该用户密码吗?<br />重置后密码为123456!', function (r) {
+				if (r) {
+					var row = uc.grid.GetSelected();
+
+					if (row) {
+						$.ajax({
+							async: true,
+							data: { userId: row.UI_ID },
+							type: "GET",
+							url: "../api/User/ResetPassword",
+							statusCode: {
+								200: function (data) {
+									top.$.messager.show({ msg: "重置成功！" });
+								}
+							}
+						});
+					}
+				}
+			});
+		}
+	</script>
+</head>
+
+<body>
+	<table id="dg" class="easyui-datagrid" data-options="
+        height: 630,
+        toolbar: '#tb',
+        rownumbers:true,
+        singleSelect: true,
+        pagination: true,
+        pageSize: 20,
+        pageList: [10,20,30,40,50],
+        method: 'GET',
+        url: '../api/User/GetAll',
+        onBeforeLoad: SetFilters,
+        loadMsg: '正在加载，请稍候...'
+        ">
+		<thead>
+			<tr>
+				<th data-options="field:'UI_ID',hidden:true">UI_ID</th>
+				<th data-options="field:'Username',width:100,align:'center'">帐号</th>
+				<th data-options="field:'RoleName',width:100,align:'center'">角色</th>
+				<th data-options="field:'RealName',width:200,align:'center'">姓名</th>
+				<th data-options="field:'Email',width:200,align:'center'">邮箱</th>
+				<th data-options="field:'Mobile',width:100,align:'center'">手机</th>
+				<th data-options="field:'StatusDesc',width:100,align:'center'">状态</th>
+				<th data-options="field:'RegisterDate',width:150,align:'center'">注册日期</th>
+				<th data-options="field:'Remarks',align:'left'">备注</th>
+			</tr>
+		</thead>
+	</table>
+
+	<div id="tb">
+		<div>
+			<label for="RoleId">角色类型:</label>
+			<select id="RoleId" class="easyui-combobox" style="width: 100px" data-options="
+				method: 'GET',
+				url:'../api/Role/GetAll',
+				editable:false
+			"></select>
+			<label for="RealName">用户姓名:</label>
+			<input id="RealName" class="easyui-textbox" style="width: 100px" />
+			<a id="search" class="easyui-linkbutton" href="javascript:void(0)" data-options="onClick:uc.grid.Reload,iconCls:'icon-search',plain:true">搜索</a>
+			<a id="reset" class="easyui-linkbutton" href="javascript:void(0)" data-options="onClick:uc.grid.Reset,iconCls:'icon-reload',plain:true">重置</a>
+		</div>
+
+		<div>
+			<a id="add" class="easyui-linkbutton" href="javascript:void(0)" data-options="onClick:UserEdit,iconCls:'icon-add',plain:true">添加用户</a>
+			<a id="mod" class="easyui-linkbutton" href="javascript:void(0)" data-options="onClick:UserEdit,iconCls:'icon-edit',plain:true">修改用户</a>
+			<a id="view" class="easyui-linkbutton" href="javascript:void(0)" data-options="onClick:UserEdit,iconCls:'icon-search',plain:true">查看详情</a>
+			<a id="reset_password" class="easyui-linkbutton" href="javascript:void(0)" data-options="onClick:ResetPassword,iconCls:'icon-lock',plain:true">重置密码</a>
+			<a id="user_enable" class="easyui-linkbutton" href="javascript:void(0)" data-options="onClick:EnableUser,iconCls:'icon-ok',plain:true">启用帐号</a>
+			<a id="user_disable" class="easyui-linkbutton" href="javascript:void(0)" data-options="onClick:DisableUser,iconCls:'icon-cancel',plain:true">停用帐号</a>
+		</div>
+	</div>
+</body>
+</html>

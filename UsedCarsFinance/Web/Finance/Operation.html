@@ -1,0 +1,669 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>运营信息录入</title>
+    <meta charset="utf-8" />
+    <link href="../Content/easyui/themes/bootstrap/easyui.css" rel="stylesheet" />
+    <link href="../Content/easyui/themes/icon.css" rel="stylesheet" />
+    <link href="../Content/form-bootstrap.css" rel="stylesheet" />
+    <script src="../Scripts/jquery/jquery.js"></script>
+    <script src="../Scripts/easyui/jquery.easyui.js"></script>
+    <script src="../Scripts/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../Scripts/usedcars.js"></script>
+    <script>
+        uc.form = new UCForm("#finance_ff");
+
+        $(function () {
+            Init();
+        });
+
+        function Init() {
+            //合并URL参数和流程参数
+            var query = $.extend(uc.GetParams(), parent.flow.InstanceData);
+
+            // 加载数据
+            LoadData(query);
+
+            // 切换页面状态
+            ChangeStatus(query);
+
+            //$("#OncePayMonthsDiv").hide();
+            //$("#OncePayMonths").textbox({ required: false });
+
+        }
+
+        // 加载数据
+        function LoadData(query)
+        {
+            // 加载所有产品信息
+            LoadAllProduce();
+
+            // 加载品牌
+            LoadBrand();
+
+            if (query.FinanceId) {
+                $("#FinanceId").textbox("setValue", query.FinanceId);
+                $("input[name=FinanceId]").val(query.FinanceId);
+
+                // 加载银行信息
+                LoadBankInfo(query.FinanceId);
+
+                // 加载融资信息、融资扩展信息
+                LoadFinanceData(query.FinanceId);
+            }
+        }
+
+        // 切换页面状态
+        function ChangeStatus(query) {
+
+            if (query.Status == undefined)
+            {
+                query.Status = "0";
+            }
+
+            if (query.Status == "0") {
+                $("#applicant_tb .l-btn:lt(3)").hide()
+
+                uc.form.DisableForm();
+            }
+            else {
+                // 加载临时数据
+                LoadTempData();
+            }
+        }
+
+        // 验证数据
+        function ValidData() {
+            //申请信息验证
+            if (!$("#finance_ff").form("validate")) {
+                // $.messager.show({ msg: "请填写剩下的必填内容!" });
+
+                return false;
+            }
+
+            return true;
+        }
+
+        // 构建数据
+        function BuildData() {
+            var creditInfo = $("#CreditInfo").serializeJson();
+            var applicantInfo = $("#ApplicantInfo").serializeJson();
+            var value = $.extend({
+                BankInfos: [creditInfo, applicantInfo],
+                VehicleInfo: $.extend(
+            		{},
+            		$("#vehicle_info").serializeJson()
+            	),
+                Finance: $("#financeScope").serializeJson(),
+                FinanceExtra: $("#financeScope").serializeJson()
+            }, $("input[name=FinanceId]").val());
+
+            var result = {};
+            result["formName"] = "信息录入";
+            result["buildData"] = value;
+
+            return result;
+        }
+
+        // 加载融资信息
+        function LoadFinanceData(financeId) {
+            uc.form.LoadForm({
+                async: false,
+                params: { financeId: financeId },
+                url: "../api/Finance/Get",
+                onLoadSuccess: function (data) {
+                    // 加载产品融资范围预期金额
+                    uc.form.Load(data.FinanceExtraInfo, "#finance_ff");
+
+                    // 加载融资信息
+                    uc.form.Load(data.FinanceInfo, "#finance_ff");
+
+                    // 加载车辆信息
+                    uc.form.Load(data.VehicleInfo, "#finance_ff");
+
+                    // 加载车辆品牌等信息
+                    $("select[comboname='MakeCode']").combobox("unselect", data.VehicleInfo.MakeCode).combobox("select", data.VehicleInfo.MakeCode);
+                    $("select[comboname='FamilyCode']").combobox("select", data.VehicleInfo.FamilyCode);
+                    $("select[comboname='VehicleKey']").combobox("select", data.VehicleInfo.VehicleKey);
+
+                    //$("#OncePayMonths").textbox("setValue", data.FinanceInfo.OncePayMonths);
+
+                    // 选择产品
+                    if (data.FinanceInfo.ProduceId != null) {
+                        $("input[name = 'ProduceId']").val(data.FinanceInfo.ProduceId);
+                        // 加载产品信息
+                        $("select[comboname='Code']").combobox("unselect", data.FinanceInfo.ProduceId).combobox("select", data.FinanceInfo.ProduceId);
+                    }
+                }
+            });
+        }
+
+        // 加载银行信息
+        function LoadBankInfo(financeId) {
+            $.ajax({
+                method: "GET",
+                async: true,
+                url: "../api/Finance/LoanBankInfoLoad",
+                data: { financeId: financeId },
+                statusCode: {
+                    200: function (data) {
+                        if (data.length > 0) {
+                            // 加载银行信息
+                            $("#CreditInfo").form("load", data[0]);
+                            $("#ApplicantInfo").form("load", data[1]);
+                        }
+                    }
+                }
+            });
+
+            // 还款账户
+            $.ajax({
+                method: "GET",
+                async: true,
+                url: "../api/Applicant/Option",
+                data: { financeId: financeId },
+                statusCode: {
+                    200: function (data) {
+                        if (data) {
+                            debugger
+                            $("input[textboxname = 'ApplicantName']").textbox("setValue", data.Name);
+                            $("input[name='ApplicantId']").val(data.ApplicantId);
+                        }
+                    }
+                }
+            });
+
+        }
+
+        // 加载临时数据
+        function LoadTempData() {
+            var data = parent.flow.InstanceTempData.D8;
+
+            if (data) {
+                uc.form.Load(data, "#finance_ff");
+
+                if (data.VehicleInfo.PlateNo != "") {
+                    $("input[textboxname = 'PlateNo']").textbox("setValue", data.VehicleInfo.PlateNo);
+                }
+                if (data.VehicleInfo.FrameNo != "") {
+                    $("input[textboxname = 'FrameNo']").textbox("setValue", data.VehicleInfo.FrameNo);
+                }
+                if (data.VehicleInfo.EngineNo != "") {
+                    $("input[textboxname = 'EngineNo']").textbox("setValue", data.VehicleInfo.EngineNo);
+                }
+                if (data.VehicleInfo.BuyCarPrice != "") {
+                    $("input[textboxname = 'BuyCarPrice']").textbox("setValue", data.VehicleInfo.BuyCarPrice);
+                }
+                if (data.VehicleInfo.RegisterCity != "") {
+                    $("input[textboxname = 'RegisterCity']").textbox("setValue", data.VehicleInfo.RegisterCity);
+                }
+                
+                $("#financeScope").form("load",data.Finance);
+
+                //$("input[textboxname = 'ActualVehiclePrice']").textbox("setValue", data.Finance.ActualVehiclePrice);
+                //$("input[textboxname = 'ActualPurchaseTaxPrice']").textbox("setValue", data.Finance.ActualPurchaseTaxPrice);
+                //$("input[textboxname = 'ActualBusinessInsurancePrice']").textbox("setValue", data.Finance.ActualBusinessInsurancePrice);
+                //$("input[textboxname = 'ActualTafficCompulsoryInsurancePrice']").textbox("setValue", data.Finance.ActualTafficCompulsoryInsurancePrice);
+                //$("input[textboxname = 'ActualVehicleVesselTaxPrice']").textbox("setValue", data.Finance.ActualVehicleVesselTaxPrice);
+                //$("input[textboxname = 'ActualExtendedWarrantyInsurancePrice']").textbox("setValue", data.Finance.ActualExtendedWarrantyInsurancePrice);
+                //$("input[textboxname = 'ActualOtherPrice']").textbox("setValue", data.Finance.ActualOtherPrice);
+
+                //$("input[textboxname = 'MarginMoney']").textbox("setValue", data.Finance.MarginMoney);
+                //$("input[textboxname = 'PaymonthlyMoney']").textbox("setValue", data.Finance.PaymonthlyMoney);
+                //$("input[textboxname = 'OnepayInterestMoney']").textbox("setValue", data.Finance.OnepayInterestMoney);
+                //$("input[textboxname = 'ActualcashMoney']").textbox("setValue", data.Finance.ActualcashMoney);
+
+                // 加载银行信息
+                $("#CreditInfo").form("load", data.BankInfos[0]);
+                $("#ApplicantInfo").form("load", data.BankInfos[1]);
+            }
+        }
+
+        // 加载产品信息
+        function LoadProduceInfo(record) {
+            $.ajax({
+                async: false,
+                method: "GET",
+                url: "../api/Produce/Get",
+                data: { productId: record.value },
+                statusCode: {
+                    200: function (data) {
+                        // 加载产品信息
+                        uc.form.Load(data);
+
+                        // 设置产品融资范围预期金额的显示，并添加验证
+                        if (data.IsVehiclePrice == true) {
+                            $('#VehiclePrice').show();
+                            var defaultValue = $("input[textboxname = 'VehiclePrice']").textbox("getValue");
+                            $("input[textboxname = 'ActualVehiclePrice']").textbox({
+                                validType: ['Price', "valueLimit[" + defaultValue + "]"],
+                            });
+                        }
+                        if (data.IsPurchaseTax == true) {
+                            $('#PurchaseTaxPrice').show();
+                            var defaultValue = $("input[textboxname = 'PurchaseTaxPrice']").textbox("getValue");
+                            $("input[textboxname = 'ActualPurchaseTaxPrice']").textbox({
+                                validType: ['Price', "valueLimit[" + defaultValue + "]"],
+                            });
+                        }
+                        if (data.IsBusinessInsurance == true) {
+                            $('#BusinessInsurancePrice').show();
+                            var defaultValue = $("input[textboxname = 'BusinessInsurancePrice']").textbox("getValue");
+                            $("input[textboxname = 'ActualBusinessInsurancePrice']").textbox({
+                                validType: ['Price', "valueLimit[" + defaultValue + "]"],
+                            });
+                        }
+                        if (data.IsTafficCompulsoryInsurance == true) {
+                            $('#TafficCompulsoryInsurancePrice').show();
+                            var defaultValue = $("input[textboxname = 'TafficCompulsoryInsurancePrice']").textbox("getValue");
+                            $("input[textboxname = 'ActualTafficCompulsoryInsurancePrice']").textbox({
+                                validType: ['Price', "valueLimit[" + defaultValue + "]"],
+                            });
+                        }
+                        if (data.IsVehicleVesselTax == true) {
+                            $('#VehicleVesselTaxPrice').show();
+                            var defaultValue = $("input[textboxname = 'VehicleVesselTaxPrice']").textbox("getValue");
+                            $("input[textboxname = 'ActualVehicleVesselTaxPrice']").textbox({
+                                validType: ['Price', "valueLimit[" + defaultValue + "]"],
+                            });
+                        }
+                        if (data.IsExtendedWarrantyInsurance == true) {
+                            $('#ExtendedWarrantyInsurancePrice').show();
+                            var defaultValue = $("input[textboxname = 'ExtendedWarrantyInsurancePrice']").textbox("getValue");
+                            $("input[textboxname = 'ActualExtendedWarrantyInsurancePrice']").textbox({
+                                validType: ['Price', "valueLimit[" + defaultValue + "]"],
+                            });
+                        }
+                        if (data.IsOther == true) {
+                            $('#OtherPrice').show();
+                            var defaultValue = $("input[textboxname = 'OtherPrice']").textbox("getValue");
+                            $("input[textboxname = 'ActualOtherPrice']").textbox({
+                                validType: ['Price', "valueLimit[" + defaultValue + "]"],
+                            });
+                        }
+                    }
+                }
+            });
+        }
+
+        // 验证扩展(融资金额不得超过预估金额)
+        $.extend($.fn.validatebox.defaults.rules, {
+            valueLimit: {
+                validator: function (value, param) {
+                    return parseFloat(value) <= parseFloat(param[0]);
+                },
+                message: '融资金额不得超过预估金额！'
+            }
+        });
+       
+    </script>
+</head>
+<body>
+    <form id="finance_ff" class="container">
+        <!-- 放还款信息 -->
+        <fieldset id="BankInfo">
+            <!-- 放款账号信息 -->
+            <fieldset id="CreditInfo">
+                <legend>放款账号信息</legend>
+                <div class="row">
+                    <div class="col-6">
+                        <label>收款账户:</label>
+                        <select name="CreditId" class="easyui-combobox" data-options="method:'GET',
+                            url:'../api/Credit/Option',                          
+                            editable:false,
+                            required:true,
+                        "></select>
+                    </div>
+                    <div class="col-6">
+                        <label>开户行:</label>
+                        <input name="BankName" class="easyui-textbox" data-options="required:true" />
+                    </div>
+                    <div class="col-6">
+                        <label>卡号:</label>
+                        <input name="BankCard" class="easyui-textbox" data-options="required:true" />
+                    </div>
+                </div>
+            </fieldset>
+
+            <!-- 还款账号信息 -->
+            <fieldset id="ApplicantInfo">
+                <legend>还款账号信息</legend>
+                <div class="row">
+                    <div class="col-6">
+                        <label>还款用户:</label>
+                        <input name="ApplicantId" type="hidden" />
+                        <input name="ApplicantName" class="easyui-textbox" data-options="
+                                editable:false,
+                                required:true "/>
+                    </div>
+                    <div class="col-6">
+                        <label>开户行:</label>
+                        <input name="BankName" class="easyui-textbox" data-options="required:true" />
+                    </div>
+                    <div class="col-6">
+                        <label>卡号:</label>
+                        <input name="BankCard" class="easyui-textbox" data-options="required:true" />
+                    </div>
+                </div>
+            </fieldset>
+        </fieldset>
+
+        <!-- 车辆信息 -->
+        <fieldset id="vehicle_info">
+            <legend>车辆信息</legend>
+            <div class="row">
+                <div class="col-6">
+                    <label>车辆品牌:</label>
+                    <select name="MakeCode" disabled class="easyui-combobox" data-options="
+                            onSelect:SelectModel,
+                            required:true,
+                            editable:false
+                            "></select>
+                </div>
+
+                <div class="col-6">
+                    <label>车辆系列:</label>
+                    <select name="FamilyCode" disabled class="easyui-combobox" data-options="
+                            onSelect:SelectCarConfigure,
+                            editable:false,
+                            required:true"></select>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12">
+                    <label>车辆车型:</label>
+                    <select name="VehicleKey" disabled class="easyui-combobox" data-options="
+                            required:true,
+                            editable:false
+                            "></select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-6">
+                    <label>车牌号:</label>
+                    <input name="PlateNo" class="easyui-textbox" data-options="required:true,validType:'PlateNo'" />
+                </div>
+                <div class="col-6">
+                    <label>车架号:</label>
+                    <input name="FrameNo" class="easyui-textbox" data-options="required:true,validType:'length[17,17]'" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-6">
+                    <label>发动机号:</label>
+                    <input name="EngineNo" class="easyui-textbox" data-options="required:true" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-6">
+                    <label>购买价格:</label>
+                    <input name="BuyCarPrice" class="easyui-textbox" data-options="validType:'Price',required:true" />
+                    <span class="unit">万元</span>
+                </div>
+
+                <div class="col-6">
+                    <label>上牌城市:</label>
+                    <input name="RegisterCity" class="easyui-textbox" data-options="required:true" />
+                </div>
+            </div>
+            <script>
+                // 加载车牌
+                function LoadBrand() {
+                    $.ajax({
+                        async: false,
+                        method: "GET",
+                        url: '../api/CarHome/GetBrand',
+                        statusCode: {
+                            200: function (data) {
+                                $("select[comboname='MakeCode']").combobox("loadData", data);
+                            }
+                        }
+                    });
+                }
+
+                // 品牌选择
+                function SelectModel(record) {
+                    $("select[comboname='FamilyCode']").combobox("clear");
+                    $("select[comboname='VehicleKey']").combobox("clear");
+                    $.ajax({
+                        async: false,
+                        data: { brandCode: record.value },
+                        method: 'GET',
+                        url: '../api/CarHome/GetSeries',
+                        statusCode: { 200: function (data) { $("select[comboname='FamilyCode']").combobox("loadData", data); } }
+                    });
+                }
+
+                // 系列选择
+                function SelectCarConfigure(record) {
+                    $("select[comboname='VehicleKey']").combobox("clear");
+                    $.ajax({
+                        async: false,
+                        data: { brandCode: $("select[comboname='MakeCode']").combobox("getValue"), seriesCode: record.value },
+                        method: 'GET',
+                        url: '../api/CarHome/GetVehicle',
+                        statusCode: { 200: function (data) { $("select[comboname='VehicleKey']").combobox("loadData", data); } }
+                    });
+                }
+            </script>
+        </fieldset>
+
+        <!-- 产品信息 -->
+        <fieldset id="produce_info">
+            <legend>产品信息</legend>
+
+            <div class="row">
+                <div class="col-6">
+                    <label>产品代码:</label>
+                    <select name="Code" class="easyui-combobox" data-options="editable:false,onSelect:LoadProduceInfo" disabled></select>
+                </div>
+
+                <div class="col-6">
+                    <label>产品名称:</label>
+                    <input name="Name" class="easyui-textbox" disabled />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6">
+                    <label>费率（年）:</label>
+                    <input name="Rate" class="easyui-textbox" data-options="validType:'Numerical'" disabled />
+                    <span class="unit">%</span>
+                </div>
+
+                <div class="col-6">
+                    <label>还款方式:</label>
+                    <input name="RepaymentMethodDesc" class="easyui-textbox" disabled />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6">
+                    <label>融资比例区间:</label>
+                    <input name="MinFinancingRatio" class="easyui-textbox" style="width:190px;" disabled />
+                    <span style="display:inline-block;width:22px; text-align:center;">-</span>
+                    <input name="MaxFinancingRatio" class="easyui-textbox" style="width:190px;" disabled />
+                    <span class="unit">%</span>
+                </div>
+
+                <div class="col-6">
+                    <label>尾款比例:</label>
+                    <input name="FinalRatio" class="easyui-textbox" disabled />
+                    <span class="unit">%</span>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6">
+                    <label>融资期限:</label>
+                    <input name="FinancingPeriods" class="easyui-textbox" disabled />
+                    <span class="unit">月</span>
+                </div>
+
+                <div class="col-6">
+                    <label>还款间隔:</label>
+                    <input name="RepaymentInterval" class="easyui-textbox" disabled />
+                    <span class="unit">月</span>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6">
+                    <label>客户保证金比例:</label>
+                    <input name="CustomerBailRatio" class="easyui-textbox" disabled />
+                    <span class="unit">%</span>
+                </div>
+
+                <div class="col-6">
+                    <label>客户手续费:</label>
+                    <input name="CustomerPoundage" class="easyui-textbox" disabled />
+                    <span class="unit">元</span>
+                </div>
+            </div>
+            <script>
+                // 加载所有产品信息
+                function LoadAllProduce() {
+                    $.ajax({
+                        async: false,
+                        method: "GET",
+                        url: '../api/Produce/Option',
+                        statusCode: {
+                            200: function (data) {
+                                $("select[comboname='Code']").combobox("loadData", data);
+                            }
+                        }
+                    });
+                }
+            </script>
+        </fieldset>
+
+        <!-- 融资范围 -->
+        <fieldset id="financeScope">
+            <div class="hidden">
+                <input name="FinanceId" type="hidden" />
+                <input name="ProduceId" type="hidden" />
+            </div>
+            <legend>融资范围</legend>
+            <div class="row" id="VehiclePrice" style="display:none">
+                <div class="col-6">
+                    <span>裸车价 - 预估金额</span>
+                    <input type="text" name="VehiclePrice" readonly class="easyui-textbox" />
+                    <span class="unit">元</span>
+                </div>
+                <div class="col-6">
+                    <span>裸车价 - 融资金额</span>
+                    <input type="text" name="ActualVehiclePrice" class="easyui-textbox" data-options="validType:'Price'" />
+                    <span class="unit">元</span>
+                </div>
+            </div>
+
+            <div class="row" id="PurchaseTaxPrice" style="display:none">
+                <div class="col-6">
+                    <span>购置税 - 预估金额</span>
+                    <input type="text" name="PurchaseTaxPrice" readonly class="easyui-textbox" />
+                    <span class="unit">元</span>
+                </div>
+                <div class="col-6">
+                    <span>购置税 - 融资金额</span>
+                    <input type="text" name="ActualPurchaseTaxPrice" class="easyui-textbox" data-options="validType:'Price'" />
+                    <span class="unit">元</span>
+                </div>
+            </div>
+
+            <div class="row" id="BusinessInsurancePrice" style="display:none">
+                <div class="col-6">
+                    <span>商业险 - 预估金额</span>
+                    <input type="text" name="BusinessInsurancePrice" readonly class="easyui-textbox" />
+                    <span class="unit">元</span>
+                </div>
+                <div class="col-6">
+                    <span>商业险 - 融资金额</span>
+                    <input type="text" name="ActualBusinessInsurancePrice" class="easyui-textbox" data-options="validType:'Price'" />
+                    <span class="unit">元</span>
+                </div>
+            </div>
+
+            <div class="row" id="TafficCompulsoryInsurancePrice" style="display:none">
+                <div class="col-6">
+                    <span>交强险 - 预估金额</span>
+                    <input type="text" name="TafficCompulsoryInsurancePrice" readonly class="easyui-textbox" />
+                    <span class="unit">元</span>
+                </div>
+                <div class="col-6">
+                    <span>交强险 - 融资金额</span>
+                    <input type="text" name="ActualTafficCompulsoryInsurancePrice" class="easyui-textbox" data-options="validType:'Price'" />
+                    <span class="unit">元</span>
+                </div>
+            </div>
+
+            <div class="row" id="VehicleVesselTaxPrice" style="display:none">
+                <div class="col-6" id="VehicleVesselTaxPrice">
+                    <span>车船税 - 预估金额</span>
+                    <input type="text" name="VehicleVesselTaxPrice" readonly class="easyui-textbox" />
+                    <span class="unit">元</span>
+                </div>
+                <div class="col-6">
+                    <span>车船税 - 融资金额</span>
+                    <input type="text" name="ActualVehicleVesselTaxPrice" class="easyui-textbox" data-options="validType:'Price'" />
+                    <span class="unit">元</span>
+                </div>
+            </div>
+
+            <div class="row" id="ExtendedWarrantyInsurancePrice" style="display:none">
+                <div class="col-6">
+                    <span>延保险 - 预估金额</span>
+                    <input type="text" name="ExtendedWarrantyInsurancePrice" readonly class="easyui-textbox" />
+                    <span class="unit">元</span>
+                </div>
+                <div class="col-6">
+                    <span>延保险 - 融资金额</span>
+                    <input type="text" name="ActualExtendedWarrantyInsurancePrice" class="easyui-textbox" data-options="validType:'Price'" />
+                    <span class="unit">元</span>
+                </div>
+            </div>
+
+            <div class="row" id="OtherPrice" style="display:none">
+                <div class="col-6">
+                    <span>其他 - 预估金额</span>
+                    <input type="text" name="OtherPrice" readonly class="easyui-textbox" />
+                    <span class="unit">元</span>
+                </div>
+                <div class="col-6">
+                    <span>其他 - 融资金额</span>
+                    <input type="text" name="ActualOtherPrice" class="easyui-textbox" data-options="validType:'Price'" />
+                    <span class="unit">元</span>
+                </div>
+            </div>
+
+            <!--放款金额信息-->
+            <div class="row">
+                <div class="col-6">
+                    <label>保证金金额:</label>
+                    <input name="MarginMoney" class="easyui-textbox" data-options="required:true,validType:'Price'" />
+                    <span class="unit">元</span>
+                </div>
+                <div class="col-6">
+                    <label>先付月供金额:</label>
+                    <input name="PaymonthlyMoney" class="easyui-textbox" data-options="required:true,validType:'Price'" />
+                    <span class="unit">元</span>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6">
+                    <label>一次性付息金额:</label>
+                    <input name="OnepayInterestMoney" class="easyui-textbox" data-options="required:true,validType:'Price'" />
+                    <span class="unit">元</span>
+                </div>
+                <div class="col-6">
+                    <label>实际用款额:</label>
+                    <input name="ActualcashMoney" class="easyui-textbox" data-options="required:true,validType:'Price'" />
+                    <span class="unit">元</span>
+                </div>
+            </div>
+        </fieldset>
+    </form>
+</body>
+</html>

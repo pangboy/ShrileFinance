@@ -1,0 +1,233 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>信息记录列表</title>
+    <meta charset="utf-8" />
+    <link href="../Content/easyui/themes/gray/easyui.css" rel="stylesheet" />
+    <link href="../Content/easyui/themes/icon.css" rel="stylesheet" />
+    <script src="../Scripts/jquery/jquery.js"></script>
+    <script src="../Scripts/easyui/jquery.easyui.js"></script>
+    <script src="../Scripts/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../Scripts/usedcars.js"></script>
+    <script>
+        uc.grid = new UCGrid("#dg");
+
+        $(function () {
+            var temp = uc.GetParams();
+            if (temp) {
+                $.ajax({
+                    method: "GET",
+                    url: "../api/MessageType/GetComList",
+                    data: { fileId: temp.fileId },
+                    statusCode: {
+                        200: function (data) {
+                            $("#MessageType").combobox("loadData", data);
+                            $("#InfoType").combobox("clear");
+                        }
+                    }
+                });
+            }
+            if (temp.method != "add") {
+                SelectFileName();
+            }
+
+            if (temp.method == "view") {
+                $("#add").linkbutton("disable");
+                $("#mod").linkbutton("disable");
+                $("#del").linkbutton("disable");
+                $("#save").linkbutton("disable");
+
+                $("#MessageType").next().find(":input").attr("disabled", "disabled");
+                $("#InfoType").next().find(":input").attr("disabled", "disabled");
+                $("#FilesName").next().find(":input").attr("disabled", "disabled");
+                $("#Remarks").next().find(":input").attr("disabled", "disabled");
+            }
+        });
+
+        function LoadInfoType(record) {
+            $("#InfoType").combobox("clear");
+
+            var messageTypeId = record.value;
+            var temp = uc.GetParams();
+            if (temp) {
+                $.ajax({
+                    method: "GET",
+                    url: "../api/Report/GetReportId",
+                    data: { messageTypeId: messageTypeId, reportFileId: temp.fileId },
+                    statusCode: {
+                        200: function (data) {
+                            $("#ReportID").val(data);
+                        }
+                    }
+                });
+            }
+
+            $.ajax({
+                method: "GET",
+                url: "../api/InfoType/GetComList",
+                data: { messageTypeId: messageTypeId },
+                statusCode: {
+                    200: function (data) {
+                        $("#InfoType").combobox("loadData", data);
+                    }
+                }
+            });
+        }
+
+        function SetFilter(params) {
+            var temp = uc.GetParams();
+            if (temp) {
+                params.ReportFileID = temp.fileId;
+            }
+        }
+
+        function ReportEdit() {
+            var infoTypeId = $("#InfoType").combobox("getValue");
+            var messageTypeId = $("#MessageType").combobox("getValue");
+
+            var url = "Information.html?method=" + this.id;
+            if (this.id == "del") {
+                var row = uc.grid.GetSelected();
+                if (row) {
+                    $.messager.confirm('确认', '确认删除该条报文信息吗?', function (r) {
+                        if (r) {
+                            $.ajax({
+                                method: "DELETE",
+                                url: "../api/Report/Delete?recordID=" + row.RecordID,
+                                statusCode: {
+                                    200: function (data) {
+                                        uc.grid.Reload();
+                                    }
+                                }
+                            });
+                        }
+                    });
+                }
+            }
+            if (this.id == "add") {
+                url += "&reportId=" + $("#ReportID").val();
+                url += "&messageTypeId=" + messageTypeId;
+                url += "&infoTypeId=" + infoTypeId;
+                if ($("#ReportID").val() != "" && messageTypeId != "" && infoTypeId != "") {
+                    window.open(url);
+                } else {
+                    top.$.messager.show({ msg: "请选择下拉框选项！" });
+                }
+            }
+
+            else if (this.id == "mod" || this.id == "view") {
+                var row = uc.grid.GetSelected();
+
+                if (row) {
+                    url += "&reportId=" + row.ReportID;
+                    url += "&messageTypeId=" + row.MessageTypeID;
+                    url += "&infoTypeId=" + row.InfoTypeID;
+                    url += "&recordID=" + row.RecordID;
+                }
+                else {
+                    return;
+                }
+                window.open(url);
+            }
+        }
+
+        function Cancel() {
+            top.$("#win").window("close");
+        }
+
+        function Save() {
+            debugger
+            var temp = uc.GetParams();
+            // 报文文件名为空时，不能上传
+            var value = $("#FilesName").textbox('getValue');
+            if (value == "") {
+                $.messager.show({ msg: "请填写剩下的必填内容!" });
+                return false;
+            }
+
+            if (temp) {
+                $.ajax({
+                    method: "GET",
+                    url: "../api/ReportFiles/Save",
+                    data: { fileId: temp.fileId, FilesName: $("#FilesName").textbox("getValue"), Remarks: $("#Remarks").textbox("getValue") },
+                    statusCode: {
+                        200: function (data) {
+                            top.$.messager.show({ msg: "保存成功！" });
+                            Cancel();
+                        }
+                    },
+                });
+            }
+        }
+
+        function SelectFileName() {
+            var temp = uc.GetParams();
+            if (temp) {
+                $.ajax({
+                    method: "GET",
+                    url: "../api/ReportFiles/Get",
+                    data: { reportFilesId: temp.fileId },
+                    statusCode: {
+                        200: function (data) {
+                            if (data) {
+                                $("#FilesName").textbox("setValue", data.FilesName)
+                                $("#Remarks").textbox("setValue", data.Remarks)
+                            }
+                        }
+                    },
+                });
+            }
+        }
+    </script>
+</head>
+<body>
+    <table id="dg" class="easyui-datagrid" data-options="
+           height:630,
+           toolbar:'#tb' ,
+           rownumbers:true,
+           singleSelect:true,
+           method:'GET',
+           url:'../api/InformationRecord/GetRecordData',
+    loadMsg :'正在加载，请稍候...' ,
+    onBeforeLoad:SetFilter
+    ">
+    <thead>
+        <tr>
+            <th data-options="field:'MessageTypeID',hidden:true"></th>
+            <th data-options="field:'RecordID',hidden:true"></th>
+            <th data-options="field:'Context',hidden:true"></th>
+            <th data-options="field:'ReportID',hidden:true"></th>
+            <th data-options="field:'InfoTypeID',hidden:true"></th>
+            <th data-options="field:'Describe',width:200,align:'center'">报文名称</th>
+            <th data-options="field:'InfoName',width:200,align:'center'">信息记录类型</th>
+            <th data-options="field:'addtime',width:200,align:'center'">创建时间</th>
+        </tr>
+    </thead>
+    </table>
+    <div id="tb">
+        <div style="height:30px; width:auto;">
+            <label for="MessageType">报文名称:</label>
+            <select id="MessageType" name="MessageType" class="easyui-combobox" data-options="width:250,onSelect:LoadInfoType,editable:false"></select>
+            <label for="InfoType">信息记录类型:</label>
+            <select id="InfoType" name="InfoType" class="easyui-combobox" data-options="width:250,editable:false"></select>
+            <input type="hidden" id="ReportID" />
+
+            <a id="add" class="easyui-linkbutton" href="javascript:void(0)" style="width: auto;height:25px; margin-top:3px;" data-options="onClick:ReportEdit,iconCls:'icon-add',plain:true">添加</a>
+            <a id="mod" class="easyui-linkbutton" href="javascript:void(0)" style="width: auto;height:25px; margin-top:3px;" data-options="onClick:ReportEdit,iconCls:'icon-edit',plain:true">修改</a>
+            <a id="del" class="easyui-linkbutton" href="javascript:void(0)" style="width: auto;height:25px; margin-top:3px;" data-options="onClick:ReportEdit,iconCls:'icon-remove',plain:true">删除</a>
+            <a id="view" class="easyui-linkbutton" href="javascript:void(0)" style="width: auto;height:25px; margin-top:3px;" data-options="onClick:ReportEdit,iconCls:'icon-search',plain:true">查看详情</a>
+        </div>
+    </div>
+    <div style="text-align:center;margin:20px auto;">
+        <label>报文文件名称:</label>
+        <input id="FilesName" name="FilesName" class="easyui-textbox" data-options="required:true" />
+        <label>备注:</label>
+        <input id="Remarks" name="Remarks" class="easyui-textbox" data-options="multiline:true,height:88,width:580" />
+    </div>
+    <div id="btn" style="text-align:center;margin:0 auto;">
+        <a id="save" href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-save',onClick:Save">保存</a>
+        <a id="back" href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-redo',onClick:Cancel">返回</a>
+    </div>
+</body>
+</html>

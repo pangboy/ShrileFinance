@@ -1,0 +1,144 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<title>数据元详情</title>
+	<meta charset="utf-8" />
+	<link href="../../Content/easyui/themes/gray/easyui.css" rel="stylesheet" />
+	<link href="../../Content/easyui/themes/icon.css" rel="stylesheet" />
+	<link href="../../Content/form.css" rel="stylesheet" />
+	<script src="../../Scripts/jquery/jquery.js"></script>
+	<script src="../../Scripts/easyui/jquery.easyui.js"></script>
+	<script src="../../Scripts/easyui/locale/easyui-lang-zh_CN.js"></script>
+	<script src="../../Scripts/usedcars.js"></script>
+	<script>
+		uc.form = new UCForm("form");
+		var query = uc.GetParams();
+		var MetaCode = query.MetaCode;
+		var Type = query.Type;
+		var Method = query.method;
+            
+		$(function () {
+		    Init();
+		});
+
+		function Init() {
+
+			if (query.method == "mod" || query.method == "view") {
+				if (query.method == "view") {
+					$("#save").linkbutton("disable");
+
+					uc.form.DisableForm();
+				}
+
+				uc.form.LoadForm({
+				    params: { MetaCode: query.MetaCode, Type: query.Type },
+				    url: "../../api/Meta/FindByPK",
+					onLoadSuccess: function (data) {
+						return data;
+					}
+				});
+			}
+		}
+
+		function Submit() {
+		    var value = $("#meta").serializeJson();
+		    var url = "../../api/Meta";
+		    var method;
+
+            value.OldType = Type;
+		    value.OldMetaCode = MetaCode;
+
+            if (value.MetaCode != MetaCode || value.Type != Type) {
+                $.ajax({
+                    method: "GET",
+                    url: "../../api/Meta/RepeatCheck",
+                    data: { MetaCode: value.MetaCode, Type: value.Type },
+                    statusCode: {
+                        200: function (data) {
+                            if (data == false) {
+                                alert("数据元标识和服务对象重复，请重新输入");
+                            }
+                            else {
+                                if (Method == "add") {
+                                    url += "/Add";
+                                    method = "POST";
+                                } else if (Method == "mod") {
+                                    url += "/Modify";
+                                    method = "PUT";
+                                }
+
+                                uc.form.Submit({
+                                    url: url,
+                                    method: method,
+                                    data: value
+                                });
+                            }
+                        }
+                    }
+                });
+            }
+            else
+            {
+                if (Method == "add") {
+                    url += "/Add";
+                    method = "POST";
+                } else if (Method == "mod") {
+                    url += "/Modify";
+                    method = "PUT";
+                }
+                uc.form.Submit({
+                    url: url,
+                    method: method,
+                    data: value
+                });
+            }
+        }
+	</script>
+</head>
+<body>
+	<form>
+		<fieldset id="meta">
+			<legend>数据元信息</legend>
+
+			<div id="data">
+                <label>数据元标识:</label>
+                <input id="MetaCode" name="MetaCode" class="easyui-textbox" data-options="required:true,validType:['Integer','length[4,4]']"/>
+			</div>
+
+			<div class="row">
+				<div>
+					<label>数据元名称:</label>
+					<input name="Name" class="easyui-textbox" data-options="required:true" />
+				</div>
+
+                <div>
+                    <label>数据元类型:</label>
+                    <select name="DataType" class="easyui-combobox" data-options="required:true,editable:false">
+                        <option value="AN">AN</option>
+                        <option value="ANC">ANC</option>
+                        <option value="N">N</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label>长度:</label>
+                    <input name="DatasLength" class="easyui-textbox" data-options="required:true,validType:'Integer'" />
+                </div>
+
+                <div>
+                    <label>服务对象:</label>
+                    <select id="Type" name="Type" class="easyui-combobox" data-options="required:true,editable:false">
+                        <option value="1">企业</option>
+                        <option value="2">个人</option>
+                    </select>
+                </div>
+			</div>
+		</fieldset>
+
+		<div id="btn">
+			<a href="javascript:void(0)" id="save" class="easyui-linkbutton" data-options="iconCls:'icon-save',onClick:Submit">保存</a>
+			<a href="javascript:void(0)" id="back" class="easyui-linkbutton" data-options="iconCls:'icon-redo',onClick:uc.form.Cancel">返回</a>
+		</div>
+	</form>
+</body>
+</html>

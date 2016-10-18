@@ -1,0 +1,61 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+    <link href="../Content/easyui/themes/bootstrap/easyui.css" rel="stylesheet" />
+    <link href="../Content/easyui/themes/icon.css" rel="stylesheet" />
+    <link href="../Content/form-bootstrap.css" rel="stylesheet" />
+    <script src="../Scripts/jquery/jquery.js"></script>
+    <script src="../Scripts/easyui/jquery.easyui.js"></script>
+    <script src="../Scripts/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../Scripts/usedcars.js"></script>
+    <script>
+        var query = $.extend(uc.GetParams(), parent.flow.InstanceData);
+
+       $(function () {
+            SelectContrantType();
+       });
+
+       function OnSelect() {
+            $.ajax({
+                async: true,
+                data: { fileId: $("#ContrantType").textbox("getValue") },
+                method: "GET",
+                url: "../api/PdfContract/GetPath",
+                statusCode: {
+                    200: function (data) {
+                        if (data) {
+                            var filepath = data.FullName;
+                            var fp = filepath.substring(1, 13);//截取出 ~ 以后的字符串
+                            var path = ".." + fp + data.FileName;
+                            $("#iframe").attr("src", path);
+                        }
+                    }
+                }
+            });
+        }
+       function SelectContrantType() {
+            $.ajax({
+                async: true,
+                data: { FinanceId: query.FinanceId },
+                method: "GET",
+                url: "../api/PdfContract/GetContrantType",
+                statusCode: {
+                    200: function (data) {
+                        if (data) {
+                            $("#ContrantType").combobox("loadData", data);
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+    <select id="ContrantType" name="ContrantType" class="easyui-combobox" style="width:408px" data-options="required:true,editable:false
+            ,onSelect:OnSelect "></select>
+	<button id="print" type="button" onclick="print_frame.print()">打印合同</button>
+	<br/>
+    <iframe name="print_frame" src="" id="iframe" style="width:100%;height:800px;border:0;"></iframe>
+</body>
+</html>

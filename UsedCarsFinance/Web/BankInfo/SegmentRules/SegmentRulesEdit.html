@@ -1,0 +1,185 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>段规则详情</title>
+    <meta charset="utf-8" />
+    <link href="../../Content/easyui/themes/gray/easyui.css" rel="stylesheet" />
+    <link href="../../Content/easyui/themes/icon.css" rel="stylesheet" />
+    <link href="../../Content/form.css" rel="stylesheet" />
+    <script src="../../Scripts/jquery/jquery.js"></script>
+    <script src="../../Scripts/easyui/jquery.easyui.js"></script>
+    <script src="../../Scripts/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../../Scripts/usedcars.js"></script>
+    <script>
+        uc.form = new UCForm("#SegmentEditPage");
+        var query = uc.GetParams();
+
+        $(function () {
+            Init();
+        });
+        // 页面初始化
+        function Init() {
+            // 判断操作为修改还是查看
+            if (query.method == "mod" || query.method == "view") {
+                if (query.method == "mod") {
+                    //$("select[comboname='DictionaryTypeId']").textbox("readonly");
+                    //$("input[textboxname='Code']").textbox("disable");
+                    $("select[comboname='MetaCode']").textbox("readonly");
+
+                    $("div#EP").find("input[type=radio]").attr('disabled',true);
+                } else if (query.method == "view") {
+                    $("#save").linkbutton("disable");
+                    $("select[comboname='MetaCode']").textbox("readonly");
+                    $("input[textboxname='Position']").textbox("disable");
+                    $("input[name='IsRequired']").attr("disabled", "disabled");
+                    $("div textarea[name='Description']").attr('readonly', 'readonly');
+
+                    $("div#EP").find("input[type=radio]").attr('disabled', true);
+                }
+                // 页面加载，向控制器传递参数
+                uc.form.LoadForm({
+                    params: { bsrId: query.BSR_ID, metaCode: query.MetaCode},//, BDS_ID: query.BDS_ID },
+                    url: '../../api/SegmentRule/Get'
+                });
+            }
+        }
+
+        // 表单提交准备工作
+        function Submit() {
+            var value = $("#dictionary").serializeJson();
+
+            var query = uc.GetParams();
+
+            var url = "../../api/SegmentRule";
+            var method;
+            if (query.method == "add") {
+                url += "/Create";
+                method = "POST";
+            } else if (query.method == "mod") {
+                url += "/Modify";
+                method = "POST";
+
+                // 设置传入控制器的参数
+                value.SegmentRulesId = query.BSR_ID;
+                value.MetaCode = query.MetaCode;
+                //value.BDS_ID = query.BDS_ID;
+            }
+           
+            // 提交表单  async: false || true,
+            $.ajax({
+                async: false,
+                data: value,
+                method: method,
+                url: url,
+                statusCode:{
+                    200: function (data) {
+                        top.$.messager.show({ msg: "保存成功！" });
+
+                        setTimeout(function () {
+                            $('#back').click();
+                        }, 500);
+                    }
+                },
+                error: function () {
+                    $("#save").linkbutton("enable");
+                }
+            });
+        }
+
+        function filterCombo(q, row) {
+            $.ajax({
+                data: value,
+                method: "GET",
+                url: "../api/SegmentRule/GetComListMateName",
+                statusCode: {
+                    200: function (data) {
+                        top.$.messager.show({ msg: "保存成功！" });
+                    }
+                },
+                error: function () {
+                    $("#save").linkbutton("enable");
+                }
+            });
+        }
+
+        function EP_Load(v) {
+            $("#MetaCode").combobox({
+                method: 'GET',
+                url: '../../api/SegmentRule/GetComListMateName',
+                queryParams: { t: v },
+                valueField: 'value',
+                textField: 'text',
+                editable: true,
+                filter: function (q, row) {
+                    var opts = $(this).combobox('options');
+                    return row[opts.textField].indexOf(q) >= 0;;//将从头位置匹配改为任意匹配 
+                },
+                equired: true
+            });
+        }
+    </script>
+</head>
+<body>
+    <form id="SegmentEditPage">
+        <fieldset id="dictionary">
+            <legend>段规则信息</legend>
+            <div class="row">
+                <div style="display:none">
+                    <label>数据段名称</label>
+                    <select name="ParagraphName" class="easyui-combobox">
+                        <option>==TODO==</option>
+                    </select>
+                </div>
+                <div>
+                    <label>元代码名称</label>
+                    <select name="MetaCode" id="MetaCode" class="easyui-combobox" data-options="
+                            method: 'GET',
+                            required:true,
+                            url: '../../api/SegmentRule/GetComListMateName',
+                            queryParams: {t: 1},
+                            valueField: 'value',
+                            textField: 'text',
+                            editable: true,
+                           filter: function(q, row){
+                var opts = $(this).combobox('options');
+                return row[opts.textField].indexOf(q) >= 0;;//将从头位置匹配改为任意匹配 
+            },
+                            equired:true
+                    "></select>
+                </div>
+            </div>
+            <div class="row">
+                <div>
+                    <label>位置:</label>
+                    <input name="Position" class="easyui-textbox" data-options="required:true,validType:'Integer'," />
+                </div>
+
+                <div>
+                    <label>是否必填:</label>
+                    <input id="#M" type="radio" value="M" name="IsRequired" /><span>是</span>&nbsp;&nbsp;
+                    <input id="#C" type="radio" value="C" name="IsRequired" checked /><span>否</span>&nbsp;&nbsp;
+                    <input id="#C" type="radio" value="O" name="IsRequired" /><span>O</span>
+                </div>
+            </div>
+
+            <div class="row">
+                <div>
+                    <label>描述：</label>
+                    <textarea name="Description" rows="6" cols="40"></textarea>
+                </div>
+            </div>
+            <div class="row">
+                <div id="EP">
+                    <label>类型：</label>
+                    <input id="#E" type="radio" name="EP" value="1" onclick="EP_Load(1)" checked /><span>企业</span>&nbsp;&nbsp;
+                    <input id="#P" type="radio" name="EP" value="2" onclick="EP_Load(2)" /><span>个人</span>
+                </div>
+            </div>
+            <div id="btn">
+                <a href="javascript:void(0)" id="save" class="easyui-linkbutton" data-options="iconCls:'icon-save',onClick:Submit">保存</a>
+                <a href="javascript:void(0)" id="back" class="easyui-linkbutton" data-options="iconCls:'icon-redo',onClick:uc.form.Cancel">返回</a>
+            </div>
+        </fieldset>
+    </form>
+</body>
+</html>

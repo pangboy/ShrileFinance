@@ -1,0 +1,95 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<title>字典类型详情</title>
+	<meta charset="utf-8" />
+	<link href="../../Content/easyui/themes/gray/easyui.css" rel="stylesheet" />
+	<link href="../../Content/easyui/themes/icon.css" rel="stylesheet" />
+	<link href="../../Content/form.css" rel="stylesheet" />
+	<script src="../../Scripts/jquery/jquery.js"></script>
+	<script src="../../Scripts/easyui/jquery.easyui.js"></script>
+	<script src="../../Scripts/easyui/locale/easyui-lang-zh_CN.js"></script>
+	<script src="../../Scripts/usedcars.js"></script>
+	<script>
+		uc.form = new UCForm("form");
+
+		$(function () {
+			Init();
+		});
+
+		function Init() {
+			var query = uc.GetParams();
+
+			if (query.method == "mod" || query.method == "view") {
+				if (query.method == "view") {
+					$("#save").linkbutton("disable");
+
+					uc.form.DisableForm();
+				}
+
+				uc.form.LoadForm({
+				    params: { DictionaryTypeId: query.DictionaryTypeId },
+				    url: "../../api/DictionaryType/GetDictionaryType",
+					onLoadSuccess: function (data) {
+						return data;
+					}
+				});
+			}
+		}
+
+		function Submit() {
+			var value = $("#dictionary_type").serializeJson();
+			var query = uc.GetParams();
+			var url = "../../api/DictionaryType";
+			var method;
+
+			if (query.method == "add") {
+			    url += "/Add";
+				method = "POST";
+			} else if (query.method == "mod") {
+			    url += "/Modify";
+				method = "PUT";
+			}
+
+			uc.form.Submit({
+				url: url,
+				method: method,
+				data: value
+			});
+		}
+	</script>
+</head>
+<body>
+	<form>
+		<fieldset id="dictionary_type">
+			<legend>字典类型信息</legend>
+
+			<div id="data">
+				<input name="DictionaryTypeId" type="hidden" />
+			</div>
+
+			<div class="row">
+				<div>
+					<label>字段名称:</label>
+					<input name="Name" class="easyui-textbox" data-options="required:true" />
+				</div>
+
+				<div>
+					<label>父类型:</label>
+                    <select name="ParentType" class="easyui-combobox" data-options="
+                            method: 'GET' ,
+                            url: '../../api/DictionaryType/GetComList',
+                            required: false,
+                            editable: false
+                    "></select>
+				</div>
+			</div>
+		</fieldset>
+
+		<div id="btn">
+			<a href="javascript:void(0)" id="save" class="easyui-linkbutton" data-options="iconCls:'icon-save',onClick:Submit">保存</a>
+			<a href="javascript:void(0)" id="back" class="easyui-linkbutton" data-options="iconCls:'icon-redo',onClick:uc.form.Cancel">返回</a>
+		</div>
+	</form>
+</body>
+</html>

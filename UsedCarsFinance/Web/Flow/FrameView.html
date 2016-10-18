@@ -1,0 +1,78 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<title>框架</title>
+	<meta charset="utf-8" />
+	<link href="../Content/easyui/themes/gray/easyui.css" rel="stylesheet" />
+	<link href="../Content/easyui/themes/icon.css" rel="stylesheet" />
+	<script src="../Scripts/jquery/jquery.js"></script>
+	<script src="../Scripts/easyui/jquery.easyui.js"></script>
+	<script src="../Scripts/easyui/locale/easyui-lang-zh_CN.js"></script>
+	<script src="../Scripts/usedcars.js"></script>
+	<script>
+        var Status = {};
+
+		var flow = {
+			InstanceId: 0,
+			InstanceData: {}
+		};
+		var binder = {
+			addBinder: function (type, obj) { }
+		};
+
+		$(function () {
+			Init();
+		});
+
+		function Init() {
+			var query = uc.GetParams();
+			Status = query.Status;
+            debugger
+			$.ajax({
+				async: false,
+				data: { instanceId: query.instanceId },
+				method: "GET",
+				url: "../api/Flow/FrameView",
+				statusCode: {
+					200: function (data) {
+						RanderTabs(data.Menus);
+
+						flow.InstanceId = query.instanceId;
+						flow.InstanceData = data.XMLData && JSON.parse(data.XMLData);
+					}
+				}
+			});
+		}
+
+		function RanderTabs(tabs) {
+			$(tabs).each(function (i) {
+				$("#tabs").tabs("add", {
+					title: this.Name
+				});
+                $("#tabs").tabs("getTab", i).data("url", this.Link+ "?Status=" + Status);
+			});
+
+			$("#tabs").tabs("select", 0);
+		}
+		function TabSelect(title, index) {
+			var tab = $("#tabs").tabs("getSelected");
+			var url = tab.data("url");
+
+			if (url) {
+				$("#tabs").tabs("update", {
+					tab: tab,
+					options: {
+						content: "<iframe name='tabframe' scrolling='auto' frameborder='0'  src='" + url + "' style='width:100%;height:99%;'></iframe>"
+					}
+				});
+
+				tab.removeData("url");
+			}
+		}
+	</script>
+</head>
+
+<body>
+	<div id="tabs" class="easyui-tabs" data-options="fit:true,onSelect:TabSelect"></div>
+</body>
+</html>

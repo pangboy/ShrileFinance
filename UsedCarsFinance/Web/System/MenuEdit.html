@@ -1,0 +1,106 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>菜单详细页</title>
+	<link href="../Content/easyui/themes/gray/easyui.css" rel="stylesheet" />
+	<link href="../Content/easyui/themes/icon.css" rel="stylesheet" />
+	<link href="../Content/form.css" rel="stylesheet" />
+	<script src="../Scripts/jquery/jquery.js"></script>
+	<script src="../Scripts/easyui/jquery.easyui.js"></script>
+	<script src="../Scripts/easyui/locale/easyui-lang-zh_CN.js"></script>
+	<script src="../Scripts/usedcars.js"></script>
+	<script>
+		uc.form = new UCForm("#ff");
+
+		$(function () {
+			Init();
+		});
+
+		function Init() {
+			LoadParent();
+
+			var query = uc.GetParams();
+
+			if (query.method == "mod" || query.method == "view") {
+
+				if (query.method == "view") {
+					$("#save").linkbutton("disable");
+
+					uc.form.DisableForm();
+				}
+
+				uc.form.LoadForm({
+					params: { menuId: query.menuId },
+					url: "../api/Menu/Get"
+				});
+			}
+		}
+
+		function Submit() {
+			var value = $("#ff").serializeJson();
+
+			uc.form.Submit({
+				url: "../api/Menu",
+				method: "auto",
+				data: value
+			});
+		}
+		function LoadParent() {
+			$.ajax({
+				async: false,
+				data: {},
+				method: "GET",
+				url: "../api/Menu/GetParent",
+				statusCode: {
+					200: function (data) {
+						$("#Parent").combobox("loadData", data);
+					}
+				}
+
+			});
+		}
+	</script>
+</head>
+<body>
+	<form id="ff">
+		<fieldset>
+			<legend>菜单信息</legend>
+
+			<div id="data">
+				<input name="MenuId" type="hidden" />
+			</div>
+
+			<div class="row">
+				<div>
+					<label>菜单名称:</label>
+					<input name="Name" class="easyui-textbox" data-options="required:true" />
+				</div>
+				<div>
+					<label>所属菜单:</label>
+					<select id="Parent" name="ParentId" class="easyui-combobox" data-options="
+                                editable: false
+                                "></select>
+				</div>
+			</div>
+
+			<div class="row">
+				<div>
+					<label>链接:</label>
+					<input name="Link" class="easyui-textbox" />
+				</div>
+
+				<div>
+					<label>排序:</label>
+					<input name="Sort" class="easyui-textbox" data-options="required:true, value:'200'" />
+				</div>
+			</div>
+		</fieldset>
+
+		<div id="btn">
+			<a href="javascript:void(0)" id="save" class="easyui-linkbutton" data-options="iconCls:'icon-save',onClick:Submit">保存</a>
+			<a href="javascript:void(0)" id="back" class="easyui-linkbutton" data-options="iconCls:'icon-redo',onClick:uc.form.Cancel">返回</a>
+		</div>
+	</form>
+</body>
+</html>

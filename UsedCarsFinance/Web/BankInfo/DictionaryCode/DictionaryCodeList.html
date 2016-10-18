@@ -1,0 +1,66 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>数据字典代码管理</title>
+    <meta charset="utf-8" />
+    <link href="../../Content/easyui/themes/gray/easyui.css" rel="stylesheet" />
+    <link href="../../Content/easyui/themes/icon.css" rel="stylesheet" />
+    <script src="../../Scripts/jquery/jquery.js"></script>
+    <script src="../../Scripts/easyui/jquery.easyui.js"></script>
+    <script src="../../Scripts/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../../Scripts/usedcars.js"></script>
+    <script>
+        uc.grid = new UCGrid("#dg");
+
+        function DictionaryEdit() {
+            var url = "BankInfo/DictionaryCode/DictionaryCodeEdit.html?method=" + this.id;
+
+            if (this.id != "add") {
+                var row = uc.grid.GetSelected();
+
+                if (row) {
+                    url += "&typeId=" + row.BDT_ID;
+                    url += "&code=" + row.Code;
+                }
+                else {
+                    return;
+                }
+            }
+            uc.ShowWindow("数据字典代码", url);
+        }
+    </script>
+</head>
+
+<body>
+    <table id="dg" class="easyui-datagrid" data-options="
+        height: 400,
+        toolbar: '#tb',
+        rownumbers:true,
+        singleSelect: true,
+        pagination: true,
+        pageSize: 20,
+        pageList: [20,30,40,50],
+        method: 'GET',
+        url: '../../api/DictionaryCode/PageList',
+        loadMsg: '正在加载，请稍候...',
+        ">
+        <thead>
+            <tr>
+                <th data-options="field:'Code',width:120,align:'center'">字典代码</th>
+                <th data-options="field:'CodeName',width:120,align:'center'">字典名称</th>
+                <th data-options="field:'ParentCodeName',width:120,align:'center'">字典代码父节点</th>
+                <!--<th data-options="field:'ParentCode',width:120,align:'center'">字典代码父节点代码</th>-->
+                <th data-options="field:'TypeName',width:120,align:'center'">字典类型</th>
+                <!--<th data-options="field:'ParentType',width:120,align:'center'">字典类型父节点代码</th>-->
+                <th data-options="field:'BDT_ID',width:120,align:'center',hidden:true">字典类型ID</th>
+            </tr>
+        </thead>
+    </table>
+
+    <div id="tb">
+        <a id="add" class="easyui-linkbutton" href="javascript:void(0)" data-options="onClick:DictionaryEdit,iconCls:'icon-add',plain:true">添加字典</a>
+        <a id="mod" class="easyui-linkbutton" href="javascript:void(0)" data-options="onClick:DictionaryEdit,iconCls:'icon-edit',plain:true">修改字典</a>
+        <a id="view" class="easyui-linkbutton" href="javascript:void(0)" data-options="onClick:DictionaryEdit,iconCls:'icon-search',plain:true">查看详情</a>
+    </div>
+</body>
+</html>

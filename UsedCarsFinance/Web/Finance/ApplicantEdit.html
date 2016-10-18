@@ -1,0 +1,633 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>申请人信息</title>
+    <link href="../Content/easyui/themes/bootstrap/easyui.css" rel="stylesheet" />
+    <link href="../Content/easyui/themes/icon.css" rel="stylesheet" />
+    <link href="../Content/form-bootstrap.css" rel="stylesheet" />
+    <script src="../Scripts/jquery/jquery.js"></script>
+    <script src="../Scripts/easyui/jquery.easyui.js"></script>
+    <script src="../Scripts/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../Scripts/usedcars.js"></script>
+    <script>
+        var main = 0;//主要申请人个数
+        var common = 0;//共同申请人个数
+
+        var rdCA = 0;
+        var rdOA = 0;
+
+        uc.form = new UCForm("#content");
+
+        $(function () {
+            $('#TypeDesc').combobox({
+                onChange: function (newValue, oldValue) {
+                    if (newValue == "主要申请人") {
+                        $("#RelationWithMaster").combobox("setValue", "本人");
+                        $('#RelationWithMaster').combobox("readonly", true);
+                        $('#OwnHouseAddress').textbox({ required: true });
+                    }
+                    if (newValue == "共同申请人") {
+                        $('#RelationWithMaster').combobox("readonly", false);
+                        $("#RelationWithMaster").combobox("setValue", "父母或子女");
+                        $('#OwnHouseAddress').textbox({ required: true });
+                    }
+                    if (newValue == "担保人") {
+                        $('#RelationWithMaster').combobox("readonly", false);
+                        $("#RelationWithMaster").combobox("setValue", "父母或子女");
+                        $('#OwnHouseAddress').textbox({ required: true });
+                    }
+                    if (newValue == "联系人") {
+                        $('#RelationWithMaster').combobox("readonly", false);
+                        $("#RelationWithMaster").combobox("setValue", "父母或子女");
+                        $('#OwnHouseAddress').textbox({ required: false });
+                    }
+                    LoadMustInput()
+                    if (rdCA > 0) {
+                        CAType(rdCA);
+                    }
+                    if (rdOA > 0) {
+                        OHType(rdOA);
+                    }
+                    $("#save").linkbutton("enable");
+                }
+            });
+            $('#ContactAddress').textbox("readonly", true);
+            $('#OwnHouseAddress').textbox("readonly", true);
+
+            $('#RelationWithMaster').combobox("readonly", true);
+            //PrincipalApplicant();//主要申请人必填项
+
+            Init();
+
+            if ($("#OwnHouseType3").is(":checked")) {
+                OHType(3);
+            }
+            if ($("#OwnHouseType2").is(":checked")) {
+                OHType(2);
+            }
+            if ($("#OwnHouseType1").is(":checked")) {
+                OHType(1);
+            }
+
+        });
+
+        // 共同联系人为配偶自动加载家庭信息
+        function Loadcommon() {
+            // 获取datagird记录
+            var RowsObject = self.parent.$("#applicant_dg").datagrid('getData');
+
+            if (RowsObject.rows.length > 0) {
+                var RelationWithMaster = $("#RelationWithMaster").combobox('getValue');
+
+                if (RelationWithMaster == "夫妻") {
+                    $("#Name").textbox('setValue', RowsObject.rows[0].WifeName);
+                    $("#HomeMonthlyIncome").textbox('setValue', RowsObject.rows[0].HomeMonthlyIncome);
+                    $("#HomeMonthlyExpend").textbox('setValue', RowsObject.rows[0].HomeMonthlyExpend);
+                    $("#OtherIncome").combobox('setValue', RowsObject.rows[0].OtherIncome);
+                    $("#FamilyNumber").textbox('setValue', RowsObject.rows[0].FamilyNumber);
+                    $("#WifeName").textbox('setValue', RowsObject.rows[0].Name);
+                }
+                else {
+                    $("#Name").textbox('setValue', "");
+                    $("#HomeMonthlyIncome").textbox('setValue', "");
+                    $("#HomeMonthlyExpend").textbox('setValue', "");
+                    $("#OtherIncome").combobox('setValue', "其他");
+                    $("#FamilyNumber").textbox('setValue', "");
+                    $("#WifeName").textbox('setValue', "");
+                }
+            }
+        }
+
+        function Init() {
+            //取FinanceId
+            var financeid = self.parent.$("input[name='FinanceId']").val();
+
+            $("input[name='FinanceId']").val(financeid);
+
+            var query = uc.GetParams();
+            LoadMustInput();//不同类型人，不同的验证
+
+            if (query.method == "applicant_mod" || query.method == "applicant_view") {
+                var row = self.parent.$("#applicant_dg").datagrid('getSelected');//获取选中行
+
+                $('#TypeDesc').combobox('setValue',row.TypeDesc);
+
+                if (query.method == "applicant_mod") {
+                    if (row) {
+                        $('#content').form('load', row);//加载数据
+                    }
+                }
+                if (query.method == "applicant_view") {
+                    if (row) {
+                        $('#content').form('load', row);//加载数据
+                    }
+                    $("#save").linkbutton("disable");
+                    uc.form.DisableForm();
+                }
+            }
+        }
+
+        function Validates() {
+
+            var RowsObject = self.parent.$("#applicant_dg").datagrid('getData');
+            if (RowsObject.rows.length > 0) {
+
+                for (var j = 0; j < RowsObject.rows.length ; j++) {
+                    if (RowsObject.rows[j].TypeDesc == "主要申请人") {
+                        main++;
+                    }
+                    if (RowsObject.rows[j].TypeDesc == "共同申请人") {
+                        common++;
+                    }
+                }
+            }
+        }
+
+        function LoadMustInput() {
+            var TypeValues = $('#TypeDesc').combobox('getValue');
+           
+            //先将所有的必填项取消
+            $(".easyui-textbox").textbox({ "required": false })
+            //设置共同的必填项选项
+            $('#LiveHouseAddress').textbox({ required: true });
+            $('#OfficeName').textbox({ required: true });
+            $('#Mobile').textbox({ required: true }); 
+            $('#Name').textbox({ required: true });
+            $('#Sex').combobox({ required: true });
+            $('#RelationWithMaster').combobox({ required: true });
+            $('#Degree').combobox({ required: true });
+            $('#LiveHouseAddress').textbox({ required: true });
+            $('#OfficePhone').textbox({ required: true });
+
+            if (TypeValues == "主要申请人") {
+                $('#IdentityType').combobox({ required: true });
+                $('#Identity').textbox({ required: true });
+                $('#Phone').textbox({ required: false });//住宅电话
+                $('#WifeName').textbox({ required: false });//配偶姓名
+                $('#Department').textbox({ required: false });//部门
+                $('#OfficePhone').textbox({ required: false });//单位电话
+                $('#MaritalStatus').combobox({ required: true });
+                $('#RegisteredAddress').textbox({ required: true });
+                $('#Degree').combobox({ required: true });
+                $('#ProfessionType').combobox({ required: true });
+                $('#IndustryType').combobox({ required: true });
+                $('#OfficeAddress').textbox({ required: true });
+                $('#TotalMonthlyIncome').textbox({ required: true });
+                $('#HomeMonthlyIncome').textbox({ required: true });
+                $('#OtherIncome').combobox({ required: true });//其他收入
+                $('#HomeMonthlyExpend').textbox({ required: true });
+                $('#FamilyNumber').textbox({ required: true });
+                $('#LiveHouseType').combobox({ required: true });
+                $('#LiveHouseArea').textbox({ required: true });
+                $('#OwnHouseAddress').textbox({ required: true });
+                $('#ContactAddress').textbox({ required: true });
+
+                $("#RelationWithMaster").combobox("setValue", "本人");
+            }
+            if (TypeValues == "共同申请人") {
+                $('#IdentityType').combobox({ required: true });
+                $('#Identity').textbox({ required: true });
+                $('#MaritalStatus').combobox({ required: true });
+                $('#RegisteredAddress').textbox({ required: true });
+                $('#Degree').combobox({ required: true });
+                $('#ProfessionType').combobox({ required: true });
+                $('#IndustryType').combobox({ required: true });
+                $('#OfficeAddress').textbox({ required: true });
+                $('#TotalMonthlyIncome').textbox({ required: true });
+                $('#LiveHouseType').combobox({ required: true });
+                $('#LiveHouseArea').textbox({ required: true });
+                $('#OwnHouseAddress').textbox({ required: true });
+                $('#ContactAddress').textbox({ required: true });
+                $('#Department').textbox({ required: true });//部门
+                $('#OfficePhone').textbox({ required: true });//单位电话
+            }
+            if (TypeValues == "担保人") {
+                $('#IdentityType').combobox({ required: true });
+                $('#Identity').textbox({ required: true });
+                $('#MaritalStatus').combobox({ required: true });
+                $('#RegisteredAddress').textbox({ required: true });
+                $('#Department').textbox({ required: true });
+                $('#Degree').combobox({ required: true });
+                $('#ProfessionType').combobox({ required: true });
+                $('#IndustryType').combobox({ required: true });
+                $('#TotalMonthlyIncome').textbox({ required: true });
+                $('#LiveHouseType').combobox({ required: true });
+                $('#LiveHouseArea').textbox({ required: true });
+                $('#OwnHouseAddress').textbox({ required: true });
+                $('#ContactAddress').textbox({ required: false });
+            }
+            if (TypeValues == "联系人") {
+                $('#Department').textbox({ required: true });
+                $('#OwnHouseAddress').textbox({ required: false });
+            }
+        }
+
+        function Submit() {
+
+            var onlyone = true;
+            var atype = $("#TypeDesc").combobox("getValue");
+            $("input[name=Type]").val(atype);
+            var row = self.parent.$("#applicant_dg").datagrid('getSelected');//获取选中行
+
+            if (row) {
+                if (row.TypeDesc == "主要申请人" && atype == "主要申请人") {
+                    onlyone = false;
+                }
+                if (row.TypeDesc == "共同申请人" && atype == "共同申请人") {
+                    onlyone = false;
+                }
+            }
+
+            if ($("#content").form("validate")) {
+                $("#save").linkbutton("disable");
+            } else {
+                $.messager.show({ msg: "请填写剩下的必填内容!" });
+                return false;
+            }
+
+            Validates();
+            if (main >= 1 && atype == "主要申请人" && onlyone == true) {
+                top.$.messager.show({ msg: "主要申请人只能有1个！" });
+                main == 0;
+                return;
+            }
+            if (common >= 1 && atype == "共同申请人" && onlyone == true) {
+                top.$.messager.show({ msg: "共同申请人只能有1个！" });
+                common == 0;
+                return;
+            }
+
+            var applicantInfos = $('#content').serializeArray();
+
+            var obj = {};
+
+            $.each(applicantInfos, function (i, e) {
+                if (obj[e.name] !== undefined) {
+                    if (!obj[e.name].push) {
+                        obj[e.name] = [obj[e.name]];
+                    }
+                    obj[e.name].push(e.value || '');
+                } else {
+                    obj[e.name] = e.value || '';
+                }
+            });
+
+            var query = uc.GetParams();
+
+            if (query.method == "applicant_mod") {
+
+                var row = self.parent.$("#applicant_dg").datagrid('getSelected');//获取选中行
+
+                if (row) {
+
+                    var RowIndex = self.parent.$("#applicant_dg").datagrid('getRowIndex', row);
+                    self.parent.$("#applicant_dg").datagrid('updateRow', { index: RowIndex, row: obj });//更新行
+                }
+            }
+            if (query.method == "applicant_add") {
+                self.parent.$("#applicant_dg").datagrid('appendRow', obj);//追加一行
+            }
+
+            self.parent.$("#applicant_dd").dialog({ closed: true });
+
+        }
+
+        function applicantCancel() {
+            self.parent.$("#applicant_dd").dialog({ closed: true });
+        }
+
+        function CAType(s) {
+            if (s == 1) {
+                $("#ContactAddress").textbox('setValue', $("#LiveHouseAddress").textbox('getValue'));
+            }
+            if (s == 2) {
+                $("#ContactAddress").textbox('setValue', $("#OfficeAddress").textbox('getValue'));
+            }
+            $("#ContactAddress").textbox('readonly', true);//只读
+            rdCA = s;
+        }
+
+        function OHType(s) {
+            if (s == 1) {
+                $("#OwnHouseAddress").textbox('setValue', $("#LiveHouseAddress").textbox('getValue')).attr('readonly', 'readonly');
+                $('#OwnHouseAddress').textbox("readonly", true);
+            }
+            if (s == 2) {
+                if ($("#OwnHouseAddress").textbox('getValue') == "") {
+                    $("#OwnHouseAddress").textbox('setValue', '');
+                }
+                $('#OwnHouseAddress').textbox({ required: true });
+                $('#OwnHouseAddress').textbox("readonly", false);
+            }
+            if (s == 3) {
+                $("#OwnHouseAddress").textbox('setValue', '');
+                $('#OwnHouseAddress').textbox({ required: false });
+                $('#OwnHouseAddress').textbox("readonly", true);
+            }
+            rdOA = s;
+        }
+    </script>
+</head>
+
+<body>
+    <form class="container" id="content">
+        <fieldset>
+            <legend>申请人信息</legend>
+
+            <div class="hidden">
+                <input name="ApplicantId" type="hidden" />
+                <input name="FinanceId" type="hidden" />
+                <input name="Type" type="hidden" />
+            </div>
+
+            <div class="row">
+                <div class="col-6">
+                    <label>姓名:</label>
+                    <input id="Name" name="Name" class="easyui-textbox"  />
+                </div>
+
+                <div class="col-6">
+                    <label>证件类型:</label>
+                    <select id="IdentityType" name="IdentityType" class="easyui-combobox" data-options="editable:false">
+                        <option value="身份证">身份证</option>
+                        <option value="居住证">居住证</option>
+                        <option value="户口本">户口本</option>
+                        <option value="机动车驾驶证">机动车驾驶证</option>
+                        <option value="军官证">军官证</option>
+                        <option value="签证">签证</option>
+                        <option value="护照">护照</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6">
+                    <label>证件号码:</label>
+                    <input id="Identity" name="Identity" class="easyui-textbox"/>
+                </div>
+
+                <div class="col-6">
+                    <label>申请人类型:</label>
+                    <select id="TypeDesc" name="TypeDesc" class="easyui-combobox" data-options="editable:false">
+                        <option value="主要申请人">主要申请人</option>
+                        <option value="共同申请人">共同申请人</option>
+                        <option value="担保人">担保人</option>
+                        <option value="联系人">联系人</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6">
+                    <label>性别:</label>
+                    <select id="Sex" name="Sex" class="easyui-combobox" data-options="editable:false">
+                        <option value="男">男</option>
+                        <option value="女">女</option>
+                    </select>
+                </div>
+
+                <div class="col-6">
+                    <label>年龄:</label>
+                    <input id="Age" name="Age" class="easyui-textbox" data-options="validType:'Integer'" />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6">
+                    <label>与申请人关系:</label>
+                    <select id="RelationWithMaster" name="RelationWithMaster" class="easyui-combobox" data-options="editable:false,onSelect:Loadcommon">
+                        <option value="父母或子女">父母或子女</option>
+                        <option value="兄弟姐妹">兄弟姐妹</option>
+                        <option value="同事">同事</option>
+                        <option value="同学">同学</option>
+                        <option value="朋友">朋友</option>
+                        <option value="夫妻">夫妻</option>
+                        <option value="其他">其他</option>
+                    </select>
+                </div>
+
+                <div class="col-6">
+                    <label>手机:</label>
+                    <input id="Mobile" name="Mobile" class="easyui-textbox" data-options="validType:'Mobile'" />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6">
+                    <label>住宅电话:</label>
+                    <input id="Phone" name="Phone" class="easyui-textbox" data-options="validType:'PhoneOrMobile'" />
+                </div>
+
+                <div class="col-6">
+                    <label>婚姻状况:</label>
+                    <select id="MaritalStatus" name="MaritalStatus" class="easyui-combobox" data-options="editable:false">
+                        <option value="1">已婚</option>
+                        <option value="2">未婚</option>
+                        <option value="3">离异</option>
+                        <option value="4">丧偶</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6">
+                    <label>传真号:</label>
+                    <input id="Fax" name="Fax" class="easyui-textbox" data-options="validType:''" />
+                </div>
+
+                <div class="col-6">
+                    <label>邮箱:</label>
+                    <input id="EMail" name="EMail" class="easyui-textbox" data-options="validType:'Email'" />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6">
+                    <label>邮编:</label>
+                    <input id="Postcode" name="Postcode" class="easyui-textbox" data-options="validType:'PostCode'" />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6">
+                    <label>户口所在地:</label>
+                    <input id="RegisteredAddress" name="RegisteredAddress" class="easyui-textbox" />
+                </div>
+
+                <div class="col-6">
+                    <label>配偶姓名:</label>
+                    <input id="WifeName" name="WifeName" class="easyui-textbox" />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6">
+                    <label>最高学历:</label>
+                    <select id="Degree" name="Degree" class="easyui-combobox" data-options="editable:false">
+                        <option value="硕士及以上">硕士及以上</option>
+                        <option value="本科">本科</option>
+                        <option value="大专">大专</option>
+                        <option value="高中">高中</option>
+                        <option value="初中及以下">初中及以下</option>
+                    </select>
+                </div>
+
+                <div class="col-6">
+                    <label>单位名称:</label>
+                    <input id="OfficeName" name="OfficeName" class="easyui-textbox" data-options="required:true" />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6">
+                    <label>部门:</label>
+                    <input id="Department" name="Department" class="easyui-textbox"/>
+                </div>
+
+                <div class="col-6">
+                    <label>行业:</label>
+                    <select id="IndustryType" name="IndustryType" class="easyui-combobox" data-options="editable:false">
+                        <option value="农、林、牧、渔业">农、林、牧、渔业</option>
+                        <option value="采掘业">采掘业</option>
+                        <option value="制造业">制造业</option>
+                        <option value="电力、燃气及水的产业和供应业">电力、燃气及水的产业和供应业</option>
+                        <option value="建筑业">建筑业</option>
+                        <option value="交通运输、仓储和邮政业">交通运输、仓储和邮政业</option>
+                        <option value="信息传输、计算机服务和软件业">信息传输、计算机服务和软件业</option>
+                        <option value="批发和零售业">批发和零售业</option>
+                        <option value="住宿和餐饮业">住宿和餐饮业</option>
+                        <option value="金融业">金融业</option>
+                        <option value="房地产业">房地产业</option>
+                        <option value="租赁和商务服务业">租赁和商务服务业</option>
+                        <option value="科学研究、技术服务业和地质勘察业">科学研究、技术服务业和地质勘察业</option>
+                        <option value="水利、环境和公共设施管理业">水利、环境和公共设施管理业</option>
+                        <option value="居民服务和其他服务业">居民服务和其他服务业</option>
+                        <option value="教育">教育</option>
+                        <option value="生、社会保障和社会福利业">卫生、社会保障和社会福利业</option>
+                        <option value="文化、体育和娱乐业">文化、体育和娱乐业</option>
+                        <option value="公共管理和社会组织">公共管理和社会组织</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6">
+                    <label>职业:</label>
+                    <select id="ProfessionType" name="ProfessionType" class="easyui-combobox" data-options="editable:false">
+                        <option value="国家机关、党群组织、企业、事业单位负责人">国家机关、党群组织、企业、事业单位负责人</option>
+                        <option value="专业技术人员">专业技术人员</option>
+                        <option value="办事人员和有关人员">办事人员和有关人员</option>
+                        <option value="商业、服务业人员">商业、服务业人员</option>
+                        <option value="农、林、牧、渔、水利业生产人员">农、林、牧、渔、水利业生产人员</option>
+                        <option value="生产、运输设备操作人员及有关人员">生产、运输设备操作人员及有关人员</option>
+                        <option value="军人">军人</option>
+                        <option value="不便分类的其他从业人员">不便分类的其他从业人员</option>
+                        <option value="未知">未知</option>
+                    </select>
+                </div>
+
+                <div class="col-6">
+                    <label>单位电话:</label>
+                    <input id="OfficePhone" name="OfficePhone" class="easyui-textbox" data-options="validType:'PhoneOrMobile'" />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12">
+                    <label>单位地址:</label>
+                    <input id="OfficeAddress" name="OfficeAddress" class="easyui-textbox" />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6">
+                    <label>月收入总额:</label>
+                    <input id="TotalMonthlyIncome" name="TotalMonthlyIncome" class="easyui-textbox" data-options="validType:'Price'" /><span class="unit">元</span>
+                </div>
+                <div class="col-6">
+                    <label>家庭月收入:</label>
+                    <input id="HomeMonthlyIncome" name="HomeMonthlyIncome" class="easyui-textbox" data-options="validType:'Price'" /><span class="unit">元</span>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6">
+                    <label>其他收入:</label>
+                    <select id="OtherIncome" name="OtherIncome" class="easyui-combobox" data-options="editable:false">
+                        <option value="基金">基金</option>
+                        <option value="股票">股票</option>
+                        <option value="其他">其他</option>
+                    </select>
+                </div>
+                <div class="col-6">
+                    <label>家庭月支出:</label>
+                    <input id="HomeMonthlyExpend" name="HomeMonthlyExpend" class="easyui-textbox" data-options="validType:'Price' " /><span class="unit">元</span>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6">
+                    <label>供养人数:</label>
+                    <input id="FamilyNumber" name="FamilyNumber" class="easyui-textbox" data-options="validType:'Integer'" /><span class="unit">人</span>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6">
+                    <label>现住房情况:</label>
+                    <select id="LiveHouseType" name="LiveHouseType" class="easyui-combobox" data-options="editable:false">
+                        <option value="自购现房无贷款">自购现房无贷款</option>
+                        <option value="自购现房有贷款">自购现房有贷款</option>
+                        <option value="与父母同住">与父母同住</option>
+                        <option value="宅基地房">宅基地房</option>
+                        <option value="租房">租房</option>
+                        <option value="军权房">军权房</option>
+                        <option value="小产权房">小产权房</option>
+                        <option value="单位宿舍">单位宿舍</option>
+                        <option value="其他">其他</option>
+                    </select>
+                </div>
+                <div class="col-6">
+                    <label>现住房面积:</label>
+                    <input id="LiveHouseArea" name="LiveHouseArea" class="easyui-textbox" data-options="validType:'Price'" /><span class="unit">平米</span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <label>现居住地址:</label>
+                    <input id="LiveHouseAddress" name="LiveHouseAddress" class="easyui-textbox" data-options="width:895" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <label>自有房产描述:</label>
+                    <input id="OwnHouseType1" name="OwnHouseType" type="radio" class="easyui-validatebox" onclick="OHType(1)" value="同现居住地址">同现居住地址<span style="margin-right:20px;"> </span>
+                    <input id="OwnHouseType2" name="OwnHouseType" type="radio" class="easyui-validatebox" onclick="OHType(2)" value="其他">其他<span style="margin-right:20px;"> </span>
+                    <input id="OwnHouseType3" name="OwnHouseType" type="radio" class="easyui-validatebox" onclick="OHType(3)" value="无">无<span style="margin-right:20px;"> </span>
+                    <input id="OwnHouseAddress" name="OwnHouseAddress" class="easyui-textbox" data-options="width:652" />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12">
+                    <label>通讯地址:</label>
+                    <input id="ContactAddressType1" name="ContactAddressType" type="radio" class="easyui-validatebox" onclick="CAType(1)" value="住宅">住宅<span style="margin-right:20px;"> </span>
+                    <input id="ContactAddressType2" name="ContactAddressType" type="radio" class="easyui-validatebox" onclick="CAType(2)" value="单位">单位<span style="margin-right:20px;"> </span>
+                    <input id="ContactAddress" name="ContactAddress" class="easyui-textbox" data-options="width:760" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <input id="AddDate" name="AddDate" type="hidden" />
+                </div>
+            </div>
+        </fieldset>
+
+        <div id="btn">
+            <a id="save" class="easyui-linkbutton" href="javascript:void(0)" data-options="iconCls:'icon-save',onClick:Submit">保存</a>
+            <a id="back" class="easyui-linkbutton" href="javascript:void(0)" data-options="iconCls:'icon-redo',onClick:applicantCancel">返回</a>
+        </div>
+    </form>
+</body>
+</html>

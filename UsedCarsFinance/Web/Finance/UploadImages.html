@@ -1,0 +1,325 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>申请人影像上传</title>
+    <link href="../Content/uploadify/uploadify.css" rel="stylesheet" />
+    <link href="../Content/easyui/themes/bootstrap/easyui.css" rel="stylesheet" />
+    <link href="../Content/easyui/themes/icon.css" rel="stylesheet" />
+    <link href="../Content/form-bootstrap.css" rel="stylesheet" />
+    <link href="../Finance/Content/uploadimages.css" rel="stylesheet" />
+    <script src="../Scripts/jquery/jquery.js"></script>
+    <script src="../Scripts/easyui/jquery.easyui.js"></script>
+    <script src="../Scripts/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../Scripts/usedcars.js"></script>
+    <script src="../Scripts/uploadify/jquery.uploadify.min.js"></script>
+    <script src="../Finance/Content/UploadImages.js"></script>
+    <script>
+        var ReferenceIdstr = 0;//引用id
+
+        function GetParams() {
+            return $.extend(uc.GetParams(), parent.flow.InstanceData);
+        }
+
+        $(function () {
+            var query = $.extend(uc.GetParams(), parent.flow.InstanceData);
+
+            // 加载数据
+            LoadData(query.FinanceId);
+
+            // 切换页面状态
+            ChangeStatus(query);
+
+            // 加载页面时，必须这句，不然上传框样式会有问题
+            setTimeout(InitDetePic(20, ReferenceIdstr), 10);
+        })
+
+        function LoadData(financeId) {
+            $($(".container").find("fieldset")[0]).find("input[name='ApplicantId']").val(financeId);
+            $($(".container").find("fieldset")[1]).find("input[name='ApplicantId']").val(financeId);
+
+            tempfs = $("#TempFieldset").clone(false);
+            $("#TempFieldset").hide();
+            LoadFinanceList();
+            GetReferenceID();
+
+            $.ajax({
+                async: false,
+                type: "Get",
+                data: { financeid: financeId },
+                url: "../api/ImageUpload/GetAll",
+                success: function (data) {
+                    var fieldset = $(".container").find("fieldset");
+                    for (var i = 0; i < fieldset.length ; i++) {
+                        var input = $($(".container").find("fieldset")[i]).find("input[name='ReferenceId']");
+                        for (var j = 0; j < input.length; j++) {
+                            for (var k = 0; k < data.length; k++) {
+                                if (input[j].value == data[k].ReferenceId) {
+                                    $(input[j]).parent().next().next().append("<span style='margin-left:6px;background-color:wheat'>" + data[k].OldName + data[k].ExtName + "</span>");
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // 切换页面状态
+        function ChangeStatus(query) {
+            if (query.Status == undefined) {
+                query.Status = "0";
+            }
+
+            // 设置“添加”和“删除”按钮
+            if (query.Status == "0") {
+                $("#add").hide();
+                $("#del").hide();
+            }
+        }
+
+        //验证数据
+        function ValidData() {
+            return true;
+        }
+        //构建数据
+        function BuildData() {
+            var value = {};
+
+            var result = {};
+            result["formName"] = "融资影像资料";
+            result["buildData"] = value;
+
+            return result;
+        }
+    </script>
+</head>
+<body>
+    <div id="linkBtn">
+        <div id="fieldsetBtn">
+            <div style="float:left;width:700px;height:25px;">
+                <a id="view" class="easyui-linkbutton" href="javascript:void(0)" data-options="onClick:view,width:100">查看</a>
+                <a id="del" class="easyui-linkbutton" href="javascript:void(0)" data-options="onClick:del,width:100">删除</a>
+                <a id="downloadall" class="easyui-linkbutton" href="javascript:void(0)" data-options="onClick:downLoadall,width:100">下载全部</a>
+                <a id="add" class="easyui-linkbutton" href="javascript:void(0)" data-options="iconCls:'icon-add',width:100,onClick:Add">添加</a>
+            </div>
+            <div style="width:200px;height:25px; padding-top:40px;"><input id="cball" style="float:left;width:30px " name="cball" type="checkbox" class="easyui-validatebox" onclick="checkall()"><label id="label1" style="width:30px;margin-top:2px;" for="cball">全选</label></div>
+        </div>
+    </div>
+    <!--上传控件-->
+    <div id="dd_upload" class="easyui-dialog" data-options="title:'上传附件',buttons:'#bb_upload',onClose:ddClose,width:390,height:350,closed:true">
+        <div id="file_queue"></div>
+
+        <div id="bb_upload">
+            <span id="pic_area">
+                <input type="file" id="pic_upload" name="pic_upload" />
+                <a class="easyui-linkbutton" data-options="width:80" href="javascript:$('#pic_upload').uploadify('upload','*')">开始上传</a>
+            </span>
+        </div>
+    </div>
+    <!--幻灯片预览-->
+    <div id="dd_upload_view" class="easyui-dialog" data-options="modal:true,title:'查看附件',width:880,height:700,closed:true">
+        <div style="width:863px; height:660px;border:1px solid white;">
+            <div id="D_relative">
+                <img id="BigPleft_absolute" onclick="PreviousPic()" src="../Finance/Content/Webppt/image/left-arrow.png" />
+                <div id="BigPicture"></div>
+                <img id="BigPright_absolute" onclick="NextPic()" src="../Finance/Content/Webppt/image/right-arrow.png" />
+            </div>
+            <hr id="hrshow" style="height:0px;border:dotted;border-top:0px solid #555555; display:none" />
+            <div align="center" id="Small">   </div>
+            <div style="clear:both;">   </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div style="height:40px;"></div>
+        <fieldset>
+            <input name="ApplicantId" type="hidden" />
+            <legend>身份类</legend>
+            <table style="width:100%;">
+                <tr>
+                    <td><input name="cb" type="checkbox" class="easyui-validatebox" value="1"><input name="ReferenceId" type="hidden" /><input name="ReferencedModule" type="hidden" value="2" /></td>
+                    <td><label onclick="labelcheck(this)">客户融资申请表</label></td>
+                    <td></td>
+                </tr>
+            </table>
+        </fieldset>
+        <fieldset>
+            <input name="ApplicantId" type="hidden" />
+            <legend>车辆类</legend>
+            <table style="width:100%;">
+                <tr>
+                    <td><input name="cb" type="checkbox" class="easyui-validatebox" value="2"><input name="ReferenceId" type="hidden" /><input name="ReferencedModule" type="hidden" value="2" /></td>
+                    <td><label onclick="labelcheck(this)">车辆登记证书</label></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td><input name="cb" type="checkbox" class="easyui-validatebox" value="3"><input name="ReferenceId" type="hidden" /><input name="ReferencedModule" type="hidden" value="2" /></td>
+                    <td><label onclick="labelcheck(this)">车辆行驶证</label></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td><input name="cb" type="checkbox" class="easyui-validatebox" value="4"><input name="ReferenceId" type="hidden" /><input name="ReferencedModule" type="hidden" value="2" /></td>
+                    <td><label onclick="labelcheck(this)">车辆照片</label></td>
+                    <td></td>
+                </tr>
+            </table>
+        </fieldset>
+
+        <fieldset id="MainApplicant" hidden>
+            <input name="ApplicantId" type="hidden" />
+            <legend>主要申请人</legend>
+            <table style="width:100%;">
+                <tr>
+                    <td><input name="cb" type="checkbox" class="easyui-validatebox" value="1"><input name="ReferenceId" type="hidden" /><input name="ReferencedModule" type="hidden" value="3" /></td>
+                    <td><label onclick="labelcheck(this)">身份证正反面</label></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td><input name="cb" type="checkbox" class="easyui-validatebox" value="2"><input name="ReferenceId" type="hidden" /><input name="ReferencedModule" type="hidden" value="3" /></td>
+                    <td><label onclick="labelcheck(this)">户口本复印件</label></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td><input name="cb" type="checkbox" class="easyui-validatebox" value="3"><input name="ReferenceId" type="hidden" /><input name="ReferencedModule" type="hidden" value="3" /></td>
+                    <td><label onclick="labelcheck(this)">结婚证/未婚承诺书</label></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td><input name="cb" type="checkbox" class="easyui-validatebox" value="4"><input name="ReferenceId" type="hidden" /><input name="ReferencedModule" type="hidden" value="3" /></td>
+                    <td><label onclick="labelcheck(this)">驾驶证</label></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td><input name="cb" type="checkbox" class="easyui-validatebox" value="5"><input name="ReferenceId" type="hidden" /><input name="ReferencedModule" type="hidden" value="3" /></td>
+                    <td><label onclick="labelcheck(this)">居住证明</label></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td><input name="cb" type="checkbox" class="easyui-validatebox" value="6"><input name="ReferenceId" type="hidden" /><input name="ReferencedModule" type="hidden" value="3" /></td>
+                    <td><label onclick="labelcheck(this)">家访照片</label></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td><input name="cb" type="checkbox" class="easyui-validatebox" value="7"><input name="ReferenceId" type="hidden" /><input name="ReferencedModule" type="hidden" value="3" /></td>
+                    <td><label onclick="labelcheck(this)">银行流水</label></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td><input name="cb" type="checkbox" class="easyui-validatebox" value="8"><input name="ReferenceId" type="hidden" /><input name="ReferencedModule" type="hidden" value="3" /></td>
+                    <td><label onclick="labelcheck(this)">征信报告</label></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td><input name="cb" type="checkbox" class="easyui-validatebox" value="9"><input name="ReferenceId" type="hidden" /><input name="ReferencedModule" type="hidden" value="3" /></td>
+                    <td><label onclick="labelcheck(this)">客户其他资信证明</label></td>
+                    <td></td>
+                </tr>
+            </table>
+        </fieldset>
+        <fieldset id="JointApplicant" hidden>
+            <input name="ApplicantId" type="hidden" />
+            <legend>共同申请人</legend>
+            <table style="width:100%;">
+                <tr>
+                    <td><input name="cb" type="checkbox" class="easyui-validatebox" value="1"><input name="ReferenceId" type="hidden" /><input name="ReferencedModule" type="hidden" value="3" /></td>
+                    <td><label onclick="labelcheck(this)">身份证正反面</label></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td><input name="cb" type="checkbox" class="easyui-validatebox" value="2"><input name="ReferenceId" type="hidden" /><input name="ReferencedModule" type="hidden" value="3" /></td>
+                    <td><label onclick="labelcheck(this)">户口本复印件</label></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td><input name="cb" type="checkbox" class="easyui-validatebox" value="3"><input name="ReferenceId" type="hidden" /><input name="ReferencedModule" type="hidden" value="3" /></td>
+                    <td><label onclick="labelcheck(this)">结婚证/未婚承诺书</label></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td><input name="cb" type="checkbox" class="easyui-validatebox" value="4"><input name="ReferenceId" type="hidden" /><input name="ReferencedModule" type="hidden" value="3" /></td>
+                    <td><label onclick="labelcheck(this)">驾驶证</label></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td><input name="cb" type="checkbox" class="easyui-validatebox" value="5"><input name="ReferenceId" type="hidden" /><input name="ReferencedModule" type="hidden" value="3" /></td>
+                    <td><label onclick="labelcheck(this)">居住证明</label></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td><input name="cb" type="checkbox" class="easyui-validatebox" value="6"><input name="ReferenceId" type="hidden" /><input name="ReferencedModule" type="hidden" value="3" /></td>
+                    <td><label onclick="labelcheck(this)">家访照片</label></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td><input name="cb" type="checkbox" class="easyui-validatebox" value="7"><input name="ReferenceId" type="hidden" /><input name="ReferencedModule" type="hidden" value="3" /></td>
+                    <td><label onclick="labelcheck(this)">银行流水</label></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td><input name="cb" type="checkbox" class="easyui-validatebox" value="8"><input name="ReferenceId" type="hidden" /><input name="ReferencedModule" type="hidden" value="3" /></td>
+                    <td><label onclick="labelcheck(this)">征信报告</label></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td><input name="cb" type="checkbox" class="easyui-validatebox" value="9"><input name="ReferenceId" type="hidden" /><input name="ReferencedModule" type="hidden" value="3" /></td>
+                    <td><label onclick="labelcheck(this)">客户其他资信证明</label></td>
+                    <td></td>
+                </tr>
+            </table>
+        </fieldset>
+        <div id="GuaranteeDiv"></div>
+        <div id="ContactsDiv"></div>
+        <fieldset id="TempFieldset">
+            <input name="ApplicantId" type="hidden" />
+            <legend id="TempFieldsetLegend"></legend>
+            <table style="width:100%;">
+                <tr>
+                    <td><input name="cb" type="checkbox" class="easyui-validatebox" value="1"><input name="ReferenceId" type="hidden" /><input name="ReferencedModule" type="hidden" value="3" /></td>
+                    <td><label onclick="labelcheck(this)">身份证正反面</label></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td><input name="cb" type="checkbox" class="easyui-validatebox" value="2"><input name="ReferenceId" type="hidden" /><input name="ReferencedModule" type="hidden" value="3" /></td>
+                    <td><label onclick="labelcheck(this)">户口本复印件</label></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td><input name="cb" type="checkbox" class="easyui-validatebox" value="3"><input name="ReferenceId" type="hidden" /><input name="ReferencedModule" type="hidden" value="3" /></td>
+                    <td><label onclick="labelcheck(this)">结婚证/未婚承诺书</label></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td><input name="cb" type="checkbox" class="easyui-validatebox" value="4"><input name="ReferenceId" type="hidden" /><input name="ReferencedModule" type="hidden" value="3" /></td>
+                    <td><label onclick="labelcheck(this)">驾驶证</label></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td><input name="cb" type="checkbox" class="easyui-validatebox" value="5"><input name="ReferenceId" type="hidden" /><input name="ReferencedModule" type="hidden" value="3" /></td>
+                    <td><label onclick="labelcheck(this)">居住证明</label></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td><input name="cb" type="checkbox" class="easyui-validatebox" value="6"><input name="ReferenceId" type="hidden" /><input name="ReferencedModule" type="hidden" value="3" /></td>
+                    <td><label onclick="labelcheck(this)">家访照片</label></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td><input name="cb" type="checkbox" class="easyui-validatebox" value="7"><input name="ReferenceId" type="hidden" /><input name="ReferencedModule" type="hidden" value="3" /></td>
+                    <td><label onclick="labelcheck(this)">银行流水</label></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td><input name="cb" type="checkbox" class="easyui-validatebox" value="8"><input name="ReferenceId" type="hidden" /><input name="ReferencedModule" type="hidden" value="3" /></td>
+                    <td><label onclick="labelcheck(this)">征信报告</label></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td><input name="cb" type="checkbox" class="easyui-validatebox" value="9"><input name="ReferenceId" type="hidden" /><input name="ReferencedModule" type="hidden" value="3" /></td>
+                    <td><label onclick="labelcheck(this)">客户其他资信证明</label></td>
+                    <td></td>
+                </tr>
+            </table>
+        </fieldset>
+    </div>
+</body>
+</html>

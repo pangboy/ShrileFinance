@@ -1,0 +1,318 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>审核</title>
+    <link href="../Content/easyui/themes/bootstrap/easyui.css" rel="stylesheet" />
+    <link href="../Content/easyui/themes/icon.css" rel="stylesheet" />
+    <link href="../Content/form-bootstrap.css" rel="stylesheet" />
+    <script src="../Scripts/jquery/jquery.js"></script>
+    <script src="../Scripts/easyui/jquery.easyui.js"></script>
+    <script src="../Scripts/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../Scripts/usedcars.js"></script>
+    <script>
+        uc.form = new UCForm(".container");
+
+        $(function () {
+            Init();
+        });
+
+        function Init() {
+            var query = $.extend(uc.GetParams(), parent.flow.InstanceData);
+
+            if (query.FinanceId) {
+                // 加载数据
+                LoadData(query.FinanceId);
+                $("input[name='FinanceId']").val(query.FinanceId);
+            }
+
+            ChangeStatus(query.Status);
+        }
+
+        function LoadData(financeId) {
+            $.ajax({
+                async: false,
+                type: "Get",
+                data: { financeId: financeId },
+                url: "../api/Finance/Get",
+                statusCode: {
+                    200: function (data) {
+                        // 加载产品信息
+                        if (data.FinanceInfo.ProduceId) {
+                            LoadProduceInfo(data.FinanceInfo.ProduceId);
+                        }
+                    }
+                }
+            });
+
+            $.ajax({
+                async: false,
+                type: "Get",
+                data: { financeId: financeId },
+                url: "../api/Finance/GetVehicleInfo",
+                statusCode: {
+                    200: function (data) {
+                        // 加载车辆价格信息
+                        if (data.VehicleKey) {
+                            LoadVehiclePrice(data.VehicleKey);
+                        }
+                    }
+                }
+            });
+
+            $.ajax({
+                async: false,
+                type: "Get",
+                data: { financeId: financeId },
+                url: "../api/Finance/GetReviewInfo",
+                statusCode: {
+                    200: function (data) {
+                        // 加载车辆评估价格
+                        if (data != null) {
+
+                            if (data.ApprovalFinanceRatio != 0) {
+                                $("input[textboxname = 'ApprovalFinanceRatio']").textbox("setValue", data.ApprovalFinanceRatio);
+                            }
+                            if (data.ApprovalPrincipal != 0) {
+                                $("input[textboxname = 'ApprovalPrincipal']").textbox("setValue", data.ApprovalPrincipal);
+                            }
+                            $("input[textboxname = 'AdvicefinanceMoney']").textbox("setValue", data.AdvicefinanceMoney);
+                            $("input[textboxname = 'FinanceCost']").textbox("setValue", data.FinanceCost);
+                            $("select[comboname = 'RepaymentDate']").combobox("select", data.RepaymentDate);
+                            $("input[textboxname = 'Payment']").textbox("setValue", data.Payment);
+                        }
+                    }
+                }
+            });
+        }
+
+        // 加载产品信息
+        function LoadProduceInfo(produceId) {
+            $.ajax({
+                async: false,
+                type: "GET",
+                url: "../api/Produce/Get",
+                data: { productId: produceId },
+                statusCode: {
+                    200: function (data) {
+                        // 融资比例限制
+                        var radio = [];
+                        radio.push(data.MinFinancingRatio);
+                        radio.push(data.MaxFinancingRatio);
+                        // 验证扩展(融资比例限制)
+                        $.extend($.fn.validatebox.defaults.rules, {
+                            ratioLimit: {
+                                validator: function (value, param) {
+                                    return parseFloat(value) >= param[0] && parseFloat(value) <= param[1];
+                                },
+                                message: '融资比例介于' + data.MinFinancingRatio + '%至' + data.MaxFinancingRatio + '%之间！'
+                            }
+                        });
+                        // 融资比例添加验证
+                        $("input[textboxname = 'ApprovalFinanceRatio']").textbox({ validType: ['Price', "ratioLimit[" + radio + "]"] });
+
+                        var produceCost = data.AdditionalGPSCost + data.AdditionalOtherCost;
+                        $("input[textboxname=ProduceCost]").textbox("setValue", produceCost);
+                    }
+                }
+            });
+        }
+
+        // 加载车辆信息
+        function LoadVehiclePrice(vehicleKey) {
+            $.ajax({
+                async: false,
+                type: "GET",
+                url: "../api/CarHome/GetPriceByVehicleID",
+                data: { vehicleKey: vehicleKey },
+                statusCode: {
+                    200: function (data) {
+                        $("input[textboxname=ManufacturerGuidePrice]").textbox("setValue", data.ManufacturerGuidePrice);
+
+                        if (data.ApprovalValue) {
+                            $("input[textboxname=ApprovalValue]").textbox("setValue", data.ApprovalValue);
+                        } else {
+                            $("input[textboxname=ApprovalValue]").textbox("setValue", 0);
+                        }
+                    }
+                }
+            });
+        }
+
+        function CostChange(newValue) {
+            var value;
+            if (newValue == undefined) {
+                value = 0
+            }
+            else {
+                // 金融手续费如果为空，默认为0
+                if (newValue == "") {
+                    newValue = "0";
+                }
+                value = parseFloat(newValue)
+            }
+            var produceCost = $("input[textboxname=ProduceCost]").textbox("getValue");
+            if (produceCost == undefined || produceCost.length == 0) {
+                produceCost = "0";
+            }
+
+            $("input[textboxname=FinalCost]").textbox("setValue", parseFloat(produceCost) + value);
+        }
+
+        // 加载临时数据
+        function LoadTempData() {
+            if (parent.flow.InstanceTempData != undefined)
+            {
+                var data = parent.flow.InstanceTempData.D4;
+
+                if (data != undefined) {
+                    // 加载初复审信息
+                    if (data.ReviewInfo != null) {
+                        uc.form.Load(data.ReviewInfo, "#review_info");
+
+                        var produceCost = $("input[textboxname=ProduceCost]").textbox("getValue");
+
+                        if (produceCost == "") {
+                            produceCost = "0";
+                            $("input[textboxname=ProduceCost]").textbox("setValue", produceCost);
+                        }
+                    }
+                }
+            }
+        }
+
+        function ChangeStatus(status) {
+
+            if (status == "0") {
+                uc.form.DisableForm();
+            }
+
+            if (status != "1") {
+                // 复审(隐藏还款日期)
+                $("#RepaymentDate").addClass("hidden");
+                // 复审(建议融资金额、月供额度、融资比例、金融手续费不可编辑)
+                $('#AdvicefinanceMoney').textbox("readonly", true);
+                $('#ApprovalFinanceRatio').textbox("readonly", true);
+                $('#Payment').textbox("readonly", true);
+                $('#FinanceCost').textbox("readonly", true);
+            }
+            else
+            {
+                $('#AdvicefinanceMoney').textbox("readonly", false);
+                $('#ApprovalFinanceRatio').textbox("readonly", false);
+                $('#Payment').textbox("readonly", false);
+                $('#FinanceCost').textbox("readonly", false);
+            }
+
+            // 加载临时数据
+            if (status != "0") {
+                LoadTempData();
+            }
+        }
+
+
+
+        // 验证数据
+        function ValidData() {
+            if (!$("#review_info").form("validate")) {
+                //  $.messager.show({ msg: "请填写剩下的必填内容!" });
+                return false;
+            }
+
+            return true;
+        }
+
+        // 构建数据
+        function BuildData() {
+            var result = {};
+
+            var value = $.extend({
+                ReviewInfo: $("#review_info").serializeJson()
+            }, []);
+
+            result["formName"] = "审批信息";
+            result["buildData"] = value;
+
+            return result;
+        }
+    </script>
+</head>
+<body>
+    <form class="container" id="Trial">
+        <fieldset id="review_info">
+            <legend>审核</legend>
+
+            <div class="hidden">
+                <input name="FinanceId" type="hidden" />
+            </div>
+
+            <div class="row">
+                <div class="col-6">
+                    <label>厂商指导价:</label>
+                    <input name="ManufacturerGuidePrice" class="easyui-textbox" readonly />
+                    <span class="unit">万元</span>
+                </div>
+
+                <div class="col-6">
+                    <label>评估现市值:</label>
+                    <input name="ApprovalValue" class="easyui-textbox" readonly data-options="required:true,validType:'Price'" />
+                    <span class="unit">万元</span>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6">
+                    <label>建议融资金额:</label>
+                    <input id ="AdvicefinanceMoney" name="AdvicefinanceMoney" class="easyui-textbox" data-options="required:true,validType:'Price'" />
+                    <span class="unit">万元</span>
+                </div>
+                <div class="col-6">
+                    <label>融资比例:</label>
+                    <input id ="ApprovalFinanceRatio" name="ApprovalFinanceRatio" class="easyui-textbox" data-options="required:true,validType:['Price']" />
+                    <span class="unit">%</span>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6">
+                    <label>审批融资金额:</label>
+                    <input name="ApprovalPrincipal" class="easyui-textbox" data-options="required:true,validType:'Price'" />
+                    <span class="unit">万元</span>
+                </div>
+                <div class="col-6">
+                    <label>月供额度:</label>
+                    <input id="Payment" name="Payment" class="easyui-textbox" data-options="required:true,validType:'Price'" />
+                    <span class="unit">元</span>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6">
+                    <label>产品服务费:</label>
+                    <input name="ProduceCost" class="easyui-textbox" readonly />
+                    <span class="unit">元</span>
+                </div>
+                <div class="col-6">
+                    <label>金融手续费:</label>
+                    <input id="FinanceCost" name="FinanceCost" class="easyui-textbox" data-options="required:true,validType:'Price',onChange:CostChange" />
+                    <span class="unit">元</span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-6" id="RepaymentDate">
+                    <label>确定还款日:</label>
+                    <select name="RepaymentDate" class="easyui-combobox" data-options="editable:false" required>
+                        <option value="10">每月10号</option>
+                        <option value="25">每月25号</option>
+                    </select>
+                </div>
+                <div class="col-6">
+                    <label>最终手续费:</label>
+                    <input name="FinalCost" class="easyui-textbox" readonly />
+                    <span class="unit">元</span>
+                </div>
+            </div>
+        </fieldset>
+    </form>
+</body>
+</html>

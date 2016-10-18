@@ -1,0 +1,680 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>信审报告</title>
+    <link href="../Content/easyui/themes/bootstrap/easyui.css" rel="stylesheet" />
+    <link href="../Content/easyui/themes/icon.css" rel="stylesheet" />
+    <link href="../Content/form-bootstrap.css" rel="stylesheet" />
+    <script src="../Scripts/jquery/jquery.js"></script>
+    <script src="../Scripts/easyui/jquery.easyui.js"></script>
+    <script src="../Scripts/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../Scripts/usedcars.js"></script>
+    <script src="../BankInfo/JS/validType.js"></script>
+    <script>
+        uc.form = new UCForm("#ff");
+
+        var ContactContent;
+        var j = 0;
+
+        $(function () {
+            var query = $.extend(uc.GetParams(), parent.flow.InstanceData);
+            $("input[name=FinanceId]").val(query.FinanceId);
+            Init(query.FinanceId);
+            LoadData(query.FinanceId);
+            ChangeStatus(query.Status);
+        });
+
+        //根据融资ID加载信息
+        function Init(financeId) {
+            uc.form.LoadForm({
+                async: false,
+                params: { financeId: financeId },
+                url: "../api/CreditExamineReport/GetByFinanceId",
+                onLoadSuccess: function (data) {
+                    if (data.length > 0) {
+                        for (var i = 0; i < data.length; i++) {
+                            if (data[i].Type == 1) {
+                                $("#proposer").form("load", data[i]);
+                            }
+                            else if (data[i].Type == 2) {
+                                $("#jointApplicant").form("load", data[i]);
+                            }
+                            else if (data[i].Type == 4) {
+                                j++;
+                                ContactContent = AppendContactContent(j);
+                                $('<fileset>').attr({ "id": "Contact" + j }).append(ContactContent).appendTo("#ContactInformation")
+                                $("#Contact" + j).form("load", data[i]);
+                                $.parser.parse('#ContactInformation');
+                            }
+                        }
+                        $('#ContactInformation').children("fileset:last").children("div:last").remove();
+                    }
+                }
+            });
+        }
+
+        function AppendContactContent(i) {
+            var template = document.querySelector("#template");
+            var clone = document.importNode(template.content, true);
+
+            $(clone.querySelectorAll("input[type=radio]")).each(function () {
+                this.name += "_" + i;
+            });
+            $(clone.querySelectorAll("input[type=hidden]")).each(function () {
+                this.name += "_" + i;
+            });
+            $(clone.querySelector("input[name=MainTakeOffice]")).each(function () {
+                this.name += "_" + i;
+            });
+            $(clone.querySelector("input[name=ContactOtherInfo]")).each(function () {
+                this.name += "_" + i;
+            });
+            $(clone.querySelector("input[name=NameReason]")).each(function () {
+                this.name += "_" + i;
+            });
+            $(clone.querySelector("input[name=RelationReason]")).each(function () {
+                this.name += "_" + i;
+            });
+
+            return clone;
+        }
+
+        // Radio单击事件
+        function RadioChick(obj) {
+            if ($(obj).attr("id").substring($(obj).attr("id").length - 1, $(obj).attr("id").length) == 2) {
+                $(obj).nextAll("input").textbox({ readonly: false, required: true });
+            }
+            else {
+                $(obj).nextAll("input[textboxname]").textbox({ readonly: true, required: false, value: "" });
+            }
+           
+            var radioName = $(obj).attr("name").substring(0, $(obj).attr("name").length - 1);
+            var value = $(obj).attr("id").substring($(obj).attr("id").length - 1, $(obj).attr("id").length);
+            // 判断是否是联系人信息中的radio
+            if ($(obj).attr("name").indexOf('_') != -1)
+            {
+                radioName = $(obj).attr("name").substring(0, $(obj).attr("name").length - 3) + "_" + $(obj).attr('name').split('_')[1];
+            }
+            // 给radio的上一个input赋值
+            $("input[name=" + radioName + "]").val(value);
+        }
+
+        // Radio单击事件,
+        function Click(obj) {
+            var radioName = $(obj).attr("name").substring(0, $(obj).attr("name").length - 1);
+            var value = $(obj).attr("id").substring($(obj).attr("id").length - 1, $(obj).attr("id").length);
+            // 判断是否是联系人信息中的radio
+            if ($(obj).attr("name").indexOf('_') != -1) {
+                radioName = $(obj).attr("name").substring(0, $(obj).attr("name").length - 3) + "_" + $(obj).attr('name').split('_')[1];
+            }
+            // 给radio的上一个input赋值
+            $("input[name=" + radioName + "]").val(value);
+        }
+
+        // 加载Radio
+        function SelectRadio() {
+            // 存放需要处理的radio
+            var tempArray = new Array();
+            // 所有隐藏控件
+            var hiddens = $("#ff input[type=hidden]");
+            // 所有radio
+            var radios = $("input[type=radio]");
+
+            // 判断选中的radio
+            for (var i = 4; i < hiddens.length; i++) {
+                for (var j = 0; j < radios.length; j++) {
+                    // 除联系人外的申请人类型
+                    if (hiddens.eq(i).attr("name") + "1" == radios.eq(j).attr("name")) {
+                        if (hiddens.eq(i).val() == radios.eq(j).attr("id").substring(radios.eq(j).attr("id").length - 1, radios.eq(j).attr("id").length)) {
+                            tempArray.push(radios.eq(j));
+                        }
+                    }
+                    // 联系人
+                    if (hiddens.eq(i).attr("name") == radios.eq(j).attr("name").substring(0, radios.eq(j).attr("name").length - 3) + "_" + radios.eq(j).attr('name').split('_')[1])
+                    {
+                        if (hiddens.eq(i).val() == radios.eq(j).attr("id").substring(radios.eq(j).attr("id").length - 1, radios.eq(j).attr("id").length)) {
+                            tempArray.push(radios.eq(j));
+                        }                     
+                    }
+                }
+            }
+
+            // 选中的radio执行单机事件
+            for (var k = 0; k < tempArray.length; k++) {
+                $(tempArray[k]).click();
+            }
+        }
+
+        // 加载数据
+        function LoadData(financeId) {
+            $.ajax({
+                async: false,
+                method: "GET",
+                url: "../api/CreditExamineReport/Get",
+                data: { financeId: financeId },
+                statusCode: {
+                    200: function (data) {                        
+                        if (data) {
+                            uc.form.Load(data, "#ff");
+                            $("#CreditExamineReportID").val(data.CreditExamineReportID);
+                            // 反序列化联系人信息
+                            if (data.ContactInformation != undefined && data.ContactInformation.length > 0)
+                            {
+                                $("#ContactInformation").form("load", $.parseJSON(data.ContactInformation));
+                            }
+                            $('input[type="radio"]:checked').each(function () {
+                                if (this.value == "2") {
+                                    if ($(this).nextAll("span")) {
+                                        $(this).nextAll("input").textbox({ readonly: false });
+                                    }
+                                }
+                            });
+                            // 单选框加载
+                            SelectRadio();
+                        }
+                    },
+                    400: uc.E400
+                }
+            });
+        }
+
+        // 加载临时数据
+        function LoadTempData() {
+            if (parent.flow.InstanceTempData != undefined)
+            {
+                var data = parent.flow.InstanceTempData.D3;
+
+                if (data) {
+                    uc.form.Load(data.CreditExamineReportInfo, "#ff");
+                    // 单选框加载
+                    SelectRadio();
+                }
+            }
+        }
+
+        function ChangeStatus(status) {
+            if (status == "0") {
+                uc.form.DisableForm();
+            }
+            else {
+                LoadTempData();
+            }
+        }
+
+        //验证数据
+        function ValidData() {
+            if (!$("#ff").form("validate")) {
+                return false;
+            }
+            return true;
+        }
+
+        //构建数据
+        function BuildData() {
+            // 序列化联系人信息
+            var obj = $("#ContactInformation").serializeJson();
+            if (obj != undefined)
+            {
+                $('input[name="ContactInformation"]').val(JSON.stringify(obj));
+            }
+
+            var result = {};
+            var value = $.extend({
+                CreditExamineReportInfo: $("#ff").serializeJson()
+            }, []);
+            result["formName"] = "信审报告";
+            result["buildData"] = value;
+
+            return result;
+        }
+
+    </script>
+</head>
+<body>
+    <form id="ff" class="container">
+        <div class="hidden">
+            <input type="hidden" name="FinanceId" />
+            <input type="hidden" name="ContactInformation" />
+            <input type="hidden" name="CreditExamineReportID" />
+        </div>
+        <fieldset id="proposer">
+            <legend>申请人信息审核</legend>
+
+            <div class="row">
+                <div class="col-12">
+                    <label>姓名:</label>
+                    <input name="Name" class="easyui-textbox" disabled style="width:408px;" />
+                    <input name="MainNameType" type="hidden" value="1" />
+                    <input id="MainNameType1" name="MainNameType1" type="radio" style="margin-left:65px" checked="checked" onclick="RadioChick(this)" value="1">一致
+                    <input id="MainNameType2" name="MainNameType1" type="radio" onclick="RadioChick(this)" value="2">不一致
+                    <input name="MainNameReason" id="MainNameReason" data-options="readonly:true" class="easyui-textbox" style="width:310px;" />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12">
+                    <label>年龄:</label>
+                    <input name="Age" class="easyui-textbox" disabled style="width:408px;" />
+                    <input name="MainAgeType" type="hidden" value="1" />
+                    <input id="MainAgeType1" name="MainAgeType1" type="radio" style="margin-left:65px" checked="checked" onclick="RadioChick(this)" value="1">一致
+                    <input id="MainAgeType2" name="MainAgeType1" type="radio" onclick="RadioChick(this)" value="2">不一致
+                    <input name="MainAgeReason" class="easyui-textbox" data-options="readonly:true,validType:'Integer'" style="width:310px;" />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12">
+                    <label>手机号:</label>
+                    <input name="Mobile" class="easyui-textbox" disabled style="width:408px;" />
+                    <input name="MainMobileType" type="hidden" value="1" />
+                    <input id="MainMobileType1" name="MainMobileType1" type="radio" style="margin-left:65px" checked="checked" onclick="RadioChick(this)" value="1">一致
+                    <input id="MainMobileType2" name="MainMobileType1" type="radio" onclick="RadioChick(this)" value="2">不一致
+                    <input name="MainMobileReason" class="easyui-textbox" data-options="readonly:true,validType:'Mobile'" style="width:310px;" />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12">
+                    <label>住宅地址:</label>
+                    <input name="LiveHouseAddress" class="easyui-textbox" disabled style="width:408px;" />
+                    <input name="MainLiveHouseAddressType" type="hidden" value="1" />
+                    <input id="MainLiveHouseAddressType1" name="MainLiveHouseAddressType1" type="radio" style="margin-left:65px" onclick="RadioChick(this)" checked="checked" value="1">一致
+                    <input id="MainLiveHouseAddressType2" name="MainLiveHouseAddressType1" type="radio" onclick="RadioChick(this)" value="2">不一致
+                    <input name="MainLiveHouseAddressReason" class="easyui-textbox" data-options="readonly:true" style="width:310px;" />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6">
+                    <label>家庭成员:</label>
+                    <input name="FamilyNumber" class="easyui-textbox" disabled />
+                    <span class="unit">个</span>
+                </div>
+
+                <div class="col-6">
+                    <label>对住址回答是否迅速流畅:</label>
+                    <input name="MainAnswerHouseAddressType" type="hidden" value="1" />
+                    <input id="MainAnswerHouseAddressType1" name="MainAnswerHouseAddressType1" type="radio" checked="checked" value="1" onclick="Click(this)">是
+                    <input id="MainAnswerHouseAddressType2" name="MainAnswerHouseAddressType1" type="radio" value="2" onclick="Click(this)">否
+                </div>
+            </div>
+
+
+            <div class="row">
+                <div class="col-6">
+                    <label>房产类型:</label>
+                    <input name="LiveHouseType" class="easyui-textbox" disabled style="width:408px;" />
+                </div>
+
+                <div class="col-6">
+                    <label>房产地址:</label>
+                    <input name="LiveHouseAddress" class="easyui-textbox" disabled style="width:408px;" />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6">
+                    <label>房产面积:</label>
+                    <input name="LiveHouseArea" class="easyui-textbox" disabled style="width:408px;" />
+                    <span>平米</span>
+                </div>
+
+                <div class="col-6">
+                    <label>购买时价格:</label>
+                    <input name="MainBuyHousePrice" class="easyui-textbox" data-options="validType:'Price'" style="width:408px;" />
+                    <span class="unit">元</span>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6">
+                    <label>现市值:</label>
+                    <input name="MainPresentWorth" class="easyui-textbox" data-options="validType:'Price'" style="width:408px;" />
+                    <span class="unit">元</span>
+                </div>
+
+                <div class="col-6">
+                    <label>对所购车辆是否熟悉:</label>
+                    <input name="FamiliarCarType" type="hidden" value="1" />
+                    <input id="FamiliarCarType1" name="FamiliarCarType1" type="radio" checked="checked" value="1" onclick="Click(this)">是
+                    <input id="FamiliarCarType2" name="FamiliarCarType1" type="radio" value="2" onclick="Click(this)">否
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12">
+                    <label>现有车辆:</label>
+                    <input name="Car" class="easyui-textbox" />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6">
+                    <label>所购车用途:</label>
+                    <input name="CarUsed" class="easyui-textbox" style="width:408px;" />
+                </div>
+
+                <div class="col-6">
+                    <label>是否合理:</label>
+                    <input name="Isreasonable" type="hidden" value="1" />
+                    <input id="IsreasonableType1" name="Isreasonable1" type="radio" checked="checked" value="1" onclick="Click(this)">是
+                    <input id="IsreasonableType2" name="Isreasonable1" type="radio" value="2" onclick="Click(this)">否
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12">
+                    <label>单位:</label>
+                    <input name="OfficeAddress" class="easyui-textbox" disabled style="width:408px;" />
+                    <input name="MainOfficeAddressType" type="hidden" value="1" />
+                    <input id="MainOfficeAddressType1" name="MainOfficeAddressType1" type="radio" onclick="RadioChick(this)" style="margin-left:65px" checked="checked" value="1">一致
+                    <input id="MainOfficeAddressType2" name="MainOfficeAddressType1" type="radio" onclick="RadioChick(this)" value="2">不一致
+                    <input name="MainOfficeAddressReason" class="easyui-textbox" data-options="readonly:true" style="width:310px;" />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6">
+                    <label>任职:</label>
+                    <input name="MainTakeOffice" class="easyui-textbox" style="width:408px;" />
+                </div>
+
+                <div class="col-6">
+                    <label>工作年限:</label>
+                    <input name="MainWorkingLife" class="easyui-textbox" data-options="validType:'Integer'" style="width:408px;" />
+                    <span class="unit">年</span>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6">
+                    <label>月平均收入:</label>
+                    <input name="MainMonthlyIncome" class="easyui-textbox" data-options="validType:'Price'" style="width:408px;" />
+                    <span class="unit">元</span>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12">
+                    <label>个人收入来源介绍:</label>
+                    <input name="IncomeStream" class="easyui-textbox" data-options="multiline:true,height:66,width:900" />
+                </div>
+            </div>
+        </fieldset>
+
+        <fieldset id="jointApplicant">
+            <legend>共同申请人信息审核</legend>
+            <div class="row">
+                <div class="col-12">
+                    <label>姓名:</label>
+                    <input name="Name" class="easyui-textbox" disabled style="width:408px;" />
+                    <input name="JointlyNameType" type="hidden" value="1" />
+                    <input id="JointlyNameType1" name="JointlyNameType1" type="radio" style="margin-left:65px" checked="checked" onclick="RadioChick(this)" value="1">一致
+                    <input id="JointlyNameType2" name="JointlyNameType1" type="radio" onclick="RadioChick(this)" value="2">不一致
+                    <input name="JointlyNameReason" class="easyui-textbox" data-options="readonly:true" style="width:310px;" />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12">
+                    <label>年龄:</label>
+                    <input name="Age" class="easyui-textbox" disabled style="width:408px;" />
+                    <input name="JointlyAgeType" type="hidden" value="1" />
+                    <input id="JointlyAgeType1" name="JointlyAgeType1" type="radio" style="margin-left:65px" checked="checked" onclick="RadioChick(this)" value="1">一致
+                    <input id="JointlyAgeType2" name="JointlyAgeType1" type="radio" onclick="RadioChick(this)" value="2">不一致
+                    <input name="JointlyAgeReason" class="easyui-textbox" data-options="readonly:true,validType:'Integer'" style="width:310px;" />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12">
+                    <label>手机号:</label>
+                    <input name="Mobile" class="easyui-textbox" disabled style="width:408px;" />
+                    <input name="JointlyMobileType" type="hidden" value="1" />
+                    <input id="JointlyMobileType1" name="JointlyMobileType1" type="radio" style="margin-left:65px" onclick="RadioChick(this)" checked="checked" value="1">一致
+                    <input id="JointlyMobileType2" name="JointlyMobileType1" type="radio" onclick="RadioChick(this)" value="2">不一致
+                    <input name="JointlyMobileReason" class="easyui-textbox" data-options="readonly:true,validType:'Mobile'" style="width:310px;" />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12">
+                    <label>住宅地址:</label>
+                    <input name="LiveHouseAddress" class="easyui-textbox" disabled style="width:408px;" />
+                    <input name="JointlyLiveHouseAddressType" type="hidden" value="1" />
+                    <input id="JointlyLiveHouseAddressType1" name="JointlyLiveHouseAddressType1" type="radio" onclick="RadioChick(this)" style="margin-left:65px" checked="checked" value="1">一致
+                    <input id="JointlyLiveHouseAddressType2" name="JointlyLiveHouseAddressType1" type="radio" onclick="RadioChick(this)" value="2">不一致
+                    <input name="JointlyLiveHouseAddressReason" class="easyui-textbox" data-options="readonly:true" style="width:310px;" />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6">
+                    <label>家庭成员:</label>
+                    <input name="FamilyNumber" class="easyui-textbox" disabled />
+                    <span class="unit">个</span>
+                </div>
+
+                <div class="col-6">
+                    <label>对住址回答是否迅速流畅:</label>
+                    <input name="JointlyAnswerHouseAddressType" type="hidden" value="1" />
+                    <input id="JointlyAnswerHouseAddressType1" name="JointlyAnswerHouseAddressType1" type="radio" checked="checked" value="1" onclick="Click(this)">是
+                    <input id="JointlyAnswerHouseAddressType2" name="JointlyAnswerHouseAddressType1" type="radio" value="2" onclick="Click(this)">否
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6">
+                    <label>房产类型:</label>
+                    <input name="LiveHouseType" class="easyui-textbox" disabled style="width:408px;" />
+                </div>
+
+                <div class="col-6">
+                    <label>房产地址:</label>
+                    <input name="LiveHouseAddress" class="easyui-textbox" disabled style="width:408px;" />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6">
+                    <label>房产面积:</label>
+                    <input name="LiveHouseArea" class="easyui-textbox" disabled style="width:408px;" />
+                    <span>平米</span>
+                </div>
+
+                <div class="col-6">
+                    <label>购买时价格:</label>
+                    <input name="JointlyBuyHousePrice" class="easyui-textbox" data-options="validType:'Price'" style="width:408px;" />
+                    <span class="unit">元</span>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6">
+                    <label>现市值:</label>
+                    <input name="JointlyPresentWorth" class="easyui-textbox" data-options="validType:'Price'" style="width:408px;" />
+                    <span class="unit">元</span>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12">
+                    <label>单位:</label>
+                    <input name="OfficeAddress" class="easyui-textbox" disabled style="width:408px;" />
+                    <input name="JointlyOfficeAddressType" type="hidden" value="1" />
+                    <input id="JointlyOfficeAddressType1" name="JointlyOfficeAddressType1" type="radio" onclick="RadioChick(this)" style="margin-left:65px" checked="checked" value="1">一致
+                    <input id="JointlyOfficeAddressType2" name="JointlyOfficeAddressType1" type="radio" onclick="RadioChick(this)" value="2">不一致
+                    <input name="JointlyOfficeAddressReason" class="easyui-textbox" data-options="readonly:true" style="width:310px;" />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6">
+                    <label>任职:</label>
+                    <input name="JointlyTakeOffice" class="easyui-textbox" style="width:408px;" />
+                </div>
+
+                <div class="col-6">
+                    <label>工作年限:</label>
+                    <input name="JointlyWorkingLife" class="easyui-textbox" data-options="validType:'Integer'" style="width:408px;" />
+                    <span class="unit">年</span>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6">
+                    <label>月平均收入:</label>
+                    <input name="JointlyMonthlyIncome" class="easyui-textbox" data-options="validType:'Price'" style="width:408px;" />
+                    <span class="unit">元</span>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12">
+                    <label>其他信息:</label>
+                    <input name="OtherMessage" class="easyui-textbox" data-options="multiline:true,height:66,width:900" />
+                </div>
+            </div>
+        </fieldset>
+
+        <fieldset id="ContactInformation">
+            <legend>联系人信息核实</legend>
+            <fieldset style="margin-top:0;margin-bottom:0">
+                <div id="ContactContent"></div>
+            </fieldset>
+
+            <template id="template">
+                <div class="row">
+                    <div class="col-12">
+                        <label>姓名:</label>
+                        <input name="Name" class="easyui-textbox" disabled style="width:408px;" />
+                        <input name="NameType" type="hidden" value="1" />
+                        <input id="NameType1" name="NameType1" type="radio" style="margin-left:65px" checked="checked" onclick="RadioChick(this)" value="1">一致
+                        <input id="NameType2" name="NameType1" type="radio" onclick="RadioChick(this)" value="2">不一致
+                        <input name="NameReason" class="easyui-textbox" data-options="readonly:true" style="width:310px;" />
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-12">
+                        <label>与申请人关系:</label>
+                        <select id="RelationWithMaster" name="RelationWithMaster" disabled class="easyui-combobox" style="width:408px" data-options="required:true,editable:false ">
+                            <option value="父母或子女">父母或子女</option>
+                            <option value="兄弟姐妹">兄弟姐妹</option>
+                            <option value="同事">同事</option>
+                            <option value="同学">同学</option>
+                            <option value="朋友">朋友</option>
+                            <option value="夫妻">夫妻</option>
+                            <option value="其他">其他</option>
+                        </select>
+                        <input name="Relation" type="hidden" value="1" />
+                        <input id="RelationType1" name="Relation1" type="radio" style="margin-left:65px" onclick="RadioChick(this)" checked="checked" value="1">一致
+                        <input id="RelationType2" name="Relation1" type="radio" onclick="RadioChick(this)" value="2">不一致
+                        <input name="RelationReason" data-options="readonly:true" class="easyui-textbox" style="width:310px;" />
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-6">
+                        <label>对申请人住址是否熟悉:</label>
+                        <input name="IsKnowAddress" type="hidden" value="1" />
+                        <input id="IsKnowAddressType1" name="IsKnowAddress1" type="radio" checked="checked" value="1" onclick="Click(this)">是
+                        <input id="IsKnowAddressType2" name="IsKnowAddress1" type="radio" value="2" onclick="Click(this)">否
+                    </div>
+
+                    <div class="col-6">
+                        <label>对申请人所从事职业是否熟悉:</label>
+                        <input name="IsKnowOccupation" type="hidden" value="1" />
+                        <input id="IsKnowOccupationType1" name="IsKnowOccupation1" type="radio" checked="checked" value="1" onclick="Click(this)">是
+                        <input id="IsKnowOccupationType2" name="IsKnowOccupation1" type="radio" value="2" onclick="Click(this)">否
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-6">
+                        <label>对申请人此次融资是否了解:</label>
+                        <input name="IsKnowFinance" type="hidden" value="1" />
+                        <input id="IsKnowFinanceType1" name="IsKnowFinance1" type="radio" checked="checked" value="1" onclick="Click(this)">是
+                        <input id="IsKnowFinanceType2" name="IsKnowFinance1" type="radio" value="2" onclick="Click(this)">否
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-12">
+                        <label>其他信息:</label>
+                        <input name="ContactOtherInfo" class="easyui-textbox" data-options="multiline:true,height:66,width:900" />
+                    </div>
+                </div>
+                <div class="row">
+                </div>
+            </template>
+        </fieldset>
+
+        <fieldset id="overview">
+            <legend>综述</legend>
+            <div class="row">
+                <div class="col-12">
+                    <label>银行流水是否正常:</label>
+                    <input name="BankBillType" type="hidden" value="1" />
+                    <input id="BankBillType1" name="BankBillType1" type="radio" checked="checked" value="1" onclick="Click(this)">是
+                    <input id="BankBillType2" name="BankBillType1" type="radio" value="2" onclick="Click(this)">否
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12">
+                    <label>疑点客户解释:</label>
+                    <input name="AnswerBankBill" class="easyui-textbox" data-options="multiline:true,height:66,width:900" />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12">
+                    <label>个人征信是否正常:</label>
+                    <input name="CreditType" type="hidden" value="1" />
+                    <input id="CreditType1" name="CreditType1" type="radio" checked="checked" value="1" onclick="Click(this)">是
+                    <input id="CreditType2" name="CreditType1" type="radio" value="2" onclick="Click(this)">否
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12">
+                    <label>疑点客户解释:</label>
+                    <input name="AnswerCredit" class="easyui-textbox" data-options="multiline:true,height:66,width:900" />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12">
+                    <label>是否家访:</label>
+                    <input name="IsHomeVisitsType" type="hidden" value="1" />
+                    <input id="IsHomeVisitsType1" name="IsHomeVisitsType1" type="radio" checked="checked" value="1" onclick="Click(this)">是
+                    <input id="IsHomeVisitsType2" name="IsHomeVisitsType1" type="radio" value="2" onclick="Click(this)">否
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12">
+                    <label>家访要求:</label>
+                    <input name="HomeVisitsRequire" class="easyui-textbox" data-options="multiline:true,height:66,width:900" />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12">
+                    <label>家访结果:</label>
+                    <input name="HomeVisitsResult" class="easyui-textbox" data-options="multiline:true,height:66,width:900" />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12">
+                    <label>综述:</label>
+                    <input name="ComprehensiveEvaluation" class="easyui-textbox" data-options="multiline:true,height:66,width:900" />
+                </div>
+            </div>
+        </fieldset>
+    </form>
+</body>
+</html>

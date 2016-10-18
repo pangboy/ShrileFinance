@@ -1,0 +1,120 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>待办列表</title>
+    <meta charset="utf-8" />
+    <link href="../Content/easyui/themes/gray/easyui.css" rel="stylesheet" />
+    <link href="../Content/easyui/themes/icon.css" rel="stylesheet" />
+    <script src="../Scripts/jquery/jquery.js"></script>
+    <script src="../Scripts/easyui/jquery.easyui.js"></script>
+    <script src="../Scripts/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../Scripts/usedcars.js"></script>
+    <script>
+        uc.grid = new UCGrid("#dg");
+
+        $(function () {
+            if (top.$("#role_id").val() == 8) {
+                $("#add").show();
+            }
+        });
+
+        function SetFilters(params) {
+            params.MainInfo = $("#MainInfo").textbox("getValue");
+            params.CurrentNode = $("#CurrentNode").textbox("getValue");
+
+            if ($("#BeginTime").datebox("isValid")) {
+                params.BeginTime = $("#BeginTime").datebox("getValue");
+            }
+            if ($("#EndTime").datebox("isValid")) {
+                params.EndTime = $("#EndTime").datebox("getValue");
+            }
+          
+            for (var p in params) {
+                if (params[p] == "") {
+                    delete params[p];
+                }
+            }
+        }
+
+        function Start() {
+            $.ajax({
+                method: "POST",
+                url: "../api/Instance/StartProcess",
+                statusCode: {
+                    200: function (data) {
+                        if (data > 0) {
+                            uc.ShowWindow("详情页", "Flow/Frame.html?Status=1&instanceId=" + data);
+                        }
+                    }
+                }
+            });
+        }
+
+        function Process() {
+            var url = "Flow/Frame.html?Status=1";
+
+            var row = uc.grid.GetSelected();
+            if (row) {
+                url += "&instanceId=" + row.InstanceId;
+            }
+            else {
+                return;
+            }
+
+            uc.ShowWindow("详情页", url);
+        }
+    </script>
+</head>
+
+<body>
+    <table id="dg" class="easyui-datagrid" data-options="
+        height: 630,
+        toolbar: '#tb',
+        rownumbers: true,
+        singleSelect: true,
+        pagination: true,
+        pageSize: 20,
+        pageList: [10,20,30,40,50],
+        method: 'GET',
+        url: '../api/Instance/DoingList',
+        onBeforeLoad: SetFilters,
+        loadMsg: '正在加载，请稍候...'
+        ">
+        <thead>
+            <tr>
+                <th data-options="field:'InstanceId',hidden:true">InstanceId</th>
+                <th data-options="field:'MainInfo',width:500,align:'center'">主要信息</th>
+                <th data-options="field:'FlowName',width:150,align:'center'">所处流程</th>
+                <th data-options="field:'CurrentNodeName',width:150,align:'center'">当前节点</th>
+                <th data-options="field:'CurrentUserName',width:100,align:'center'">当前操作者</th>
+                <th data-options="field:'ProcessUserName',width:100,align:'center'">上一个操作者</th>
+                <th data-options="field:'ProcessTime',width:150,align:'center'">处理时间</th>
+                <th data-options="field:'StartUserName',width:150,align:'center'">发起者</th>
+                <th data-options="field:'StartTime',width:150,align:'center'">发起时间</th>
+                <th data-options="field:'StatusDesc',width:150,align:'center'">状态</th>
+            </tr>
+        </thead>
+    </table>
+
+    <div id="tb">
+        <div>
+            <label for="MainInfo">主要信息:</label>
+            <input  id="MainInfo" name="MainInfo" class="easyui-textbox"data-options="width:200,prompt: '输入车牌或客户姓名查询'"/>
+            <label for="CurrentNode">当前节点:</label>
+            <select id="CurrentNode" name="CurrentNode" class="easyui-combobox" data-options="width:120,editable:false,method:'GET',url:'../api/Flow/NodeOption'"></select>
+            <label for="BeginTime">发起时间 从:</label>
+            <input id="BeginTime" name="BeginTime" class="easyui-datebox" data-options="width:100,validType:'Date'">
+            <label for="EndTime">至:</label>
+            <input id="EndTime" name="EndTime" class="easyui-datebox" data-options="width:100,validType:'Date'">
+
+            <a id="search" class="easyui-linkbutton" href="javascript:void(0)" data-options="onClick:uc.grid.Reload,iconCls:'icon-search',plain:true">搜索</a>
+            <a id="reset" class="easyui-linkbutton" href="javascript:void(0)" data-options="onClick:uc.grid.Reset,iconCls:'icon-reload',plain:true">重置</a>
+        </div>
+
+        <div>
+            <a id="add" class="easyui-linkbutton" href="javascript:void(0)" data-options="onClick:Start,iconCls:'icon-add',plain:true" style="display:none">发起流程</a>
+            <a id="mod" class="easyui-linkbutton" href="javascript:void(0)" data-options="onClick:Process,iconCls:'icon-edit',plain:true">处理</a>
+        </div>
+    </div>
+</body>
+</html>
