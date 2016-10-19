@@ -48,6 +48,7 @@
     <Compile Include="Interfaces\IAggregateRoot.cs" />
     <Compile Include="Interfaces\IEntity.cs" />
     <Compile Include="Interfaces\Repositories\IRepository.cs" />
+    <Compile Include="Interfaces\Repositories\IUnitOfWork.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

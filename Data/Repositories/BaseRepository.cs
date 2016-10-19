@@ -33,21 +33,14 @@
             return Entities.Find(key);
         }
 
-        public TEntity Get(Expression<Func<TEntity, bool>> predicate)
+        public IQueryable<Entity> GetAll()
         {
-            return Entities.FirstOrDefault(predicate);
+            return Entities;
         }
 
-        public IQueryable<TEntity> GetAll(Expression<Func<TEntity, bool>> predicate = null)
+        public IQueryable<TEntity> GetAll(Expression<Func<TEntity, bool>> predicate)
         {
-            var query = Entities.AsQueryable();
-
-            if (predicate != null)
-            {
-                query = query.Where(predicate);
-            }
-
-            return query;
+            return Entities.Where(predicate);
         }
 
         public void Create(TEntity entity)
@@ -57,12 +50,17 @@
 
         public void Modify(TEntity entity)
         {
-            context.Entry(entity).State = EntityState.Modified;
+            Context.Entry(entity).State = EntityState.Modified;
         }
 
         public void Remove(TEntity entity)
         {
             Entities.Remove(entity);
+        }
+
+        public int Commit()
+        {
+            return Context.SaveChanges();
         }
     }
 }

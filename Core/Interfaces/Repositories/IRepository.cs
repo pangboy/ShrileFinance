@@ -5,14 +5,14 @@
     using System.Linq.Expressions;
     using Entities;
 
-    public interface IRepository<TEntity>
+    public interface IRepository<TEntity> : IUnitOfWork
         where TEntity : Entity, IAggregateRoot
     {
         TEntity Get(Guid key);
 
-        TEntity Get(Expression<Func<TEntity, bool>> predicate);
+        IQueryable<Entity> GetAll();
 
-        IQueryable<TEntity> GetAll(Expression<Func<TEntity, bool>> predicate = null);
+        IQueryable<TEntity> GetAll(Expression<Func<TEntity, bool>> predicate);
 
         void Create(TEntity entity);
 
