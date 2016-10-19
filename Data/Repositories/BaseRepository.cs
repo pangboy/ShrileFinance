@@ -23,7 +23,7 @@
             get { return context; }
         }
 
-        private DbSet<TEntity> Entities
+        protected DbSet<TEntity> Entities
         {
             get { return context.Set<TEntity>(); }
         }

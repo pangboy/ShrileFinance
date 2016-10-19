@@ -1,9 +1,8 @@
 ﻿namespace Data
 {
-    using System;
     using System.Data.Entity;
     using System.Data.Entity.ModelConfiguration.Conventions;
-    using System.Linq;
+    using ModelConfigurations;
 
     public class MyContext : DbContext
     {
@@ -12,12 +11,15 @@
         {
         }
 
-        // public virtual DbSet<MyEntity> MyEntities { get; set; }
-
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
             modelBuilder.Conventions.Remove<OneToManyCascadeDeleteConvention>();
+
+            modelBuilder.Configurations
+                .Add(new UserConfiguration());
+
+            base.OnModelCreating(modelBuilder);
         }
     }
 }
