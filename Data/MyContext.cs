@@ -2,9 +2,10 @@
 {
     using System.Data.Entity;
     using System.Data.Entity.ModelConfiguration.Conventions;
+	using Microsoft.AspNet.Identity.EntityFramework;
     using ModelConfigurations;
 
-    public class MyContext : DbContext
+    public class MyContext : IdentityDbContext
     {
         public MyContext()
             : base("name=MyContext")

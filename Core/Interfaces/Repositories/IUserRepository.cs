@@ -5,7 +5,7 @@
     /// <summary>
     /// 用户仓储
     /// </summary>
-    public interface IUserRepository : IRepository<User>
+    public interface IUserRepository : IRepository<ApplicationUser>
     {
         /// <summary>
         /// 检查用户名是否存在

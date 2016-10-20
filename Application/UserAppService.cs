@@ -13,7 +13,7 @@
             this.repository = repository;
         }
 
-        public User GetUser(Guid userId)
+        public ApplicationUser GetUser(Guid userId)
         {
             var user = repository.Get(userId);
 
@@ -22,7 +22,7 @@
 
         public void CreateUser()
         {
-            var user = new User();
+            var user = new ApplicationUser();
 
             repository.Create(user);
             repository.Commit();
