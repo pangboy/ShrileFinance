@@ -1,11 +1,17 @@
 ﻿namespace Data.ModelConfigurations
 {
+    using System.ComponentModel.DataAnnotations.Schema;
+    using System.Data.Entity.ModelConfiguration;
     using Core.Entities;
 
-    public class UserConfiguration : EntityConfiguration<User>
+    public class UserConfiguration : EntityTypeConfiguration<User>
     {
         public UserConfiguration() : base()
         {
+            HasKey(m => m.Id);
+
+            Property(m => m.Id)
+                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
             Property(m => m.Username)
                 .IsRequired()
                 .HasMaxLength(32)
