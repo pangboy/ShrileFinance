@@ -3,8 +3,10 @@
 namespace Model.Customer.Enterprise.Family
 {
     /// <summary>
-    /// 删除报文记录
+    /// 删除报文记录（家族）
     /// </summary>
+    [FDBasePeriod_MOR(ErrorMessage = "主要关系人证件号码和证件类型成对出现")]
+    [FDBasePeriod_FOR(ErrorMessage = "家族成员证件号码和证件类型成对出现")]
     public class DeleteRecord
     {
         /// <summary>
@@ -44,7 +46,7 @@ namespace Model.Customer.Enterprise.Family
         public string FamilyMembersCertificateType { get; set; }
 
         /// <summary>
-        /// 证件号码
+        /// 家族成员证件号码
         /// </summary>
         [Display(Name = "家族成员证件号码"), StringLength(20), Required, ANC(ErrorMessage = "家族成员证件号码类型错误")]
         public string FamilyMembersCertificateNumber { get; set; }

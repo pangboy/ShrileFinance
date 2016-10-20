@@ -9,8 +9,9 @@ namespace Model.Customer.Enterprise.Organizate
 {
 
     /// <summary>
-    /// 上级机构（主管单位）段数据项
+    /// 上级机构（主管单位）段
     /// </summary>
+    [SuperInstitutionPeriod_ROI(ErrorMessage = "上级机构（主管单位）段 登记注册号码、组织机构代码和机构信用代码不能同时为空")]
     public class SuperInstitutionPeriod
     {
         /// <summary>

@@ -3,8 +3,10 @@
 namespace Model.Customer.Enterprise.Family
 {
     /// <summary>
-    /// 基础段
+    /// 基础段（家族）
     /// </summary>
+    [FBasePeriod_MOR(ErrorMessage = "主要关系人证件号码和证件类型成对出现")]
+    [FBasePeriod_FOR(ErrorMessage = "家族成员证件号码和证件类型成对出现")]
     public class BasePeriod : DeleteRecord
     {
         /// <summary>
