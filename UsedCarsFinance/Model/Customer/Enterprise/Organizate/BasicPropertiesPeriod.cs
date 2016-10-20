@@ -82,6 +82,7 @@ namespace Model.Customer.Enterprise.Organizate
         /// 注册资本（万元）
         /// </summary>
         [Display(Name = "注册资本（万元）"), MaxLength(10), AN(ErrorMessage = "注册资本（万元）类型错误")]
+        [RegisterCapital(ErrorMessage = "注册资本 保留两位小数")]
         public string RegisterCapital { get; set; }
 
         /// <summary>
