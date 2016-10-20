@@ -1,23 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Net;
-using System.Net.Http;
-using System.Web;
-using System.Web.Http;
-using System.Web.Http.Filters;
-using System.Web.Routing;
-using Web.Infrastructure;
-
-namespace Web
+﻿namespace Web
 {
+    using System.Web;
+    using System.Web.Http;
+    using Infrastructure;
+
     public class WebApiApplication : HttpApplication
     {
         protected void Application_Start()
         {
             GlobalConfiguration.Configure(Register);
+
+            Bootstrapper.Run();
         }
 
-        public void Register(HttpConfiguration config)
+        protected void Register(HttpConfiguration config)
         {
             // Web API 配置和服务
             config.Formatters.Remove(config.Formatters.XmlFormatter);

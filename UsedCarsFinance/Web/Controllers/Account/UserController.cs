@@ -1,23 +1,30 @@
-﻿using Model;
+﻿using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Web.Http;
+using Application;
+using Model;
 using Model.User;
-using System.Collections.Generic;
 
 namespace Web.Controllers.Account
 {
 	public class UserController : ApiController
 	{
 		private readonly static BLL.User.User _user = new BLL.User.User();
+        private readonly UserAppService userService;
 
-		/// <summary>
-		/// 分页查询
-		/// </summary>
-		/// qiy		15.11.17
-		/// <param name="page">页码</param>
-		/// <param name="rows">尺寸</param>
-		/// <returns></returns>
-		public Datagrid GetAll(int page, int rows)
+        public UserController(UserAppService userService)
+        {
+            this.userService = userService;
+        }
+
+        /// <summary>
+        /// 分页查询
+        /// </summary>
+        /// qiy		15.11.17
+        /// <param name="page">页码</param>
+        /// <param name="rows">尺寸</param>
+        /// <returns></returns>
+        public Datagrid GetAll(int page, int rows)
 		{
 			Pagination pagination = new Pagination(page, rows);
 			NameValueCollection filter = ApiHelper.GetParameters();
