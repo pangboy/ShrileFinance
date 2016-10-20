@@ -15,11 +15,11 @@
                 .InstancePerRequest();
             builder.RegisterAssemblyTypes(typeof(Core.Entities.User).Assembly)
                 .Where(m => m.Name.EndsWith("Service"))
-                .AsImplementedInterfaces()
+                .AsSelf()
                 .InstancePerRequest();
             builder.RegisterAssemblyTypes(Assembly.GetExecutingAssembly())
                 .Where(m => m.Name.EndsWith("AppService"))
-                .AsImplementedInterfaces()
+                .AsSelf()
                 .InstancePerRequest();
         }
     }
