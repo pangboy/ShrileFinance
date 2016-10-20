@@ -15,8 +15,8 @@
 
         public User()
         {
-            CreateTime = DateTime.Now;
-            IsEnable = true;
+            CreatedTime = DateTime.Now;
+            Activated = true;
         }
 
         public string Username { get; set; }
@@ -31,16 +31,16 @@
 
         public string Phone { get; set; }
 
-        public DateTime CreateTime { get; set; }
+        public DateTime CreatedTime { get; set; }
 
-        public bool IsEnable { get; set; }
+        public bool Activated { get; set; }
 
         /// <summary>
         /// 启用
         /// </summary>
         public void Enable()
         {
-            IsEnable = true;
+            Activated = true;
         }
 
         /// <summary>
@@ -48,7 +48,7 @@
         /// </summary>
         public void Disable()
         {
-            IsEnable = false;
+            Activated = false;
         }
 
         /// <summary>
