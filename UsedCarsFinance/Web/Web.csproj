@@ -608,6 +608,18 @@
       <Project>{b731b153-38cd-4043-ae5f-b46302b4d310}</Project>
       <Name>Application</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Core\Core.csproj">
+      <Project>{9efa088c-87ef-4270-85fc-10418c4529ce}</Project>
+      <Name>Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Data\Data.csproj">
+      <Project>{2253be75-d4a9-4865-ac93-dba1fd9db777}</Project>
+      <Name>Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Infrastructure\Infrastructure.csproj">
+      <Project>{6dee6ac9-2f19-4e2e-98cb-9638e0ccb78a}</Project>
+      <Name>Infrastructure</Name>
+    </ProjectReference>
     <ProjectReference Include="..\BLL\BLL.csproj">
       <Project>{2881c719-81e4-42c3-8d1f-9a7ec452a47a}</Project>
       <Name>BLL</Name>
