@@ -22,11 +22,13 @@
         {
             var manager = e.Instance;
 
+            // 配置用户名的验证逻辑
             manager.UserValidator = new UserValidator<AppUser>(manager) {
                 AllowOnlyAlphanumericUserNames = true,
                 RequireUniqueEmail = false
             };
 
+            // 配置密码的验证逻辑
             manager.PasswordValidator = new PasswordValidator {
                 RequiredLength = 6,
                 RequireNonLetterOrDigit = false,
