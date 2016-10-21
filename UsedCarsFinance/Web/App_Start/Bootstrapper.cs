@@ -2,6 +2,7 @@
 {
     using System.Reflection;
     using System.Web.Http;
+    using Application;
     using Autofac;
     using Autofac.Integration.WebApi;
 
@@ -11,8 +12,8 @@
 
         public static void Run()
         {
-            appStartup = new Application.Startup();
-            appStartup.Configuration();
+            //appStartup = new Application.Startup();
+            //appStartup.Configuration();
 
             SetContainer();
         }
@@ -26,7 +27,7 @@
 
             builder.RegisterApiControllers(assembly);
 
-            appStartup.ConfigureContainer(builder);
+            Startup.ConfigureAutofac(builder);
 
             var container = builder.Build();
             config.DependencyResolver = new AutofacWebApiDependencyResolver(container);

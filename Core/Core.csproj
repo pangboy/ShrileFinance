@@ -61,20 +61,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Entities\AppUserManager.cs" />
     <Compile Include="Entities\Entity.cs" />
-    <Compile Include="Entities\User.cs" />
+    <Compile Include="Entities\AppUser.cs" />
     <Compile Include="Interfaces\IAggregateRoot.cs" />
     <Compile Include="Interfaces\IEntity.cs" />
     <Compile Include="Interfaces\Repositories\IRepository.cs" />
     <Compile Include="Interfaces\Repositories\IUnitOfWork.cs" />
-    <Compile Include="Interfaces\Repositories\IUserRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Services\" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

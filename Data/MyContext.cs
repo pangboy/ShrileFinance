@@ -18,7 +18,7 @@
             modelBuilder.Conventions.Remove<OneToManyCascadeDeleteConvention>();
 
             modelBuilder.Configurations
-                .Add(new UserConfiguration());
+                .Add(new AppUserConfiguration());
 
             base.OnModelCreating(modelBuilder);
         }
