@@ -205,12 +205,7 @@
 
             var basePeriod = value as Enterprise.Organizate.BasePeriod;
 
-            if (string.IsNullOrEmpty(basePeriod.OrganizateCode) && string.IsNullOrEmpty(basePeriod.RegistrationNumber))
-            {
-                return false;
-            }
-
-            return true;
+            return ServiceMethods.CheckInPairs(new string[] { basePeriod.OrganizateCode, basePeriod.RegistrationNumber });
         }
     }
 
@@ -231,7 +226,7 @@
                 return false;
             }
 
-            return true;
+            return ServiceMethods.CheckInPairs(new string[] { basePeriod.RegistrationNumberType, basePeriod.RegistrationNumber });
         }
     }
     #endregion
@@ -248,12 +243,7 @@
 
             var executivesMajorParticipantPeriod = value as Enterprise.Organizate.ExecutivesMajorParticipantPeriod;
 
-            if (string.IsNullOrEmpty(executivesMajorParticipantPeriod.CertificateNumber) && string.IsNullOrEmpty(executivesMajorParticipantPeriod.CertificateType))
-            {
-                return false;
-            }
-
-            return true;
+            return ServiceMethods.CheckInPairs(new string[] {executivesMajorParticipantPeriod.CertificateNumber,executivesMajorParticipantPeriod.CertificateType });
         }
     }
     #endregion
@@ -270,12 +260,7 @@
 
             var executivesMajorParticipantPeriod = value as Enterprise.Organizate.MajorShareholdersPeriod;
 
-            if (string.IsNullOrEmpty(executivesMajorParticipantPeriod.RegistraterCode) && string.IsNullOrEmpty(executivesMajorParticipantPeriod.RegistraterType))
-            {
-                return false;
-            }
-
-            return true;
+            return ServiceMethods.CheckInPairs(new string[] {executivesMajorParticipantPeriod.RegistraterCode,executivesMajorParticipantPeriod.RegistraterType }); 
         }
     }
 
@@ -315,12 +300,7 @@
 
             var mainAssociatedEnterprisePerid = value as Enterprise.Organizate.MainAssociatedEnterprisePerid;
 
-            if (string.IsNullOrEmpty(mainAssociatedEnterprisePerid.RegistraterNumber) && string.IsNullOrEmpty(mainAssociatedEnterprisePerid.OrganizateCode) && string.IsNullOrEmpty(mainAssociatedEnterprisePerid.InstitutionCreditCode))
-            {
-                return false;
-            }
-
-            return true;
+            return ServiceMethods.CheckInPairs(new string[] {mainAssociatedEnterprisePerid.RegistraterNumber,mainAssociatedEnterprisePerid.OrganizateCode });
         }
     }
     #endregion
@@ -337,12 +317,7 @@
 
             var superInstitutionPeriod = value as Enterprise.Organizate.SuperInstitutionPeriod;
 
-            if (string.IsNullOrEmpty(superInstitutionPeriod.RegistraterNumber) && string.IsNullOrEmpty(superInstitutionPeriod.OrganizateCode) && string.IsNullOrEmpty(superInstitutionPeriod.InstitutionCreditCode))
-            {
-                return false;
-            }
-
-            return true;
+            return ServiceMethods.CheckInPairs(new string[] { superInstitutionPeriod.RegistraterNumber,superInstitutionPeriod.OrganizateCode});
         }
     }
     #endregion
@@ -361,12 +336,7 @@
 
             var basePeriod = value as Enterprise.Family.BasePeriod;
 
-            if (string.IsNullOrEmpty(basePeriod.MainParticipantCertificateNumber) && string.IsNullOrEmpty(basePeriod.MainParticipantCertificateType))
-            {
-                return false;
-            }
-
-            return true;
+            return ServiceMethods.CheckInPairs(new string[] {basePeriod.MainParticipantCertificateNumber,basePeriod.MainParticipantCertificateType });
         }
     }
 
@@ -381,12 +351,7 @@
 
             var basePeriod = value as Enterprise.Family.BasePeriod;
 
-            if (string.IsNullOrEmpty(basePeriod.FamilyMembersCertificateNumber) && string.IsNullOrEmpty(basePeriod.FamilyMembersCertificateType))
-            {
-                return false;
-            }
-
-            return true;
+            return ServiceMethods.CheckInPairs(new string[] {basePeriod.FamilyMembersCertificateNumber,basePeriod.FamilyMembersCertificateType });
         }
     }
     #endregion
@@ -404,12 +369,7 @@
 
             var basePeriod = value as Enterprise.Family.DeleteRecord;
 
-            if (string.IsNullOrEmpty(basePeriod.MainParticipantCertificateNumber) && string.IsNullOrEmpty(basePeriod.MainParticipantCertificateType))
-            {
-                return false;
-            }
-
-            return true;
+            return ServiceMethods.CheckInPairs(new string[] {basePeriod.MainParticipantCertificateNumber,basePeriod.MainParticipantCertificateType });
         }
     }
 
@@ -424,17 +384,42 @@
 
             var basePeriod = value as Enterprise.Family.DeleteRecord;
 
-            if (string.IsNullOrEmpty(basePeriod.FamilyMembersCertificateNumber) && string.IsNullOrEmpty(basePeriod.FamilyMembersCertificateType))
-            {
-                return false;
-            }
-
-            return true;
+            return ServiceMethods.CheckInPairs(new string[] {basePeriod.FamilyMembersCertificateNumber,basePeriod.FamilyMembersCertificateType });
         }
     }
     #endregion
 
     #region 信息记录级别验证
+
+    #endregion
+
+    #region 服务方法
+    class ServiceMethods
+    {
+        /// <summary>
+        /// 判断两项成对出现
+        /// </summary>
+        /// <param name="valueArray">被判断的值</param>
+        /// <returns></returns>
+        public static bool CheckInPairs(string[] valueArray)
+        {
+            if (valueArray == null || valueArray.Length < 2)
+            {
+                return false;
+            }
+
+            var value1 = string.IsNullOrEmpty(valueArray[0]);
+
+            var value2 = string.IsNullOrEmpty(valueArray[2]);
+
+            if ((value1 && value2) || (!value1 && !value2))
+            {
+                return true;
+            }
+
+            return false;
+        }
+    }
 
     #endregion
 }
