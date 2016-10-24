@@ -9,8 +9,6 @@
         protected void Application_Start()
         {
             GlobalConfiguration.Configure(Register);
-
-            Bootstrapper.Run();
         }
 
         protected void Register(HttpConfiguration config)

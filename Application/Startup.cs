@@ -1,14 +1,14 @@
-﻿using Microsoft.Owin;
-using Owin;
-
-[assembly: OwinStartup(typeof(Application.Startup))]
-namespace Application
+﻿namespace Application
 {
-	public partial class Startup
+    using Owin;
+
+    public abstract partial class Startup
     {
         public void Configuration(IAppBuilder app)
         {
             ConfigureAuth(app);
+
+            ConfigureAutofac();
         }
     }
 }

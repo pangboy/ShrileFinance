@@ -7,8 +7,12 @@
 
     public partial class Startup
     {
-        public static void ConfigureAutofac(ContainerBuilder builder)
+        public abstract void ConfigureAutofac(ContainerBuilder builder);
+
+        public virtual void ConfigureAutofac()
         {
+            var builder = new ContainerBuilder();
+
             builder.RegisterType<Data.MyContext>().AsSelf().InstancePerRequest();
 
             builder.RegisterAssemblyTypes(typeof(Data.Repositories.BaseRepository<>).Assembly)
@@ -28,9 +32,10 @@
                 .As<IUserStore<AppUser>>()
                 .InstancePerRequest();
             builder.RegisterType<AppUserManager>()
-                .As<UserManager<AppUser>>()
-                .InstancePerRequest()
-                .OnActivated(ConfigUserManager);
+                .AsSelf()
+                .InstancePerRequest();
+
+            ConfigureAutofac(builder);
         }
     }
 }
