@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Web;
-using Model.Sys;
+using Models.Sys;
 using System.Linq;
 
 namespace BLL.Sys

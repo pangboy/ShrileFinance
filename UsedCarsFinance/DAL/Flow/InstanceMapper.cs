@@ -2,7 +2,7 @@
 using System.Collections.Specialized;
 using System.Data;
 using System.Data.SqlClient;
-using Model.Flow;
+using Models.Flow;
 
 namespace DAL.Flow
 {
@@ -152,7 +152,7 @@ namespace DAL.Flow
 		/// <param name="page"></param>
 		/// <param name="filters"></param>
 		/// <returns></returns>
-		public DataTable FindDoingList(Model.Pagination page, NameValueCollection filters)
+		public DataTable FindDoingList(Models.Pagination page, NameValueCollection filters)
 		{
             SqlCommand comm = DHelper.GetSqlCommand(@"
                 SELECT tmp.rownum,tmp.Name, fi.InstanceId, tmp.VehicleKey,tmp.PlateNo,
@@ -225,7 +225,7 @@ namespace DAL.Flow
         /// <param name="page"></param>
         /// <param name="filters"></param>
         /// <returns></returns>
-        public DataTable FindDoneList(Model.Pagination page, NameValueCollection filters)
+        public DataTable FindDoneList(Models.Pagination page, NameValueCollection filters)
 		{
             SqlCommand comm = DHelper.GetSqlCommand(@"
                 SELECT tmp.rownum,tmp.Name,tmp.PlateNo, tmp.VehicleKey,tmp.PlateNo,fi.InstanceId, 

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Model
+namespace Models
 {
     /// <summary>
     /// wangpf  16.09.12 添加用户Id字段

@@ -1,4 +1,4 @@
-﻿using Model.Finance;
+﻿using Models.Finance;
 
 namespace BLL.Finance
 {

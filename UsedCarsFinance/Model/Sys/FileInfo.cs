@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Model.Sys
+namespace Models.Sys
 {
     /// <summary>
     /// 文件信息

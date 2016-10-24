@@ -1,5 +1,5 @@
-﻿using Model;
-using Model.Credit;
+﻿using Models;
+using Models.Credit;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Web.Http;

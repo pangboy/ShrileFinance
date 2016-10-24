@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Model.Produce
+namespace Models.Produce
 {
     /// <summary>
     /// 产品信息

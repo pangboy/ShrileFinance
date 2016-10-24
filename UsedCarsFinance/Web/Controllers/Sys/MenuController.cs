@@ -1,8 +1,8 @@
-﻿using Model;
+﻿using Models;
 using System.Collections.Generic;
 using System.Data;
 using System.Web.Http;
-using Model.Sys;
+using Models.Sys;
 
 namespace Web.Controllers.Sys
 {

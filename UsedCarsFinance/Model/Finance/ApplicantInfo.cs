@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Model.Finance
+namespace Models.Finance
 {
     /// <summary>
     /// 申请人实体

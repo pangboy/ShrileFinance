@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
-using Model;
-using Model.Vehicle;
+using Models;
+using Models.Vehicle;
 using System.Data;
 using System.Data.SqlClient;
 using DataHelper;
 using System;
-using Model.Finance;
+using Models.Finance;
 
 namespace DAL.Vehicle
 {

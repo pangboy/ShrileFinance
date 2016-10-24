@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Data;
-using Model;
-using Model.BankCredit;
+using Models;
+using Models.BankCredit;
 
 namespace BLL.BankCredit
 {

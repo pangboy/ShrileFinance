@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Data;
 using System.Data.SqlClient;
-using Model.BankCredit;
+using Models.BankCredit;
 
 namespace DAL.BankCredit
 {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using Model;
-using Model.Vehicle;
+using Models;
+using Models.Vehicle;
 
 namespace BLL.Vehicle
 {

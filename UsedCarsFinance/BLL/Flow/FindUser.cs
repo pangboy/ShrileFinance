@@ -1,4 +1,4 @@
-﻿using Model.Flow;
+﻿using Models.Flow;
 using System;
 
 namespace BLL.Flow
@@ -106,7 +106,7 @@ namespace BLL.Flow
 
             var creditId = _partner.Get(User.User.CurrentUserId).CreditId;
             var accounts = _partner.GetAll(creditId);
-            var manager = accounts.Find(m => m.RoleId == 9 && m.Status == Model.User.UserInfo.StatusEnum.正常);
+            var manager = accounts.Find(m => m.RoleId == 9 && m.Status == Models.User.UserInfo.StatusEnum.正常);
 
             if (manager == null)
                 throw new ApplicationException("该合作商没有渠道经理，任务无法分配。");

@@ -1,5 +1,5 @@
-﻿using Model.Credit;
-using Model.Finance;
+﻿using Models.Credit;
+using Models.Finance;
 using System;
 using System.Data;
 

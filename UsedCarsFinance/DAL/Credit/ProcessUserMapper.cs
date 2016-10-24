@@ -1,6 +1,6 @@
 ﻿using System.Data;
 using System.Data.SqlClient;
-using Model.Credit;
+using Models.Credit;
 
 namespace DAL.Credit
 {

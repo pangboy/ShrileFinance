@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Data;
 using System.Data.SqlClient;
-using Model.Flow;
+using Models.Flow;
 
 namespace DAL.Flow
 {

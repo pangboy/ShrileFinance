@@ -22,7 +22,7 @@ namespace Web.Controllers.Sys
         /// <param name="fileId">文件标识</param>
         /// <returns></returns>
         [HttpGet]
-        public Model.Sys.FileInfo Get(int fileId)
+        public Models.Sys.FileInfo Get(int fileId)
         {
             return _file.Get(fileId);
         }
@@ -34,7 +34,7 @@ namespace Web.Controllers.Sys
         /// <param name="referenceId">引用标识</param>
         /// <returns></returns>
         [HttpGet]
-        public List<Model.Sys.FileInfo> List(int referenceId)
+        public List<Models.Sys.FileInfo> List(int referenceId)
         {
             return _file.GetByReference(referenceId);
         }
@@ -51,7 +51,7 @@ namespace Web.Controllers.Sys
         {
             HttpResponseMessage response = Request.CreateResponse();
 
-            Model.Sys.FileInfo file = _file.Get(fileId);
+            Models.Sys.FileInfo file = _file.Get(fileId);
             string fullname = HttpContext.Current.Server.MapPath(file.FullName);
 
             if (System.IO.File.Exists(fullname))
@@ -140,7 +140,7 @@ namespace Web.Controllers.Sys
         /// <returns>下载文件流</returns>
         [HttpGet]
         [Route("get_demo_file")]
-        public HttpResponseMessage GetDownloadResponse(Model.Sys.FileInfo fileinfo)
+        public HttpResponseMessage GetDownloadResponse(Models.Sys.FileInfo fileinfo)
         {
             try
             {

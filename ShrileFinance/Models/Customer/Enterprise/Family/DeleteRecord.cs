@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Model.Customer.Enterprise.Family
+namespace Models.Customer.Enterprise.Family
 {
     /// <summary>
     /// 删除报文记录（家族）

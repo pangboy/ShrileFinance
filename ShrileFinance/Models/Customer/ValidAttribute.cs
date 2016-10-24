@@ -1,4 +1,4 @@
-﻿namespace Model.Customer
+﻿namespace Models.Customer
 {
     #region 命名空间引用
     using System;

@@ -1,12 +1,12 @@
-﻿using Model.Sys;
+﻿using Models.Sys;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Model.BankCredit;
-using Model;
+using Models.BankCredit;
+using Models;
 using System.Collections.Specialized;
 
 namespace BLL.BankCredit

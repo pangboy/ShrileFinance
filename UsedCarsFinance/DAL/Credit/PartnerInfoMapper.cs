@@ -1,4 +1,4 @@
-﻿using Model.Credit;
+﻿using Models.Credit;
 using System;
 using System.Collections.Specialized;
 using System.Data;
@@ -92,7 +92,7 @@ namespace DAL.Credit
         /// <param name="page">分页信息</param>
         /// <param name="filter">筛选条件</param>
         /// <returns></returns>
-        public DataTable List(Model.Pagination page, NameValueCollection filter)
+        public DataTable List(Models.Pagination page, NameValueCollection filter)
         {
             SqlCommand comm = DHelper.GetSqlCommand(@"
 				SELECT tmp.rownum, ci.CreditId,

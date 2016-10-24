@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Model.Customer.Enterprise.Organizate
+namespace Models.Customer.Enterprise.Organizate
 {
     /// <summary>
     /// 机构状态段

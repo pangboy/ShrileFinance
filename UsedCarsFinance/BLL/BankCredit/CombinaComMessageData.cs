@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Model.BankCredit;
+using Models.BankCredit;
 using System.Web;
 using BLL.FileOparate;
 using System.IO;

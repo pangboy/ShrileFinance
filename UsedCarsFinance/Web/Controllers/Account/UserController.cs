@@ -2,8 +2,8 @@
 using System.Collections.Specialized;
 using System.Web.Http;
 using Application;
-using Model;
-using Model.User;
+using Models;
+using Models.User;
 
 namespace Web.Controllers.Account
 {

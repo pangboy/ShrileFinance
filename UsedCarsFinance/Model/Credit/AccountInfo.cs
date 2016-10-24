@@ -1,4 +1,4 @@
-﻿namespace Model.Credit
+﻿namespace Models.Credit
 {
 	/// <summary>
 	/// 授信帐号

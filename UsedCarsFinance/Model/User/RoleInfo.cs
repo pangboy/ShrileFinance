@@ -1,4 +1,4 @@
-﻿namespace Model.User
+﻿namespace Models.User
 {
 	/// <summary>
 	/// 角色信息

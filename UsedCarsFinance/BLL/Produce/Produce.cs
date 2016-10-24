@@ -1,5 +1,5 @@
-﻿using Model;
-using Model.Produce;
+﻿using Models;
+using Models.Produce;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Data;
@@ -18,7 +18,7 @@ namespace BLL.Produce
         /// <param name="filter">参数</param>
         /// <returns>dt</returns>
 
-        public DataTable List(Model.Pagination pagination, NameValueCollection filter)
+        public DataTable List(Models.Pagination pagination, NameValueCollection filter)
         {
             return produceMapper.Find(pagination, filter);
         }

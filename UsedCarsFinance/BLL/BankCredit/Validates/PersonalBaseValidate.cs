@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
-using Model.BankCredit;
+using Models.BankCredit;
 using System.Linq;
 
 namespace BLL.BankCredit.Validates

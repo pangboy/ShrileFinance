@@ -4,9 +4,9 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
-using Model;
+using Models;
 using System.Collections.Specialized;
-using Model.BankCredit;
+using Models.BankCredit;
 
 namespace DAL.BankCredit
 {

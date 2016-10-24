@@ -5,13 +5,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Model.Customer.Enterprise.Organizate
+namespace Models.Customer.Enterprise.Organizate
 {
+
     /// <summary>
-    /// 主要关联企业段
+    /// 上级机构（主管单位）段
     /// </summary>
-    [MainAssociatedEnterprisePerid_ROI(ErrorMessage = "主要关联企业段 登记注册号码、组织机构代码和机构信用代码不能同时为空")]
-    public class MainAssociatedEnterprisePerid
+    [SuperInstitutionPeriod_ROI(ErrorMessage = "上级机构（主管单位）段 登记注册号码、组织机构代码和机构信用代码不能同时为空")]
+    public class SuperInstitutionPeriod
     {
         /// <summary>
         /// ID
@@ -26,21 +27,15 @@ namespace Model.Customer.Enterprise.Organizate
         {
             get
             {
-                return "H";
+                return "I";
             }
         }
 
         /// <summary>
-        /// 关联类型
+        /// 上级机构名称
         /// </summary>
-        [Display(Name = "关联类型"), StringLength(2), Required, AN(ErrorMessage = "关联类型类型错误")]
-        public string AssociatedType { get; set; }
-
-        /// <summary>
-        /// 关联企业名称
-        /// </summary>
-        [Display(Name = "关联企业名称"), StringLength(80), Required, ANC(ErrorMessage = "关联企业名称类型错误")]
-        public string AssociatedEnterpriseName { get; set; }
+        [Display(Name = "上级机构名称"), StringLength(80), Required, ANC(ErrorMessage = "上级机构名称类型错误")]
+        public string SuperInstitutionsName { get; set; }
 
         /// <summary>
         /// 登记注册号类型
@@ -49,21 +44,21 @@ namespace Model.Customer.Enterprise.Organizate
         public string RegistraterNumberType { get; set; }
 
         /// <summary>
-        /// 登记注册号码
+        /// 登记注册号
         /// </summary>
-        [Display(Name = "登记注册号码"), StringLength(20), ANC(ErrorMessage = "登记注册号码类型错误")]
+        [Display(Name = "登记注册号"), StringLength(20), ANC(ErrorMessage = "登记注册号类型错误")]
         public string RegistraterNumber { get; set; }
 
         /// <summary>
         /// 组织机构代码
         /// </summary>
-        [Display(Name = "组织机构代码"), StringLength(10), MinLength(10), AN(ErrorMessage = "组织机构代码类型错误")]
+        [Display(Name = "组织机构代码"), StringLength(10), AN(ErrorMessage = "组织机构代码类型错误")]
         public string OrganizateCode { get; set; }
 
         /// <summary>
         /// 机构信用代码
         /// </summary>
-        [Display(Name = "机构信用代码"), StringLength(18), MinLength(18), AN(ErrorMessage = "机构信用代码类型错误")]
+        [Display(Name = "机构信用代码"), StringLength(18), AN(ErrorMessage = "机构信用代码类型错误")]
         public string InstitutionCreditCode { get; set; }
 
         /// <summary>
@@ -75,7 +70,7 @@ namespace Model.Customer.Enterprise.Organizate
         /// <summary>
         /// 预留字段
         /// </summary>
-        [Display(Name = "预留字段"), StringLength(40), ANC(ErrorMessage = "预留字段类型错误")]
+        [Display(Name = "预留字段"), StringLength(40), Required, ANC(ErrorMessage = "预留字段类型错误")]
         public string ReservedField { get; set; }
     }
 }

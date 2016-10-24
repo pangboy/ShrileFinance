@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Model.Credit;
+using Models.Credit;
 using System.Transactions;
 using System.Data;
 using System.Collections.Specialized;
-using Model;
+using Models;
 
 namespace BLL.Credit
 {
@@ -27,7 +27,7 @@ namespace BLL.Credit
             AccountInfo account = accountMapper.Find(userId);
 
             if (account != null)
-                Model.ConvertHelper.Copy(_user.GetUser(userId), account);
+                Models.ConvertHelper.Copy(_user.GetUser(userId), account);
 
             return account;
         }

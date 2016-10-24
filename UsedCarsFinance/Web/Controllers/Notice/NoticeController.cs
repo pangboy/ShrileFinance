@@ -3,9 +3,9 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web.Http;
 using BLL.Tools;
-using Model;
-using Model.Notice;
-using Model.User;
+using Models;
+using Models.Notice;
+using Models.User;
 
 namespace Web.Controllers.Notice
 {

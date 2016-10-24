@@ -1,4 +1,4 @@
-﻿using Model.Notice;
+﻿using Models.Notice;
 using System;
 using System.Collections.Generic;
 using System.Linq;

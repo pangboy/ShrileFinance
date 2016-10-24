@@ -1,5 +1,5 @@
 ﻿using BLL.Sys;
-using Model.Sys;
+using Models.Sys;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -104,7 +104,7 @@ namespace BLL.Finance
         /// cais    16.04.27
         /// <param name="references">referencesid 集合</param>
         /// <returns>一个压缩好的文件信息</returns>
-        public Model.Sys.FileInfo Download(List<int> references)
+        public Models.Sys.FileInfo Download(List<int> references)
         {
             BLL.Sys.File _file = new BLL.Sys.File();
             Compress _compress = new Compress();
@@ -124,7 +124,7 @@ namespace BLL.Finance
         /// </summary>
         /// cais    16.04.28
         /// <param name="compressFile">文件信息</param>
-        public void DeleteFileByDate(Model.Sys.FileInfo compressFile)
+        public void DeleteFileByDate(Models.Sys.FileInfo compressFile)
         {
             if (compressFile.FilePath != null)
             {

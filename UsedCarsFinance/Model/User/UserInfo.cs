@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Model.User
+namespace Models.User
 {
 	/// <summary>
 	/// 用户信息

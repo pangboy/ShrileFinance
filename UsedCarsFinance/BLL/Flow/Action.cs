@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Model.Flow;
+using Models.Flow;
 
 namespace BLL.Flow
 {

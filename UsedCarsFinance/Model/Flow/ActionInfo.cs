@@ -1,4 +1,4 @@
-﻿namespace Model.Flow
+﻿namespace Models.Flow
 {
     /// <summary>
     /// 行为信息

@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using Model;
-using Model.User;
+using Models;
+using Models.User;
 
 namespace DAL.User
 {

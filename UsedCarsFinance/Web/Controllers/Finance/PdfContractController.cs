@@ -1,5 +1,5 @@
-﻿using Model;
-using Model.Sys;
+﻿using Models;
+using Models.Sys;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -27,7 +27,7 @@ namespace Web.Controllers
         /// <param name="fileId">文件ID</param>
         /// <returns></returns>
         [HttpGet]
-        public Model.Sys.FileInfo GetPath(int fileId)
+        public Models.Sys.FileInfo GetPath(int fileId)
         {
             return new BLL.Sys.File().Get(fileId);
         }

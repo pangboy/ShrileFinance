@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Model;
-using Model.BankCredit;
+using Models;
+using Models.BankCredit;
 
 namespace BLL.BankCredit
 {

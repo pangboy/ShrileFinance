@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Model.BankCredit
+namespace Models.BankCredit
 {
     public class InformationRecordInfo
     {

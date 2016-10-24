@@ -1,5 +1,5 @@
-﻿using Model;
-using Model.BankCredit;
+﻿using Models;
+using Models.BankCredit;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -50,7 +50,7 @@ namespace DAL.BankCredit
         /// <param name="page"></param>
         /// <param name="filter"></param>
         /// <returns></returns>
-        public DataTable List(Model.Pagination page, NameValueCollection filter)
+        public DataTable List(Models.Pagination page, NameValueCollection filter)
         {
             SqlCommand comm = DHelper.GetSqlCommand(@"
                 SELECT tmp.rownum, bm.MetaCode, bm.Name, bm.DataType, bm.DatasLength,CASE bm.Type WHEN 1 THEN '企业' WHEN 2 THEN '个人' END AS TypeName

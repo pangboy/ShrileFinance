@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Model.Customer.Enterprise.Organizate
+namespace Models.Customer.Enterprise.Organizate
 {
     /// <summary>
     /// 机构基本信息记录

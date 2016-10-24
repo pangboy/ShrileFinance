@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Model.Notice
+namespace Models.Notice
 {
     /// <summary>
     /// 行为通知实体

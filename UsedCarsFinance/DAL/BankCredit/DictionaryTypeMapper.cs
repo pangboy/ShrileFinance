@@ -1,6 +1,6 @@
 ﻿using DataHelper;
-using Model;
-using Model.BankCredit;
+using Models;
+using Models.BankCredit;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -83,7 +83,7 @@ namespace DAL.BankCredit
         /// yangj    16.07.01
         /// <param name="dictionaryTypeId">字典类型ID</param>
         /// <returns></returns>
-        public DataTable List(Model.Pagination page, NameValueCollection filter)
+        public DataTable List(Models.Pagination page, NameValueCollection filter)
         {
             SqlCommand comm = DHelper.GetSqlCommand(@"
                 SELECT tmp.rownum, bdt.BDT_ID,bdt.Name, temp.Name AS ParentName

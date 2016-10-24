@@ -1,7 +1,7 @@
 ﻿using iTextSharp.text;
-using Model;
-using Model.Finance;
-using Model.Sys;
+using Models;
+using Models.Finance;
+using Models.Sys;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -180,8 +180,8 @@ namespace BLL.Contract
         {
             bool result = false;
             //插入一条pdf文件数据
-            Model.Sys.FileInfo fi = new Model.Sys.FileInfo();
-            fileMapper.Insert(fi = new Model.Sys.FileInfo
+            Models.Sys.FileInfo fi = new Models.Sys.FileInfo();
+            fileMapper.Insert(fi = new Models.Sys.FileInfo
             {
                 OldName = number,
                 ExtName = ".pdf",
@@ -217,7 +217,7 @@ namespace BLL.Contract
                     referenceInfo = reference.Apply(FinanceId, 4, 2);//合同模块为4，2为车辆抵押
                     refid = referenceInfo.ReferenceId;
 
-                    List<Model.Sys.FileInfo> filelist = fileMapper.FindByReference(refid);
+                    List<Models.Sys.FileInfo> filelist = fileMapper.FindByReference(refid);
                     string dy = contractsCalc.GetContractNum("DY", FinanceId, mainApplicant.ApplicantId.Value);//融资租赁合同编号代码
                     if (filelist.Count > 0)
                     {

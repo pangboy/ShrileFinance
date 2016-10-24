@@ -1,4 +1,4 @@
-﻿using Model.BankCredit;
+﻿using Models.BankCredit;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -30,7 +30,7 @@ namespace BLL.BankCredit
         /// yangj    16.07.05
         /// <param name="metaCode">数据元标识</param> 
         /// <returns></returns>
-        public DataTable List(Model.Pagination page, NameValueCollection filter)
+        public DataTable List(Models.Pagination page, NameValueCollection filter)
         {
             return metaMapper.List(page, filter);
         }

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Model.Customer.Enterprise.Family
+namespace Models.Customer.Enterprise.Family
 {
     /// <summary>
     /// 基础段（家族）

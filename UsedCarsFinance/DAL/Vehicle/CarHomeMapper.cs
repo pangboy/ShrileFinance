@@ -1,7 +1,7 @@
 ﻿using DataHelper;
-using Model;
-using Model.Finance;
-using Model.Vehicle;
+using Models;
+using Models.Finance;
+using Models.Vehicle;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;

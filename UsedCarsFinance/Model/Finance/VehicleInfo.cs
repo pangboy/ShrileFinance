@@ -1,6 +1,6 @@
-﻿using Model.Vehicle;
+﻿using Models.Vehicle;
 
-namespace Model.Finance
+namespace Models.Finance
 {
 	/// <summary>
 	/// 融资申请-车辆信息

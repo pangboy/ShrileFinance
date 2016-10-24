@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace Model.Customer.Enterprise.Organizate
+namespace Models.Customer.Enterprise.Organizate
 {
     /// <summary>
     /// 基础段

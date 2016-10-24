@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using Model.Sys;
-using Model;
+using Models.Sys;
+using Models;
 
 namespace DAL.Sys
 {

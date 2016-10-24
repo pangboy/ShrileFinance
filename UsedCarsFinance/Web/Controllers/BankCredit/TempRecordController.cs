@@ -1,5 +1,5 @@
 ﻿using System.Web.Http;
-using Model.BankCredit;
+using Models.BankCredit;
 
 namespace Web.Controllers.BankCredit
 {

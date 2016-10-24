@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Model.BankCredit
+namespace Models.BankCredit
 {
     /// <summary>
     /// 报文段实体

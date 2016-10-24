@@ -4,8 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Transactions;
-using Model;
-using Model.Finance;
+using Models;
+using Models.Finance;
 
 namespace BLL.Finance
 {
@@ -89,7 +89,7 @@ namespace BLL.Finance
                 return null;
 
             //获取授信主体所拥有的产品
-            List<Model.Produce.ProduceInfo> produces = _credit.GetProduces(creditAccount.CreditId);
+            List<Models.Produce.ProduceInfo> produces = _credit.GetProduces(creditAccount.CreditId);
 
             //转换为选项
             List<ComboInfo> options = Produce.Produce.ProducesToOption(produces);

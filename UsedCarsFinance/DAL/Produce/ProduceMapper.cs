@@ -1,6 +1,6 @@
 ﻿using DataHelper;
-using Model;
-using Model.Produce;
+using Models;
+using Models.Produce;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -174,7 +174,7 @@ namespace DAL.Produce
         /// <param name="pagination">分页</param>
         /// <param name="filter">参数</param>
         /// <returns></returns>
-        public DataTable Find(Model.Pagination pagination, NameValueCollection filter)
+        public DataTable Find(Models.Pagination pagination, NameValueCollection filter)
         {
             SqlCommand comm = DHelper.GetSqlCommand(@"
                 SELECT

@@ -1,4 +1,4 @@
-﻿using Model.Finance;
+﻿using Models.Finance;
 using System;
 using System.Data;
 using System.Data.SqlClient;
