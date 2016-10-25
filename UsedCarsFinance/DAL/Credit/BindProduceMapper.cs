@@ -41,7 +41,7 @@ namespace DAL.Credit
 		/// <param name="creditId">授信主体标识</param>
 		/// <param name="produces">产品列表</param>
 		/// <returns></returns>
-		public int InsertByCredit(int creditId, List<Model.Produce.ProduceInfo> produces)
+		public int InsertByCredit(int creditId, List<Models.Produce.ProduceInfo> produces)
 		{
 			SqlCommand comm = DHelper.GetSqlCommand(string.Empty);
 			DHelper.AddParameter(comm, "@CreditId", SqlDbType.Int, creditId);

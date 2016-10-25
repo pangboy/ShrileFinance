@@ -1,5 +1,5 @@
 ﻿using DataHelper;
-using Model.Finance;
+using Models.Finance;
 using System;
 using System.Collections.Generic;
 using System.Data;

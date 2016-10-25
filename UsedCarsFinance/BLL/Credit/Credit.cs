@@ -4,8 +4,8 @@ using System.Collections.Specialized;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Model;
-using Model.Credit;
+using Models;
+using Models.Credit;
 using System.Transactions;
 
 namespace BLL.Credit
@@ -127,12 +127,12 @@ namespace BLL.Credit
         /// qiy		16.03.29
         /// <param name="creditId">标识</param>
         /// <returns></returns>
-        public List<Model.Produce.ProduceInfo> GetProduces(int creditId)
+        public List<Models.Produce.ProduceInfo> GetProduces(int creditId)
         {
             Produce.Produce _produce = new Produce.Produce();
 
             List<int> producesId = bindProduceMapper.FindByCredit(creditId);
-            List<Model.Produce.ProduceInfo> produces = new List<Model.Produce.ProduceInfo>();
+            List<Models.Produce.ProduceInfo> produces = new List<Models.Produce.ProduceInfo>();
 
             foreach (int produceId in producesId)
             {

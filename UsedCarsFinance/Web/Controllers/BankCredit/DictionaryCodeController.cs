@@ -4,8 +4,8 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
-using Model;
-using Model.BankCredit;
+using Models;
+using Models.BankCredit;
 using System.Collections.Specialized;
 
 namespace Web.Controllers.BankCredit

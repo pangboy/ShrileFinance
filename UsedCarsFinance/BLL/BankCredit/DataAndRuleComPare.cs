@@ -4,7 +4,7 @@ using System.Data;
 using System.Reflection;
 using System.Text;
 using System.Transactions;
-using Model.BankCredit;
+using Models.BankCredit;
 using Newtonsoft.Json;
 
 namespace BLL.BankCredit

@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Model.Credit;
+using Models.Credit;
 
-namespace Model.Finance
+namespace Models.Finance
 {
     /// <summary>
     /// 银行卡信息

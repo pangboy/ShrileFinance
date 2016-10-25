@@ -7,7 +7,7 @@ using System.Web.Http;
 using System.Data;
 using System.Data.SqlClient;
 using System.Collections.Specialized;
-using Model.BankCredit;
+using Models.BankCredit;
 
 namespace Web.Controllers.BankCredit
 {

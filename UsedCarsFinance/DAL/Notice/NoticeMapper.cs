@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using Model.Notice;
+using Models.Notice;
 
 namespace DAL.Notice
 {
@@ -62,7 +62,7 @@ namespace DAL.Notice
         /// <param name="isRead">是否已读</param>
         /// <param name="pagination">分页</param>
         /// <returns>通知集合</returns>
-        public DataTable Find(int userId, bool isRead, Model.Pagination pagination)
+        public DataTable Find(int userId, bool isRead, Models.Pagination pagination)
         {
             var sql = string.Format(@"
                 SELECT TOP (@End)
@@ -100,7 +100,7 @@ namespace DAL.Notice
                 ORDER BY 
                     IsRead,[Time]
             ");
-                pagination = new Model.Pagination(0, 0);
+                pagination = new Models.Pagination(0, 0);
             }
 
             SqlCommand comm = DHelper.GetSqlCommand(sql);
@@ -132,7 +132,7 @@ namespace DAL.Notice
         /// <param name="userId">用户标识</param>
         /// <param name="pagination">分页</param>
         /// <returns>通知</returns>
-        public DataTable FindAll(int userId, Model.Pagination pagination)
+        public DataTable FindAll(int userId, Models.Pagination pagination)
         {
             var sql = string.Format(@"
                SELECT TOP (@End)
@@ -169,7 +169,7 @@ namespace DAL.Notice
                 ORDER BY 
                     IsRead,[Time]
             ");
-                pagination = new Model.Pagination(0, 0);
+                pagination = new Models.Pagination(0, 0);
             }
 
             SqlCommand comm = DHelper.GetSqlCommand(sql);

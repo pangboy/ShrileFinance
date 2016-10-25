@@ -1,4 +1,4 @@
-﻿namespace Model.Sys
+﻿namespace Models.Sys
 {
 	/// <summary>
 	/// 字典信息

@@ -5,8 +5,8 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using System.Collections.Specialized;
-using Model;
-using Model.Credit;
+using Models;
+using Models.Credit;
 
 namespace Web.Controllers.Credit
 {

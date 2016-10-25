@@ -4,10 +4,10 @@ using System.Data;
 using System.Text.RegularExpressions;
 using BLL.Flow;
 using BLL.Tools;
-using Model;
-using Model.Flow;
-using Model.Notice;
-using Model.User;
+using Models;
+using Models.Flow;
+using Models.Notice;
+using Models.User;
 using System.Transactions;
 
 namespace BLL.Notice
@@ -35,7 +35,7 @@ namespace BLL.Notice
         /// <param name="isRead">是否已读</param>
         /// <param name="pagination">分页</param>
         /// <returns>通知集合</returns>
-        public DataTable Get(int userId, bool isRead = false, Model.Pagination pagination = null)
+        public DataTable Get(int userId, bool isRead = false, Models.Pagination pagination = null)
         {
             return NoticeMapper.Find(userId, isRead, pagination);
         }
@@ -57,7 +57,7 @@ namespace BLL.Notice
         /// <param name="userId">用户标识</param>
         /// <param name="pagination">分页</param>
         /// <returns>通知</returns>
-        public DataTable GetAll(int userId, Model.Pagination pagination = null)
+        public DataTable GetAll(int userId, Models.Pagination pagination = null)
         {
             return NoticeMapper.FindAll(userId, pagination);
         }
@@ -68,7 +68,7 @@ namespace BLL.Notice
         /// zouql   16.08.29
         /// <param name="noticeReceiver">通知实体</param>
         /// <returns>插入结果</returns>
-        public bool Add(Model.Notice.NoticeInfo noticeReceiver)
+        public bool Add(Models.Notice.NoticeInfo noticeReceiver)
         {
             return NoticeMapper.Insert(noticeReceiver) > 0;
         }
@@ -151,7 +151,7 @@ namespace BLL.Notice
         /// zouql   16.08.29
         /// <param name="noticeReceiver">通知实体</param>
         /// <returns>更新结果</returns>
-        public bool Modify(Model.Notice.NoticeInfo noticeReceiver)
+        public bool Modify(Models.Notice.NoticeInfo noticeReceiver)
         {
             return NoticeMapper.Update(noticeReceiver) > 0;
         }

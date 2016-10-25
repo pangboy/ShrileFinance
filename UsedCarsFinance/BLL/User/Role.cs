@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using Model;
-using Model.User;
+using Models;
+using Models.User;
 
 namespace BLL.User
 {

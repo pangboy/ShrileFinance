@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Data;
 using System.Data.SqlClient;
-using Model.Finance;
+using Models.Finance;
 
 namespace DAL.Finance
 {

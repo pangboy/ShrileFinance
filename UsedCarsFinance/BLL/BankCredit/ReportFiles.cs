@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Model;
+using Models;
 using System.Collections.Specialized;
 using System.Data;
-using Model.BankCredit;
+using Models.BankCredit;
 using System.Transactions;
 using System.Web;
 

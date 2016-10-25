@@ -5,13 +5,13 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Model.Flow;
-using Model.Finance;
+using Models.Flow;
+using Models.Finance;
 using System.Xml.Serialization;
 using System.IO;
 using Newtonsoft.Json;
 using System.Xml;
-using Model.Vehicle;
+using Models.Vehicle;
 
 namespace BLL.Flow
 {
@@ -171,7 +171,7 @@ namespace BLL.Flow
         /// <param name="page"></param>
         /// <param name="filters"></param>
         /// <returns></returns>
-        public DataTable DoingList(Model.Pagination page, NameValueCollection filters)
+        public DataTable DoingList(Models.Pagination page, NameValueCollection filters)
         {
             var user = new User.User().CurrentUser();
             filters.Add("CurrentUser", user.UserId.ToString());
@@ -218,7 +218,7 @@ namespace BLL.Flow
         /// <param name="page"></param>
         /// <param name="filters"></param>
         /// <returns></returns>
-        public DataTable DoneList(Model.Pagination page, NameValueCollection filters)
+        public DataTable DoneList(Models.Pagination page, NameValueCollection filters)
         {
             filters.Add("CurrentUser", User.User.CurrentUserId.ToString());
             CarHomeInfo carHome = new CarHomeInfo();

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Model.Finance
+namespace Models.Finance
 {
     /// <summary>
     /// 融资申请信息

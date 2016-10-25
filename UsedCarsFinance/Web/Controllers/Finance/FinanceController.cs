@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Web.Http;
-using Model;
-using Model.Finance;
+using Models;
+using Models.Finance;
 
 namespace Web.Controllers.Finance
 {

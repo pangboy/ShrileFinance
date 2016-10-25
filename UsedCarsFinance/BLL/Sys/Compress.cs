@@ -32,7 +32,7 @@ namespace BLL.Sys
         /// </summary>
         /// cais    16.04.26
         /// <param name="fileinfo">文件信息</param>
-        public void Add(Model.Sys.FileInfo fileinfo)
+        public void Add(Models.Sys.FileInfo fileinfo)
         {
             var Server = HttpContext.Current.Server;
 
@@ -48,7 +48,7 @@ namespace BLL.Sys
         /// </summary>
         /// cais    16.04.27
         /// <param name="listfileinfo">文件信息</param>
-        public void Add(List<Model.Sys.FileInfo> listfileinfo)
+        public void Add(List<Models.Sys.FileInfo> listfileinfo)
         {
             foreach (var file in listfileinfo)
             {
@@ -60,12 +60,12 @@ namespace BLL.Sys
         /// 压缩后的文件信息
         /// </summary>
         /// <returns></returns>
-        public Model.Sys.FileInfo Comperssing()
+        public Models.Sys.FileInfo Comperssing()
         {
             string err;
             string zippath = zipfilepath + ".zip";
 
-            Model.Sys.FileInfo comperssFile = new Model.Sys.FileInfo();
+            Models.Sys.FileInfo comperssFile = new Models.Sys.FileInfo();
 
             if (ZipFile(HttpContext.Current.Server.MapPath(zipfilepath), out err) == true)
             {

@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Specialized;
 using System.Web.Http;
-using Model;
-using Model.Flow;
-using Model.Finance;
+using Models;
+using Models.Flow;
+using Models.Finance;
 using System.Collections.Generic;
 
 namespace Web.Controllers.Flow

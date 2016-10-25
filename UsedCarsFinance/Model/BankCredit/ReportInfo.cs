@@ -1,4 +1,4 @@
-﻿namespace Model.BankCredit
+﻿namespace Models.BankCredit
 {
     /// <summary>
     /// 报文

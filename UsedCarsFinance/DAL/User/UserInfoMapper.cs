@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Data;
 using System.Data.SqlClient;
-using Model.User;
+using Models.User;
 
 namespace DAL.User
 {
@@ -17,7 +17,7 @@ namespace DAL.User
 		/// <param name="page">分页信息</param>
 		/// <param name="filter">筛选条件</param>
 		/// <returns></returns>
-		public DataTable List(Model.Pagination page, NameValueCollection filter)
+		public DataTable List(Models.Pagination page, NameValueCollection filter)
 		{
 			SqlCommand comm = DHelper.GetSqlCommand(
 				@"SELECT tmp.rownum, ui.UI_ID,
@@ -125,7 +125,7 @@ namespace DAL.User
         /// qiy     16.05.31
         /// <param name="roleId">角色标识</param>
         /// <returns></returns>
-        public List<Model.ComboInfo> Option(int? roleId)
+        public List<Models.ComboInfo> Option(int? roleId)
         {
             SqlCommand comm = DHelper.GetSqlCommand(
                 @"SELECT UI_ID, Realname FROM USER_UserInfo 
@@ -135,11 +135,11 @@ namespace DAL.User
 
             DataTable dt = DHelper.ExecuteDataTable(comm);
 
-            var list = new List<Model.ComboInfo>();
+            var list = new List<Models.ComboInfo>();
 
             foreach (DataRow dr in dt.Rows)
             {
-                var cbi = new Model.ComboInfo(dr[0].ToString(), dr[1].ToString());
+                var cbi = new Models.ComboInfo(dr[0].ToString(), dr[1].ToString());
 
                 list.Add(cbi);
             }

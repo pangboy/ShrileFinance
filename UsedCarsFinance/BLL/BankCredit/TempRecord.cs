@@ -1,6 +1,6 @@
 ﻿using System.Transactions;
 using DAL.BankCredit;
-using Model.BankCredit;
+using Models.BankCredit;
 
 namespace BLL.BankCredit
 {

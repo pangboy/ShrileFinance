@@ -6,8 +6,8 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using BLL.BankCredit;
-using Model;
-using Model.BankCredit;
+using Models;
+using Models.BankCredit;
 
 namespace Web.Controllers.BankCredit
 {

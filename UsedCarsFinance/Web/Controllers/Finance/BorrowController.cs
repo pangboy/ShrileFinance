@@ -57,7 +57,7 @@ namespace Web.Controllers.Finance
         /// <param name="value">借贷信息</param>
         /// <returns>修改结果</returns>
         [HttpPost]
-        public IHttpActionResult Modify(Model.Finance.BorrowInfo value)
+        public IHttpActionResult Modify(Models.Finance.BorrowInfo value)
         {
             var result = borrow.Moddify(value);
 

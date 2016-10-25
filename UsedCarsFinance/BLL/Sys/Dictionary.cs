@@ -1,4 +1,4 @@
-﻿using Model.Sys;
+﻿using Models.Sys;
 using System.Data;
 
 namespace BLL.Sys

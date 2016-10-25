@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Data;
 using System.Data.SqlClient;
-using Model;
-using Model.BankCredit;
+using Models;
+using Models.BankCredit;
 
 namespace DAL.BankCredit
 {

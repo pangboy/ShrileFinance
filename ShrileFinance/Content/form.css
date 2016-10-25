@@ -1,0 +1,28 @@
+﻿form { width: 824px; margin: 0 auto; }
+
+form fieldset { margin: 30px 0; padding: 6px 10px 12px; }
+form fieldset legend { font-weight: 800; }
+
+/*行*/
+form fieldset div.row { padding: 8px 0; min-height: 22px; clear: left; overflow: hidden; }
+/*项*/
+form fieldset div.row > div { min-width: 400px; max-width: 800px; float: left; }
+
+/*标签*/
+form fieldset label { display: inline-block; width: 8em; text-align: right; }
+/*输入域*/
+form fieldset span.textbox { }
+/*单位*/
+form fieldset span.unit { font-size: 13px; }
+/*注释*/
+form fieldset span.annotation { font-size: 13px; color: #f00; }
+/*下拉框*/
+form fieldset select { width: 155px; }
+
+/*禁用输入域*/
+form fieldset input.textbox-text:disabled, fieldset textarea.textbox-text:disabled { background-color: #F5FFFA; }
+
+
+form div#btn { margin-top: 30px; text-align: center; }
+
+.clear { clear: both; }

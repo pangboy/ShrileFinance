@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Model.Credit
+namespace Models.Credit
 {
 	/// <summary>
 	/// 授信主体信息
@@ -12,7 +12,7 @@ namespace Model.Credit
 		public string Name { get; set; }
 		public TypeEnum Type { get; set; }
 		public decimal LineOfCredit { get; set; }
-		public List<Model.Produce.ProduceInfo> Produces { get; set; }
+		public List<Models.Produce.ProduceInfo> Produces { get; set; }
 		public string Remarks { get; set; }
 
         public ProcessUserInfo ProcessUser { get; set; }

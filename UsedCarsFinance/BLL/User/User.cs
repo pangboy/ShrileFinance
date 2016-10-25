@@ -6,7 +6,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Web;
 using System.Web.Security;
-using Model.User;
+using Models.User;
 
 namespace BLL.User
 {
@@ -55,7 +55,7 @@ namespace BLL.User
         /// qiy     16.05.31
         /// <param name="roleId">角色标识</param>
         /// <returns></returns>
-        public List<Model.ComboInfo> Option(int? roleId)
+        public List<Models.ComboInfo> Option(int? roleId)
         {
             return userMapper.Option(roleId);
         }
@@ -279,7 +279,7 @@ namespace BLL.User
         /// <param name="page">分页信息</param>
         /// <param name="filter">筛选条件</param>
         /// <returns></returns>
-        public DataTable List(Model.Pagination page, NameValueCollection filter)
+        public DataTable List(Models.Pagination page, NameValueCollection filter)
         {
             return userMapper.List(page, filter);
         }

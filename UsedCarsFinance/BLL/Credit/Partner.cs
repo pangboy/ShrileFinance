@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Transactions;
-using Model.Credit;
+using Models.Credit;
 
 namespace BLL.Credit
 {
@@ -24,7 +24,7 @@ namespace BLL.Credit
 			PartnerInfo partner = partnerMapper.Find(creditId);
 
 			if (partner != null)
-				Model.ConvertHelper.Copy(base.Get(creditId), partner);
+				Models.ConvertHelper.Copy(base.Get(creditId), partner);
 
 			return partner;
 		}
@@ -96,7 +96,7 @@ namespace BLL.Credit
 		/// <param name="page">分页信息</param>
 		/// <param name="filter">筛选条件</param>
 		/// <returns></returns>
-		public System.Data.DataTable List(Model.Pagination page, NameValueCollection filter)
+		public System.Data.DataTable List(Models.Pagination page, NameValueCollection filter)
 		{
 			return partnerMapper.List(page, filter);
 		}

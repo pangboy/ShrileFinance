@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using Model.Flow;
-using Model.User;
+using Models.Flow;
+using Models.User;
 
 namespace BLL.Flow
 {

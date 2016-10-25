@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Data;
 
-namespace Model
+namespace Models
 {
     public sealed class ComboInfo
     {

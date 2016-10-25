@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Model.Flow
+namespace Models.Flow
 {
 	/// <summary>
 	/// 记录信息

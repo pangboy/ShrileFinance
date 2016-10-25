@@ -1,4 +1,4 @@
-﻿using Model.Finance;
+﻿using Models.Finance;
 using System.Collections.Generic;
 
 namespace BLL.Finance

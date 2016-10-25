@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Model;
-using Model.Finance;
-using Model.Vehicle;
+using Models;
+using Models.Finance;
+using Models.Vehicle;
 using System.Data;
 
 namespace BLL.Vehicle

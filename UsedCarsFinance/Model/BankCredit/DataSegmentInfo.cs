@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Model.BankCredit
+namespace Models.BankCredit
 {
     /// <summary>
     /// 数据段实体
