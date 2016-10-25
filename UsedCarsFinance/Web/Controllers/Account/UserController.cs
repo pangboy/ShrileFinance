@@ -10,9 +10,9 @@ namespace Web.Controllers.Account
     public class UserController : ApiController
     {
         private readonly static BLL.User.User _user = new BLL.User.User();
-        private readonly UserAppService userService;
+        private readonly AccountAppService userService;
 
-        public UserController(UserAppService userService)
+        public UserController(AccountAppService userService)
         {
             this.userService = userService;
         }

@@ -1,0 +1,122 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<meta charset="utf-8" />
+	<!--  应使用注释的部分.  -->
+	<!--<link href="../Content/easyui/themes/bootstrap/easyui.css" rel="stylesheet" />
+	<link href="../Content/easyui/themes/icon.css" rel="stylesheet" />
+	<link href="../Content/form-bootstrap.css" rel="stylesheet" />
+	<script src="../Scripts/jquery/jquery.js"></script>
+	<script src="../Scripts/easyui/jquery.easyui.js"></script>
+	<script src="../Scripts/easyui/locale/easyui-lang-zh_CN.js"></script>-->
+	<link href="../easyui/themes/bootstrap/easyui.css" rel="stylesheet" />
+	<link href="../easyui/themes/icon.css" rel="stylesheet" />
+	<link href="../form-bootstrap.css" rel="stylesheet" />
+	<script src="../../Scripts/jquery/jquery.js"></script>
+	<script src="../../Scripts/easyui/jquery.easyui.js"></script>
+	<script src="../../Scripts/easyui/locale/easyui-lang-zh_CN.js"></script>
+</head>
+<body>
+	<form class="container">
+		<fieldset>
+			<legend>标题</legend>
+
+			<div class="hidden">
+				<input type="text" name="HideFieldA" hidden />
+				<input type="text" name="HideFieldB" hidden />
+			</div>
+
+			<div class="row">
+				<div class="col-6">
+					<label>字段A:</label>
+					<input name="FieldA" class="easyui-textbox" />
+				</div>
+
+				<div class="col-6">
+					<label>字段B:</label>
+					<label class="radio"><input type="radio" name="FieldB" />住址</label>
+					<label class="radio"><input type="radio" name="FieldB" />单位</label>
+					<input name="FieldB" class="easyui-textbox" style="width:310px;" />
+					<span class="unit">万公里</span>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-6">
+					<label>字段C:</label>
+					<select name="FieldC" class="easyui-combobox">
+						<option value="1">A</option>
+						<option value="2">B</option>
+						<option value="3">C</option>
+					</select>
+				</div>
+
+				<div class="col-6">
+					<label>字段D:</label>
+					<input name="FieldD" class="easyui-textbox" disabled />
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-12">
+					<label>字段E:</label>
+					<input name="FieldE" class="easyui-textbox" data-options="multiline:true,height:60" />
+				</div>
+			</div>
+		</fieldset>
+
+		<fieldset>
+			<legend>标题</legend>
+
+			<div class="hidden">
+				<input type="text" name="HideFieldA" hidden />
+				<input type="text" name="HideFieldB" hidden />
+			</div>
+
+			<div class="row">
+				<div class="col-6">
+					<label>字段A:</label>
+					<input name="FieldA" class="easyui-textbox" />
+				</div>
+
+				<div class="col-6">
+					<label>字段B:</label>
+					<label class="radio"><input type="radio" name="FieldB" />住址</label>
+					<label class="radio"><input type="radio" name="FieldB" />单位</label>
+					<input name="FieldB" class="easyui-textbox" style="width:310px;" />
+					<span class="unit">万公里</span>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-6">
+					<label>字段C:</label>
+					<select name="FieldC" class="easyui-combobox">
+						<option value="1">A</option>
+						<option value="2">B</option>
+						<option value="3">C</option>
+					</select>
+				</div>
+
+				<div class="col-6">
+					<label>字段D:</label>
+					<input name="FieldD" class="easyui-textbox" disabled />
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-12">
+					<label>字段E:</label>
+					<input name="FieldE" class="easyui-textbox" data-options="multiline:true,height:60" />
+				</div>
+			</div>
+		</fieldset>
+
+		<div id="btn">
+			<a href="javascript:void(0)" id="save" class="easyui-linkbutton" data-options="iconCls:'icon-save'">保存</a>
+			<a href="javascript:void(0)" id="back" class="easyui-linkbutton" data-options="iconCls:'icon-redo'">返回</a>
+		</div>
+	</form>
+</body>
+</html>

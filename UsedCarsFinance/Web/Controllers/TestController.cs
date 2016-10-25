@@ -1,55 +1,103 @@
 ﻿namespace Web.Controllers
 {
     using System;
-    using System.Collections.Generic;
     using System.Net.Http;
-    using System.Security.Claims;
-    using System.Security.Cryptography;
     using System.Threading.Tasks;
     using System.Web;
     using System.Web.Http;
-    using System.Web.Http.ModelBinding;
+    using Application;
+    using Application.ViewModels.AccountViewModels;
     using Microsoft.AspNet.Identity;
-    using Microsoft.AspNet.Identity.EntityFramework;
-    //using Microsoft.AspNet.Identity.Owin;
     using Microsoft.Owin.Security;
-    using Microsoft.Owin.Security.Cookies;
-    //using Microsoft.Owin.Security.OAuth;
-    using Core.Entities;
 
     public class TestController : ApiController
     {
-        private readonly AppUserManager manager;
+        private AccountAppService service;
 
-        public TestController(AppUserManager manager)
+        private IAuthenticationManager AuthManager
         {
-            this.manager = manager;
+            get { return Request.GetOwinContext().Authentication; }
+        }
+
+        public TestController(AccountAppService service)
+        {
+            this.service = service;
+        }
+
+        public IHttpActionResult Get()
+        {
+            return Ok();
         }
 
         [AllowAnonymous]
-        public async Task<IHttpActionResult> Login(string username, string password)
+        public async Task<IHttpActionResult> Login(LoginViewModel model)
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest();
+                return BadRequest(ModelState);
             }
 
-            var user = await manager.FindAsync("admin", "admin");
-
-            if (user == null)
+            try
             {
-                return BadRequest("Invalid name or password.");
+                var ident = await service.Login(model);
+
+                AuthManager.SignOut();
+                AuthManager.SignIn(new AuthenticationProperties {
+                    IsPersistent = false
+                }, ident);
+
+                return Ok();
+            }
+            catch (ApplicationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        public async Task<IHttpActionResult> Create(RegisterViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
             }
 
-            ClaimsIdentity ident = await manager.CreateIdentityAsync(user,
-                DefaultAuthenticationTypes.ApplicationCookie);
+            var result = await service.Create(model);
 
-            //AuthManager.SignOut();
-            //AuthManager.SignIn(new AuthenticationProperties {
-            //    IsPersistent = false
-            //}, ident);
+            if (!result.Succeeded)
+            {
+                return GetErrorResult(result);
+            }
 
             return Ok();
+        }
+
+        private IHttpActionResult GetErrorResult(IdentityResult result)
+        {
+            if (result == null)
+            {
+                return InternalServerError();
+            }
+
+            if (!result.Succeeded)
+            {
+                if (result.Errors != null)
+                {
+                    foreach (string error in result.Errors)
+                    {
+                        ModelState.AddModelError("", error);
+                    }
+                }
+
+                if (ModelState.IsValid)
+                {
+                    // 没有可发送的 ModelState 错误，因此仅返回空 BadRequest。
+                    return BadRequest();
+                }
+
+                return BadRequest(ModelState);
+            }
+
+            return null;
         }
     }
 }

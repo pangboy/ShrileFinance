@@ -1,0 +1,26 @@
+﻿legend {font-weight: 800;}
+/*fieldset{width:800px; padding:10px 0px;}*/
+.fs input.textbox-text:disabled, .fs textarea.textbox-text:disabled { background-color: #F5FFFA; }
+.form_item {width: 398px;margin-top: 15px;float: left;margin-left:0px;border:0px;}
+.form_item span{float: left;margin-left:5px;}
+.form_items {width: 800px;margin-top: 15px; float: left;margin-left:0px;border:0px;}
+.form_items span{float: left;margin-left:5px;}
+.form_item input,.form_items input {float: left;width: 160px;padding: 0 2px;border: 1px solid #dedad1;}
+.form_btn {width: 800px;margin: 0 auto;margin-top: 15px;margin-bottom: 15px;text-align: center;}
+/*.form_items textarea,.form_item textarea{float: left;margin-left:5px;}*/
+
+.clear{clear:both;}
+.form_items label,.form_item label{font-weight: normal; font-size: 16px;float: left;width: 140px;text-align: right;margin-right: 15px;}
+
+.div-hidden{display:none;}
+.single-length{width:400px;}
+.double-length{width:800px;}
+.div-center{text-align:center;margin:0 auto;margin-top:15px;}
+
+.tb { border: 1px solid #d3d3d3;border-collapse: collapse;width: 510px;}
+.tb th {border: 1px solid #d3d3d3;}
+.tb th input{text-align: center;width: 170px;height: 45px;font-size: 18px; font-weight:bold;border:0;}
+.tb td{border: 1px solid #d3d3d3;text-align: center;width: 85px;height: 45px;}
+.tb td input{text-align:center;width: 85px;height: 45px;border: 0;}
+/*.checkbox{width: 800px;margin:15px 250px; float:left}*/
+#btn{width: 800px;padding-top: 15px; float: left;margin-left:0px;}
