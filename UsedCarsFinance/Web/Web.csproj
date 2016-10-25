@@ -156,6 +156,8 @@
     <Content Include="BankInfo\Meta\MetaList.html" />
     <Content Include="BankInfo\SegmentRules\SegmentRulesEdit.html" />
     <Content Include="BankInfo\SegmentRules\SegmentRulesList.html" />
+    <Content Include="Borrowers\Institution.html" />
+    <Content Include="Borrowers\Lawsuit.html" />
     <Content Include="Finance\Loan.html" />
     <Content Include="Finance\Operation.html" />
     <Content Include="Flow\FlowTest\Frame.html" />
@@ -599,6 +601,7 @@
     <Compile Include="Controllers\Flow\FinanceScriptController.cs" />
     <Compile Include="Controllers\Flow\InstanceController.cs" />
     <Compile Include="Controllers\Finance\PdfContractController.cs" />
+    <Compile Include="Controllers\Customer\LotigationController.cs" />
     <Compile Include="Controllers\Notice\NoticeController.cs" />
     <Compile Include="Controllers\Produce\ProduceController.cs" />
     <Compile Include="Controllers\Sys\FileController.cs" />
