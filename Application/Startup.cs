@@ -2,13 +2,16 @@
 {
     using Owin;
 
+    /// <summary>
+    /// 启动配置
+    /// </summary>
     public abstract partial class Startup
     {
         public void Configuration(IAppBuilder app)
         {
-            ConfigureAuth(app);
+            this.ConfigureAuth(app);
 
-            ConfigureAutofac();
+            this.ConfigureAutofac();
         }
     }
 }

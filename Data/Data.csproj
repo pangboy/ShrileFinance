@@ -63,44 +63,114 @@
     <Compile Include="Migrations\201610240308231_Identity.Designer.cs">
       <DependentUpon>201610240308231_Identity.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Migrations\Configuration.cs">
+      <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
+    </Compile>
     <Compile Include="ModelConfigurations\TypeConfigurationExtensions.cs" />
     <Compile Include="ModelConfigurations\AppUserConfiguration.cs" />
-    <Compile Include="Models\CRET_Cities.cs" />
-    <Compile Include="Models\CRET_CreditInfo.cs" />
-    <Compile Include="Models\CRET_PartnerInfo.cs" />
-    <Compile Include="Models\CRET_ProcessUser.cs" />
-    <Compile Include="Models\FANC_ApplicantInfo.cs" />
-    <Compile Include="Models\FANC_BankInfo.cs" />
-    <Compile Include="Models\FANC_Borrow.cs" />
-    <Compile Include="Models\FANC_Contracts.cs" />
-    <Compile Include="Models\FANC_CreditExamineReport.cs" />
-    <Compile Include="Models\FANC_FinanceExtra.cs" />
-    <Compile Include="Models\FANC_FinanceInfo.cs" />
-    <Compile Include="Models\FANC_ReviewInfo.cs" />
-    <Compile Include="Models\FANC_VehicleInfo.cs" />
-    <Compile Include="Models\FLOW_Action.cs" />
-    <Compile Include="Models\FLOW_Form.cs" />
-    <Compile Include="Models\FLOW_FormWithNode.cs" />
-    <Compile Include="Models\FLOW_FormWithRole.cs" />
-    <Compile Include="Models\FLOW_Instance.cs" />
-    <Compile Include="Models\FLOW_Log.cs" />
-    <Compile Include="Models\FLOW_Node.cs" />
-    <Compile Include="Models\FLOW_WorkFlow.cs" />
-    <Compile Include="Models\Notice_ActionNotice.cs" />
-    <Compile Include="Models\Notice_Notice.cs" />
-    <Compile Include="Models\OldContext.cs" />
-    <Compile Include="Models\PROD_ProduceInfo.cs" />
-    <Compile Include="Models\SYS_DicCommon.cs" />
-    <Compile Include="Models\SYS_DicType.cs" />
-    <Compile Include="Models\SYS_FileList.cs" />
-    <Compile Include="Models\SYS_Menu.cs" />
-    <Compile Include="Models\SYS_OperationLog.cs" />
-    <Compile Include="Models\SYS_Reference.cs" />
-    <Compile Include="Models\USER_Role.cs" />
-    <Compile Include="Models\USER_UserInfo.cs" />
+    <Compile Include="Models\CRET_Cities.cs">
+      <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Models\CRET_CreditInfo.cs">
+      <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Models\CRET_PartnerInfo.cs">
+      <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Models\CRET_ProcessUser.cs">
+      <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Models\FANC_ApplicantInfo.cs">
+      <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Models\FANC_BankInfo.cs">
+      <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Models\FANC_Borrow.cs">
+      <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Models\FANC_Contracts.cs">
+      <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Models\FANC_CreditExamineReport.cs">
+      <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Models\FANC_FinanceExtra.cs">
+      <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Models\FANC_FinanceInfo.cs">
+      <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Models\FANC_ReviewInfo.cs">
+      <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Models\FANC_VehicleInfo.cs">
+      <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Models\FLOW_Action.cs">
+      <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Models\FLOW_Form.cs">
+      <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Models\FLOW_FormWithNode.cs">
+      <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Models\FLOW_FormWithRole.cs">
+      <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Models\FLOW_Instance.cs">
+      <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Models\FLOW_Log.cs">
+      <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Models\FLOW_Node.cs">
+      <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Models\FLOW_WorkFlow.cs">
+      <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Models\Notice_ActionNotice.cs">
+      <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Models\Notice_Notice.cs">
+      <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Models\OldContext.cs">
+      <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Models\PROD_ProduceInfo.cs">
+      <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Models\SYS_DicCommon.cs">
+      <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Models\SYS_DicType.cs">
+      <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Models\SYS_FileList.cs">
+      <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Models\SYS_Menu.cs">
+      <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Models\SYS_OperationLog.cs">
+      <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Models\SYS_Reference.cs">
+      <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Models\USER_Role.cs">
+      <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Models\USER_UserInfo.cs">
+      <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
+    </Compile>
     <Compile Include="MyContext.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
+    </Compile>
     <Compile Include="Repositories\AppUserStore.cs" />
     <Compile Include="Repositories\BaseRepository.cs" />
   </ItemGroup>

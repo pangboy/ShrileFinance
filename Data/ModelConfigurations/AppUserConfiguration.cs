@@ -10,8 +10,6 @@
             Property(m => m.Name)
                 .IsRequired()
                 .HasMaxLength(50);
-
-            //ToTable("User");
         }
     }
 }

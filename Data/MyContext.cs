@@ -2,7 +2,7 @@
 {
     using System.Data.Entity;
     using System.Data.Entity.ModelConfiguration.Conventions;
-	using Microsoft.AspNet.Identity.EntityFramework;
+    using Microsoft.AspNet.Identity.EntityFramework;
     using ModelConfigurations;
 
     public class MyContext : IdentityDbContext

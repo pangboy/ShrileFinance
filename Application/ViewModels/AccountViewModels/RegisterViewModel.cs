@@ -6,7 +6,7 @@
     {
         [Required]
         [StringLength(256)]
-        [Display(Name ="用户名")]
+        [Display(Name = "用户名")]
         public string Username { get; set; }
 
         [Required]

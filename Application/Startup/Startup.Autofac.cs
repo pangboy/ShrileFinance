@@ -5,6 +5,9 @@
     using Core.Entities;
     using Microsoft.AspNet.Identity;
 
+    /// <summary>
+    /// 依赖注入的配置
+    /// </summary>
     public partial class Startup
     {
         public abstract void ConfigureAutofac(ContainerBuilder builder);
@@ -35,7 +38,7 @@
                 .AsSelf()
                 .InstancePerRequest();
 
-            ConfigureAutofac(builder);
+            this.ConfigureAutofac(builder);
         }
     }
 }
