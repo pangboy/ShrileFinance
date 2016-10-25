@@ -1,9 +1,6 @@
 ﻿namespace Application
 {
-    using System.Reflection;
     using Autofac;
-    using Core.Entities;
-    using Microsoft.AspNet.Identity;
 
     /// <summary>
     /// 依赖注入的配置
@@ -16,29 +13,43 @@
         {
             var builder = new ContainerBuilder();
 
+            // Logger
+            builder.RegisterType<Infrastructure.Logger.Log4net>()
+                .As<Core.Interfaces.ILogger>()
+                .SingleInstance();
+
+            builder.RegisterModule<Infrastructure.Logger.LoggingModule>();
+
+            // Entity Framework
             builder.RegisterType<Data.MyContext>().AsSelf().InstancePerRequest();
 
+            // Repository
             builder.RegisterAssemblyTypes(typeof(Data.Repositories.BaseRepository<>).Assembly)
                 .Where(m => m.Name.EndsWith("Repository"))
                 .AsImplementedInterfaces()
                 .InstancePerRequest();
-            builder.RegisterAssemblyTypes(typeof(Core.Entities.AppUser).Assembly)
+
+            // Service
+            builder.RegisterAssemblyTypes(typeof(Core.Interfaces.IEntity).Assembly)
                 .Where(m => m.Name.EndsWith("Service"))
                 .AsSelf()
                 .InstancePerRequest();
-            builder.RegisterAssemblyTypes(Assembly.GetExecutingAssembly())
+
+            // Application Service
+            builder.RegisterAssemblyTypes(typeof(Startup).Assembly)
                 .Where(m => m.Name.EndsWith("AppService"))
                 .AsSelf()
                 .InstancePerRequest();
 
+            // Application User
             builder.RegisterType<Data.Repositories.AppUserStore>()
-                .As<IUserStore<AppUser>>()
+                .As<Microsoft.AspNet.Identity.IUserStore<Core.Entities.AppUser>>()
                 .InstancePerRequest();
-            builder.RegisterType<AppUserManager>()
+            builder.RegisterType<Core.Entities.AppUserManager>()
                 .AsSelf()
                 .InstancePerRequest();
 
-            this.ConfigureAutofac(builder);
+            ConfigureAutofac(builder);
         }
     }
 }
