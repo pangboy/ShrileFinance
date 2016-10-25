@@ -60,6 +60,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="ModelConfigurations\AppLotigationConfiguration.cs" />
+    <Compile Include="ModelConfigurations\AppLotigationBaseConfiguration.cs" />
     <Compile Include="ModelConfigurations\TypeConfigurationExtensions.cs" />
     <Compile Include="ModelConfigurations\AppUserConfiguration.cs" />
     <Compile Include="Models\CRET_Cities.cs" />
