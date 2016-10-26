@@ -63,12 +63,17 @@
     <Compile Include="Migrations\201610240308231_Identity.Designer.cs">
       <DependentUpon>201610240308231_Identity.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201610260709237_Organization.cs" />
+    <Compile Include="Migrations\201610260709237_Organization.Designer.cs">
+      <DependentUpon>201610260709237_Organization.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs">
       <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
     </Compile>
     <Compile Include="ModelConfigurations\AppLotigationConfiguration.cs" />
     <Compile Include="ModelConfigurations\AppLotigationBaseConfiguration.cs" />
-    <Compile Include="ModelConfigurations\CustomerConfiguration.cs" />
+    <Compile Include="ModelConfigurations\AssociatedEnterpriseConfiguration.cs" />
+    <Compile Include="ModelConfigurations\OrganizationConfiguration.cs" />
     <Compile Include="ModelConfigurations\TypeConfigurationExtensions.cs" />
     <Compile Include="ModelConfigurations\AppUserConfiguration.cs" />
     <Compile Include="Models\CRET_Cities.cs">
@@ -176,7 +181,7 @@
     </Compile>
     <Compile Include="Repositories\AppUserStore.cs" />
     <Compile Include="Repositories\BaseRepository.cs" />
-    <Compile Include="Repositories\CustomerRepository.cs" />
+    <Compile Include="Repositories\OrganizationRepository.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Core\Core.csproj">
@@ -194,6 +199,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201610240308231_Identity.resx">
       <DependentUpon>201610240308231_Identity.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201610260709237_Organization.resx">
+      <DependentUpon>201610260709237_Organization.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

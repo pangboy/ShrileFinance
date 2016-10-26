@@ -1,15 +1,15 @@
 ﻿namespace Application
 {
     using System;
-    using Core.Entities.Customers.Enterprise.Organizate;
+    using Core.Entities.Customers.Enterprise;
     using Core.Interfaces.Repositories;
     using ViewModels.CustomerViewModels;
 
-    public class CustomerAppService
+    public class OrganizationAppService
     {
-        private readonly ICustomerRepository repository;
+        private readonly IOrganizationRepository repository;
 
-        public CustomerAppService(ICustomerRepository repository)
+        public OrganizationAppService(IOrganizationRepository repository)
         {
             this.repository = repository;
         }
@@ -21,7 +21,7 @@
         /// <param name="model">实体</param>
         public void Create(CustomerViewModel model)
         {
-            var customer = new Customer()
+            var customer = new Organization()
             {
                 ////Id = model.Id,
                 ////BasicAccountState = model.BasicAccountState,
@@ -71,7 +71,7 @@
         /// <param name="model">实体</param>
         public void Modify(CustomerViewModel model)
         {
-            var customer = new Customer()
+            var customer = new Organization()
             {
                 ////Id = model.Id,
                 ////BasicAccountState = model.BasicAccountState,
@@ -120,9 +120,9 @@
         /// yand    16.10.25
         /// <param name="id">id</param>
         /// <returns></returns>
-        public Customer Get(Guid id)
+        public Organization Get(Guid id)
         {
-            Customer customer = repository.Get(id);
+            Organization customer = repository.Get(id);
 
             return customer;
         }

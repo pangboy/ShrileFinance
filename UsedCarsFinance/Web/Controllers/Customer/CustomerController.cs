@@ -8,9 +8,9 @@ namespace Web.Controllers.Customer
 
     public class CustomerController : ApiController
     {
-        private readonly CustomerAppService customerAppService;
+        private readonly OrganizationAppService customerAppService;
 
-        public CustomerController(CustomerAppService service)
+        public CustomerController(OrganizationAppService service)
         {
             this.customerAppService = service;
         }

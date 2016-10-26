@@ -1,9 +1,11 @@
-﻿namespace Core.Entities.Customers.Enterprise.Organizate
+﻿namespace Core.Entities.Customers.Enterprise
 {
+    using System;
+
     /// <summary>
     /// 基本属性段
     /// </summary>
-    public class BasicPropertiesPeriod
+    public class OrganizationProperties
     {
         /// <summary>
         /// 机构中文名称
@@ -11,19 +13,9 @@
         public string InstitutionChName { get; set; }
 
         /// <summary>
-        /// 机构英文名称
-        /// </summary>
-        public string InstitutionEnName { get; set; }
-
-        /// <summary>
         /// 注册登记地址
         /// </summary>
         public string RegisterAddress { get; set; }
-
-        /// <summary>
-        /// 国别
-        /// </summary>
-        public string Country { get; set; }
 
         /// <summary>
         /// 注册（登记）地行政区划
@@ -33,12 +25,12 @@
         /// <summary>
         /// 成立日期
         /// </summary>
-        public string SetupDate { get; set; }
+        public DateTime SetupDate { get; set; }
 
         /// <summary>
         /// 证书到期日期
         /// </summary>
-        public string CertificateDueDate { get; set; }
+        public DateTime CertificateDueDate { get; set; }
 
         /// <summary>
         /// 经营（业务）范围
@@ -46,14 +38,9 @@
         public string BusinessScope { get; set; }
 
         /// <summary>
-        /// 注册资本币种
-        /// </summary>
-        public string RegisterCapitalCurrency { get; set; }
-
-        /// <summary>
         /// 注册资本（万元）
         /// </summary>
-        public string RegisterCapital { get; set; }
+        public decimal RegisterCapital { get; set; }
 
         /// <summary>
         /// 组织机构类别
@@ -74,15 +61,5 @@
         /// 经济类型
         /// </summary>
         public string EconomicType { get; set; }
-
-        /// <summary>
-        /// 信息更新日期
-        /// </summary>
-        public string InformationUpdateDate { get; set; }
-
-        /// <summary>
-        /// 预留字段
-        /// </summary>
-        public string ReservedField { get; set; }
     }
 }

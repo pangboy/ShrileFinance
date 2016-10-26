@@ -1,21 +1,16 @@
-﻿namespace Core.Entities.Customers.Enterprise.Organizate
+﻿namespace Core.Entities.Customers.Enterprise
 {
-    using System.ComponentModel.DataAnnotations;
+    using System.Collections.Generic;
 
     /// <summary>
     /// 高管及主要关系人段
     /// </summary>
-    public class ExecutivesMajorParticipantPeriod
+    public class Manager : Entity, INaturalPerson
     {
-        /// <summary>
-        /// ID
-        /// </summary>
-        public int Id { get; set; }
-
         /// <summary>
         /// 关系人类型
         /// </summary>
-        public string ParticipantType { get; set; }
+        public string Type { get; set; }
 
         /// <summary>
         /// 姓名
@@ -30,13 +25,11 @@
         /// <summary>
         /// 证件号码
         /// </summary>
-        public string CertificateNumber { get; set; }
+        public string CertificateCode { get; set; }
 
         /// <summary>
-        /// 信息更新日期
+        /// 家族成员
         /// </summary>
-        public string InformationUpdateDate { get; set; }
-
-        public string ReservedField { get; set; }
+        public List<FamilyMember> FamilyMembers { get; set; }
     }
 }
