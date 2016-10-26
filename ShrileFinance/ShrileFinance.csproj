@@ -222,13 +222,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Areas\HelpPage\HelpPage.css" />
-    <Content Include="Borrowers\FamilyInfo.html" />
-    <Content Include="Borrowers\FamilyInfoDel.html" />
-    <Content Include="Borrowers\img\InfoImg.png" />
-    <Content Include="Borrowers\OrganizateInfoDel.html" />
-    <Content Include="Borrowers\JS\BorrowerMethod.js" />
-    <Content Include="Borrowers\JS\validType.js" />
-    <Content Include="Borrowers\OrganizateInfo.html" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\bootstrap\bootstrap-theme.css" />
