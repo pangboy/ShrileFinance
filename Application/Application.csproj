@@ -83,6 +83,8 @@
   <ItemGroup>
     <Compile Include="CustomerAppService.cs" />
     <Compile Include="LawsuitAppService.cs" />
+    <Compile Include="Mappings\DomainToViewModelMappingProfile.cs" />
+    <Compile Include="Mappings\ViewModelToDomainMappingProfile.cs" />
     <Compile Include="Startup\Startup.Autofac.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
@@ -132,6 +134,7 @@
       <SubType>Designer</SubType>
     </None>
     <Compile Include="Startup\Startup.Auth.cs" />
+    <Compile Include="Startup\Startup.AutoMapper.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

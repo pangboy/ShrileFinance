@@ -9,22 +9,14 @@
     /// </summary>
     public class ValidModel : ApiController
     {
-        private readonly ModelStateDictionary modelState;
-
-        private ValidModel(ModelStateDictionary modelState)
-        {
-            this.modelState = modelState;
-        }
-
         #region ShowError
+        /// <summary>
+        /// 输出模型验证得到的所有错误信息
+        /// </summary>
+        /// <param name="modelState">模型验证</param>
+        /// <returns>错误信息</returns>
         [NonAction]
         public static string ShowError(ModelStateDictionary modelState)
-        {
-            return new ValidModel(modelState).Show();
-        }
-
-        [NonAction]
-        public string Show()
         {
             var errorMessage = new StringBuilder();
 
@@ -42,6 +34,25 @@
             }
 
             return errorMessage.ToString();
+        }
+
+        /// <summary>
+        /// 输出模型验证得到的第一条错误信息
+        /// </summary>
+        /// <param name="modelState">模型验证</param>
+        /// <returns>错误信息</returns>
+        [NonAction]
+        public static string ShowErrorFirst(ModelStateDictionary modelState)
+        {
+            if (!modelState.IsValid)
+            {
+                foreach (var value in modelState.Values)
+                {
+                    return value.Errors[0].ErrorMessage;
+                }
+            }
+
+            return string.Empty;
         }
         #endregion
     }

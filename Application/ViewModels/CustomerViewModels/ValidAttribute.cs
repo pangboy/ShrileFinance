@@ -669,6 +669,249 @@
 
     #endregion
 
+    #region 代码表验证
+    /// <summary>
+    /// 证件类型
+    /// </summary>
+    public class CertificateTypeAttribute : ValidationAttribute
+    {
+        public override bool IsValid(object value)
+        {
+            value = value ?? string.Empty;
+
+            var list = new List<string>() { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B", "C", "X" };
+
+            return list.Contains(value.ToString());
+        }
+    }
+
+    /// <summary>
+    /// 家族关系
+    /// </summary>
+    public class FamilyRelationshipAttribute : ValidationAttribute
+    {
+        public override bool IsValid(object value)
+        {
+            value = value ?? string.Empty;
+
+            var list = new List<string>() { "1", "2", "3", "4", "5" };
+
+            return list.Contains(value.ToString());
+        }
+    }
+
+    /// <summary>
+    /// 需删除的信息类别
+    /// </summary>
+    public class NendDeleteInformationCategoriesAttribute : ValidationAttribute
+    {
+        public override bool IsValid(object value)
+        {
+            value = value ?? string.Empty;
+
+            var list = new List<string>() { "B", "C", "D", "E", "F", "G", "H", "I" };
+
+            return list.Contains(value.ToString());
+        }
+    }
+
+    /// <summary>
+    /// 关系人类型
+    /// </summary>
+    public class ParticipantTypeAttribute : ValidationAttribute
+    {
+        public override bool IsValid(object value)
+        {
+            value = value ?? string.Empty;
+
+            var list = new List<string>() { "0", "1", "2", "3", "4", "5" };
+
+            return list.Contains(value.ToString());
+        }
+    }
+
+    /// <summary>
+    /// 客户类型
+    /// </summary>
+    public class CustomerTypeAttribute : ValidationAttribute
+    {
+        public override bool IsValid(object value)
+        {
+            value = value ?? string.Empty;
+
+            var list = new List<string>() { "1", "2", "3", "X" };
+
+            return list.Contains(value.ToString());
+        }
+    }
+
+    /// <summary>
+    /// 登记注册号类型
+    /// </summary>
+    public class RegistrationNumberTypeAttribute : ValidationAttribute
+    {
+        public override bool IsValid(object value)
+        {
+            value = value ?? string.Empty;
+
+            var list = new List<string>() { "01", "02", "03", "04", "05", "06", "07", "08", "99" };
+
+            return list.Contains(value.ToString());
+        }
+    }
+
+    /// <summary>
+    /// 国别
+    /// </summary>
+    public class CountryAttribute : ValidationAttribute
+    {
+        public override bool IsValid(object value)
+        {
+            value = value ?? string.Empty;
+
+            var list = new List<string>() { "CHN", "HKG", "MAC", "TWN" };
+
+            return list.Contains(value.ToString());
+        }
+    }
+
+    /// <summary>
+    /// 币种
+    /// </summary>
+    public class CapitalCurrencyAttribute : ValidationAttribute
+    {
+        public override bool IsValid(object value)
+        {
+            value = value ?? string.Empty;
+
+            var list = new List<string>() { "CNY", "HKD", "MOP", "USD", "XAU" };
+
+            return list.Contains(value.ToString());
+        }
+    }
+
+    /// <summary>
+    /// 组织机构类别
+    /// </summary>
+    public class OrganizationCategoryAttribute : ValidationAttribute
+    {
+        public override bool IsValid(object value)
+        {
+            value = value ?? string.Empty;
+
+            var list = new List<string>() { "1", "2", "3", "4", "7", "9" };
+
+            return list.Contains(value.ToString());
+        }
+    }
+
+    /// <summary>
+    /// 组织机构类别细分
+    /// </summary>
+    public class OrganizationCategorySubdivisionAttribute : ValidationAttribute
+    {
+        public override bool IsValid(object value)
+        {
+            value = value ?? string.Empty;
+
+            var list = new List<string>() { "10", "13", "14", "11", "12", "20", "21", "24", "30", "31", "32", "40", "41", "51", "52", "53", "54", "60", "61", "62", "70", "99" };
+
+            return list.Contains(value.ToString());
+        }
+    }
+
+    /// <summary>
+    /// 经济类型
+    /// </summary>
+    public class EconomicTypeAttribute : ValidationAttribute
+    {
+        public override bool IsValid(object value)
+        {
+            value = value ?? string.Empty;
+
+            var list = new List<string>() { "10", "11", "12", "13", "14", "15", "16", "17", "19", "20", "21", "22", "23", "24", "29", "30", "31", "32", "33", "34", "39", "90" };
+
+            return list.Contains(value.ToString());
+        }
+    }
+
+    /// <summary>
+    /// 基本户状态
+    /// </summary>
+    public class BasicAccountStateAttribute : ValidationAttribute
+    {
+        public override bool IsValid(object value)
+        {
+            value = value ?? string.Empty;
+
+            var list = new List<string>() { "1", "2", "3", "4", "9", "X" };
+
+            return list.Contains(value.ToString());
+        }
+    }
+
+    /// <summary>
+    /// 企业规模
+    /// </summary>
+    public class EnterpriseScaleAttribute : ValidationAttribute
+    {
+        public override bool IsValid(object value)
+        {
+            value = value ?? string.Empty;
+
+            var list = new List<string>() { "2", "3", "4", "5", "9", "X" };
+
+            return list.Contains(value.ToString());
+        }
+    }
+
+    /// <summary>
+    /// 机构状态
+    /// </summary>
+    public class InstitutionsStateAttribute : ValidationAttribute
+    {
+        public override bool IsValid(object value)
+        {
+            value = value ?? string.Empty;
+
+            var list = new List<string>() { "1", "2", "9", "X" };
+
+            return list.Contains(value.ToString());
+        }
+    }
+
+    /// <summary>
+    /// 股东类型
+    /// </summary>
+    public class ShareholdersTypeAttribute : ValidationAttribute
+    {
+        public override bool IsValid(object value)
+        {
+            value = value ?? string.Empty;
+
+            var list = new List<string>() { "1", "2" };
+
+            return list.Contains(value.ToString());
+        }
+    }
+
+    /// <summary>
+    /// 关联类型
+    /// </summary>
+    public class AssociatedTypeAttribute : ValidationAttribute
+    {
+        public override bool IsValid(object value)
+        {
+            value = value ?? string.Empty;
+
+            var list = new List<string>() { "20", "21", "22", "23", "24" };
+
+            return list.Contains(value.ToString());
+        }
+    }
+
+    #endregion
+
     #region 服务方法
     public class ServiceMethods
     {

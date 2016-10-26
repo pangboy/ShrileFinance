@@ -10,8 +10,8 @@
     <script src="../Scripts/jquery/jquery.js"></script>
     <script src="../Scripts/easyui/jquery.easyui.js"></script>
     <script src="../Scripts/easyui/locale/easyui-lang-zh_CN.js"></script>
-    <script src="../Scripts/JS/Method.js"></script>
-    <script src="../Scripts/JS/validType.js"></script>
+    <script src="JS/BorrowerMethod.js"></script>
+    <script src="JS/validType.js"></script>
 
     <style charset="utf-8" type="text/css" class="firebugResetStyles">
         /* See license.txt for terms of usage */
@@ -151,84 +151,7 @@
     </style>
 
     <script type="text/javascript">
-        // 提交
-        function Submit() {
-            var data = {};
-            var section = $("#content").find("section");
-            //序列化数据
-            var temp;
-            for (var i = 0; i < section.length; i++) {
-                var fs = new Array();
-                temp = $(section[i]).attr("id");
-                var fieldset = $(section[i]).children("fieldset");
-                for (var j = 0; j < fieldset.length; j++) {
-                    fs.push($(fieldset[j]).serializeJson())
-                }
-                data[temp] = fs;
-            }
-            var str = JSON.stringify(data);
-            $("#content").children().children(":hidden").find(":input.validatebox-text").validatebox("disableValidation");
-            if (!$("#content").form("validate")) {
-                $.messager.show({ msg: "请填写剩下的必填内容!" });
-                return false;
-            }
-
-            $.ajax({
-                async: true,
-                data: { value: str, InfoTypeId: infoTypeId, ReportId: reportId, recordID: recordID, messageTypeID: messageTypeId },
-                method: "POST",
-                url: "../api/DynamicLoad/PostMessageInfo",
-                statusCode: {
-                    200: function (data) {
-                        if (data == "") {
-                            // 禁用提交、保存草稿和清空草稿按钮
-                            $("#submit").linkbutton("disable");
-                            $("#temp").linkbutton("disable");
-                            $("#clear").linkbutton("disable");
-                            // 删除临时数据
-                            DeleteTempRecord();
-                            top.$.messager.show({ msg: "保存成功！" });
-                            setTimeout(function () {
-                                Cancel();
-                            }, 1000);
-                        }
-                    },
-                    500: function (data) {
-                        $.messager.alert('错误', data.responseJSON.ExceptionMessage);
-                    },
-                    400: function (data) {
-                        $.messager.alert('错误', data.responseJSON.Message, "info");
-                    }
-                }
-            });
-        }
-
-        // 取消按钮
-        function Cancel() {
-            window.opener.location.href = window.opener.location.href;
-            window.close()
-        }
-
-        // 时间数据格式转换
-        function myformatter(date) {
-            var y = date.getFullYear();
-            var m = date.getMonth() + 1;
-            var d = date.getDate();
-            return y.toString() + (m < 10 ? ('0' + m) : m).toString() + (d < 10 ? ('0' + d) : d).toString();
-        }
-        function myparser(s) {
-            if (s != "") {
-                var y = s.substring(0, 4);
-                var m = s.substring(4, 6);
-                var d = s.substring(6, 8);
-                var s = Date.parse(y + "-" + m + "-" + d);
-                return new Date(s);
-            }
-            else {
-                return new Date();
-            }
-        }
-
+       
     </script>
 </head>
 <body>
@@ -245,46 +168,84 @@
                 <div class="row">
                     <div class="col-6">
                         <label>
-                            主要关系人证件类型：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('InfoImg.png') no-repeat scroll 0 0" title=""></a>
+                            主要关系人证件类型：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('img/InfoImg.png') no-repeat scroll 0 0" title="">　</a>
                         </label>
-                        <select class="easyui-combobox  combobox-f combo-f textbox-f" data-options="editable:false,required:true" textboxname="MainParticipantCertificateType"></select>
-
+                        <select class="easyui-combobox  combobox-f combo-f textbox-f" data-options="editable:false,required:true" textboxname="MainParticipantCertificateType">
+                            <option value=""></option>
+                            <option value="0">身份证</option>
+                            <option value="1">户口簿</option>
+                            <option value="2">护照</option>
+                            <option value="3">军官证</option>
+                            <option value="4">士兵证</option>
+                            <option value="5">港澳居民来往内地通行证</option>
+                            <option value="6">台湾同胞来往内地通行证</option>
+                            <option value="7">临时身份证</option>
+                            <option value="8">外国人居留证</option>
+                            <option value="9">警官证</option>
+                            <option value="A">香港身份证</option>
+                            <option value="B">澳门身份证</option>
+                            <option value="C">台湾身份证</option>
+                            <option value="X">其他证件</option>
+                        </select>
                     </div>
                     <div class="col-6">
                         <label>
-                            主要关系人证件号码：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('InfoImg.png') no-repeat scroll 0 0" title=""></a>
+                            主要关系人证件号码：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('img/InfoImg.png') no-repeat scroll 0 0" title="">　</a>
                         </label>
-                        <input class="easyui-textbox textbox-f" data-options="required:true" textboxname="MainParticipantCertificateNumber">
+                        <input class="easyui-textbox textbox-f" data-options="required:true,validType:['ANC','length[1,20]']" textboxname="MainParticipantCertificateNumber">
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="col-6">
                         <label>
-                            家族关系：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('InfoImg.png') no-repeat scroll 0 0" title=""></a>
+                            家族关系：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('img/InfoImg.png') no-repeat scroll 0 0" title="">　</a>
                         </label>
-                        <select class="easyui-combobox  combobox-f combo-f textbox-f" data-options="editable:false,required:false" textboxname="FamilyRelationship"></select>
+                        <select class="easyui-combobox  combobox-f combo-f textbox-f" data-options="editable:false,required:false" textboxname="FamilyRelationship">
+                            <option value=""></option>
+                            <option value="1">配偶</option>
+                            <option value="2">父母</option>
+                            <option value="3">子女</option>
+                            <option value="4">其他血亲</option>
+                            <option value="5">其他姻亲</option>
+                        </select>
                     </div>
                     <div class="col-6">
                         <label>
-                            家族成员证件类型：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('InfoImg.png') no-repeat scroll 0 0" title=""></a>
+                            家族成员证件类型：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('img/InfoImg.png') no-repeat scroll 0 0" title="">　</a>
                         </label>
-                        <select class="easyui-combobox  combobox-f combo-f textbox-f" data-options="editable:false,required:true" textboxname="FamilyMembersCertificateType"></select>
+                        <select class="easyui-combobox  combobox-f combo-f textbox-f" data-options="editable:false,required:true,validType:['AN','length[1,2]']" textboxname="FamilyMembersCertificateType">
+                            <option value=""></option>
+                            <option value="0">身份证</option>
+                            <option value="1">户口簿</option>
+                            <option value="2">护照</option>
+                            <option value="3">军官证</option>
+                            <option value="4">士兵证</option>
+                            <option value="5">港澳居民来往内地通行证</option>
+                            <option value="6">台湾同胞来往内地通行证</option>
+                            <option value="7">临时身份证</option>
+                            <option value="8">外国人居留证</option>
+                            <option value="9">警官证</option>
+                            <option value="A">香港身份证</option>
+                            <option value="B">澳门身份证</option>
+                            <option value="C">台湾身份证</option>
+                            <option value="X">其他证件</option>
+                        </select>
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="col-6">
                         <label>
-                            家族成员证件号码：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('InfoImg.png') no-repeat scroll 0 0" title=""></a>
+                            家族成员证件号码：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('img/InfoImg.png') no-repeat scroll 0 0" title="">　</a>
                         </label>
-                        <input class="easyui-textbox textbox-f" data-options="required:true" textboxname="FamilyMembersCertificateNumber">
+                        <input class="easyui-textbox textbox-f" data-options="required:true,validType:['ANC','length[1,20]']" textboxname="FamilyMembersCertificateNumber">
                     </div>
                     <div class="col-6">
                         <label>
-                            信息更新日期：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('InfoImg.png') no-repeat scroll 0 0" title=""></a>
+                            信息更新日期：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('img/InfoImg.png') no-repeat scroll 0 0" title="">　</a>
                         </label>
-                        <input class="easyui-datebox datebox-f combo-f textbox-f" data-options="editable:false ,width:407.75, formatter:myformatter,parser:myparser,required:true" textboxname="DataUpdateDate">
+                        <input class="easyui-datebox datebox-f combo-f textbox-f" data-options="editable:false ,width:407.75, formatter:myformatter,parser:myparser,required:true,validType:['N','length[8,8]']" textboxname="DataUpdateDate">
                     </div>
                 </div>
             </fieldset>

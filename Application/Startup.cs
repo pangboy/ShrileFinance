@@ -9,6 +9,8 @@
     {
         public void Configuration(IAppBuilder app)
         {
+            this.ConfigureMapper();
+
             this.ConfigureAuth(app);
 
             this.ConfigureAutofac();
