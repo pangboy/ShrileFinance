@@ -116,7 +116,6 @@ namespace Data.Migrations
                 .PrimaryKey(t => t.Id)
                 .ForeignKey("dbo.Organization", t => t.Organization_Id)
                 .Index(t => t.Organization_Id);
-            
         }
         
         public override void Down()
