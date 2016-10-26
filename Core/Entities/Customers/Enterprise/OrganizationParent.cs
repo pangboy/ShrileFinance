@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Core.Entities.Customers.Enterprise
+﻿namespace Core.Entities.Customers.Enterprise
 {
     /// <summary>
     /// 上级机构（主管单位）段
