@@ -64,6 +64,9 @@
         /// </summary>
         public string LoanCardCode { get; set; }
 
+        /// <summary>
+        /// 是否有上级机构
+        /// </summary>
         public bool HasParent
         {
             get { return Parent != null; }

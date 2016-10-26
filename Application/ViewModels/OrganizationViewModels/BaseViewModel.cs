@@ -1,5 +1,6 @@
-﻿namespace Application.ViewModels.CustomerViewModels
+﻿namespace Application.ViewModels.OrganizationViewModels
 {
+    using System;
     using System.ComponentModel.DataAnnotations;
 
     /// <summary>
@@ -7,21 +8,9 @@
     /// </summary>
     [BasePeriod_OR(ErrorMessage = "基础段 组织机构代码和登记注册号码不能同时为空")]
     [BasePeriod_TN(ErrorMessage = "基础段 登记注册号类型和登记注册号码需成对出现")]
-    public class OrganizateBaseViewModel
+    public class BaseViewModel
     {
-        public int Id { get; set; }
-
-        /// <summary>
-        /// 信息类别
-        /// </summary>
-        [Display(Name = "信息类别"), StringLength(1), Required, AN(ErrorMessage = "信息类别 类型错误")]
-        public string InformationCategories
-        {
-            get
-            {
-                return "B";
-            }
-        }
+        public Guid Id { get; set; }
 
         /// <summary>
         /// 客户号
@@ -57,13 +46,13 @@
         /// 登记注册号类型
         /// </summary>
         [Display(Name = "登记注册号类型"), StringLength(2), AN(ErrorMessage = "登记注册号类型 类型错误"), RegistrationNumberType(ErrorMessage = "登记注册号类型 值错误")]
-        public string RegistrationNumberType { get; set; }
+        public string RegistraterType { get; set; }
 
         /// <summary>
         /// 登记注册号码
         /// </summary>
         [Display(Name = "登记注册号码"), StringLength(20), ANC(ErrorMessage = "登记注册号码 类型错误")]
-        public string RegistrationNumber { get; set; }
+        public string RegistraterCode { get; set; }
 
         /// <summary>
         /// 纳税人识别号（国税）
@@ -78,21 +67,21 @@
         public string TaxpayerIdentifyLandNumber { get; set; }
 
         /// <summary>
-        /// 开户许可证核准号
+        /// 中征码
         /// </summary>
-        [Display(Name = "开户许可证核准号"), StringLength(20), AN(ErrorMessage = "开户许可证核准号 类型错误")]
-        public string NewaccountlicenseNumber { get; set; }
-
-        /// <summary>
-        /// 贷款卡编码
-        /// </summary>
-        [Display(Name = "贷款卡编码"), StringLength(16), AN(ErrorMessage = "贷款卡编码 类型错误")]
+        [Display(Name = "中征码"), StringLength(16), AN(ErrorMessage = "中征码 类型错误")]
         public string LoanCardCode { get; set; }
 
         /// <summary>
-        /// 数据提取日期
+        /// 是否有上级机构
         /// </summary>
-        [Display(Name = "数据提取日期"), StringLength(8), Required, N(ErrorMessage = "数据提取日期 类型错误")]
-        public string DataExtractionDate { get; set; }
+        [Display(Name = "是否有上级机构")]
+        public bool HasParent { get; set; }
+
+        /// <summary>
+        /// 创建日期
+        /// </summary>
+        [Display(Name = "创建日期")]
+        public DateTime CreatedDate { get; set; }
     }
 }
