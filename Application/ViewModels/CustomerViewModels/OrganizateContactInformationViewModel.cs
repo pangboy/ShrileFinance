@@ -1,34 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Models.Customer.Enterprise.Organizate
+﻿namespace Application.ViewModels.CustomerViewModels
 {
+    using System.ComponentModel.DataAnnotations;
+
     /// <summary>
     /// 联络信息段
     /// </summary>
-    public class ContactInformationPeriod
+    public class OrganizateContactInformationViewModel
     {
-        /// <summary>
-        /// ID
-        /// </summary>
-        public int Id { get; set; }
-
-        /// <summary>
-        /// 信息类别
-        /// </summary>
-        [Display(Name = "信息类别"), StringLength(1), Required, AN(ErrorMessage = "信息类别类型错误")]
-        public string InformationCategories
-        {
-            get
-            {
-                return "E";
-            }
-        }
-
         /// <summary>
         /// 办公（生产、经营）地址
         /// </summary>
@@ -58,5 +36,7 @@ namespace Models.Customer.Enterprise.Organizate
         /// </summary>
         [Display(Name = "预留字段"), StringLength(40), ANC(ErrorMessage = "预留字段类型错误")]
         public string ReservedField { get; set; }
+
+        public virtual OrganizateBaseViewModel OrganizateBaseViewModel { get; set; }
     }
 }

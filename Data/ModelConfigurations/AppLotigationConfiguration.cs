@@ -1,8 +1,9 @@
 ﻿namespace Data.ModelConfigurations
 {
-    using Core.Entities.Concern;
     using System.Data.Entity.ModelConfiguration;
-    public class AppLotigationConfiguration: EntityTypeConfiguration<Litigation>
+    using Core.Entities.Concern;
+
+    public class AppLotigationConfiguration : EntityTypeConfiguration<Litigation>
     {
         public AppLotigationConfiguration() : base()
         {

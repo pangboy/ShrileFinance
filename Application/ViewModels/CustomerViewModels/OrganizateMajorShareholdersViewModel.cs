@@ -1,18 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Models.Customer.Enterprise.Organizate
+﻿namespace Application.ViewModels.CustomerViewModels
 {
+    using System.ComponentModel.DataAnnotations;
+
     /// <summary>
     /// 重要股东段
     /// </summary>
     [MajorShareholdersPeriod_NT(ErrorMessage = "重要股东段 证件号码/登记注册号码和证件类型/登记注册号类型成对出现")]
     [MajorShareholdersPeriod_ROI(ErrorMessage = "重要股东段 当股东类型为机构时，登记注册号码、组织机构代码、机构信用代码必填其一")]
-    public class MajorShareholdersPeriod
+    [MajorShareholdersPeriod_TR(ErrorMessage = "证件类型/登记注册号类型 值错误")]
+    public class OrganizateMajorShareholdersViewModel
     {
         /// <summary>
         /// ID
@@ -34,7 +30,7 @@ namespace Models.Customer.Enterprise.Organizate
         /// <summary>
         /// 股东类型
         /// </summary>
-        [Display(Name = "股东类型"), StringLength(1), Required, AN(ErrorMessage = "股东类型 类型错误")]
+        [Display(Name = "股东类型"), StringLength(1), Required, AN(ErrorMessage = "股东类型 类型错误"), ShareholdersType(ErrorMessage = "股东类型 值错误")]
         public string ShareholdersType { get; set; }
 
         /// <summary>
@@ -70,19 +66,9 @@ namespace Models.Customer.Enterprise.Organizate
         /// <summary>
         /// 持股比例
         /// </summary>
-        [Display(Name = "持股比例"), StringLength(10), AN(ErrorMessage = "持股比例 类型错误"),SharesProportion(ErrorMessage = "持股比例保留2位小数")]
+        [Display(Name = "持股比例"), StringLength(10), AN(ErrorMessage = "持股比例 类型错误"), SharesProportion(ErrorMessage = "持股比例保留2位小数")]
         public string SharesProportion { get; set; }
 
-        /// <summary>
-        /// 信息更新日期
-        /// </summary>
-        [Display(Name = "信息更新日期"), StringLength(8), Required, N(ErrorMessage = "信息更新日期 类型错误")]
-        public string InformationUpdateDate { get; set; }
-
-        /// <summary>
-        /// 预留字段
-        /// </summary>
-        [Display(Name = "预留字段"), StringLength(40), ANC(ErrorMessage = "预留字段 类型错误")]
-        public string ReservedField { get; set; }
+        public virtual OrganizateBaseViewModel OrganizateBaseViewModel { get; set; }
     }
 }

@@ -81,6 +81,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CustomerAppService.cs" />
     <Compile Include="LawsuitAppService.cs" />
     <Compile Include="Startup\Startup.Autofac.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -90,6 +91,20 @@
     <Compile Include="AccountAppService.cs" />
     <Compile Include="ViewModels\AccountViewModels\LoginViewModel.cs" />
     <Compile Include="ViewModels\AccountViewModels\RegisterViewModel.cs" />
+    <Compile Include="ViewModels\CustomerViewModels\FamilyBaseViewModel.cs" />
+    <Compile Include="ViewModels\CustomerViewModels\FamilyDeleteRecord.cs" />
+    <Compile Include="ViewModels\CustomerViewModels\OrganizateBaseViewModel.cs" />
+    <Compile Include="ViewModels\CustomerViewModels\OrganizateBasicPropertiesViewModel.cs" />
+    <Compile Include="ViewModels\CustomerViewModels\OrganizateContactInformationViewModel.cs" />
+    <Compile Include="ViewModels\CustomerViewModels\CustomerViewModel.cs" />
+    <Compile Include="ViewModels\CustomerViewModels\OrganizateDeleteRecordViewModel.cs" />
+    <Compile Include="ViewModels\CustomerViewModels\OrganizateExecutivesMajorParticipantViewModel.cs" />
+    <Compile Include="ViewModels\CustomerViewModels\OrganizateInstitutionsStateViewModel.cs" />
+    <Compile Include="ViewModels\CustomerViewModels\OrganizateMainAssociatedEnterpriseViewModel.cs" />
+    <Compile Include="ViewModels\CustomerViewModels\OrganizateMajorShareholdersViewModel.cs" />
+    <Compile Include="ViewModels\CustomerViewModels\OrganizateSuperInstitutionViewModel.cs" />
+    <Compile Include="ViewModels\CustomerViewModels\ValidAttribute.cs" />
+    <Compile Include="ViewModels\LitigationViewModels\LitigationViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Core\Core.csproj">
@@ -103,6 +118,10 @@
     <ProjectReference Include="..\Infrastructure\Infrastructure.csproj">
       <Project>{6dee6ac9-2f19-4e2e-98cb-9638e0ccb78a}</Project>
       <Name>Infrastructure</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\UsedCarsFinance\Model\Model.csproj">
+      <Project>{78D8115D-9CA8-49C9-A2C1-02DC3C7BA828}</Project>
+      <Name>Model</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

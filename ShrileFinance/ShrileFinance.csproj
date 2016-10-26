@@ -17,7 +17,7 @@
     <AssemblyName>ShrileFinance</AssemblyName>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
-    <UseIISExpress>false</UseIISExpress>
+    <UseIISExpress>true</UseIISExpress>
     <IISExpressSSLPort />
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
@@ -214,19 +214,6 @@
     </Compile>
     <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
-    <Compile Include="Models\Customer\Enterprise\Family\BasePeriod.cs" />
-    <Compile Include="Models\Customer\Enterprise\Family\DeleteRecord.cs" />
-    <Compile Include="Models\Customer\Enterprise\Organizate\BasePeriod.cs" />
-    <Compile Include="Models\Customer\Enterprise\Organizate\BasicPropertiesPeriod.cs" />
-    <Compile Include="Models\Customer\Enterprise\Organizate\ContactInformationPeriod.cs" />
-    <Compile Include="Models\Customer\Enterprise\Organizate\DeleteRecord.cs" />
-    <Compile Include="Models\Customer\Enterprise\Organizate\ExecutivesMajorParticipantPeriod.cs" />
-    <Compile Include="Models\Customer\Enterprise\Organizate\InstitutionsStatePeriod.cs" />
-    <Compile Include="Models\Customer\Enterprise\Organizate\MainAssociatedEnterprisePerid.cs" />
-    <Compile Include="Models\Customer\Enterprise\Organizate\MajorShareholdersPeriod.cs" />
-    <Compile Include="Models\Customer\Enterprise\Organizate\OrganizateInfo.cs" />
-    <Compile Include="Models\Customer\Enterprise\Organizate\SuperInstitutionPeriod.cs" />
-    <Compile Include="Models\Customer\ValidAttribute.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\ApplicationOAuthProvider.cs" />
@@ -638,7 +625,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Models\Customer\Pensonal\" />
     <Folder Include="Views\Default\" />
   </ItemGroup>
   <ItemGroup>

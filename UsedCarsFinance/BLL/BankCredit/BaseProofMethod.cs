@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace BLL.BankCredit
+﻿namespace BLL.BankCredit
 {
     /// <summary>
     /// 基础校验方法基类

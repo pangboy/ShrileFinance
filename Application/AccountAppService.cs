@@ -36,7 +36,6 @@
                 Email = model.Email,
                 PhoneNumber = model.Phone
             };
-
             return userManager.CreateAsync(user, model.Password);
         }
     }

@@ -68,6 +68,7 @@
     </Compile>
     <Compile Include="ModelConfigurations\AppLotigationConfiguration.cs" />
     <Compile Include="ModelConfigurations\AppLotigationBaseConfiguration.cs" />
+    <Compile Include="ModelConfigurations\CustomerConfiguration.cs" />
     <Compile Include="ModelConfigurations\TypeConfigurationExtensions.cs" />
     <Compile Include="ModelConfigurations\AppUserConfiguration.cs" />
     <Compile Include="Models\CRET_Cities.cs">
@@ -175,6 +176,7 @@
     </Compile>
     <Compile Include="Repositories\AppUserStore.cs" />
     <Compile Include="Repositories\BaseRepository.cs" />
+    <Compile Include="Repositories\CustomerRepository.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Core\Core.csproj">

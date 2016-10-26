@@ -1,8 +1,9 @@
 ﻿namespace Data.ModelConfigurations
 {
-    using Core.Entities.Concern;
     using System.Data.Entity.ModelConfiguration;
-    public class AppLotigationBaseConfiguration: EntityTypeConfiguration<LitigationBasePeriod>
+    using Core.Entities.Concern;
+
+    public class AppLotigationBaseConfiguration : EntityTypeConfiguration<LitigationBasePeriod>
     {
         public AppLotigationBaseConfiguration() : base()
         {

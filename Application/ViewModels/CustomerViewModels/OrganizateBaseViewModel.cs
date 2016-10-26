@@ -1,14 +1,13 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
-
-namespace Models.Customer.Enterprise.Organizate
+﻿namespace Application.ViewModels.CustomerViewModels
 {
+    using System.ComponentModel.DataAnnotations;
+
     /// <summary>
     /// 基础段
     /// </summary>
     [BasePeriod_OR(ErrorMessage = "基础段 组织机构代码和登记注册号码不能同时为空")]
     [BasePeriod_TN(ErrorMessage = "基础段 登记注册号类型和登记注册号码需成对出现")]
-    public class BasePeriod
+    public class OrganizateBaseViewModel
     {
         public int Id { get; set; }
 
@@ -39,7 +38,7 @@ namespace Models.Customer.Enterprise.Organizate
         /// <summary>
         /// 客户类型
         /// </summary>
-        [Display(Name = "客户类型"), StringLength(1), Required, AN(ErrorMessage = "客户类型 类型错误")]
+        [Display(Name = "客户类型"), StringLength(1), Required, AN(ErrorMessage = "客户类型 类型错误"), CustomerType(ErrorMessage = "客户类型 值错误")]
         public string CustomerType { get; set; }
 
         /// <summary>
@@ -57,7 +56,7 @@ namespace Models.Customer.Enterprise.Organizate
         /// <summary>
         /// 登记注册号类型
         /// </summary>
-        [Display(Name = "登记注册号类型"), StringLength(2), AN(ErrorMessage = "登记注册号类型 类型错误")]
+        [Display(Name = "登记注册号类型"), StringLength(2), AN(ErrorMessage = "登记注册号类型 类型错误"), RegistrationNumberType(ErrorMessage = "登记注册号类型 值错误")]
         public string RegistrationNumberType { get; set; }
 
         /// <summary>
@@ -95,16 +94,5 @@ namespace Models.Customer.Enterprise.Organizate
         /// </summary>
         [Display(Name = "数据提取日期"), StringLength(8), Required, N(ErrorMessage = "数据提取日期 类型错误")]
         public string DataExtractionDate { get; set; }
-
-        /// <summary>
-        /// 预留字段
-        /// </summary>
-        [Display(Name = "预留字段"), StringLength(40), ANC(ErrorMessage = "预留字段 类型错误")]
-        public string ReservedField { get; set; }
-
-        public BasePeriod()
-        {
-
-        }
     }
 }

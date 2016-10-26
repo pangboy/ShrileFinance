@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-
-namespace Core.Entities.Concern
+﻿namespace Core.Entities.Concern
 {
     public class LitigationBasePeriod
     {
@@ -20,7 +15,7 @@ namespace Core.Entities.Concern
         /// <summary>
         /// 信息记录操作类型
         /// </summary>
-        public string InformationOperationType{ get; set; }
+        public string InformationOperationType { get; set; }
 
         /// <summary>
         /// 业务发生日期
