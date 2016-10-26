@@ -350,7 +350,7 @@
 
             var superInstitutionPeriod = value as ParentViewModel;
 
-            return ServiceMethods.CheckInPairs(new string[] { superInstitutionPeriod.RegistraterNumber, superInstitutionPeriod.OrganizateCode });
+            return ServiceMethods.CheckInPairs(new string[] { superInstitutionPeriod.RegistraterCode, superInstitutionPeriod.OrganizateCode });
         }
     }
     #endregion
@@ -358,21 +358,6 @@
 
     #region 家族段级别验证
     #region 基础段
-    /// <summary>
-    /// 主要关系人证件号码和证件类型成对出现
-    /// </summary>
-    public class FBasePeriod_MORAttribute : ValidationAttribute
-    {
-        public override bool IsValid(object value)
-        {
-            value = value ?? new FamilyMemberViewModel();
-
-            var basePeriod = value as FamilyMemberViewModel;
-
-            return ServiceMethods.CheckInPairs(new string[] { basePeriod.MainParticipantCertificateNumber, basePeriod.MainParticipantCertificateType });
-        }
-    }
-
     /// <summary>
     /// 家族成员证件号码和证件类型成对出现
     /// </summary>
@@ -391,21 +376,6 @@
     #endregion
 
     #region 家族删除报文
-    /// <summary>
-    /// 主要关系人证件号码和证件类型成对出现
-    /// </summary>
-    public class FDBasePeriod_MORAttribute : ValidationAttribute
-    {
-        public override bool IsValid(object value)
-        {
-            value = value ?? new FamilyMemberViewModel();
-
-            var basePeriod = value as FamilyMemberViewModel;
-
-            return ServiceMethods.CheckInPairs(new string[] { basePeriod.MainParticipantCertificateNumber, basePeriod.MainParticipantCertificateType });
-        }
-    }
-
     /// <summary>
     /// 家族成员证件号码和证件类型成对出现
     /// </summary>

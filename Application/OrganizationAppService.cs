@@ -19,7 +19,7 @@
         /// </summary>
         /// yand    16.10.25
         /// <param name="model">实体</param>
-        public void Create(Base1ViewModel model)
+        public void Create(BaseViewModel model)
         {
             var customer = new Core.Entities.Customers.Enterprise.Organization()
             {
@@ -69,7 +69,7 @@
         /// </summary>
         /// yand    16.10.25
         /// <param name="model">实体</param>
-        public void Modify(Base1ViewModel model)
+        public void Modify(BaseViewModel model)
         {
             var customer = new Core.Entities.Customers.Enterprise.Organization()
             {
@@ -120,11 +120,10 @@
         /// yand    16.10.25
         /// <param name="id">id</param>
         /// <returns></returns>
-        public Organization Get(Guid id)
+        public ViewModels.OrganizationViewModels.Organization Get(Guid id)
         {
             Core.Entities.Customers.Enterprise.Organization customer = repository.Get(id);
-
-            return customer;
+            return null;
         }
     }
 }
