@@ -3,7 +3,7 @@
 namespace Web.Controllers.Customer
 {
     using Application;
-    using Application.ViewModels.CustomerViewModels;
+    using Application.ViewModels.OrganizationViewModels;
     using System;
 
     public class CustomerController : ApiController
@@ -21,7 +21,7 @@ namespace Web.Controllers.Customer
         /// yand    16.10.25
         /// <param name="value"></param>
         /// <returns></returns>
-        public IHttpActionResult Add(CustomerViewModel value)
+        public IHttpActionResult Add(Base1ViewModel value)
         {
             if (!ModelState.IsValid)
             {
@@ -38,7 +38,7 @@ namespace Web.Controllers.Customer
         /// yand    16.10.25
         /// <param name="value"></param>
         /// <returns></returns>
-        public IHttpActionResult Modify(CustomerViewModel value)
+        public IHttpActionResult Modify(Base1ViewModel value)
         {
             if (!ModelState.IsValid)
             {
@@ -49,7 +49,7 @@ namespace Web.Controllers.Customer
             return Ok();
         }
 
-        public CustomerViewModel Get(Guid id)
+        public Base1ViewModel Get(Guid id)
         {
             return null;//customerAppService.Get(id);
         }

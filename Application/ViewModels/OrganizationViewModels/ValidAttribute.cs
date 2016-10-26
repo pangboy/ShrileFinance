@@ -1,4 +1,4 @@
-﻿namespace Application.ViewModels.CustomerViewModels
+﻿namespace Application.ViewModels.OrganizationViewModels
 {
     #region 命名空间引用
     using System;
@@ -202,11 +202,11 @@
     {
         public override bool IsValid(object value)
         {
-            value = value ?? new OrganizateBaseViewModel();
+            value = value ?? new BaseViewModel();
 
-            var basePeriod = value as OrganizateBaseViewModel;
+            var basePeriod = value as BaseViewModel;
 
-            return ServiceMethods.CheckInPairs(new string[] { basePeriod.OrganizateCode, basePeriod.RegistrationNumber });
+            return ServiceMethods.CheckInPairs(new string[] { basePeriod.OrganizateCode, basePeriod.RegistraterCode });
         }
     }
 
@@ -218,16 +218,16 @@
     {
         public override bool IsValid(object value)
         {
-            value = value ?? new OrganizateBaseViewModel();
+            value = value ?? new BaseViewModel();
 
-            var basePeriod = value as OrganizateBaseViewModel;
+            var basePeriod = value as BaseViewModel;
 
-            if (string.IsNullOrEmpty(basePeriod.RegistrationNumberType) && string.IsNullOrEmpty(basePeriod.RegistrationNumber))
+            if (string.IsNullOrEmpty(basePeriod.RegistraterType) && string.IsNullOrEmpty(basePeriod.RegistraterCode))
             {
                 return false;
             }
 
-            return ServiceMethods.CheckInPairs(new string[] { basePeriod.RegistrationNumberType, basePeriod.RegistrationNumber });
+            return ServiceMethods.CheckInPairs(new string[] { basePeriod.RegistraterType, basePeriod.RegistraterCode });
         }
     }
     #endregion
@@ -240,11 +240,11 @@
     {
         public override bool IsValid(object value)
         {
-            value = value ?? new OrganizateExecutivesMajorParticipantViewModel();
+            value = value ?? new ManagerViewModel();
 
-            var executivesMajorParticipantPeriod = value as OrganizateExecutivesMajorParticipantViewModel;
+            var executivesMajorParticipantPeriod = value as ManagerViewModel;
 
-            return ServiceMethods.CheckInPairs(new string[] { executivesMajorParticipantPeriod.CertificateNumber, executivesMajorParticipantPeriod.CertificateType });
+            return ServiceMethods.CheckInPairs(new string[] { executivesMajorParticipantPeriod.CertificateCode, executivesMajorParticipantPeriod.CertificateType });
         }
     }
     #endregion
@@ -257,9 +257,9 @@
     {
         public override bool IsValid(object value)
         {
-            value = value ?? new OrganizateMajorShareholdersViewModel();
+            value = value ?? new StockholderViewModel();
 
-            var executivesMajorParticipantPeriod = value as OrganizateMajorShareholdersViewModel;
+            var executivesMajorParticipantPeriod = value as StockholderViewModel;
 
             return ServiceMethods.CheckInPairs(new string[] { executivesMajorParticipantPeriod.RegistraterCode, executivesMajorParticipantPeriod.RegistraterType }); 
         }
@@ -272,9 +272,9 @@
     {
         public override bool IsValid(object value)
         {
-            value = value ?? new OrganizateMajorShareholdersViewModel();
+            value = value ?? new StockholderViewModel();
 
-            var executivesMajorParticipantPeriod = value as OrganizateMajorShareholdersViewModel;
+            var executivesMajorParticipantPeriod = value as StockholderViewModel;
 
             if (!string.IsNullOrEmpty(executivesMajorParticipantPeriod.ShareholdersType) && executivesMajorParticipantPeriod.ShareholdersType.Equals("2"))
             {
@@ -295,9 +295,9 @@
     {
         public override bool IsValid(object value)
         {
-            value = value ?? new OrganizateMajorShareholdersViewModel();
+            value = value ?? new StockholderViewModel();
 
-            var executivesMajorParticipantPeriod = value as OrganizateMajorShareholdersViewModel;
+            var executivesMajorParticipantPeriod = value as StockholderViewModel;
 
             if (!string.IsNullOrEmpty(executivesMajorParticipantPeriod.ShareholdersType) && !string.IsNullOrEmpty(executivesMajorParticipantPeriod.RegistraterType))
             {
@@ -329,11 +329,11 @@
     {
         public override bool IsValid(object value)
         {
-            value = value ?? new OrganizateMainAssociatedEnterpriseViewModel();
+            value = value ?? new AssociatedEnterpriseViewModel();
 
-            var mainAssociatedEnterprisePerid = value as OrganizateMainAssociatedEnterpriseViewModel;
+            var mainAssociatedEnterprisePerid = value as AssociatedEnterpriseViewModel;
 
-            return ServiceMethods.CheckInPairs(new string[] { mainAssociatedEnterprisePerid.RegistraterNumber, mainAssociatedEnterprisePerid.OrganizateCode });
+            return ServiceMethods.CheckInPairs(new string[] { mainAssociatedEnterprisePerid.RegistraterCode, mainAssociatedEnterprisePerid.OrganizateCode });
         }
     }
     #endregion
@@ -346,9 +346,9 @@
     {
         public override bool IsValid(object value)
         {
-            value = value ?? new OrganizateSuperInstitutionViewModel();
+            value = value ?? new ParentViewModel();
 
-            var superInstitutionPeriod = value as OrganizateSuperInstitutionViewModel;
+            var superInstitutionPeriod = value as ParentViewModel;
 
             return ServiceMethods.CheckInPairs(new string[] { superInstitutionPeriod.RegistraterNumber, superInstitutionPeriod.OrganizateCode });
         }
@@ -365,9 +365,9 @@
     {
         public override bool IsValid(object value)
         {
-            value = value ?? new FamilyBaseViewModel();
+            value = value ?? new FamilyMemberViewModel();
 
-            var basePeriod = value as FamilyBaseViewModel;
+            var basePeriod = value as FamilyMemberViewModel;
 
             return ServiceMethods.CheckInPairs(new string[] { basePeriod.MainParticipantCertificateNumber, basePeriod.MainParticipantCertificateType });
         }
@@ -380,11 +380,11 @@
     {
         public override bool IsValid(object value)
         {
-            value = value ?? new FamilyBaseViewModel();
+            value = value ?? new FamilyMemberViewModel();
 
-            var basePeriod = value as FamilyBaseViewModel;
+            var basePeriod = value as FamilyMemberViewModel;
 
-            return ServiceMethods.CheckInPairs(new string[] { basePeriod.FamilyMembersCertificateNumber, basePeriod.FamilyMembersCertificateType });
+            return ServiceMethods.CheckInPairs(new string[] { basePeriod.CertificateCode, basePeriod.CertificateType });
         }
     }
     #endregion
@@ -398,9 +398,9 @@
     {
         public override bool IsValid(object value)
         {
-            value = value ?? new FamilyBaseViewModel();
+            value = value ?? new FamilyMemberViewModel();
 
-            var basePeriod = value as FamilyBaseViewModel;
+            var basePeriod = value as FamilyMemberViewModel;
 
             return ServiceMethods.CheckInPairs(new string[] { basePeriod.MainParticipantCertificateNumber, basePeriod.MainParticipantCertificateType });
         }
@@ -413,11 +413,11 @@
     {
         public override bool IsValid(object value)
         {
-            value = value ?? new FamilyBaseViewModel();
+            value = value ?? new FamilyMemberViewModel();
 
-            var basePeriod = value as FamilyBaseViewModel;
+            var basePeriod = value as FamilyMemberViewModel;
 
-            return ServiceMethods.CheckInPairs(new string[] { basePeriod.FamilyMembersCertificateNumber, basePeriod.FamilyMembersCertificateType });
+            return ServiceMethods.CheckInPairs(new string[] { basePeriod.CertificateCode, basePeriod.CertificateType });
         }
     }
     #endregion

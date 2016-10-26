@@ -1,35 +1,24 @@
-﻿namespace Application.ViewModels.CustomerViewModels
+﻿namespace Application.ViewModels.OrganizationViewModels
 {
+    using System;
     using System.ComponentModel.DataAnnotations;
 
     /// <summary>
     /// 基本属性段
     /// </summary>
-    public class OrganizateBasicPropertiesViewModel
+    public class PropertiesViewModel
     {
         /// <summary>
         /// 机构中文名称
         /// </summary>
-        [Display(Name = "机构中文名称"), StringLength(80), ANC(ErrorMessage = "机构中文名称 类型错误")]
+        [Display(Name = "机构名称"), StringLength(80), ANC(ErrorMessage = "机构中文名称 类型错误")]
         public string InstitutionChName { get; set; }
-
-        /// <summary>
-        /// 机构英文名称
-        /// </summary>
-        [Display(Name = "机构英文名称"), StringLength(80), ANC(ErrorMessage = "机构英文名称 类型错误")]
-        public string InstitutionEnName { get; set; }
 
         /// <summary>
         /// 注册登记地址
         /// </summary>
         [Display(Name = "注册登记地址"), StringLength(80), ANC(ErrorMessage = "注册登记地址 类型错误")]
         public string RegisterAddress { get; set; }
-
-        /// <summary>
-        /// 国别
-        /// </summary>
-        [Display(Name = "国别"), StringLength(3), AN(ErrorMessage = "国别 类型错误"), Country(ErrorMessage = "国别 值错误")]
-        public string Country { get; set; }
 
         /// <summary>
         /// 注册（登记）地行政区划
@@ -40,14 +29,14 @@
         /// <summary>
         /// 成立日期
         /// </summary>
-        [Display(Name = "成立日期"), StringLength(8), N(ErrorMessage = "成立日期 类型错误")]
-        public string SetupDate { get; set; }
+        [Display(Name = "成立日期")]
+        public DateTime SetupDate { get; set; }
 
         /// <summary>
         /// 证书到期日期
         /// </summary>
-        [Display(Name = "证书到期日期"), StringLength(8), N(ErrorMessage = "证书到期日期 类型错误")]
-        public string CertificateDueDate { get; set; }
+        [Display(Name = "证书到期日期")]
+        public DateTime CertificateDueDate { get; set; }
 
         /// <summary>
         /// 经营（业务）范围
@@ -56,17 +45,11 @@
         public string BusinessScope { get; set; }
 
         /// <summary>
-        /// 注册资本币种
-        /// </summary>
-        [Display(Name = "注册资本币种"), StringLength(3), AN(ErrorMessage = "注册资本币种 类型错误"), CapitalCurrency(ErrorMessage = "注册资本币种 值错误")]
-        public string RegisterCapitalCurrency { get; set; }
-
-        /// <summary>
         /// 注册资本（万元）
         /// </summary>
-        [Display(Name = "注册资本（万元）"), MaxLength(10), AN(ErrorMessage = "注册资本（万元） 类型错误")]
+        [Display(Name = "注册资本（万元）"), DataType(DataType.Currency)]
         [RegisterCapital(ErrorMessage = "注册资本 保留两位小数")]
-        public string RegisterCapital { get; set; }
+        public decimal RegisterCapital { get; set; }
 
         /// <summary>
         /// 组织机构类别
@@ -91,7 +74,5 @@
         /// </summary>
         [Display(Name = "经济类型"), StringLength(2), AN(ErrorMessage = "经济类型 类型错误"), EconomicType(ErrorMessage = "经济类型 值错误")]
         public string EconomicType { get; set; }
-
-        public virtual OrganizateBaseViewModel OrganizateBaseViewModel { get; set; }
     }
 }

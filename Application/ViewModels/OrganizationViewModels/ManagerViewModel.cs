@@ -1,35 +1,22 @@
-﻿namespace Application.ViewModels.CustomerViewModels
+﻿namespace Application.ViewModels.OrganizationViewModels
 {
+    using System;
+    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
 
     /// <summary>
     /// 高管及主要关系人段
     /// </summary>
     [ExecutivesMajorParticipantPeriod_NT(ErrorMessage = "高管及主要关系人段 证件号码和证件类型成对出现")]
-    public class OrganizateExecutivesMajorParticipantViewModel
+    public class ManagerViewModel
     {
-        /// <summary>
-        /// ID
-        /// </summary>
-        public int Id { get; set; }
-
-        /// <summary>
-        /// 信息类别
-        /// </summary>
-        [Display(Name = "信息类别"), StringLength(1), Required, AN(ErrorMessage = "信息类别 类型错误")]
-        public string InformationCategories
-        {
-            get
-            {
-                return "F";
-            }
-        }
+        public Guid Id { get; set; }
 
         /// <summary>
         /// 关系人类型
         /// </summary>
         [Display(Name = "关系人类型"), StringLength(1), AN(ErrorMessage = "关系人类型 类型错误"), ParticipantType(ErrorMessage = "关系人类型 值错误")]
-        public string ParticipantType { get; set; }
+        public string Type { get; set; }
 
         /// <summary>
         /// 姓名
@@ -47,8 +34,11 @@
         /// 证件号码
         /// </summary>
         [Display(Name = "证件号码"), StringLength(20), Required, ANC(ErrorMessage = "证件号码 类型错误")]
-        public string CertificateNumber { get; set; }
+        public string CertificateCode { get; set; }
 
-        public virtual OrganizateBaseViewModel OrganizateBaseViewModel { get; set; }
+        /// <summary>
+        /// 家族成员
+        /// </summary>
+        public IEnumerable<FamilyMemberViewModel> FamilyMembers { get; set; }
     }
 }

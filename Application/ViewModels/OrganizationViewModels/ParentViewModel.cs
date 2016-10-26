@@ -1,4 +1,4 @@
-﻿namespace Application.ViewModels.CustomerViewModels
+﻿namespace Application.ViewModels.OrganizationViewModels
 {
     using System.ComponentModel.DataAnnotations;
 
@@ -6,13 +6,8 @@
     /// 上级机构（主管单位）段
     /// </summary>
     [SuperInstitutionPeriod_ROI(ErrorMessage = "上级机构（主管单位）段 登记注册号码、组织机构代码和机构信用代码不能同时为空")]
-    public class OrganizateSuperInstitutionViewModel
+    public class ParentViewModel
     {
-        /// <summary>
-        /// ID
-        /// </summary>
-        public int Id { get; set; }
-
         /// <summary>
         /// 上级机构名称
         /// </summary>
@@ -23,13 +18,13 @@
         /// 登记注册号类型
         /// </summary>
         [Display(Name = "登记注册号类型"), StringLength(2), AN(ErrorMessage = "登记注册号类型 类型错误"), RegistrationNumberType(ErrorMessage = "登记注册号类型 值错误")]
-        public string RegistraterNumberType { get; set; }
+        public string RegistraterType { get; set; }
 
         /// <summary>
         /// 登记注册号
         /// </summary>
         [Display(Name = "登记注册号"), StringLength(20), ANC(ErrorMessage = "登记注册号 类型错误")]
-        public string RegistraterNumber { get; set; }
+        public string RegistraterCode { get; set; }
 
         /// <summary>
         /// 组织机构代码
@@ -42,7 +37,5 @@
         /// </summary>
         [Display(Name = "机构信用代码"), StringLength(18), AN(ErrorMessage = "机构信用代码 类型错误")]
         public string InstitutionCreditCode { get; set; }
-
-        public virtual OrganizateBaseViewModel OrganizateBaseViewModel { get; set; }
     }
 }

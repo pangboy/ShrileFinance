@@ -1,5 +1,7 @@
-﻿namespace Application.ViewModels.CustomerViewModels
+﻿namespace Application.ViewModels.OrganizationViewModels
 {
+    using System;
+    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
 
     /// <summary>
@@ -8,24 +10,9 @@
     [MajorShareholdersPeriod_NT(ErrorMessage = "重要股东段 证件号码/登记注册号码和证件类型/登记注册号类型成对出现")]
     [MajorShareholdersPeriod_ROI(ErrorMessage = "重要股东段 当股东类型为机构时，登记注册号码、组织机构代码、机构信用代码必填其一")]
     [MajorShareholdersPeriod_TR(ErrorMessage = "证件类型/登记注册号类型 值错误")]
-    public class OrganizateMajorShareholdersViewModel
+    public class StockholderViewModel
     {
-        /// <summary>
-        /// ID
-        /// </summary>
-        public int Id { get; set; }
-
-        /// <summary>
-        /// 信息类别
-        /// </summary>
-        [Display(Name = "信息类别"), StringLength(1), Required, AN(ErrorMessage = "信息类别 类型错误")]
-        public string InformationCategories
-        {
-            get
-            {
-                return "G";
-            }
-        }
+        public Guid Id { get; set; }
 
         /// <summary>
         /// 股东类型
@@ -66,9 +53,12 @@
         /// <summary>
         /// 持股比例
         /// </summary>
-        [Display(Name = "持股比例"), StringLength(10), AN(ErrorMessage = "持股比例 类型错误"), SharesProportion(ErrorMessage = "持股比例保留2位小数")]
-        public string SharesProportion { get; set; }
+        [Display(Name = "持股比例"), DataType(DataType.Currency)]
+        public decimal SharesProportion { get; set; }
 
-        public virtual OrganizateBaseViewModel OrganizateBaseViewModel { get; set; }
+        /// <summary>
+        /// 家族成员
+        /// </summary>
+        public IEnumerable<FamilyMemberViewModel> FamilyMembers { get; set; }
     }
 }

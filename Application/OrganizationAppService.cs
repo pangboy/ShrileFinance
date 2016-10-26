@@ -3,7 +3,7 @@
     using System;
     using Core.Entities.Customers.Enterprise;
     using Core.Interfaces.Repositories;
-    using ViewModels.CustomerViewModels;
+    using ViewModels.OrganizationViewModels;
 
     public class OrganizationAppService
     {
@@ -19,9 +19,9 @@
         /// </summary>
         /// yand    16.10.25
         /// <param name="model">实体</param>
-        public void Create(CustomerViewModel model)
+        public void Create(Base1ViewModel model)
         {
-            var customer = new Organization()
+            var customer = new Core.Entities.Customers.Enterprise.Organization()
             {
                 ////Id = model.Id,
                 ////BasicAccountState = model.BasicAccountState,
@@ -69,9 +69,9 @@
         /// </summary>
         /// yand    16.10.25
         /// <param name="model">实体</param>
-        public void Modify(CustomerViewModel model)
+        public void Modify(Base1ViewModel model)
         {
-            var customer = new Organization()
+            var customer = new Core.Entities.Customers.Enterprise.Organization()
             {
                 ////Id = model.Id,
                 ////BasicAccountState = model.BasicAccountState,
@@ -122,7 +122,7 @@
         /// <returns></returns>
         public Organization Get(Guid id)
         {
-            Organization customer = repository.Get(id);
+            Core.Entities.Customers.Enterprise.Organization customer = repository.Get(id);
 
             return customer;
         }
