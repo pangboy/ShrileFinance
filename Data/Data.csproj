@@ -73,7 +73,7 @@
     <Compile Include="ModelConfigurations\AppLotigationConfiguration.cs" />
     <Compile Include="ModelConfigurations\AppLotigationBaseConfiguration.cs" />
     <Compile Include="ModelConfigurations\AssociatedEnterpriseConfiguration.cs" />
-    <Compile Include="ModelConfigurations\ManagersConfiguration.cs" />
+    <Compile Include="ModelConfigurations\ManagerConfiguration.cs" />
     <Compile Include="ModelConfigurations\FamilyMemberConfiguration.cs" />
     <Compile Include="ModelConfigurations\OrganizationConfiguration.cs" />
     <Compile Include="ModelConfigurations\StockholderConfiguration.cs" />

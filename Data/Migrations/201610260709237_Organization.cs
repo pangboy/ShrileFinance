@@ -8,7 +8,7 @@ namespace Data.Migrations
         public override void Up()
         {
             CreateTable(
-                "dbo.Organization",
+                "dbo.CUST_Organization",
                 c => new
                     {
                         Id = c.Guid(nullable: false, identity: true),
@@ -48,93 +48,94 @@ namespace Data.Migrations
                 .PrimaryKey(t => t.Id);
             
             CreateTable(
-                "dbo.AssociatedEnterprise",
+                "dbo.CUST_AssociatedEnterprise",
                 c => new
                     {
-                        Id = c.Guid(nullable: false),
-                        AssociatedType = c.String(),
-                        Name = c.String(),
-                        RegistraterType = c.String(),
-                        RegistraterCode = c.String(),
-                        OrganizateCode = c.String(),
-                        InstitutionCreditCode = c.String(),
-                        Organization_Id = c.Guid(),
+                        Id = c.Guid(nullable: false, identity: true),
+                        AssociatedType = c.String(nullable: false, maxLength: 2),
+                        Name = c.String(nullable: false, maxLength: 80),
+                        RegistraterType = c.String(maxLength: 2),
+                        RegistraterCode = c.String(maxLength: 20),
+                        OrganizateCode = c.String(maxLength: 10),
+                        InstitutionCreditCode = c.String(maxLength: 18),
+                        OrganizationId = c.Guid(nullable: false),
                     })
                 .PrimaryKey(t => t.Id)
-                .ForeignKey("dbo.Organization", t => t.Organization_Id)
-                .Index(t => t.Organization_Id);
+                .ForeignKey("dbo.CUST_Organization", t => t.OrganizationId)
+                .Index(t => t.OrganizationId);
             
             CreateTable(
-                "dbo.Manager",
+                "dbo.CUST_Manager",
                 c => new
                     {
-                        Id = c.Guid(nullable: false),
-                        Type = c.String(),
-                        Name = c.String(),
-                        CertificateType = c.String(),
-                        CertificateCode = c.String(),
-                        Organization_Id = c.Guid(),
+                        Id = c.Guid(nullable: false, identity: true),
+                        Type = c.String(nullable: false, maxLength: 1),
+                        Name = c.String(nullable: false, maxLength: 80),
+                        CertificateType = c.String(nullable: false, maxLength: 2),
+                        CertificateCode = c.String(nullable: false, maxLength: 20),
+                        OrganizationId = c.Guid(nullable: false),
                     })
                 .PrimaryKey(t => t.Id)
-                .ForeignKey("dbo.Organization", t => t.Organization_Id)
-                .Index(t => t.Organization_Id);
+                .ForeignKey("dbo.CUST_Organization", t => t.OrganizationId)
+                .Index(t => t.OrganizationId);
             
             CreateTable(
-                "dbo.FamilyMember",
+                "dbo.CUST_FamilyMember",
                 c => new
                     {
-                        Id = c.Guid(nullable: false),
-                        Relationship = c.String(),
-                        Name = c.String(),
-                        CertificateType = c.String(),
-                        CertificateCode = c.String(),
-                        Manager_Id = c.Guid(),
-                        PersonStockholder_Id = c.Guid(),
+                        Id = c.Guid(nullable: false, identity: true),
+                        Relationship = c.String(nullable: false, maxLength: 1),
+                        Name = c.String(nullable: false, maxLength: 80),
+                        CertificateType = c.String(nullable: false, maxLength: 2),
+                        CertificateCode = c.String(nullable: false, maxLength: 20),
+                        ManagerId = c.Guid(),
+                        PersonStockholderId = c.Guid(),
                     })
                 .PrimaryKey(t => t.Id)
-                .ForeignKey("dbo.Manager", t => t.Manager_Id)
-                .ForeignKey("dbo.Stockholder", t => t.PersonStockholder_Id)
-                .Index(t => t.Manager_Id)
-                .Index(t => t.PersonStockholder_Id);
+                .ForeignKey("dbo.CUST_Manager", t => t.ManagerId)
+                .ForeignKey("dbo.CUST_Stockholder", t => t.PersonStockholderId)
+                .Index(t => t.ManagerId)
+                .Index(t => t.PersonStockholderId);
             
             CreateTable(
-                "dbo.Stockholder",
+                "dbo.CUST_Stockholder",
                 c => new
                     {
-                        Id = c.Guid(nullable: false),
-                        ShareholdersName = c.String(),
-                        SharesProportion = c.Decimal(nullable: false, precision: 18, scale: 2),
-                        RegistraterType = c.String(),
-                        RegistraterCode = c.String(),
-                        OrganizateCode = c.String(),
-                        InstitutionCreditCode = c.String(),
-                        CertificateType = c.String(),
-                        CertificateCode = c.String(),
-                        Discriminator = c.String(nullable: false, maxLength: 128),
-                        Organization_Id = c.Guid(),
+                        Id = c.Guid(nullable: false, identity: true),
+                        ShareholdersType = c.String(nullable: false, maxLength: 1),
+                        ShareholdersName = c.String(nullable: false, maxLength: 80),
+                        SharesProportion = c.Decimal(nullable: false, precision: 10, scale: 2),
+                        RegistraterType = c.String(maxLength: 2),
+                        RegistraterCode = c.String(maxLength: 20),
+                        OrganizateCode = c.String(maxLength: 10),
+                        InstitutionCreditCode = c.String(maxLength: 18),
+                        CertificateType = c.String(maxLength: 2),
+                        CertificateCode = c.String(maxLength: 20),
+                        OrganizationId = c.Guid(nullable: false),
                     })
                 .PrimaryKey(t => t.Id)
-                .ForeignKey("dbo.Organization", t => t.Organization_Id)
-                .Index(t => t.Organization_Id);
+                .ForeignKey("dbo.CUST_Organization", t => t.OrganizationId)
+                .Index(t => t.OrganizationId);
+            
         }
         
         public override void Down()
         {
-            DropForeignKey("dbo.Stockholder", "Organization_Id", "dbo.Organization");
-            DropForeignKey("dbo.FamilyMember", "PersonStockholder_Id", "dbo.Stockholder");
-            DropForeignKey("dbo.Manager", "Organization_Id", "dbo.Organization");
-            DropForeignKey("dbo.FamilyMember", "Manager_Id", "dbo.Manager");
-            DropForeignKey("dbo.AssociatedEnterprise", "Organization_Id", "dbo.Organization");
-            DropIndex("dbo.Stockholder", new[] { "Organization_Id" });
-            DropIndex("dbo.FamilyMember", new[] { "PersonStockholder_Id" });
-            DropIndex("dbo.FamilyMember", new[] { "Manager_Id" });
-            DropIndex("dbo.Manager", new[] { "Organization_Id" });
-            DropIndex("dbo.AssociatedEnterprise", new[] { "Organization_Id" });
-            DropTable("dbo.Stockholder");
-            DropTable("dbo.FamilyMember");
-            DropTable("dbo.Manager");
-            DropTable("dbo.AssociatedEnterprise");
-            DropTable("dbo.Organization");
+            DropForeignKey("dbo.CUST_Stockholder", "OrganizationId", "dbo.CUST_Organization");
+            DropForeignKey("dbo.CUST_FamilyMember", "PersonStockholderId", "dbo.CUST_Stockholder");
+            DropForeignKey("dbo.CUST_Manager", "OrganizationId", "dbo.CUST_Organization");
+            DropForeignKey("dbo.CUST_FamilyMember", "ManagerId", "dbo.CUST_Manager");
+            DropForeignKey("dbo.CUST_AssociatedEnterprise", "OrganizationId", "dbo.CUST_Organization");
+            DropIndex("dbo.CUST_Stockholder", new[] { "OrganizationId" });
+            DropIndex("dbo.CUST_FamilyMember", new[] { "PersonStockholderId" });
+            DropIndex("dbo.CUST_FamilyMember", new[] { "ManagerId" });
+            DropIndex("dbo.CUST_Manager", new[] { "OrganizationId" });
+            DropIndex("dbo.CUST_AssociatedEnterprise", new[] { "OrganizationId" });
+            DropTable("dbo.CUST_Stockholder");
+            DropTable("dbo.CUST_FamilyMember");
+            DropTable("dbo.CUST_Manager");
+            DropTable("dbo.CUST_AssociatedEnterprise");
+            DropTable("dbo.CUST_Organization");
         }
     }
 }

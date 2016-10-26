@@ -59,6 +59,8 @@
             HasMany(m => m.Managers).WithRequired().Map(m => m.MapKey("OrganizationId"));
             HasMany(m => m.Shareholders).WithRequired().Map(m => m.MapKey("OrganizationId"));
             HasMany(m => m.AssociatedEnterprises).WithRequired().Map(m => m.MapKey("OrganizationId"));
+
+            ToTable("CUST_Organization");
         }
     }
 }

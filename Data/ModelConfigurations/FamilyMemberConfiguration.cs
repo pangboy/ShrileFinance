@@ -15,6 +15,8 @@
             Property(m => m.Name).IsRequired().HasMaxLength(80);
             Property(m => m.CertificateType).IsRequired().HasMaxLength(2);
             Property(m => m.CertificateCode).IsRequired().HasMaxLength(20);
+
+            ToTable("CUST_FamilyMember");
         }
     }
 }

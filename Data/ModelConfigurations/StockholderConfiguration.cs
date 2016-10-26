@@ -17,6 +17,8 @@
 
             Property(m => m.ShareholdersName).IsRequired().HasMaxLength(80);
             Property(m => m.SharesProportion).IsRequired().HasPrecision(10, 2);
+
+            ToTable("CUST_Stockholder");
         }
     }
 

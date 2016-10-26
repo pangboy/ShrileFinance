@@ -10,6 +10,8 @@
             Managers = new List<Manager>();
             Shareholders = new List<Stockholder>();
             AssociatedEnterprises = new List<AssociatedEnterprise>();
+
+            CreatedDate = DateTime.Now;
         }
 
         /// <summary>

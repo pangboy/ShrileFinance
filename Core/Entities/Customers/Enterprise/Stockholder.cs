@@ -10,7 +10,7 @@
         /// <summary>
         /// 股东类型
         /// </summary>
-        public abstract string ShareholdersType { get; set; }
+        public string ShareholdersType { get; set; }
 
         /// <summary>
         /// 股东名称
@@ -28,12 +28,6 @@
     /// </summary>
     public class PersonStockholder : Stockholder, INaturalPerson
     {
-        public override string ShareholdersType
-        {
-            get { return "自然人"; }
-            set { ShareholdersType = value; }
-        }
-
         /// <summary>
         /// 证件类型
         /// </summary>
@@ -55,12 +49,6 @@
     /// </summary>
     public class EnterpriseStockholder : Stockholder, IEnterprise
     {
-        public override string ShareholdersType
-        {
-            get { return "企业"; }
-            set { ShareholdersType = value; }
-        }
-
         /// <summary>
         /// 登记注册类型
         /// </summary>

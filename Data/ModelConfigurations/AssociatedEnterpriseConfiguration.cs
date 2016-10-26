@@ -17,6 +17,8 @@
             Property(m => m.OrganizateCode).HasMaxLength(10);
             Property(m => m.RegistraterCode).HasMaxLength(20);
             Property(m => m.RegistraterType).HasMaxLength(2);
+
+            ToTable("CUST_AssociatedEnterprise");
         }
     }
 }
