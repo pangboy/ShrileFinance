@@ -10,7 +10,7 @@
         /// <summary>
         /// 股东类型
         /// </summary>
-        public abstract string ShareholdersType { get; }
+        public abstract string ShareholdersType { get; set; }
 
         /// <summary>
         /// 股东名称
@@ -31,6 +31,7 @@
         public override string ShareholdersType
         {
             get { return "自然人"; }
+            set { ShareholdersType = value; }
         }
 
         /// <summary>
@@ -57,6 +58,7 @@
         public override string ShareholdersType
         {
             get { return "企业"; }
+            set { ShareholdersType = value; }
         }
 
         /// <summary>

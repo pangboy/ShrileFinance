@@ -58,11 +58,11 @@ namespace Data.Migrations
                         RegistraterCode = c.String(),
                         OrganizateCode = c.String(),
                         InstitutionCreditCode = c.String(),
-                        Organization_Id = c.Guid(),
+                        OrganizationId = c.Guid(nullable: false),
                     })
                 .PrimaryKey(t => t.Id)
-                .ForeignKey("dbo.Organization", t => t.Organization_Id)
-                .Index(t => t.Organization_Id);
+                .ForeignKey("dbo.Organization", t => t.OrganizationId)
+                .Index(t => t.OrganizationId);
             
             CreateTable(
                 "dbo.Manager",
@@ -73,11 +73,11 @@ namespace Data.Migrations
                         Name = c.String(),
                         CertificateType = c.String(),
                         CertificateCode = c.String(),
-                        Organization_Id = c.Guid(),
+                        OrganizationId = c.Guid(nullable: false),
                     })
                 .PrimaryKey(t => t.Id)
-                .ForeignKey("dbo.Organization", t => t.Organization_Id)
-                .Index(t => t.Organization_Id);
+                .ForeignKey("dbo.Organization", t => t.OrganizationId)
+                .Index(t => t.OrganizationId);
             
             CreateTable(
                 "dbo.FamilyMember",
@@ -111,26 +111,26 @@ namespace Data.Migrations
                         CertificateType = c.String(),
                         CertificateCode = c.String(),
                         Discriminator = c.String(nullable: false, maxLength: 128),
-                        Organization_Id = c.Guid(),
+                        OrganizationId = c.Guid(nullable: false),
                     })
                 .PrimaryKey(t => t.Id)
-                .ForeignKey("dbo.Organization", t => t.Organization_Id)
-                .Index(t => t.Organization_Id);
+                .ForeignKey("dbo.Organization", t => t.OrganizationId)
+                .Index(t => t.OrganizationId);
             
         }
         
         public override void Down()
         {
-            DropForeignKey("dbo.Stockholder", "Organization_Id", "dbo.Organization");
+            DropForeignKey("dbo.Stockholder", "OrganizationId", "dbo.Organization");
             DropForeignKey("dbo.FamilyMember", "PersonStockholder_Id", "dbo.Stockholder");
-            DropForeignKey("dbo.Manager", "Organization_Id", "dbo.Organization");
+            DropForeignKey("dbo.Manager", "OrganizationId", "dbo.Organization");
             DropForeignKey("dbo.FamilyMember", "Manager_Id", "dbo.Manager");
-            DropForeignKey("dbo.AssociatedEnterprise", "Organization_Id", "dbo.Organization");
-            DropIndex("dbo.Stockholder", new[] { "Organization_Id" });
+            DropForeignKey("dbo.AssociatedEnterprise", "OrganizationId", "dbo.Organization");
+            DropIndex("dbo.Stockholder", new[] { "OrganizationId" });
             DropIndex("dbo.FamilyMember", new[] { "PersonStockholder_Id" });
             DropIndex("dbo.FamilyMember", new[] { "Manager_Id" });
-            DropIndex("dbo.Manager", new[] { "Organization_Id" });
-            DropIndex("dbo.AssociatedEnterprise", new[] { "Organization_Id" });
+            DropIndex("dbo.Manager", new[] { "OrganizationId" });
+            DropIndex("dbo.AssociatedEnterprise", new[] { "OrganizationId" });
             DropTable("dbo.Stockholder");
             DropTable("dbo.FamilyMember");
             DropTable("dbo.Manager");
