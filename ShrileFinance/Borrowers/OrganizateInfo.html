@@ -10,8 +10,8 @@
     <script src="../Scripts/jquery/jquery.js"></script>
     <script src="../Scripts/easyui/jquery.easyui.js"></script>
     <script src="../Scripts/easyui/locale/easyui-lang-zh_CN.js"></script>
-    <script src="../Scripts/JS/Method.js"></script>
-    <script src="../Scripts/JS/validType.js"></script>
+    <script src="JS/BorrowerMethod.js"></script>
+    <script src="JS/validType.js"></script>
 
     <style charset="utf-8" type="text/css" class="firebugResetStyles">
         /* See license.txt for terms of usage */
@@ -150,86 +150,6 @@
         }
     </style>
 
-    <script type="text/javascript">
-        // 提交
-        function Submit() {
-            var data = {};
-            var section = $("#content").find("section");
-            //序列化数据
-            var temp;
-            for (var i = 0; i < section.length; i++) {
-                var fs = new Array();
-                temp = $(section[i]).attr("id");
-                var fieldset = $(section[i]).children("fieldset");
-                for (var j = 0; j < fieldset.length; j++) {
-                    fs.push($(fieldset[j]).serializeJson())
-                }
-                data[temp] = fs;
-            }
-            var str = JSON.stringify(data);
-            $("#content").children().children(":hidden").find(":input.validatebox-text").validatebox("disableValidation");
-            if (!$("#content").form("validate")) {
-                $.messager.show({ msg: "请填写剩下的必填内容!" });
-                return false;
-            }
-
-            $.ajax({
-                async: true,
-                data: { value: str, InfoTypeId: infoTypeId, ReportId: reportId, recordID: recordID, messageTypeID: messageTypeId },
-                method: "POST",
-                url: "../api/DynamicLoad/PostMessageInfo",
-                statusCode: {
-                    200: function (data) {
-                        if (data == "") {
-                            // 禁用提交、保存草稿和清空草稿按钮
-                            $("#submit").linkbutton("disable");
-                            $("#temp").linkbutton("disable");
-                            $("#clear").linkbutton("disable");
-                            // 删除临时数据
-                            DeleteTempRecord();
-                            top.$.messager.show({ msg: "保存成功！" });
-                            setTimeout(function () {
-                                Cancel();
-                            }, 1000);
-                        }
-                    },
-                    500: function (data) {
-                        $.messager.alert('错误', data.responseJSON.ExceptionMessage);
-                    },
-                    400: function (data) {
-                        $.messager.alert('错误', data.responseJSON.Message, "info");
-                    }
-                }
-            });
-        }
-
-        // 取消按钮
-        function Cancel() {
-            window.opener.location.href = window.opener.location.href;
-            window.close()
-        }
-
-        // 时间数据格式转换
-        function myformatter(date) {
-            var y = date.getFullYear();
-            var m = date.getMonth() + 1;
-            var d = date.getDate();
-            return y.toString() + (m < 10 ? ('0' + m) : m).toString() + (d < 10 ? ('0' + d) : d).toString();
-        }
-        function myparser(s) {
-            if (s != "") {
-                var y = s.substring(0, 4);
-                var m = s.substring(4, 6);
-                var d = s.substring(6, 8);
-                var s = Date.parse(y + "-" + m + "-" + d);
-                return new Date(s);
-            }
-            else {
-                return new Date();
-            }
-        }
-
-    </script>
 </head>
 <body>
     <form class="container" id="content">
@@ -238,98 +158,127 @@
         </h1>
         <section id="B" min="1" max="1">
             <h2>基础段</h2>
-            
+
             <fieldset id="B">
                 <input type="hidden" name="InformationCategories" value="B" placeholder="信息类别">
 
                 <div class="row">
                     <div class="col-6">
                         <label>
-                            客户号：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('InfoImg.png') no-repeat scroll 0 0" title="">　</a>
+                            客户号：
+                            <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('img/InfoImg.png') no-repeat scroll 0 0" title="">　</a>
                         </label>
-                        <input class="easyui-textbox textbox-f" data-options="required:true" textboxname="CustomerNumber">
+                        <input class="easyui-textbox textbox-f" data-options="required:true,validType:['AN','length[1,40]']" textboxname="CustomerNumber">
                     </div>
 
                     <div class="col-6">
                         <label>
-                            管理行代码：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('InfoImg.png') no-repeat scroll 0 0" title=""></a>
+                            管理行代码：
+                            <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('img/InfoImg.png') no-repeat scroll 0 0" title="">　</a>
                         </label>
-                        <input class="easyui-textbox textbox-f" data-options="required:true" textboxname="ManagementerCode">
+                        <input class="easyui-textbox textbox-f" data-options="required:true,validType:['AN','length[1,20]']" textboxname="ManagementerCode">
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="col-6">
                         <label>
-                            客户类型：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('InfoImg.png') no-repeat scroll 0 0" title=""></a>
+                            客户类型：
+                            <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('img/InfoImg.png') no-repeat scroll 0 0" title="">　</a>
                         </label>
-                        <select class="easyui-combobox  combobox-f combo-f textbox-f" data-options="editable:false,required:true" textboxname="CustomerType"></select>
+                        <select class="easyui-combobox  combobox-f combo-f textbox-f" data-options="editable:false,required:true" textboxname="CustomerType">
+                            <option value=""></option>
+                            <option value="1">仅是基本户客户</option>
+                            <option value="2">仅是信贷户客户</option>
+                            <option value="3">既是基本户又是信贷户的客户</option>
+                            <option value="X">未知</option>
+                        </select>
                     </div>
                     <div class="col-6">
                         <label>
-                            机构信用代码：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('InfoImg.png') no-repeat scroll 0 0" title="">　</a>
+                            机构信用代码：
+                            <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('img/InfoImg.png') no-repeat scroll 0 0" title="征信中心赋予该客户的18位机构信用代码">　</a>
                         </label>
-                        <input class="easyui-textbox textbox-f" data-options="required:false" textboxname="InstitutionCreditCode">
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-6">
-                        <label>
-                            组织机构代码：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('InfoImg.png') no-repeat scroll 0 0" title=""></a>
-                        </label>
-                        <input class="easyui-textbox textbox-f" data-options="required:false" textboxname="OrganizateCode">
-                    </div>
-                    <div class="col-6">
-                        <label>
-                            登记注册号类型：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('InfoImg.png') no-repeat scroll 0 0" title="">　</a>
-                        </label>
-                        <select class="easyui-combobox  combobox-f combo-f textbox-f" data-options="editable:false,required:false" textboxname="RegistrationNumberType"></select>
+                        <input class="easyui-textbox textbox-f" data-options="required:false,validType:['AN','length[1,18]']" textboxname="InstitutionCreditCode">
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="col-6">
                         <label>
-                            登记注册号码：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('InfoImg.png') no-repeat scroll 0 0" title=""></a>
+                            组织机构代码：
+                            <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('img/InfoImg.png') no-repeat scroll 0 0" title="质检部门颁发的组织机构代码">　</a>
                         </label>
-                        <input class="easyui-textbox textbox-f" data-options="required:false" textboxname="RegistrationNumber">
+                        <input class="easyui-textbox textbox-f" data-options="required:false,validType:['AN','length[1,10]','OrganizateCode[true]']" textboxname="OrganizateCode">
                     </div>
                     <div class="col-6">
                         <label>
-                            纳税人识别号（国税）：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('InfoImg.png') no-repeat scroll 0 0" title="">　</a>
+                            登记注册号类型：
+                            <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('img/InfoImg.png') no-repeat scroll 0 0" title="标识登记注册号码的具体类型">　</a>
                         </label>
-                        <input class="easyui-textbox textbox-f" data-options="required:false" textboxname="TaxpayerIdentifyIrsNumber">
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-6">
-                        <label>
-                            纳税人识别号（地税）：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('InfoImg.png') no-repeat scroll 0 0" title=""></a>
-                        </label>
-                        <input class="easyui-textbox textbox-f" data-options="required:false" textboxname="TaxpayerIdentifyLandNumber">
-                    </div>
-                    <div class="col-6">
-                        <label>
-                            开户许可证核准号：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('InfoImg.png') no-repeat scroll 0 0" title="">　</a>
-                        </label>
-                        <input class="easyui-textbox textbox-f" data-options="required:false" textboxname="NewaccountlicenseNumber">
+                        <select class="easyui-combobox  combobox-f combo-f textbox-f" data-options="editable:false,required:false" textboxname="RegistrationNumberType">
+                            <option value=""></option>
+                            <option value="01">工商注册号</option>
+                            <option value="02">机关和事业单位登记号</option>
+                            <option value="03">社会团体登记号</option>
+                            <option value="04">民办非企业单位登记号</option>
+                            <option value="05">基金会登记号</option>
+                            <option value="06">宗教活动场所登记号</option>
+                            <option value="07">统一社会信用代码</option>
+                            <option value="08">商事与非商事登记证号</option>
+                            <option value="99">其他</option>
+                        </select>
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="col-6">
                         <label>
-                            贷款卡编码：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('InfoImg.png') no-repeat scroll 0 0" title=""></a>
+                            登记注册号码：
+                            <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('img/InfoImg.png') no-repeat scroll 0 0" title="填写登记注册证书或签发的批文上的注册号、登记号、批文号，如工商注册号、事业单位证书号、社会团体登记证号等">　</a>
                         </label>
-                        <input class="easyui-textbox textbox-f" data-options="required:false" textboxname="LoanCardCode">
+                        <input class="easyui-textbox textbox-f" data-options="required:false,validType:['ANC','length[1,20]']" textboxname="RegistrationNumber">
                     </div>
                     <div class="col-6">
                         <label>
-                            数据提取日期：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('InfoImg.png') no-repeat scroll 0 0" title="">　</a>
+                            纳税人识别号（国税）：
+                            <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('img/InfoImg.png') no-repeat scroll 0 0" title="机构在国税部门的缴税统一标识">　</a>
                         </label>
-                        <input class="easyui-datebox datebox-f combo-f textbox-f" data-options="editable:false ,width:407.75, formatter:myformatter,parser:myparser,required:true" textboxname="DataExtractionDate">
+                        <input class="easyui-textbox textbox-f" data-options="required:false,validType:['ANC','length[1,20]']" textboxname="TaxpayerIdentifyIrsNumber">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-6">
+                        <label>
+                            纳税人识别号（地税）：
+                            <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('img/InfoImg.png') no-repeat scroll 0 0" title="机构在国税部门的缴税统一标识">　</a>
+                        </label>
+                        <input class="easyui-textbox textbox-f" data-options="required:false,validType:['ANC','length[1,20]']" textboxname="TaxpayerIdentifyLandNumber">
+                    </div>
+                    <div class="col-6">
+                        <label>
+                            开户许可证核准号：
+                            <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('img/InfoImg.png') no-repeat scroll 0 0" title="机构开立基本户时人民银行颁发的14位开户许可证核准号">　</a>
+                        </label>
+                        <input class="easyui-textbox textbox-f" data-options="required:false,validType:['ANC','length[1,20]']" textboxname="NewaccountlicenseNumber">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-6">
+                        <label>
+                            贷款卡编码：
+                            <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('img/InfoImg.png') no-repeat scroll 0 0" title="人民银行颁发的16位贷款卡编码">　</a>
+                        </label>
+                        <input class="easyui-textbox textbox-f" data-options="required:false,validType:['AN','length[1,16]','CreditCard']" textboxname="LoanCardCode">
+                    </div>
+                    <div class="col-6">
+                        <label>
+                            数据提取日期：
+                            <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('img/InfoImg.png') no-repeat scroll 0 0" title="">　</a>
+                        </label>
+                        <input class="easyui-datebox datebox-f combo-f textbox-f" data-options="editable:false ,width:407.75, formatter:myformatter,parser:myparser,required:true,validType:['N','length[1,8]']" textboxname="DataExtractionDate">
                     </div>
                 </div>
             </fieldset>
@@ -344,172 +293,272 @@
                 </div>
             </div>
 
-            <fieldset id="C">
-                <input type="hidden" name="InformationCategories" value="C" placeholder="信息类别">
-                
-            </fieldset>
-
             <template id="templateC">
+                <input type="hidden" name="InformationCategories" value="C" placeholder="信息类别">
                 <div class="row">
                     <div class="col-6">
                         <label>
-                            机构中文名称：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('InfoImg.png') no-repeat scroll 0 0" title="">　</a>
+                            机构中文名称：
+                            <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('img/InfoImg.png') no-repeat scroll 0 0" title="请按照机构登记注册证上或批文上的名称填写">　</a>
                         </label>
-                        <input class="easyui-textbox textbox-f" data-options="required:false" textboxname="InstitutionChName">
+                        <input class="easyui-textbox textbox-f" data-options="required:false,validType:['ANC','length[1,80]']" textboxname="InstitutionChName">
                     </div>
                     <div class="col-6">
                         <label>
-                            机构英文名称：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('InfoImg.png') no-repeat scroll 0 0" title=""></a>
+                            机构英文名称：
+                            <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('img/InfoImg.png') no-repeat scroll 0 0" title="如果没有英文名称，填写外文名称">　</a>
                         </label>
-                        <input class="easyui-textbox textbox-f" data-options="required:false" textboxname="InstitutionEnName">
+                        <input class="easyui-textbox textbox-f" data-options="required:false,validType:['ANC','length[1,80]']" textboxname="InstitutionEnName">
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="col-6">
                         <label>
-                            注册登记地址：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('InfoImg.png') no-repeat scroll 0 0" title="">　</a>
+                            注册登记地址：
+                            <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('img/InfoImg.png') no-repeat scroll 0 0" title="机构登记注册证书或批文上的住所地址，包括所属行政区划名称，乡（镇）、村、街名称和门牌号">　</a>
                         </label>
-                        <input class="easyui-textbox textbox-f" data-options="required:false" textboxname="RegisterAddress">
+                        <input class="easyui-textbox textbox-f" data-options="required:false,validType:['ANC','length[1,80]']" textboxname="RegisterAddress">
                     </div>
                     <div class="col-6">
                         <label>
-                            国别：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('InfoImg.png') no-repeat scroll 0 0" title=""></a>
+                            国别：
+                            <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('img/InfoImg.png') no-repeat scroll 0 0" title="">　</a>
                         </label>
-                        <select class="easyui-combobox  combobox-f combo-f textbox-f" data-options="editable:false,required:false" textboxname="Country"></select>
+                        <select class="easyui-combobox  combobox-f combo-f textbox-f" data-options="editable:false,required:false" textboxname="Country">
+                            <option value=""></option>
+                            <option value="CHN">中华人民共和国</option>
+                            <option value="HKG">中国香港特别行政区</option>
+                            <option value="MAC">中国澳门特别行政区</option>
+                            <option value="TWN">中国台湾</option>
+                        </select>
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="col-6">
                         <label>
-                            注册（登记）地行政区划：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('InfoImg.png') no-repeat scroll 0 0" title="">　</a>
+                            注册（登记）地行政区划：
+                            <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('img/InfoImg.png') no-repeat scroll 0 0" title="注册（登记）地址所在地行政区划">　</a>
                         </label>
-                        <select class="easyui-combobox  combobox-f combo-f textbox-f" data-options="editable:false,required:false" textboxname="RegisterAdministrativeDivision"></select>
+                        <input class="easyui-textbox textbox-f" data-options="required:false,validType:['N','length[1,6]']" textboxname="RegisterAdministrativeDivision">
                     </div>
                     <div class="col-6">
                         <label>
-                            成立日期：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('InfoImg.png') no-repeat scroll 0 0" title=""></a>
+                            成立日期：
+                            <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('img/InfoImg.png') no-repeat scroll 0 0" title="机构登记注册证书或批文上的成立日期或批准成立日期">　</a>
                         </label>
-                        <input class="easyui-datebox datebox-f combo-f textbox-f" data-options="editable:false ,width:407.75, formatter:myformatter,parser:myparser,required:false" textboxname="SetupDate">
+                        <input class="easyui-datebox datebox-f combo-f textbox-f" data-options="editable:false ,width:407.75, formatter:myformatter,parser:myparser,required:false,validType:['N','length[1,8]']" textboxname="SetupDate">
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="col-6">
                         <label>
-                            证书到期日期：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('InfoImg.png') no-repeat scroll 0 0" title="">　</a>
+                            证书到期日：
+                            <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('img/InfoImg.png') no-repeat scroll 0 0" title="机构登记证书上记载的有效期最终到期日">　</a>
                         </label>
-                        <input class="easyui-datebox datebox-f combo-f textbox-f" data-options="editable:false ,width:407.75, formatter:myformatter,parser:myparser,required:false" textboxname="CertificateDueDate">
+                        <input class="easyui-datebox datebox-f combo-f textbox-f" data-options="editable:false ,width:407.75, formatter:myformatter,parser:myparser,required:false,validType:['N','length[1,8]']" textboxname="CertificateDueDate">
                     </div>
-                    <div class="col-6">
-                        <label>
-                            "注册资本币种：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('InfoImg.png') no-repeat scroll 0 0" title="">　</a>
-                        </label>
-                        <select class="easyui-combobox  combobox-f combo-f textbox-f" data-options="editable:false,required:false" textboxname="RegisterCapitalCurrency"></select>
-                    </div>
+
                 </div>
 
                 <div class="row">
                     <div class="col-12">
                         <label>
-                            经营（业务）范围：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('InfoImg.png') no-repeat scroll 0 0" title=""></a>
+                            经营（业务）范围：
+                            <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('img/InfoImg.png') no-repeat scroll 0 0" title="机构登记注册证书或签发的批文上的经营范围、职责、宗旨和业务范围等">　</a>
                         </label>
-                        <input class="easyui-textbox textbox-f" data-options="required:false" textboxname="BusinessScope">
+                        <input class="easyui-textbox textbox-f" data-options="required:false,validType:['ANC','length[1,400]']" textboxname="BusinessScope">
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="col-6">
                         <label>
-                            注册资本：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('InfoImg.png') no-repeat scroll 0 0" title="">　</a>
+                            注册资本币种：
+                            <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('img/InfoImg.png') no-repeat scroll 0 0" title="机构登记注册证书上的注册资本、开办资金、原始基金数额的币种">　</a>
                         </label>
-                        <input class="easyui-textbox textbox-f" data-options="required:false" textboxname="RegisterCapital">
+                        <select class="easyui-combobox  combobox-f combo-f textbox-f" data-options="editable:false,required:false" textboxname="RegisterCapitalCurrency">
+                            <option value=""></option>
+                            <option value="CNY">人民币</option>
+                            <option value="HKD">港币</option>
+                            <option value="MOP">澳门币</option>
+                            <option value="USD">美元</option>
+                            <option value="XAU">黄金</option>
+                        </select>
                     </div>
                     <div class="col-6">
                         <label>
-                            组织机构类别：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('InfoImg.png') no-repeat scroll 0 0" title="">　</a>
+                            注册资本：
+                            <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('img/InfoImg.png') no-repeat scroll 0 0" title="机构登记登记注册证书或签发的批文上的注册资本、开办资金、原始基金数额，四舍五入保留2位小数，单位为万元">　</a>
                         </label>
-                        <select class="easyui-combobox  combobox-f combo-f textbox-f" data-options="editable:false,required:false" textboxname="OrganizationCategory"></select>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-6">
-                        <label>
-                            组织机构类别细分：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('InfoImg.png') no-repeat scroll 0 0" title="">　</a>
-                        </label>
-                        <select class="easyui-combobox  combobox-f combo-f textbox-f" data-options="editable:false,required:false" textboxname="OrganizationCategorySubdivision"></select>
-                    </div>
-                    <div class="col-6">
-                        <label>
-                            经济行业分类：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('InfoImg.png') no-repeat scroll 0 0" title="">　</a>
-                        </label>
-                        <select class="easyui-combobox  combobox-f combo-f textbox-f" data-options="editable:false,required:false" textboxname="EconomicSectorsClassification"></select>
+                        <input class="easyui-textbox textbox-f" data-options="required:false,validType:['AN','length[1,10]']" textboxname="RegisterCapital">
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="col-6">
                         <label>
-                            经济类型：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('InfoImg.png') no-repeat scroll 0 0" title="">　</a>
+                            组织机构类别：
+                            <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('img/InfoImg.png') no-repeat scroll 0 0" title="">　</a>
                         </label>
-                        <select class="easyui-combobox  combobox-f combo-f textbox-f" data-options="editable:false,required:false" textboxname="EconomicType"></select>
+                        <select class="easyui-combobox  combobox-f combo-f textbox-f" data-options="editable:false,required:false" textboxname="OrganizationCategory">
+                            <option value=""></option>
+                            <option value="1">企业</option>
+                            <option value="2">事业单位</option>
+                            <option value="3">机关</option>
+                            <option value="4">社会团体</option>
+                            <option value="7">个体工商户</option>
+                            <option value="9">其他</option>
+                        </select>
                     </div>
                     <div class="col-6">
                         <label>
-                            信息更新日期：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('InfoImg.png') no-repeat scroll 0 0" title="">　</a>
+                            组织机构类别细分：
+                            <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('img/InfoImg.png') no-repeat scroll 0 0" title="对于组织机构类别的进一步细化分类">　</a>
                         </label>
-                        <input class="easyui-datebox datebox-f combo-f textbox-f" data-options="editable:false ,width:407.75, formatter:myformatter,parser:myparser,required:true" textboxname="InformationUpdateDate">
+                        <select class="easyui-combobox  combobox-f combo-f textbox-f" data-options="editable:false,required:false" textboxname="OrganizationCategorySubdivision">
+                            <option value=""></option>
+                            <option value="10">企业法人</option>
+                            <option value="13">个人独资、合伙企业</option>
+                            <option value="14">企业的分支机构</option>
+                            <option value="11">其他企业</option>
+                            <option value="12">农民专业合作社</option>
+                            <option value="20">事业法人</option>
+                            <option value="21">未登记的事业单位</option>
+                            <option value="24">事业单位的分支机构</option>
+                            <option value="30">机关法人</option>
+                            <option value="31">机关的内设机构</option>
+                            <option value="32">机关的下设机构</option>
+                            <option value="40">社会团体法人</option>
+                            <option value="41">社会团体分支机构</option>
+                            <option value="51">民办非企业</option>
+                            <option value="52">基金会</option>
+                            <option value="53">居委会</option>
+                            <option value="54">村委会</option>
+                            <option value="60">律师事务所、司法鉴定所</option>
+                            <option value="61">宗教活动场所</option>
+                            <option value="62">境外在境内成立的组织机构</option>
+                            <option value="70">个体工商户</option>
+                            <option value="99">其他</option>
+                        </select>
+                    </div>
 
+                </div>
+                <div class="row">
+                    <div class="col-6">
+                        <label>
+                            经济行业分类：
+                            <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('img/InfoImg.png') no-repeat scroll 0 0" title="请填写机构登记注册时的所属行业分类，尽量细化">　</a>
+                        </label>
+                        <select class="easyui-combobox  combobox-f combo-f textbox-f" data-options="editable:false,required:false,validType:['AN','length[1,5]']" textboxname="EconomicSectorsClassification"></select>
+                    </div>
+                    <div class="col-6">
+                        <label>
+                            经济类型：
+                            <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('img/InfoImg.png') no-repeat scroll 0 0" title="指以生产资料的所有制性质和国家有关法规为依据划分的经济类型，包括内资、港、澳、台投资和国外投资等">　</a>
+                        </label>
+                        <select class="easyui-combobox  combobox-f combo-f textbox-f" data-options="editable:false,required:false" textboxname="EconomicType">
+                            <option value=""></option>
+                            <option value="10">内资</option>
+                            <option value="11">国有全资</option>
+                            <option value="12">集体全资</option>
+                            <option value="13">股份合作</option>
+                            <option value="14">联营</option>
+                            <option value="15">有限责任公司</option>
+                            <option value="16">股份有限公司</option>
+                            <option value="17">私有</option>
+                            <option value="19">其它内资</option>
+                            <option value="20">港澳台投资</option>
+                            <option value="21">内地和港澳台投资</option>
+                            <option value="22">内地和港澳台合作</option>
+                            <option value="23">港澳台独资</option>
+                            <option value="24">港澳台投资股份有限公司</option>
+                            <option value="29">其他港澳台投资</option>
+                            <option value="30">国外投资</option>
+                            <option value="31">中外合资</option>
+                            <option value="32">中外合作</option>
+                            <option value="33">外资</option>
+                            <option value="34">国外投资股份有限公司</option>
+                            <option value="39">其他国外投资</option>
+                            <option value="90">其他</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-6">
+                        <label>
+                            信息更新日期：
+                            <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('img/InfoImg.png') no-repeat scroll 0 0" title="">　</a>
+                        </label>
+                        <input class="easyui-datebox datebox-f combo-f textbox-f" data-options="editable:false ,width:407.75, formatter:myformatter,parser:myparser,required:true,validType:['N','length[1,8]']" textboxname="InformationUpdateDate">
                     </div>
                 </div>
             </template>
-
         </section>
 
         <section id="D" min="0" max="1">
             <h2>机构状态段</h2>
             <div style="background-color:#afe3fa;height:30px ;width:95%">
                 <div float="right" style="width:100%">
-                    <a style="margin-top: 2px; margin-right: 10px; float: right; font-size: 24px; text-decoration: none" id="Cadd" onclick="Add(this.id)" href="javascript:void(0)">+</a>
-                    <a style=" margin-right: 20px; float: right; font-size: 24px; text-decoration: none" id="Cminus" onclick="Minus(this)" href="javascript:void(0)" hidden="hidden">-</a>
+                    <a style="margin-top: 2px; margin-right: 10px; float: right; font-size: 24px; text-decoration: none" id="Dadd" onclick="Add(this.id)" href="javascript:void(0)">+</a>
+                    <a style=" margin-right: 20px; float: right; font-size: 24px; text-decoration: none" id="Dminus" onclick="Minus(this)" href="javascript:void(0)" hidden="hidden">-</a>
                 </div>
             </div>
 
-            <fieldset id="D">
-                <input type="hidden" name="InformationCategories" value="D" placeholder="信息类别">
-
-            </fieldset>
-
             <template id="templateD">
+                <input type="hidden" name="InformationCategories" value="D" placeholder="信息类别">
                 <div class="row">
                     <div class="col-6">
                         <label>
-                            基本户状态：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('InfoImg.png') no-repeat scroll 0 0" title="">　</a>
+                            基本户状态：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('img/InfoImg.png') no-repeat scroll 0 0" title="标识基本户账户目前的状态">　</a>
                         </label>
-                        <select class="easyui-combobox  combobox-f combo-f textbox-f" data-options="editable:false,required:false" textboxname="BasicAccountState"></select>
+                        <select class="easyui-combobox  combobox-f combo-f textbox-f" data-options="editable:false,required:false,validType:['AN','length[1,1]']" textboxname="BasicAccountState">
+                            <option value=""></option>
+                            <option value="1">正常</option>
+                            <option value="2">久悬</option>
+                            <option value="3">注销</option>
+                            <option value="4">待审核</option>
+                            <option value="9">其他</option>
+                            <option value="X">未知</option>
+                        </select>
                     </div>
                     <div class="col-6">
                         <label>
-                            企业规模：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('InfoImg.png') no-repeat scroll 0 0" title="">　</a>
+                            企业规模：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('img/InfoImg.png') no-repeat scroll 0 0" title="按照工业和信息化部、国家统计局、发展改革委、财政部联合印发的《关于印发中小企业划型标准规定的通知》（工信部联企业〔2011〕300号）执行">　</a>
                         </label>
-                        <select class="easyui-combobox  combobox-f combo-f textbox-f" data-options="editable:false,required:false" textboxname="EnterpriseScale"></select>
+                        <select class="easyui-combobox  combobox-f combo-f textbox-f" data-options="editable:false,required:false" textboxname="EnterpriseScale">
+                            <option value=""></option>
+                            <option value="2">大型企业</option>
+                            <option value="3">中型企业</option>
+                            <option value="4">小型企业</option>
+                            <option value="5">微型企业</option>
+                            <option value="9">其他</option>
+                            <option value="X">未知</option>
+                        </select>
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="col-6">
                         <label>
-                            机构状态：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('InfoImg.png') no-repeat scroll 0 0" title="">　</a>
+                            机构状态：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('img/InfoImg.png') no-repeat scroll 0 0" title="机构目前的活动状态，其中注销状态是指机构从登记部门注销登记或注销备案">　</a>
                         </label>
-                        <select class="easyui-combobox  combobox-f combo-f textbox-f" data-options="editable:false,required:false" textboxname="InstitutionsState"></select>
+                        <select class="easyui-combobox  combobox-f combo-f textbox-f" data-options="editable:false,required:false" textboxname="InstitutionsState">
+                            <option value=""></option>
+                            <option value="1">正常</option>
+                            <option value="2">注销</option>
+                            <option value="9">其他</option>
+                            <option value="X">未知</option>
+                        </select>
                     </div>
                     <div class="col-6">
                         <label>
-                            信息更新日期：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('InfoImg.png') no-repeat scroll 0 0" title="">　</a>
+                            信息更新日期：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('img/InfoImg.png') no-repeat scroll 0 0" title="">　</a>
                         </label>
-                        <input class="easyui-datebox datebox-f combo-f textbox-f" data-options="editable:false ,width:407.75, formatter:myformatter,parser:myparser,required:true" textboxname="InformationUpdateDate">
+                        <input class="easyui-datebox datebox-f combo-f textbox-f" data-options="editable:false ,width:407.75, formatter:myformatter,parser:myparser,required:true,validType:['N','length[1,8]']" textboxname="InformationUpdateDate">
                     </div>
                 </div>
             </template>
@@ -519,180 +568,272 @@
             <h2>联络信息段</h2>
             <div style="background-color:#afe3fa;height:30px ;width:95%">
                 <div float="right" style="width:100%">
-                    <a style="margin-top: 2px; margin-right: 10px; float: right; font-size: 24px; text-decoration: none" id="Cadd" onclick="Add(this.id)" href="javascript:void(0)">+</a>
-                    <a style=" margin-right: 20px; float: right; font-size: 24px; text-decoration: none" id="Cminus" onclick="Minus(this)" href="javascript:void(0)" hidden="hidden">-</a>
+                    <a style="margin-top: 2px; margin-right: 10px; float: right; font-size: 24px; text-decoration: none" id="Eadd" onclick="Add(this.id)" href="javascript:void(0)">+</a>
+                    <a style=" margin-right: 20px; float: right; font-size: 24px; text-decoration: none" id="Eminus" onclick="Minus(this)" href="javascript:void(0)" hidden="hidden">-</a>
                 </div>
             </div>
 
-            <fieldset id="E">
+            <template id="templateE">
                 <input type="hidden" name="InformationCategories" value="E" placeholder="信息类别">
 
-            </fieldset>
-
-            <template id="templateE">
                 <div class="row">
                     <div class="col-12">
                         <label>
-                            办公（生产、经营）地址：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('InfoImg.png') no-repeat scroll 0 0" title="">　</a>
+                            办公（生产、经营）地址：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('img/InfoImg.png') no-repeat scroll 0 0" title="机构的办公地址或生产、经营地址，包括所属行政区划名称，乡（镇）、村、街名称和门牌号，如以上三类地址都有，请填写常用的通讯地址">　</a>
                         </label>
-                        <input class="easyui-textbox textbox-f" data-options="required:false" textboxname="OfficeAddress">
+                        <input class="easyui-textbox textbox-f" data-options="required:false,validType:['ANC','length[1,80]']" textboxname="OfficeAddress">
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="col-6">
                         <label>
-                            联系电话：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('InfoImg.png') no-repeat scroll 0 0" title="">　</a>
+                            联系电话：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('img/InfoImg.png') no-repeat scroll 0 0" title="填写机构的联系电话，参考格式：国别号/地区号－区号－电话号码（－分机号）">　</a>
                         </label>
-                        <select class="easyui-combobox  combobox-f combo-f textbox-f" data-options="editable:false,required:false" textboxname="ContactPhone"></select>
+                        <input class="easyui-textbox textbox-f" data-options="required:false,validType:['AN','length[1,35]']" textboxname="ContactPhone">
                     </div>
                     <div class="col-6">
                         <label>
-                            财务部联系电话：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('InfoImg.png') no-repeat scroll 0 0" title="">　</a>
+                            财务部联系电话：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('img/InfoImg.png') no-repeat scroll 0 0" title="参考格式：国别号/地区号－区号－电话号码（－分机号），填写财务部或财务人员的联系电话">　</a>
                         </label>
-                        <input class="easyui-datebox datebox-f combo-f textbox-f" data-options="required:false" textboxname="FinancialContactPhone">
+                        <input class="easyui-textbox textbox-f" data-options="required:false,validType:['AN','length[1,35]']" textboxname="FinancialContactPhone">
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="col-6">
                         <label>
-                            信息更新日期：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('InfoImg.png') no-repeat scroll 0 0" title="">　</a>
+                            信息更新日期：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('img/InfoImg.png') no-repeat scroll 0 0" title="">　</a>
                         </label>
-                        <input class="easyui-datebox datebox-f combo-f textbox-f" data-options="editable:false ,width:407.75, formatter:myformatter,parser:myparser,required:true" textboxname="InformationUpdateDate">
+                        <input class="easyui-datebox datebox-f combo-f textbox-f" data-options="editable:false ,width:407.75, formatter:myformatter,parser:myparser,required:true,validType:['N','length[1,8]']" textboxname="InformationUpdateDate">
                     </div>
                 </div>
             </template>
         </section>
 
         <section id="F" min="0" max="n">
+            <script>
+                function Formattr(row) {
+                    var opts = $(this).combobox("options");
+                    return "<input type='checkbox' class='combobox-checkbox'>" + row[opts.textField];
+                }
+            </script>
             <h2>高管及主要关系人段</h2>
             <div style="background-color:#afe3fa;height:30px ;width:95%">
                 <div float="right" style="width:100%">
-                    <a style="margin-top: 2px; margin-right: 10px; float: right; font-size: 24px; text-decoration: none" id="Cadd" onclick="Add(this.id)" href="javascript:void(0)">+</a>
-                    <a style=" margin-right: 20px; float: right; font-size: 24px; text-decoration: none" id="Cminus" onclick="Minus(this)" href="javascript:void(0)" hidden="hidden">-</a>
+                    <a style="margin-top: 2px; margin-right: 10px; float: right; font-size: 24px; text-decoration: none" id="Fadd" onclick="Add(this.id)" href="javascript:void(0)">+</a>
+                    <a style=" margin-right: 20px; float: right; font-size: 24px; text-decoration: none" id="Fminus" onclick="Minus(this)" href="javascript:void(0)" hidden="hidden">-</a>
                 </div>
             </div>
 
-            <fieldset id="F">
+            <template id="templateF">
                 <input type="hidden" name="InformationCategories" value="F" placeholder="信息类别">
 
-            </fieldset>
-
-            <template id="templateF">
                 <div class="row">
                     <div class="col-6">
                         <label>
-                            关系人类型：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('InfoImg.png') no-repeat scroll 0 0" title="">　</a>
+                            关系人类型：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('img/InfoImg.png') no-repeat scroll 0 0" title="同一人兼任或具有上述多重关系的，分别填报">　</a>
                         </label>
-                        <select class="easyui-combobox  combobox-f combo-f textbox-f" data-options="editable:false,required:true" textboxname="ParticipantType"></select>
+                        <select class="easyui-combobox  combobox-f combo-f textbox-f" data-options="editable:false,required:true,multiple:true" textboxname="ParticipantType">
+                            <option value="0">实际控制人</option>
+                            <option value="1">董事长</option>
+                            <option value="2">总经理/主要负责人</option>
+                            <option value="3">财务负责人</option>
+                            <option value="4">监事长 </option>
+                            <option value="5">法定代表人</option>
+                        </select>
+
+                        <!--<input class="easyui-combobox  combobox-f combo-f textbox-f" checkbox="true" textboxname="ParticipantType" data-options="editable:false,required:true,multiple:true,
+                                valueField: 'label',
+		                        textField: 'value',
+                                checkbox:true,
+		                        data: [{
+			                        label: 'java',
+                                value: 'Java'
+                                },{
+                                label: 'perl',
+                                value: 'Perl'
+                                },{
+                                label: 'ruby',
+                                value: 'Ruby'
+                                }],
+                                format : function(row){
+                                    var opts = $(this).combobox('options');
+                                    return  '<input type='checkbox' class='combobox-checkbox'>' + row[opts.textField];
+                                }
+                        " />-->
+
                     </div>
                     <div class="col-6">
                         <label>
-                            姓名：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('InfoImg.png') no-repeat scroll 0 0" title="">　</a>
+                            姓名：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('img/InfoImg.png') no-repeat scroll 0 0" title="高管及重要关系人的姓名全称">　</a>
                         </label>
-                        <input class="easyui-textbox textbox-f" data-options="required:true" textboxname="Name">
+                        <input class="easyui-textbox textbox-f" data-options="required:true,validType:['ANC','length[1,80]']" textboxname="Name">
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="col-6">
                         <label>
-                            证件类型：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('InfoImg.png') no-repeat scroll 0 0" title="">　</a>
+                            证件类型：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('img/InfoImg.png') no-repeat scroll 0 0" title="">　</a>
                         </label>
-                        <select class="easyui-combobox  combobox-f combo-f textbox-f" data-options="editable:false,required:true" textboxname="CertificateType"></select>
+                        <select class="easyui-combobox  combobox-f combo-f textbox-f" data-options="editable:false,required:true" textboxname="CertificateType">
+                            <option value=""></option>
+                            <option value="0">身份证</option>
+                            <option value="1">户口簿</option>
+                            <option value="2">护照</option>
+                            <option value="3">军官证</option>
+                            <option value="4">士兵证</option>
+                            <option value="5">港澳居民来往内地通行证</option>
+                            <option value="6">台湾同胞来往内地通行证</option>
+                            <option value="7">临时身份证</option>
+                            <option value="8">外国人居留证</option>
+                            <option value="9">警官证</option>
+                            <option value="A">香港身份证</option>
+                            <option value="B">澳门身份证</option>
+                            <option value="C">台湾身份证</option>
+                            <option value="X">其他证件</option>
+                        </select>
                     </div>
                     <div class="col-6">
                         <label>
-                            证件号码：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('InfoImg.png') no-repeat scroll 0 0" title="">　</a>
+                            证件号码：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('img/InfoImg.png') no-repeat scroll 0 0" title="">　</a>
                         </label>
-                        <input class="easyui-textbox textbox-f" data-options="required:true" textboxname="CertificateNumber">
+                        <input class="easyui-textbox textbox-f" data-options="required:true,validType:['ANC','length[1,20]']" textboxname="CertificateNumber">
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="col-6">
                         <label>
-                            信息更新日期：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('InfoImg.png') no-repeat scroll 0 0" title="">　</a>
+                            信息更新日期：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('img/InfoImg.png') no-repeat scroll 0 0" title="">　</a>
                         </label>
-                        <input class="easyui-datebox datebox-f combo-f textbox-f" data-options="editable:false ,width:407.75, formatter:myformatter,parser:myparser,required:true" textboxname="InformationUpdateDate">
+                        <input class="easyui-datebox datebox-f combo-f textbox-f" data-options="editable:false ,width:407.75, formatter:myformatter,parser:myparser,required:true,validType:['N','length[1,8]']" textboxname="InformationUpdateDate">
                     </div>
                 </div>
             </template>
         </section>
 
         <section id="G" min="0" max="n">
+            <script type="text/javascript">
+                function ChangeType() {
+                    var value = $(this).parents('fieldset').find("input[name=ShareholdersType]").val();
+                    if (value == 1) {
+                        $(this).parents('fieldset').find('div[id=Reg]').hide();
+                        $(this).parents('fieldset').find('div[id=Card]').show();
+                    }
+                    else {
+                        $(this).parents('fieldset').find('div[id=Card]').hide();
+                        $(this).parents('fieldset').find('div[id=Reg]').show();
+                    }
+                }
+            </script>
             <h2>重要股东段</h2>
             <div style="background-color:#afe3fa;height:30px ;width:95%">
                 <div float="right" style="width:100%">
-                    <a style="margin-top: 2px; margin-right: 10px; float: right; font-size: 24px; text-decoration: none" id="Cadd" onclick="Add(this.id)" href="javascript:void(0)">+</a>
-                    <a style=" margin-right: 20px; float: right; font-size: 24px; text-decoration: none" id="Cminus" onclick="Minus(this)" href="javascript:void(0)" hidden="hidden">-</a>
+                    <a style="margin-top: 2px; margin-right: 10px; float: right; font-size: 24px; text-decoration: none" id="Gadd" onclick="Add(this.id)" href="javascript:void(0)">+</a>
+                    <a style=" margin-right: 20px; float: right; font-size: 24px; text-decoration: none" id="Gminus" onclick="Minus(this)" href="javascript:void(0)" hidden="hidden">-</a>
                 </div>
             </div>
 
-            <fieldset id="G">
+            <template id="templateG">
                 <input type="hidden" name="InformationCategories" value="G" placeholder="信息类别">
 
-            </fieldset>
-
-            <template id="templateG">
                 <div class="row">
                     <div class="col-6">
                         <label>
-                            股东类型：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('InfoImg.png') no-repeat scroll 0 0" title="">　</a>
+                            股东类型：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('img/InfoImg.png') no-repeat scroll 0 0" title="">　</a>
                         </label>
-                        <select class="easyui-combobox  combobox-f combo-f textbox-f" data-options="editable:false,required:true" textboxname="ShareholdersType"></select>
+                        <select class="easyui-combobox  combobox-f combo-f textbox-f" data-options="editable:false,required:true,onSelect:ChangeType" textboxname="ShareholdersType">
+                            <option value=""></option>
+                            <option value="1">自然人</option>
+                            <option value="2">机构</option>
+                        </select>
                     </div>
                     <div class="col-6">
                         <label>
-                            股东名称：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('InfoImg.png') no-repeat scroll 0 0" title="">　</a>
+                            股东名称：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('img/InfoImg.png') no-repeat scroll 0 0" title="填写股东/关联企业的姓名">　</a>
                         </label>
-                        <input class="easyui-textbox textbox-f" data-options="required:true" textboxname="ShareholdersName">
+                        <input class="easyui-textbox textbox-f" data-options="required:true,validType:['ANC','length[1,80]']" textboxname="ShareholdersName">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-6" id="Card">
+                        <label>
+                            证件类型/登记注册号类型：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('img/InfoImg.png') no-repeat scroll 0 0" title="当股东类型为自然人时，填写证件类型；当股东类型为机构时，填写登记注册号类型">　</a>
+                        </label>
+                        <select class="easyui-combobox  combobox-f combo-f textbox-f" data-options="editable:false,required:false" textboxname="RegistraterType">
+                            <option value=""></option>
+                            <option value="0">身份证</option>
+                            <option value="1">户口簿</option>
+                            <option value="2">护照</option>
+                            <option value="3">军官证</option>
+                            <option value="4">士兵证</option>
+                            <option value="5">港澳居民来往内地通行证</option>
+                            <option value="6">台湾同胞来往内地通行证</option>
+                            <option value="7">临时身份证</option>
+                            <option value="8">外国人居留证</option>
+                            <option value="9">警官证</option>
+                            <option value="A">香港身份证</option>
+                            <option value="B">澳门身份证</option>
+                            <option value="C">台湾身份证</option>
+                            <option value="X">其他证件</option>
+                        </select>
+                    </div>
+                    <div class="col-6" id="Reg" style="display:none">
+                        <label>
+                            证件类型/登记注册号类型：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('img/InfoImg.png') no-repeat scroll 0 0" title="当股东类型为自然人时，填写证件类型；当股东类型为机构时，填写登记注册号类型">　</a>
+                        </label>
+                        <select class="easyui-combobox  combobox-f combo-f textbox-f" data-options="editable:false,required:false" textboxname="RegistraterType">
+                            <option value=""></option>
+                            <option value="01">工商注册号</option>
+                            <option value="02">机关和事业单位登记号</option>
+                            <option value="03">社会团体登记号</option>
+                            <option value="04">民办非企业单位登记号</option>
+                            <option value="05">基金会登记号</option>
+                            <option value="06">宗教活动场所登记号</option>
+                            <option value="07">统一社会信用代码</option>
+                            <option value="08">商事与非商事登记证号</option>
+                            <option value="99">其他</option>
+                        </select>
+                    </div>
+
+                    <div class="col-6">
+                        <label>
+                            证件号码/登记注册号码：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('img/InfoImg.png') no-repeat scroll 0 0" title="对应证件类型/登记注册号类型的证件号码/登记注册号码">　</a>
+                        </label>
+                        <input class="easyui-textbox textbox-f" data-options="required:false,validType:['ANC','length[1,20]']" textboxname="RegistraterCode">
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="col-6">
                         <label>
-                            证件类型/登记注册号类型：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('InfoImg.png') no-repeat scroll 0 0" title="">　</a>
+                            组织机构代码：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('img/InfoImg.png') no-repeat scroll 0 0" title="质检部门颁发给机构股东的组织机构代码">　</a>
                         </label>
-                        <select class="easyui-combobox  combobox-f combo-f textbox-f" data-options="editable:false,required:false" textboxname="RegistraterType"></select>
+                        <input class="easyui-textbox textbox-f" data-options="required:false,validType:['AN','length[1,10]','OrganizateCode[true]']" textboxname="OrganizateCode">
                     </div>
                     <div class="col-6">
                         <label>
-                            证件号码/登记注册号码：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('InfoImg.png') no-repeat scroll 0 0" title="">　</a>
+                            机构信用代码：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('img/InfoImg.png') no-repeat scroll 0 0" title="征信中心赋予机构股东的18位机构信用代码">　</a>
                         </label>
-                        <input class="easyui-textbox textbox-f" data-options="required:false" textboxname="RegistraterCode">
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-6">
-                        <label>
-                            组织机构代码：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('InfoImg.png') no-repeat scroll 0 0" title="">　</a>
-                        </label>
-                        <select class="easyui-combobox  combobox-f combo-f textbox-f" data-options="editable:false,required:false" textboxname="OrganizateCode"></select>
-                    </div>
-                    <div class="col-6">
-                        <label>
-                            机构信用代码：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('InfoImg.png') no-repeat scroll 0 0" title="">　</a>
-                        </label>
-                        <input class="easyui-textbox textbox-f" data-options="required:false" textboxname="InstitutionCreditCode">
+                        <input class="easyui-textbox textbox-f" data-options="required:false,validType:['AN','length[1,18]']" textboxname="InstitutionCreditCode">
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="col-6">
                         <label>
-                            持股比例：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('InfoImg.png') no-repeat scroll 0 0" title="">　</a>
+                            持股比例：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('img/InfoImg.png') no-repeat scroll 0 0" title="股东持有该机构股份的百分率，保留两位小数">　</a>
                         </label>
-                        <input class="easyui-textbox textbox-f" data-options="required:true" textboxname="SharesProportion"><span>%</span>
+                        <input class="easyui-textbox textbox-f" data-options="required:true,validType:['AN','length[1,10]','SharesProportion']" textboxname="SharesProportion"><span>%</span>
                     </div>
                     <div class="col-6">
                         <label>
-                            信息更新日期：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('InfoImg.png') no-repeat scroll 0 0" title="">　</a>
+                            信息更新日期：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('img/InfoImg.png') no-repeat scroll 0 0" title="">　</a>
                         </label>
-                        <input class="easyui-datebox datebox-f combo-f textbox-f" data-options="editable:false ,width:407.75, formatter:myformatter,parser:myparser,required:true" textboxname="InformationUpdateDate">
+                        <input class="easyui-datebox datebox-f combo-f textbox-f" data-options="editable:false ,width:407.75, formatter:myformatter,parser:myparser,required:true,validType:['N','length[1,8]']" textboxname="InformationUpdateDate">
                     </div>
                 </div>
             </template>
@@ -702,68 +843,83 @@
             <h2>主要关联企业段</h2>
             <div style="background-color:#afe3fa;height:30px ;width:95%">
                 <div float="right" style="width:100%">
-                    <a style="margin-top: 2px; margin-right: 10px; float: right; font-size: 24px; text-decoration: none" id="Cadd" onclick="Add(this.id)" href="javascript:void(0)">+</a>
-                    <a style=" margin-right: 20px; float: right; font-size: 24px; text-decoration: none" id="Cminus" onclick="Minus(this)" href="javascript:void(0)" hidden="hidden">-</a>
+                    <a style="margin-top: 2px; margin-right: 10px; float: right; font-size: 24px; text-decoration: none" id="Hadd" onclick="Add(this.id)" href="javascript:void(0)">+</a>
+                    <a style=" margin-right: 20px; float: right; font-size: 24px; text-decoration: none" id="Hminus" onclick="Minus(this)" href="javascript:void(0)" hidden="hidden">-</a>
                 </div>
             </div>
 
-            <fieldset id="H">
+            <template id="templateH">
                 <input type="hidden" name="InformationCategories" value="H" placeholder="信息类别">
 
-            </fieldset>
-
-            <template id="templateH">
                 <div class="row">
                     <div class="col-6">
                         <label>
-                            关联类型：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('InfoImg.png') no-repeat scroll 0 0" title="">　</a>
+                            关联类型：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('img/InfoImg.png') no-repeat scroll 0 0" title="除本企业的股东外，与本企业存在直接或间接控制关系的关联企业">　</a>
                         </label>
-                        <select class="easyui-combobox  combobox-f combo-f textbox-f" data-options="editable:false,required:true" textboxname="AssociatedType"></select>
+                        <select class="easyui-combobox  combobox-f combo-f textbox-f" data-options="editable:false,required:true" textboxname="AssociatedType">
+                            <option value=""></option>
+                            <option value="20">实际控制人</option>
+                            <option value="21">除本企业的股东外，直接或间接控制本企业的关联企业</option>
+                            <option value="22">本企业直接或间接控制的关联企业</option>
+                            <option value="23">直接或间接被同一控制方控制的关联企业</option>
+                            <option value="24">符合《企业会计制度》第147条规定的其他关联企业</option>
+                        </select>
                     </div>
                     <div class="col-6">
                         <label>
-                            关联企业名称：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('InfoImg.png') no-repeat scroll 0 0" title="">　</a>
+                            关联企业名称：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('img/InfoImg.png') no-repeat scroll 0 0" title="填写关联企业的姓名">　</a>
                         </label>
-                        <input class="easyui-textbox textbox-f" data-options="required:true" textboxname="AssociatedEnterpriseName">
+                        <input class="easyui-textbox textbox-f" data-options="required:true,validType:['ANC','length[1,80]']" textboxname="AssociatedEnterpriseName">
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="col-6">
                         <label>
-                            登记注册号类型：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('InfoImg.png') no-repeat scroll 0 0" title="">　</a>
+                            登记注册号类型：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('img/InfoImg.png') no-repeat scroll 0 0" title="">　</a>
                         </label>
-                        <select class="easyui-combobox  combobox-f combo-f textbox-f" data-options="editable:false,required:false" textboxname="RegistraterNumberType"></select>
+                        <select class="easyui-combobox  combobox-f combo-f textbox-f" data-options="editable:false,required:false" textboxname="RegistraterNumberType">
+                            <option value=""></option>
+                            <option value="01">工商注册号</option>
+                            <option value="02">机关和事业单位登记号</option>
+                            <option value="03">社会团体登记号</option>
+                            <option value="04">民办非企业单位登记号</option>
+                            <option value="05">基金会登记号</option>
+                            <option value="06">宗教活动场所登记号</option>
+                            <option value="07">统一社会信用代码</option>
+                            <option value="08">商事与非商事登记证号</option>
+                            <option value="99">其他</option>
+                        </select>
                     </div>
                     <div class="col-6">
                         <label>
-                            登记注册号码：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('InfoImg.png') no-repeat scroll 0 0" title="">　</a>
+                            登记注册号码：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('img/InfoImg.png') no-repeat scroll 0 0" title="填写关联企业登记注册证书或签发的批文上的注册号、登记号、文号，如工商注册号、事业单位证书号、社会团体登记证号等">　</a>
                         </label>
-                        <input class="easyui-textbox textbox-f" data-options="required:false" textboxname="RegistraterNumber">
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-6">
-                        <label>
-                            组织机构代码：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('InfoImg.png') no-repeat scroll 0 0" title="">　</a>
-                        </label>
-                        <input class="easyui-textbox textbox-f" data-options="required:false" textboxname="OrganizateCode">
-                    </div>
-                    <div class="col-6">
-                        <label>
-                            机构信用代码：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('InfoImg.png') no-repeat scroll 0 0" title="">　</a>
-                        </label>
-                        <input class="easyui-textbox textbox-f" data-options="required:false" textboxname="InstitutionCreditCode">
+                        <input class="easyui-textbox textbox-f" data-options="required:false,validType:['ANC','length[1,20]']" textboxname="RegistraterNumber">
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="col-6">
                         <label>
-                            信息更新日期：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('InfoImg.png') no-repeat scroll 0 0" title="">　</a>
+                            组织机构代码：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('img/InfoImg.png') no-repeat scroll 0 0" title="质检部门颁发给关联企业的组织机构代码">　</a>
                         </label>
-                        <input class="easyui-datebox datebox-f combo-f textbox-f" data-options="editable:false ,width:407.75, formatter:myformatter,parser:myparser,required:true" textboxname="InformationUpdateDate">
+                        <input class="easyui-textbox textbox-f" data-options="required:false,validType:['AN','length[1,10]','OrganizateCode[true]']" textboxname="OrganizateCode">
+                    </div>
+                    <div class="col-6">
+                        <label>
+                            机构信用代码：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('img/InfoImg.png') no-repeat scroll 0 0" title="征信中心赋予该关联企业的18位机构信用代码">　</a>
+                        </label>
+                        <input class="easyui-textbox textbox-f" data-options="required:false,validType:['AN','length[1,18]']" textboxname="InstitutionCreditCode">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-6">
+                        <label>
+                            信息更新日期：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('img/InfoImg.png') no-repeat scroll 0 0" title="">　</a>
+                        </label>
+                        <input class="easyui-datebox datebox-f combo-f textbox-f" data-options="editable:false ,width:407.75, formatter:myformatter,parser:myparser,required:true,validType:['N','length[1,8]']" textboxname="InformationUpdateDate">
                     </div>
                 </div>
             </template>
@@ -773,62 +929,70 @@
             <h2>上级机构（主管单位）段</h2>
             <div style="background-color:#afe3fa;height:30px ;width:95%">
                 <div float="right" style="width:100%">
-                    <a style="margin-top: 2px; margin-right: 10px; float: right; font-size: 24px; text-decoration: none" id="Cadd" onclick="Add(this.id)" href="javascript:void(0)">+</a>
-                    <a style=" margin-right: 20px; float: right; font-size: 24px; text-decoration: none" id="Cminus" onclick="Minus(this)" href="javascript:void(0)" hidden="hidden">-</a>
+                    <a style="margin-top: 2px; margin-right: 10px; float: right; font-size: 24px; text-decoration: none" id="Iadd" onclick="Add(this.id)" href="javascript:void(0)">+</a>
+                    <a style=" margin-right: 20px; float: right; font-size: 24px; text-decoration: none" id="Iminus" onclick="Minus(this)" href="javascript:void(0)" hidden="hidden">-</a>
                 </div>
             </div>
 
-            <fieldset id="I">
+            <template id="templateI">
                 <input type="hidden" name="InformationCategories" value="H" placeholder="信息类别">
 
-            </fieldset>
-
-            <template id="templateI">
                 <div class="row">
                     <div class="col-12">
                         <label>
-                            上级机构名称：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('InfoImg.png') no-repeat scroll 0 0" title="">　</a>
+                            上级机构名称：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('img/InfoImg.png') no-repeat scroll 0 0" title="上级机构或主管单位名称">　</a>
                         </label>
-                        <input class="easyui-textbox textbox-f" data-options="required:true" textboxname="SuperInstitutionsName">
+                        <input class="easyui-textbox textbox-f" data-options="required:true,validType:['ANC','length[1,80]']" textboxname="SuperInstitutionsName">
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="col-6">
                         <label>
-                            登记注册号类型：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('InfoImg.png') no-repeat scroll 0 0" title="">　</a>
+                            登记注册号类型：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('img/InfoImg.png') no-repeat scroll 0 0" title="上级机构或主管单位的登记注册号类型">　</a>
                         </label>
-                        <select class="easyui-combobox  combobox-f combo-f textbox-f" data-options="editable:false,required:false" textboxname="RegistraterNumberType"></select>
+                        <select class="easyui-combobox  combobox-f combo-f textbox-f" data-options="editable:false,required:false" textboxname="RegistraterNumberType">
+                            <option value=""></option>
+                            <option value="01">工商注册号</option>
+                            <option value="02">机关和事业单位登记号</option>
+                            <option value="03">社会团体登记号</option>
+                            <option value="04">民办非企业单位登记号</option>
+                            <option value="05">基金会登记号</option>
+                            <option value="06">宗教活动场所登记号</option>
+                            <option value="07">统一社会信用代码</option>
+                            <option value="08">商事与非商事登记证号</option>
+                            <option value="99">其他</option>
+                        </select>
                     </div>
                     <div class="col-6">
                         <label>
-                            登记注册号：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('InfoImg.png') no-repeat scroll 0 0" title="">　</a>
+                            登记注册号：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('img/InfoImg.png') no-repeat scroll 0 0" title="上级机构或主管单登记注册证书或签发的批文上的注册号、登记号、文号，如工商注册号、事业单位证书号、社会团体登记证号等">　</a>
                         </label>
-                        <input class="easyui-textbox textbox-f" data-options="required:true" textboxname="RegistraterNumber">
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-6">
-                        <label>
-                            组织机构代码：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('InfoImg.png') no-repeat scroll 0 0" title="">　</a>
-                        </label>
-                        <input class="easyui-textbox textbox-f" data-options="required:false" textboxname="OrganizateCode">
-                    </div>
-                    <div class="col-6">
-                        <label>
-                            机构信用代码：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('InfoImg.png') no-repeat scroll 0 0" title="">　</a>
-                        </label>
-                        <input class="easyui-textbox textbox-f" data-options="required:false" textboxname="InstitutionCreditCode">
+                        <input class="easyui-textbox textbox-f" data-options="required:true,validType:['ANC','length[1,20]']" textboxname="RegistraterNumber">
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="col-6">
                         <label>
-                            信息更新日期：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('InfoImg.png') no-repeat scroll 0 0" title="">　</a>
+                            组织机构代码：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('img/InfoImg.png') no-repeat scroll 0 0" title="质检部门颁发给该上级机构或主管单位的组织机构代码">　</a>
                         </label>
-                        <input class="easyui-datebox datebox-f combo-f textbox-f" data-options="editable:false ,width:407.75, formatter:myformatter,parser:myparser,required:true" textboxname="InformationUpdateDate">
+                        <input class="easyui-textbox textbox-f" data-options="required:false,validType:['AN','length[1,10]','OrganizateCode[true]']" textboxname="OrganizateCode">
+                    </div>
+                    <div class="col-6">
+                        <label>
+                            机构信用代码：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('img/InfoImg.png') no-repeat scroll 0 0" title="征信中心赋予该上级机构或主管单位的18位机构信用代码">　</a>
+                        </label>
+                        <input class="easyui-textbox textbox-f" data-options="required:false,validType:['AN','length[1,18]']" textboxname="InstitutionCreditCode">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-6">
+                        <label>
+                            信息更新日期：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('img/InfoImg.png') no-repeat scroll 0 0" title="">　</a>
+                        </label>
+                        <input class="easyui-datebox datebox-f combo-f textbox-f" data-options="editable:false ,width:407.75, formatter:myformatter,parser:myparser,required:true,validType:['N','length[1,8]']" textboxname="InformationUpdateDate">
                     </div>
                 </div>
             </template>
@@ -841,6 +1005,3 @@
     </form>
 </body>
 </html>
-
-
-

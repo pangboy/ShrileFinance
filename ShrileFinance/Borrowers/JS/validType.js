@@ -216,4 +216,10 @@
         },
         message: '身份证号码不合法'
     },
+    SharesProportion: {// 验证持股比例
+        validator: function (value) {
+            return /^\d+\.\d{2}$/.test(value);
+        },
+        message: '持股比例保留两位小数，例如：1.00'
+    }
 });

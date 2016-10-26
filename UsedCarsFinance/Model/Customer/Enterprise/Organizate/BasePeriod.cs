@@ -39,7 +39,7 @@ namespace Models.Customer.Enterprise.Organizate
         /// <summary>
         /// 客户类型
         /// </summary>
-        [Display(Name = "客户类型"), StringLength(1), Required, AN(ErrorMessage = "客户类型 类型错误")]
+        [Display(Name = "客户类型"), StringLength(1), Required, AN(ErrorMessage = "客户类型 类型错误"), CustomerType(ErrorMessage = "客户类型 值错误")]
         public string CustomerType { get; set; }
 
         /// <summary>
@@ -57,7 +57,7 @@ namespace Models.Customer.Enterprise.Organizate
         /// <summary>
         /// 登记注册号类型
         /// </summary>
-        [Display(Name = "登记注册号类型"), StringLength(2), AN(ErrorMessage = "登记注册号类型 类型错误")]
+        [Display(Name = "登记注册号类型"), StringLength(2), AN(ErrorMessage = "登记注册号类型 类型错误"), RegistrationNumberType(ErrorMessage = "登记注册号类型 值错误")]
         public string RegistrationNumberType { get; set; }
 
         /// <summary>
