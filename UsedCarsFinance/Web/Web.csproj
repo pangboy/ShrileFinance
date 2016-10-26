@@ -158,6 +158,8 @@
     <Content Include="BankInfo\SegmentRules\SegmentRulesList.html" />
     <Content Include="Borrowers\ContentPages\ExecutivesMajorParticipantPage.html" />
     <Content Include="Borrowers\ContentPages\FamilyPage.html" />
+    <Content Include="Borrowers\ContentPages\MainAssociatedEnterprisePage.html" />
+    <Content Include="Borrowers\ContentPages\MajorShareholderPage.html" />
     <Content Include="Borrowers\FamilyInfo.html" />
     <Content Include="Borrowers\FamilyInfoDel.html" />
     <Content Include="Borrowers\img\InfoImg.png" />
