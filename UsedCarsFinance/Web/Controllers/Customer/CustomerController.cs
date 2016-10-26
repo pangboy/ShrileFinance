@@ -21,7 +21,7 @@ namespace Web.Controllers.Customer
         /// yand    16.10.25
         /// <param name="value"></param>
         /// <returns></returns>
-        public IHttpActionResult Add(Base1ViewModel value)
+        public IHttpActionResult Add(BaseViewModel value)
         {
             if (!ModelState.IsValid)
             {
@@ -38,7 +38,7 @@ namespace Web.Controllers.Customer
         /// yand    16.10.25
         /// <param name="value"></param>
         /// <returns></returns>
-        public IHttpActionResult Modify(Base1ViewModel value)
+        public IHttpActionResult Modify(BaseViewModel value)
         {
             if (!ModelState.IsValid)
             {
@@ -49,7 +49,7 @@ namespace Web.Controllers.Customer
             return Ok();
         }
 
-        public Base1ViewModel Get(Guid id)
+        public BaseViewModel Get(Guid id)
         {
             return null;//customerAppService.Get(id);
         }
