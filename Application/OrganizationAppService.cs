@@ -3,6 +3,8 @@
     using System;
     using AutoMapper;
     using Core.Interfaces.Repositories;
+    using System.Collections;
+    using System.Collections.Generic;
 
     public class OrganizationAppService
     {
@@ -20,9 +22,11 @@
         /// <param name="model">实体</param>
         public void Create(ViewModels.OrganizationViewModels.Organization model)
         {
-            var customer = Mapper.Map<Core.Entities.Customers.Enterprise.Organization>(model.Managers);
-            //customer = Mapper.Map(model, customer);
-           //var s = Mapper.Map<ViewModels.OrganizationViewModels.Organization,Core.Entities.Customers.Enterprise.Organization>(model);
+            var customer = Mapper.Map<Core.Entities.Customers.Enterprise.Organization>(model.Base);
+            var managers = Mapper.Map<IEnumerable<Core.Entities.Customers.Enterprise.Manager>>(model.Managers);
+
+            customer = Mapper.Map(model, customer);
+            //var s = Mapper.Map<ViewModels.OrganizationViewModels.Organization,Core.Entities.Customers.Enterprise.Organization>(model);
             repository.Create(customer);
             repository.Commit();
         }
