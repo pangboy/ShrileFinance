@@ -20,10 +20,6 @@
             CreateMap<ViewModels.OrganizationViewModels.Organization, Core.Entities.Customers.Enterprise.Organization>();
             CreateMap<ViewModels.OrganizationViewModels.ContactViewModel, Core.Entities.Customers.Enterprise.OrganizationContact>();
             CreateMap<ViewModels.OrganizationViewModels.FamilyMemberViewModel, Core.Entities.Customers.Enterprise.FamilyMember>();
-
-            //名称不相同时的映射
-            //CreateMap<ViewModels.OrganizationViewModels.BaseViewModel, Core.Entities.Customers.Enterprise.Organization>()
-            //    .ForMember(d => d.ManagementerCode, opt => opt.MapFrom(s => s.ManagementerCode));
         }
     }
 }
