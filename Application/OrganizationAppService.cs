@@ -22,9 +22,9 @@
         /// <param name="model">实体</param>
         public void Create(ViewModels.OrganizationViewModels.Organization model)
         {
-            var customer = Mapper.Map<Core.Entities.Customers.Enterprise.Organization>(model.Base);
-            customer = Mapper.Map(model, customer);
-
+            var customer = Mapper.Map<Core.Entities.Customers.Enterprise.Organization>(model.Managers);
+            //customer = Mapper.Map(model, customer);
+           //var s = Mapper.Map<ViewModels.OrganizationViewModels.Organization,Core.Entities.Customers.Enterprise.Organization>(model);
             repository.Create(customer);
             repository.Commit();
         }

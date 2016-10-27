@@ -156,8 +156,7 @@
         })
 
         // 初始化
-        function Init()
-        {
+        function Init() {
             // 设置所有是否填写复选框不选中
             $('input[id=TF]').each(function (index, value) {
                 value.checked = false;
@@ -165,8 +164,7 @@
         }
 
         // 是否填写 复选框onClick事件
-        function checkboxOnclick(Obj)
-        {
+        function checkboxOnclick(Obj) {
             Obj.checked = Obj.checked;
 
             if (Obj.checked) {
@@ -222,19 +220,110 @@
         }
 
         function Submit() {
+            var base = {
+                CustomerNumber: "123123", ManagementerCode: "11111111111111111111", CustomerType: "1", InstitutionCreditCode: "123123123123123123",
+                OrganizateCode: "", RegistraterType: "01", RegistraterCode: "123123", TaxpayerIdentifyIrsNumber: "123123123", TaxpayerIdentifyLandNumber: "123133213", LoanCardCode: "1111111111112222", HasParent: "false"
+            }
+            var Property = {
+                InstitutionChName: "yandong", RegisterAddress: "杭州", RegisterAdministrativeDivision: "100101", SetupDate: "2016-01-01",CertificateDueDate: "2016-01-01", BusinessScope: "上面啊司法考试更多",
+                RegisterCapital: "10000.23", OrganizationCategory: "1", OrganizationCategorySubdivision: "10", EconomicSectorsClassification: "g2560", EconomicType: "10"
+            }
+            var State = { EnterpriseScale: "2", InstitutionsState: "1" }
+            var Contact = { OfficeAddress: "12345643213", ContactPhone: "13111111111", FinancialContactPhone:"13111111111"}
+            var Manager = [{
+                Type: "1",
+                name: "zhangsan",
+                CertificateType: "1",
+                CertificateCode: "123123123",
+                FamilyMembers: [{
+                    Relationship: "1",
+                    Name: "xiaozhangsan",
+                    CertificateType: "1",
+                    CertificateCode: "222222"
+                },
+                 {
+                     Relationship: "2",
+                     Name: "xiaozhangsan2",
+                     CertificateType: "2",
+                     CertificateCode: "11111"
+                 }]
+            },
+                {
+                    Type: "2",
+                    name: "lisi",
+                    CertificateType: "2",
+                    CertificateCode: "111111",
+                    FamilyMembers: [{
+                        Relationship: "3",
+                        Name: "xiaolisi",
+                        CertificateType: "3",
+                        CertificateCode: "3333333"
+                    },
+                     {
+                         Relationship: "4",
+                         Name: "xiaolisi2",
+                         CertificateType: "4",
+                         CertificateCode: "44444"
+                     }]
+                }
+            ];
+
+
+            var Stockholder = [{
+                ShareholdersType: "1",
+                ShareholdersName: "股东1",
+                RegistraterType: "1",
+                RegistraterCode: "1111111",
+                OrganizateCode: "L1832212-3",
+                InstitutionCreditCode: "124124124124123412",
+                SharesProportion: "10.00",
+                FamilyMembers: [{
+                    Relationship: "3",
+                    Name: "xiaolisi",
+                    CertificateType: "3",
+                    CertificateCode: "3333333"
+                },
+                 {
+                     Relationship: "4",
+                     Name: "xiaolisi2",
+                     CertificateType: "4",
+                     CertificateCode: "44444"
+                 }]
+            },
+            {
+                ShareholdersType: "2",
+                ShareholdersName: "股东2",
+                RegistraterType: "2",
+                RegistraterCode: "222222",
+                OrganizateCode: "L1832212-3",
+                InstitutionCreditCode: "124124124124123433",
+                SharesProportion: "10.00",
+                FamilyMembers: [{
+                    Relationship: "2",
+                    Name: "xiaolisi",
+                    CertificateType: "1",
+                    CertificateCode: "2222222"
+                },
+                 {
+                     Relationship: "1",
+                     Name: "xiaolisi2",
+                     CertificateType: "1",
+                     CertificateCode: "333333"
+                 }]
+            }]
+            var AssociatedEnterprise = [{ AssociatedType: "01", Name: "晟融", RegistraterType: "02", RegistraterCode: "2222222222", OrganizateCode: "L1832212-3", InstitutionCreditCode: "123123123123123111" },
+            { AssociatedType: "01", Name: "云为", RegistraterType: "02", RegistraterCode: "3333333333", OrganizateCode: "L1832212-3", InstitutionCreditCode: "333333333333333322" }]
+            var Parent = { SuperInstitutionsName: "晟融", RegistraterType: "01", RegistraterCode: "1111111111", OrganizateCode: "2222222222", InstitutionCreditCode: "333333333333333333" }
             var data = {};
-
-
-
-
-         
-            data["Base"] = $("#base").serializeJson();
-            data["Properties"] = $("#Properties").serializeJson();
-            data["State"] = $("#State").serializeJson();
-            data["Contact"] = $("#Contact").serializeJson();
-            data["Manager"] = $("#Manager").serializeJson();
-            data["Stockholder"] = $("#Stockholder").serializeJson();
-            data["AssociatedEnterprise"] = $("#AssociatedEnterprise").serializeJson();
+            data["Base"] = base;//$("#base").serializeJson();
+            data["Property"] = Property;// $("#Properties").serializeJson();
+            data["State"] = State;//$("#State").serializeJson();
+            data["Contact"] = Contact; $("#Contact").serializeJson();
+            data["Managers"] = Manager;//$("#Manager").serializeJson();//高管
+            data["Shareholders"] = Stockholder;//$("#Stockholder").serializeJson();//重要股东
+            data["AssociatedEnterprises"] = AssociatedEnterprise;//主要关联企业
+            data["Parent"] = Parent;// $("#AssociatedEnterprise").serializeJson();上级机构
+            debugger
 
             $.ajax({
                 async: true,
@@ -291,14 +380,6 @@
                             客户类型：
                             <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('img/InfoImg.png') no-repeat scroll 0 0" title="">　</a>
                         </label>
-                        <!--<select class="easyui-combobox  combobox-f combo-f textbox-f" data-options="editable:false,required:true" name="CustomerType">
-                    <option value=""></option>
-                    <option value="1">仅是基本户客户</option>
-                    <option value="2">仅是信贷户客户</option>
-                    <option value="3">既是基本户又是信贷户的客户</option>
-                    <option value="X">未知</option>
-                </select>-->
-
                         <input class="easyui-textbox textbox-f" data-options="required:false,readonly:true,value:'仅是信贷户客户'" name="CustomerType_Text">
                         <input type="hidden" value="2" name="CustomerType" />
                     </div>
@@ -396,12 +477,12 @@
             <h2>基本属性</h2>
 
             <fieldset id="Properties">
-            <div style="background-color:#afe3fa;height:30px ;width:95%;display:none">
-                <div float="right" style="width:100%">
-                    <a style="margin-top: 2px; margin-right: 10px; float: right; font-size: 24px; text-decoration: none" id="Cadd" onclick="Add(this.id)" href="javascript:void(0)">+</a>
-                    <a style=" margin-right: 20px; float: right; font-size: 24px; text-decoration: none" id="Cminus" onclick="Minus(this)" href="javascript:void(0)" hidden="hidden">-</a>
+                <div style="background-color:#afe3fa;height:30px ;width:95%;display:none">
+                    <div float="right" style="width:100%">
+                        <a style="margin-top: 2px; margin-right: 10px; float: right; font-size: 24px; text-decoration: none" id="Cadd" onclick="Add(this.id)" href="javascript:void(0)">+</a>
+                        <a style=" margin-right 20px; float right; font-size 24px; text-decoration none" id="Cminus" onclick="Minus(this)" href="javascript:void(0)" hidden="hidden">-</a>
+                    </div>
                 </div>
-            </div>
 
                 <input type="hidden" name="InformationCategories" value="C" placeholder="信息类别">
                 <div class="row">
@@ -837,61 +918,6 @@
                             <option value="9">其他</option>
                             <option value="X">未知</option>
                         </select>
-            </div>
-                    <div class="col-6">
-                        <label>
-                            企业规模：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('img/InfoImg.png') no-repeat scroll 0 0" title="按照工业和信息化部、国家统计局、发展改革委、财政部联合印发的《关于印发中小企业划型标准规定的通知》（工信部联企业〔2011〕300号）执行">　</a>
-                        </label>
-                        <select class="easyui-combobox  combobox-f combo-f textbox-f" data-options="editable:false,required:false" name="EnterpriseScale">
-                            <option value=""></option>
-                            <option value="2">大型企业</option>
-                            <option value="3">中型企业</option>
-                            <option value="4">小型企业</option>
-                            <option value="5">微型企业</option>
-                            <option value="9">其他</option>
-                            <option value="X">未知</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-6">
-                        <label>
-                            机构状态：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('img/InfoImg.png') no-repeat scroll 0 0" title="机构目前的活动状态，其中注销状态是指机构从登记部门注销登记或注销备案">　</a>
-                        </label>
-                        <select class="easyui-combobox  combobox-f combo-f textbox-f" data-options="editable:false,required:false" name="InstitutionsState">
-                            <option value=""></option>
-                            <option value="1">正常</option>
-                            <option value="2">注销</option>
-                            <option value="9">其他</option>
-                            <option value="X">未知</option>
-                        </select>
-                    </div>
-                    <!--<div class="col-6">
-                <label>
-                    信息更新日期：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('img/InfoImg.png') no-repeat scroll 0 0" title="">　</a>
-                </label>
-                <input class="easyui-datebox datebox-f combo-f textbox-f" data-options="editable:false ,width:407.75, formatter:myformatter,parser:myparser,required:true,validType:['N','length[1,8]']" name="InformationUpdateDate">
-            </div>-->
-                </div>
-
-
-            <template id="templateD">
-                <input type="hidden" name="InformationCategories" value="D" placeholder="信息类别">
-                <div class="row">
-                    <div class="col-6">
-                        <label>
-                            基本户状态：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('img/InfoImg.png') no-repeat scroll 0 0" title="标识基本户账户目前的状态">　</a>
-                        </label>
-                        <select class="easyui-combobox  combobox-f combo-f textbox-f" data-options="editable:false,required:false,validType:['AN','length[1,1]']" name="BasicAccountState">
-                            <option value=""></option>
-                            <option value="1">正常</option>
-                            <option value="2">久悬</option>
-                            <option value="3">注销</option>
-                            <option value="4">待审核</option>
-                            <option value="9">其他</option>
-                            <option value="X">未知</option>
-                        </select>
                     </div>
                     <div class="col-6">
                         <label>
@@ -929,58 +955,69 @@
                         <input class="easyui-datebox datebox-f combo-f textbox-f" data-options="editable:false ,width:407.75, formatter:myformatter,parser:myparser,required:true,validType:['N','length[1,8]']" name="InformationUpdateDate">
                     </div>-->
                 </div>
-            </template>
 
-                </fieldset>
+
+                <template id="templateD">
+                    <input type="hidden" name="InformationCategories" value="D" placeholder="信息类别">
+                    <div class="row">
+                        <div class="col-6">
+                            <label>
+                                基本户状态：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('img/InfoImg.png') no-repeat scroll 0 0" title="标识基本户账户目前的状态">　</a>
+                            </label>
+                            <select class="easyui-combobox  combobox-f combo-f textbox-f" data-options="editable:false,required:false,validType:['AN','length[1,1]']" name="BasicAccountState">
+                                <option value=""></option>
+                                <option value="1">正常</option>
+                                <option value="2">久悬</option>
+                                <option value="3">注销</option>
+                                <option value="4">待审核</option>
+                                <option value="9">其他</option>
+                                <option value="X">未知</option>
+                            </select>
+                        </div>
+                        <div class="col-6">
+                            <label>
+                                企业规模：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('img/InfoImg.png') no-repeat scroll 0 0" title="按照工业和信息化部、国家统计局、发展改革委、财政部联合印发的《关于印发中小企业划型标准规定的通知》（工信部联企业〔2011〕300号）执行">　</a>
+                            </label>
+                            <select class="easyui-combobox  combobox-f combo-f textbox-f" data-options="editable:false,required:false" name="EnterpriseScale">
+                                <option value=""></option>
+                                <option value="2">大型企业</option>
+                                <option value="3">中型企业</option>
+                                <option value="4">小型企业</option>
+                                <option value="5">微型企业</option>
+                                <option value="9">其他</option>
+                                <option value="X">未知</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-6">
+                            <label>
+                                机构状态：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('img/InfoImg.png') no-repeat scroll 0 0" title="机构目前的活动状态，其中注销状态是指机构从登记部门注销登记或注销备案">　</a>
+                            </label>
+                            <select class="easyui-combobox  combobox-f combo-f textbox-f" data-options="editable:false,required:false" name="InstitutionsState">
+                                <option value=""></option>
+                                <option value="1">正常</option>
+                                <option value="2">注销</option>
+                                <option value="9">其他</option>
+                                <option value="X">未知</option>
+                            </select>
+                        </div>
+                        <!--<div class="col-6">
+                            <label>
+                                信息更新日期：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('img/InfoImg.png') no-repeat scroll 0 0" title="">　</a>
+                            </label>
+                            <input class="easyui-datebox datebox-f combo-f textbox-f" data-options="editable:false ,width:407.75, formatter:myformatter,parser:myparser,required:true,validType:['N','length[1,8]']" name="InformationUpdateDate">
+                        </div>-->
+                    </div>
+                </template>
+
+            </fieldset>
         </section>
 
         <section id="E" min="0" max="1">
             <h2>联络信息</h2>
             <fieldset id="Contact">
-
-                <!--<div style="background-color:#afe3fa;height:30px ;width:95%">
-                <div float="right" style="width:100%">
-                    <a style="margin-top: 2px; margin-right: 10px; float: right; font-size: 24px; text-decoration: none" id="Eadd" onclick="Add(this.id)" href="javascript:void(0)">+</a>
-                    <a style=" margin-right: 20px; float: right; font-size: 24px; text-decoration: none" id="Eminus" onclick="Minus(this)" href="javascript:void(0)" hidden="hidden">-</a>
-                </div>
-                </div>-->
-
-                <input type="hidden" name="InformationCategories" value="E" placeholder="信息类别">
-
-                <div class="row">
-                    <div class="col-12">
-                        <label>
-                            办公（生产、经营）地址：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('img/InfoImg.png') no-repeat scroll 0 0" title="机构的办公地址或生产、经营地址，包括所属行政区划名称，乡（镇）、村、街名称和门牌号，如以上三类地址都有，请填写常用的通讯地址">　</a>
-                        </label>
-                        <input class="easyui-textbox textbox-f" data-options="required:false,validType:['ANC','length[1,80]']" name="OfficeAddress">
-            </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-6">
-                        <label>
-                            联系电话：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('img/InfoImg.png') no-repeat scroll 0 0" title="填写机构的联系电话，参考格式：国别号/地区号－区号－电话号码（－分机号）">　</a>
-                        </label>
-                        <input class="easyui-textbox textbox-f" data-options="required:false,validType:['AN','length[1,35]']" name="ContactPhone">
-                    </div>
-                    <div class="col-6">
-                        <label>
-                            财务部联系电话：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('img/InfoImg.png') no-repeat scroll 0 0" title="参考格式：国别号/地区号－区号－电话号码（－分机号），填写财务部或财务人员的联系电话">　</a>
-                        </label>
-                        <input class="easyui-textbox textbox-f" data-options="required:false,validType:['AN','length[1,35]']" name="FinancialContactPhone">
-                    </div>
-                </div>
-
-                <!--<div class="row">
-                    <div class="col-6">
-                        <label>
-                            信息更新日期：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('img/InfoImg.png') no-repeat scroll 0 0" title="">　</a>
-                        </label>
-                        <input class="easyui-datebox datebox-f combo-f textbox-f" data-options="editable:false ,width:407.75, formatter:myformatter,parser:myparser,required:true,validType:['N','length[1,8]']" name="InformationUpdateDate">
-                    </div>
-                </div>-->
-
-            <template id="templateE">
                 <input type="hidden" name="InformationCategories" value="E" placeholder="信息类别">
 
                 <div class="row">
@@ -1006,17 +1043,33 @@
                         <input class="easyui-textbox textbox-f" data-options="required:false,validType:['AN','length[1,35]']" name="FinancialContactPhone">
                     </div>
                 </div>
+                <template id="templateE">
+                    <input type="hidden" name="InformationCategories" value="E" placeholder="信息类别">
 
-                <!--<div class="row">
-                    <div class="col-6">
-                        <label>
-                            信息更新日期：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('img/InfoImg.png') no-repeat scroll 0 0" title="">　</a>
-                        </label>
-                        <input class="easyui-datebox datebox-f combo-f textbox-f" data-options="editable:false ,width:407.75, formatter:myformatter,parser:myparser,required:true,validType:['N','length[1,8]']" name="InformationUpdateDate">
+                    <div class="row">
+                        <div class="col-12">
+                            <label>
+                                办公（生产、经营）地址：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('img/InfoImg.png') no-repeat scroll 0 0" title="机构的办公地址或生产、经营地址，包括所属行政区划名称，乡（镇）、村、街名称和门牌号，如以上三类地址都有，请填写常用的通讯地址">　</a>
+                            </label>
+                            <input class="easyui-textbox textbox-f" data-options="required:false,validType:['ANC','length[1,80]']" name="OfficeAddress">
+                        </div>
                     </div>
-                </div>-->
-            </template>
 
+                    <div class="row">
+                        <div class="col-6">
+                            <label>
+                                联系电话：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('img/InfoImg.png') no-repeat scroll 0 0" title="填写机构的联系电话，参考格式：国别号/地区号－区号－电话号码（－分机号）">　</a>
+                            </label>
+                            <input class="easyui-textbox textbox-f" data-options="required:false,validType:['AN','length[1,35]']" name="ContactPhone">
+                        </div>
+                        <div class="col-6">
+                            <label>
+                                财务部联系电话：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('img/InfoImg.png') no-repeat scroll 0 0" title="参考格式：国别号/地区号－区号－电话号码（－分机号），填写财务部或财务人员的联系电话">　</a>
+                            </label>
+                            <input class="easyui-textbox textbox-f" data-options="required:false,validType:['AN','length[1,35]']" name="FinancialContactPhone">
+                        </div>
+                    </div>
+                </template>
             </fieldset>
         </section>
 
@@ -1028,8 +1081,8 @@
             <div style="background-color:#afe3fa;height:30px ;width:95%;display:none">
                 <div float="right" style="width:100%">
                     <a style="margin-top: 2px; margin-right: 10px; float: right; font-size: 24px; text-decoration: none" id="Fadd" onclick="Add(this.id)" href="javascript:void(0)">+</a>
-                    <a style=" margin-right: 20px; float: right; font-size: 24px; text-decoration: none" id="Fminus" onclick="Minus(this)" href="javascript:void(0)" hidden="hidden">-</a>
-            </div>
+                    <a style=" margin-right 20px; float right; font-size 24px; text-decoration none" id="Fminus" onclick="Minus(this)" href="javascript:void(0)" hidden="hidden">-</a>
+                </div>
             </div>
 
             <fieldset id="Manager">
@@ -1048,34 +1101,6 @@
                             <option value="4">监事长 </option>
                             <option value="5">法定代表人</option>
                         </select>
-
-                        <!--<input class="easyui-combobox  combobox-f combo-f textbox-f" checkbox="true" name="ParticipantType" data-options="editable:false,required:true,multiple:true,
-                        valueField: 'label',
-                        textField: 'value',
-                        checkbox:true,
-                        data: [{
-                            label: 'java',
-                        value: 'Java'
-                        },{
-                        label: 'perl',
-                        value: 'Perl'
-                        },{
-                        label: 'ruby',
-                        value: 'Ruby'
-                        }],
-                        format : function(row){
-                            var opts = $(this).combobox('options');
-                            return  '<input type='checkbox' class='combobox-checkbox'>' + row[opts.textField];
-                    }
-                " />
-                            <script>
-                function Formattr(row) {
-                    var opts = $(this).combobox("options");
-                    return "<input type='checkbox' class='combobox-checkbox'>" + row[opts.textField];
-                }
-            </script>
-                    -->
-
                     </div>
                     <div class="col-6">
                         <label>
@@ -1115,16 +1140,6 @@
                         <input class="easyui-textbox textbox-f" data-options="required:true,validType:['ANC','length[1,20]']" name="CertificateNumber">
                     </div>
                 </div>
-
-                <!--<div class="row">
-            <div class="col-6">
-                <label>
-                    信息更新日期：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('img/InfoImg.png') no-repeat scroll 0 0" title="">　</a>
-                </label>
-                <input class="easyui-datebox datebox-f combo-f textbox-f" data-options="editable:false ,width:407.75, formatter:myformatter,parser:myparser,required:true,validType:['N','length[1,8]']" name="InformationUpdateDate">
-            </div>
-        </div>-->
-
             </fieldset>
             <template id="templateF">
                 <input type="hidden" name="InformationCategories" value="F" placeholder="信息类别">
@@ -1142,27 +1157,6 @@
                             <option value="4">监事长 </option>
                             <option value="5">法定代表人</option>
                         </select>
-
-                        <!--<input class="easyui-combobox  combobox-f combo-f textbox-f" checkbox="true" name="ParticipantType" data-options="editable:false,required:true,multiple:true,
-                                valueField: 'label',
-                                textField: 'value',
-                                checkbox:true,
-                                data: [{
-                                    label: 'java',
-                                value: 'Java'
-                                },{
-                                label: 'perl',
-                                value: 'Perl'
-                                },{
-                                label: 'ruby',
-                                value: 'Ruby'
-                                }],
-                                format : function(row){
-                                    var opts = $(this).combobox('options');
-                                    return  '<input type='checkbox' class='combobox-checkbox'>' + row[opts.textField];
-                    }
-                        " />-->
-
                     </div>
                     <div class="col-6">
                         <label>
@@ -1201,16 +1195,7 @@
                         </label>
                         <input class="easyui-textbox textbox-f" data-options="required:true,validType:['ANC','length[1,20]']" name="CertificateNumber">
                     </div>
-            </div>
-
-                <!--<div class="row">
-                    <div class="col-6">
-                        <label>
-                            信息更新日期：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('img/InfoImg.png') no-repeat scroll 0 0" title="">　</a>
-                        </label>
-                        <input class="easyui-datebox datebox-f combo-f textbox-f" data-options="editable:false ,width:407.75, formatter:myformatter,parser:myparser,required:true,validType:['N','length[1,8]']" name="InformationUpdateDate">
-                    </div>
-                </div>-->
+                </div>
             </template>
 
             <!--F 家族成员信息-->
@@ -1226,7 +1211,7 @@
                         <th data-options="field:'FamilyRelationship',width:100,align:'center'">股东类型</th>
                         <th data-options="field:'FamilyMembersName',width:100,align:'center'">股东名称</th>
                         <th data-options="field:'FamilyMembersCertificateType_Txt',width:100,align:'center'">证件类型/登记注册号类型</th>
-                        <th data-options="field:'FamilyMembersCertificateType',width:100,align:'center',,hidden:true">证件类型/登记注册号类型</th>
+                        <th data-options="field:'FamilyMembersCertificateType',width:100,align:'center',hidden:true">证件类型/登记注册号类型</th>
                         <th data-options="field:'FamilyMembersCertificateNumber',width:130,align:'center'">证件号码/登记注册号码</th>
                         <th data-options="field:'FamilyMembersCertificateNumber',width:100,align:'center'">组织机构代码</th>
                         <th data-options="field:'FamilyMembersCertificateNumber',width:100,align:'center'">机构信用代码</th>
@@ -1254,7 +1239,7 @@
             <div style="background-color:#afe3fa;height:30px ;width:95%;display:none">
                 <div float="right" style="width:100%">
                     <a style="margin-top: 2px; margin-right: 10px; float: right; font-size: 24px; text-decoration: none" id="Gadd" onclick="Add(this.id)" href="javascript:void(0)">+</a>
-                    <a style=" margin-right: 20px; float: right; font-size: 24px; text-decoration: none" id="Gminus" onclick="Minus(this)" href="javascript:void(0)" hidden="hidden">-</a>
+                    <a style=" margin-right 20px; float right; font-size 24px; text-decoration none" id="Gminus" onclick="Minus(this)" href="javascript:void(0)" hidden="hidden">-</a>
                 </div>
             </div>
 
@@ -1264,7 +1249,7 @@
                     if (value == 1) {
                         $(this).parents('fieldset').find('div[id=Reg]').hide();
                         $(this).parents('fieldset').find('div[id=Card]').show();
-                            }
+                    }
                     else {
                         $(this).parents('fieldset').find('div[id=Card]').hide();
                         $(this).parents('fieldset').find('div[id=Reg]').show();
@@ -1365,13 +1350,7 @@
                         </label>
                         <input class="easyui-textbox textbox-f" data-options="required:true,validType:['AN','length[1,10]','SharesProportion']" name="SharesProportion">%
                     </div>
-                    <!--<div class="col-6">
-                        <label>
-                            信息更新日期：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('img/InfoImg.png') no-repeat scroll 0 0" title="">　</a>
-                        </label>
-                        <input class="easyui-datebox datebox-f combo-f textbox-f" data-options="editable:false ,width:407.75, formatter:myformatter,parser:myparser,required:true,validType:['N','length[1,8]']" name="InformationUpdateDate">
-                    </div>-->
-            </div>
+                </div>
             </template>
         </section>
 
@@ -1381,7 +1360,7 @@
             <div style="background-color:#afe3fa;height:30px ;width:95%;display:none">
                 <div float="right" style="width:100%">
                     <a style="margin-top: 2px; margin-right: 10px; float: right; font-size: 24px; text-decoration: none" id="Hadd" onclick="Add(this.id)" href="javascript:void(0)">+</a>
-                    <a style=" margin-right: 20px; float: right; font-size: 24px; text-decoration: none" id="Hminus" onclick="Minus(this)" href="javascript:void(0)" hidden="hidden">-</a>
+                    <a style=" margin-right 20px; float right; font-size 24px; text-decoration none" id="Hminus" onclick="Minus(this)" href="javascript:void(0)" hidden="hidden">-</a>
                 </div>
             </div>
             <fieldset id="AssociatedEnterprise"></fieldset>
@@ -1408,7 +1387,7 @@
                         </label>
                         <input class="easyui-textbox textbox-f" data-options="required:true,validType:['ANC','length[1,80]']" name="AssociatedEnterpriseName">
                     </div>
-            </div>
+                </div>
 
                 <div class="row">
                     <div class="col-6">
@@ -1450,15 +1429,6 @@
                         <input class="easyui-textbox textbox-f" data-options="required:false,validType:['AN','length[1,18]']" name="InstitutionCreditCode">
                     </div>
                 </div>
-
-                <!--<div class="row">
-                <div class="col-6">
-                    <label>
-                        信息更新日期：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('img/InfoImg.png') no-repeat scroll 0 0" title="">　</a>
-                    </label>
-                    <input class="easyui-datebox datebox-f combo-f textbox-f" data-options="editable:false ,width:407.75, formatter:myformatter,parser:myparser,required:true,validType:['N','length[1,8]']" name="InformationUpdateDate">
-            </div>
-            </div>-->
             </template>
         </section>
 
@@ -1468,7 +1438,7 @@
             <div style="background-color:#afe3fa;height:30px ;width:95%;display:none">
                 <div float="right" style="width:100%">
                     <a style="margin-top: 2px; margin-right: 10px; float: right; font-size: 24px; text-decoration: none" id="Iadd" onclick="Add(this.id)" href="javascript:void(0)">+</a>
-                    <a style=" margin-right: 20px; float: right; font-size: 24px; text-decoration: none" id="Iminus" onclick="Minus(this)" href="javascript:void(0)" hidden="hidden">-</a>
+                    <a style=" margin-right 20px; float right; font-size 24px; text-decoration none" id="Iminus" onclick="Minus(this)" href="javascript:void(0)" hidden="hidden">-</a>
                 </div>
             </div>
 
@@ -1524,15 +1494,6 @@
                         <input class="easyui-textbox textbox-f" data-options="required:false,validType:['AN','length[1,18]']" name="InstitutionCreditCode">
                     </div>
                 </div>
-
-                <!--<div class="row">
-                    <div class="col-6">
-                        <label>
-                            信息更新日期：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('img/InfoImg.png') no-repeat scroll 0 0" title="">　</a>
-                        </label>
-                        <input class="easyui-datebox datebox-f combo-f textbox-f" data-options="editable:false ,width:407.75, formatter:myformatter,parser:myparser,required:true,validType:['N','length[1,8]']" name="InformationUpdateDate">
-                    </div>
-                </div>-->
             </template>
         </section>
 
@@ -1540,12 +1501,7 @@
             <a id="submit" class="easyui-linkbutton" data-options="iconCls: 'icon-edit'" style="margin:0 auto" onclick="Submit()">提交</a>
             <a id="submit" class="easyui-linkbutton" data-options="iconCls: 'icon-redo'" style="margin:0 auto" onclick="Cancel()">取消</a>
         </div>
-
-
     </form>
-
-
     <form id="finance_ff" class="container"></form>
-
 </body>
 </html>
