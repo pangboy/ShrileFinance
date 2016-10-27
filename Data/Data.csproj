@@ -67,6 +67,10 @@
     <Compile Include="Migrations\201610260709237_Organization.Designer.cs">
       <DependentUpon>201610260709237_Organization.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201610270956148_StockholderUpdate.cs" />
+    <Compile Include="Migrations\201610270956148_StockholderUpdate.Designer.cs">
+      <DependentUpon>201610270956148_StockholderUpdate.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs">
       <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
     </Compile>
@@ -205,6 +209,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201610260709237_Organization.resx">
       <DependentUpon>201610260709237_Organization.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201610270956148_StockholderUpdate.resx">
+      <DependentUpon>201610270956148_StockholderUpdate.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

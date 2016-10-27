@@ -35,7 +35,7 @@ namespace Web.Controllers.Customer
 
                 return Ok();
             }
-            catch (System.Data.Entity.Validation.DbEntityValidationException ex)
+            catch (Exception ex)
             {
                 return BadRequest();
             }
