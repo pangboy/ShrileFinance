@@ -136,13 +136,123 @@
                 return false;
             }
 
-            
+
         }
 
         // 取消按钮
         function OrganizateCancel() {
             window.opener.location.href = window.opener.location.href;
             window.close()
+        }
+    </script>
+
+    <script type="text/javascript">
+        function Submit() {
+            var base = {
+                CustomerNumber: "123123", ManagementerCode: "11111111111111111111", CustomerType: "1", InstitutionCreditCode: "123123123123123123",
+                OrganizateCode: "", RegistraterType: "01", RegistraterCode: "123123", TaxpayerIdentifyIrsNumber: "123123123", TaxpayerIdentifyLandNumber: "123133213", LoanCardCode: "1111111111112222", HasParent: "false"
+            }
+            var Property = {
+                InstitutionChName: "yandong", RegisterAddress: "杭州", RegisterAdministrativeDivision: "100101", SetupDate: "2016-01-01", CertificateDueDate: "2016-01-01", BusinessScope: "上面啊司法考试更多",
+                RegisterCapital: "10000.23", OrganizationCategory: "1", OrganizationCategorySubdivision: "10", EconomicSectorsClassification: "g2560", EconomicType: "10"
+            }
+            var State = { EnterpriseScale: "2", InstitutionsState: "1" }
+            var Contact = { OfficeAddress: "12345643213", ContactPhone: "13111111111", FinancialContactPhone: "13111111111" }
+            var Manager = [{
+                Type: "1",
+                name: "zhangsan",
+                CertificateType: "1",
+                CertificateCode: "123123123",
+                FamilyMembers: [{
+                    Relationship: "1",
+                    Name: "xiaozhangsan",
+                    CertificateType: "1",
+                    CertificateCode: "222222"
+                },
+                 {
+                     Relationship: "2",
+                     Name: "xiaozhangsan2",
+                     CertificateType: "2",
+                     CertificateCode: "11111"
+                 }]
+            },
+                {
+                    Type: "2",
+                    name: "lisi",
+                    CertificateType: "2",
+                    CertificateCode: "111111",
+                    FamilyMembers: [{
+                        Relationship: "3",
+                        Name: "xiaolisi",
+                        CertificateType: "3",
+                        CertificateCode: "3333333"
+                    },
+                     {
+                         Relationship: "4",
+                         Name: "xiaolisi2",
+                         CertificateType: "4",
+                         CertificateCode: "44444"
+                     }]
+                }
+            ];
+
+
+            var Stockholder = [{
+                ShareholdersType: "1",
+                ShareholdersName: "股东1",
+                RegistraterType: "10",
+                RegistraterCode: "123123123123",
+                SharesProportion: "10.00",
+                FamilyMembers: [{
+                    Relationship: "3",
+                    Name: "xiaolisi",
+                    CertificateType: "3",
+                    CertificateCode: "3333333"
+                },
+                 {
+                     Relationship: "4",
+                     Name: "xiaolisi2",
+                     CertificateType: "4",
+                     CertificateCode: "44444"
+                 }]
+            },
+            {
+                ShareholdersType: "2",
+                ShareholdersName: "股东2",
+                RegistraterType: "2",
+                RegistraterCode: "222222",
+                OrganizateCode: "L1832212-3",
+                InstitutionCreditCode: "124124124124123433",
+                SharesProportion: "10.00"
+            }]
+            var AssociatedEnterprise = [{ AssociatedType: "01", Name: "晟融", RegistraterType: "02", RegistraterCode: "2222222222", OrganizateCode: "L1832212-3", InstitutionCreditCode: "123123123123123111" },
+            { AssociatedType: "01", Name: "云为", RegistraterType: "02", RegistraterCode: "3333333333", OrganizateCode: "L1832212-3", InstitutionCreditCode: "333333333333333322" }]
+            var Parent = { SuperInstitutionsName: "晟融", RegistraterType: "01", RegistraterCode: "1111111111", OrganizateCode: "2222222222", InstitutionCreditCode: "333333333333333333" }
+            var data = {};
+            data["Base"] = base;//$("#base").serializeJson();
+            data["Property"] = Property;// $("#Properties").serializeJson();
+            data["State"] = State;//$("#State").serializeJson();
+            data["Contact"] = Contact;// $("#Contact").serializeJson();
+            data["Managers"] = Manager;//$("#Manager").serializeJson();//高管
+            data["Shareholders"] = Stockholder;//$("#Stockholder").serializeJson();//重要股东
+            data["AssociatedEnterprises"] = AssociatedEnterprise;//主要关联企业
+            data["Parent"] = Parent;// $("#AssociatedEnterprise").serializeJson();上级机构
+            $.ajax({
+                async: true,
+                data: data,
+                type: "POST",
+                url: "../api/Customer/Add",
+                statusCode: {
+                    200: function (data) {
+                    },
+                    500: function (data) {
+                        $.messager.alert('错误', data.responseJSON.ExceptionMessage);
+                    },
+                    400: function (data) {
+                        $.messager.alert('错误', data.responseJSON.Message, "info");
+                    }
+                }
+            })
         }
     </script>
 </head>
@@ -423,11 +533,10 @@
                         <select class="easyui-combotree combobox-f combo-f textbox-f" name="EconomicSectorsClassification" data-options="editable:false,required:false,width:407,
                                 async: true,
                                 method: 'GET',
-                                idField: 'id',    
+                                idField: 'id',
                                 textField: 'text',
                                 url: '../api/Method/GetIndustry'
-                                ">
-                        </select>
+                                "></select>
                     </div>
                     <div class="col-6">
                         <label>
@@ -515,9 +624,9 @@
                             <option value="X">未知</option>
                         </select>
                     </div>
-                <!--</div>
+                    <!--</div>
 
-                <div class="row">-->
+                    <div class="row">-->
                     <div class="col-6">
                         <label>
                             机构状态：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('img/InfoImg.png') no-repeat scroll 0 0" title="机构目前的活动状态，其中注销状态是指机构从登记部门注销登记或注销备案">　</a>
