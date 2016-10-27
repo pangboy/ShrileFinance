@@ -272,8 +272,8 @@
             var Stockholder = [{
                 ShareholdersType: "1",
                 ShareholdersName: "股东1",
-                CertificateType:"10",
-                CertificateCode:"123123123123",
+                RegistraterType: "10",
+                RegistraterCode: "123123123123",
                 SharesProportion: "10.00",
                 FamilyMembers: [{
                     Relationship: "3",
@@ -295,19 +295,7 @@
                 RegistraterCode: "222222",
                 OrganizateCode: "L1832212-3",
                 InstitutionCreditCode: "124124124124123433",
-                SharesProportion: "10.00",
-                FamilyMembers: [{
-                    Relationship: "2",
-                    Name: "xiaolisi",
-                    CertificateType: "1",
-                    CertificateCode: "2222222"
-                },
-                 {
-                     Relationship: "1",
-                     Name: "xiaolisi2",
-                     CertificateType: "1",
-                     CertificateCode: "333333"
-                 }]
+                SharesProportion: "10.00"
             }]
             var AssociatedEnterprise = [{ AssociatedType: "01", Name: "晟融", RegistraterType: "02", RegistraterCode: "2222222222", OrganizateCode: "L1832212-3", InstitutionCreditCode: "123123123123123111" },
             { AssociatedType: "01", Name: "云为", RegistraterType: "02", RegistraterCode: "3333333333", OrganizateCode: "L1832212-3", InstitutionCreditCode: "333333333333333322" }]
@@ -316,13 +304,11 @@
             data["Base"] = base;//$("#base").serializeJson();
             data["Property"] = Property;// $("#Properties").serializeJson();
             data["State"] = State;//$("#State").serializeJson();
-            data["Contact"] = Contact; $("#Contact").serializeJson();
+            data["Contact"] = Contact;// $("#Contact").serializeJson();
             data["Managers"] = Manager;//$("#Manager").serializeJson();//高管
             data["Shareholders"] = Stockholder;//$("#Stockholder").serializeJson();//重要股东
             data["AssociatedEnterprises"] = AssociatedEnterprise;//主要关联企业
             data["Parent"] = Parent;// $("#AssociatedEnterprise").serializeJson();上级机构
-            debugger
-
             $.ajax({
                 async: true,
                 data: data,

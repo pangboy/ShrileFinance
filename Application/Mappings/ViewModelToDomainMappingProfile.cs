@@ -17,9 +17,7 @@
             CreateMap<ViewModels.OrganizationViewModels.StateViewModel, Core.Entities.Customers.Enterprise.OrganizationState>();
             CreateMap<ViewModels.OrganizationViewModels.ManagerViewModel, Core.Entities.Customers.Enterprise.Manager>();
             CreateMap<ViewModels.OrganizationViewModels.BaseViewModel, Core.Entities.Customers.Enterprise.Organization>();
-            CreateMap<ViewModels.OrganizationViewModels.StockholderViewModel, Core.Entities.Customers.Enterprise.Stockholder>().ForMember(m => m.ShareholdersType, t => { t.Condition(m => m.ShareholdersType == "1"); }).As<Core.Entities.Customers.Enterprise.PersonStockholder>();
-           // CreateMap<ViewModels.OrganizationViewModels.StockholderViewModel, Core.Entities.Customers.Enterprise.Stockholder>().ForMember(m => m.ShareholdersType, t => { t.Condition(m => m.ShareholdersType == "2"); }).As<Core.Entities.Customers.Enterprise.EnterpriseStockholder>();
-
+            CreateMap<ViewModels.OrganizationViewModels.StockholderViewModel, Core.Entities.Customers.Enterprise.Stockholder>();
             CreateMap<ViewModels.OrganizationViewModels.Organization, Core.Entities.Customers.Enterprise.Organization>();
             CreateMap<ViewModels.OrganizationViewModels.ContactViewModel, Core.Entities.Customers.Enterprise.OrganizationContact>();
             CreateMap<ViewModels.OrganizationViewModels.FamilyMemberViewModel, Core.Entities.Customers.Enterprise.FamilyMember>();
