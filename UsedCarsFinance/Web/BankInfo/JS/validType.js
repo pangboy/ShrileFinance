@@ -157,7 +157,7 @@
 
                 var C9 = 0;
                 $(W).each(function (index, itemValue) {
-                    C9 += parseInt(value[index], 16) * W[index];
+                    C9 += parseInt(value[index], 36) * W[index];
                 });
                 C9 = 11 - C9 % 11;
 
@@ -170,7 +170,7 @@
                 }
                 else {
                     // 十六进制转十进制后进行校验
-                    regResult = parseInt(value[8], 16) == C9;
+                    regResult = parseInt(value[8], 36) == C9;
                 }
             }
 

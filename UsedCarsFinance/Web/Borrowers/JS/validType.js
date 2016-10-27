@@ -155,7 +155,7 @@
 
                 var C9 = 0;
                 $(W).each(function (index, itemValue) {
-                    C9 += parseInt(value[index], 16) * W[index];
+                    C9 += parseInt(value[index], 36) * W[index];
                 });
                 C9 = 11 - C9 % 11;
 
@@ -167,8 +167,8 @@
                     regResult = value[8] == 0;
                 }
                 else {
-                    // 十六进制转十进制后进行校验
-                    regResult = parseInt(value[8], 16) == C9;
+                    // 三十六进制转十进制后进行校验
+                    regResult = parseInt(value[8], 36) == C9;
                 }
             }
 
@@ -218,8 +218,14 @@
     },
     SharesProportion: {// 验证持股比例
         validator: function (value) {
-            return /^\d+\.\d{2}$/.test(value);
+            return /^\d+\.\d{2}$/.test(value) && value>0;
         },
-        message: '持股比例保留两位小数，例如：1.00'
+        message: '持股比例大于0且保留两位小数，例如：1.00'
+    },
+    PositiveNumber: {// 验证正实数
+        validator: function (value) {
+            return /^\d+\.\d+$/.test(value) || /^\d+$/.test(value);
+        },
+        message: '请输入正实数'
     }
 });

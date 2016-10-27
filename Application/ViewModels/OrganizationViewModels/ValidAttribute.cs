@@ -99,7 +99,8 @@
                     var c9 = 0;
                     for (var index = 0; index < w.Length; index++)
                     {
-                        c9 += int.Parse(valueStr[index].ToString()) * w[index];
+                        ////c9 += int.Parse(valueStr[index].ToString()) * w[index];
+                        c9 += Trans_32bTo10(valueStr[index]) * w[index];
                     }
 
                     c9 = 11 - (c9 % 11);
@@ -115,8 +116,9 @@
                     }
                     else
                     {
-                        // 十六进制转十进制后进行校验
-                        regResult = Convert.ToInt32(valueStr[8].ToString(), 16) == c9;
+                        // 三十六进制转十进制后进行校验
+                        ////regResult = Convert.ToInt32(valueStr[8].ToString(), 16) == c9;
+                        regResult = Trans_32bTo10(valueStr[8]) == c9;
                     }
                 }
 
@@ -127,6 +129,19 @@
             }
 
             return regResult;
+        }
+
+        // 36进制转十进制
+        private static int Trans_32bTo10(char ch)
+        {
+            int num = 0;
+            if (ch >= 'A' && ch <= 'Z')
+                num = ch - 'A' + 10;
+            else if (ch >= 'a' && ch <= 'z')
+                num = ch - 'a' + 36;
+            else
+                num = ch - '0';
+            return num;
         }
     }
 
