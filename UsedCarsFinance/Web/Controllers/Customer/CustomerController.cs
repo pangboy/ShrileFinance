@@ -5,6 +5,7 @@ namespace Web.Controllers.Customer
     using Application;
     using Application.ViewModels.OrganizationViewModels;
     using System;
+    using System.Linq;
 
     public class CustomerController : ApiController
     {
@@ -14,22 +15,30 @@ namespace Web.Controllers.Customer
         {
             this.customerAppService = service;
         }
-
         /// <summary>
         /// 提交
         /// </summary>
         /// yand    16.10.25
         /// <param name="value"></param>
         /// <returns></returns>
-        public IHttpActionResult Add(BaseViewModel value)
+        [HttpPost]
+        public IHttpActionResult Add(Organization value)
         {
-            if (!ModelState.IsValid)
-            {
-                BadRequest(ModelState);
-            }
+            //if (!ModelState.IsValid)
+            //{
+            //     return BadRequest(ValidModel.ShowErrorFirst(ModelState));
+            //}
 
-            customerAppService.Create(value);
-            return Ok();
+            try
+            {
+                customerAppService.Create(value); 
+
+                return Ok();
+            }
+            catch (System.Data.Entity.Validation.DbEntityValidationException ex)
+            {
+                return BadRequest();
+            }
         }
 
         /// <summary>
@@ -38,14 +47,15 @@ namespace Web.Controllers.Customer
         /// yand    16.10.25
         /// <param name="value"></param>
         /// <returns></returns>
-        public IHttpActionResult Modify(BaseViewModel value)
+        public IHttpActionResult Modify(Organization value)
         {
             if (!ModelState.IsValid)
             {
-                BadRequest(ModelState);
+                return BadRequest(ModelState);
             }
 
-            customerAppService.Create(value);
+            customerAppService.Modify(value);
+
             return Ok();
         }
 

@@ -158,8 +158,6 @@
     <Content Include="BankInfo\SegmentRules\SegmentRulesList.html" />
     <Content Include="Borrowers\ContentPages\ExecutivesMajorParticipantPage.html" />
     <Content Include="Borrowers\ContentPages\FamilyPage.html" />
-    <Content Include="Borrowers\ContentPages\MainAssociatedEnterprisePage.html" />
-    <Content Include="Borrowers\ContentPages\MajorShareholderPage.html" />
     <Content Include="Borrowers\FamilyInfo.html" />
     <Content Include="Borrowers\FamilyInfoDel.html" />
     <Content Include="Borrowers\img\InfoImg.png" />
@@ -916,6 +914,7 @@
     <Compile Include="Controllers\Sys\MenuController.cs" />
     <Compile Include="Controllers\Account\UserController.cs" />
     <Compile Include="Controllers\Unused\WorkFlowController.cs" />
+    <Compile Include="Controllers\ValidModel.cs" />
     <Compile Include="Controllers\Vehicle\CarHomeController.cs" />
     <Compile Include="Controllers\Vehicle\VehicleIautosController.cs" />
     <Compile Include="Global.asax.cs">

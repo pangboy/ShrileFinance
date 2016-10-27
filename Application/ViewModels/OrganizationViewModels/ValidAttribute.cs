@@ -84,38 +84,46 @@
                 return true;
             }
 
-            // 基础校验（前8位为数字或者大写英文字母、后1位为校验码）
-            regResult = new Regex(@"^[A-Z0-9]{8}-[A-Z0-9]$").IsMatch(valueStr);
-
-            // 校验码 C9=11-MOD(∑Ci(i=1→8)×Wi,11)
-            if (regResult)
+            if (valueStr != "")
             {
-                valueStr = valueStr.Remove(valueStr.IndexOf('-'), 1);
+                // 基础校验（前8位为数字或者大写英文字母、后1位为校验码）
+                regResult = new Regex(@"^[A-Z0-9]{8}-[A-Z0-9]$").IsMatch(valueStr);
 
-                var w = new int[] { 3, 7, 9, 10, 5, 8, 4, 2 };
-
-                var c9 = 0;
-                for (var index = 0; index < w.Length; index++)
+                // 校验码 C9=11-MOD(∑Ci(i=1→8)×Wi,11)
+                if (regResult)
                 {
-                    c9 += int.Parse(valueStr[index].ToString()) * w[index];
+                    valueStr = valueStr.Remove(valueStr.IndexOf('-'), 1);
+
+                    var w = new int[] { 3, 7, 9, 10, 5, 8, 4, 2 };
+
+                    var c9 = 0;
+                    for (var index = 0; index < w.Length; index++)
+                    {
+                        c9 += int.Parse(valueStr[index].ToString()) * w[index];
+                    }
+
+                    c9 = 11 - (c9 % 11);
+
+                    // 校验  当C9的值为10时，校验码应用大写的拉丁字母X表示；当C9的值为11时校验码用0表示。
+                    if (c9 == 10)
+                    {
+                        regResult = valueStr[8] == 'X';
+                    }
+                    else if (c9 == 11)
+                    {
+                        regResult = valueStr[8] == 0;
+                    }
+                    else
+                    {
+                        // 十六进制转十进制后进行校验
+                        regResult = Convert.ToInt32(valueStr[8].ToString(), 16) == c9;
+                    }
                 }
 
-                c9 = 11 - (c9 % 11);
-
-                // 校验  当C9的值为10时，校验码应用大写的拉丁字母X表示；当C9的值为11时校验码用0表示。
-                if (c9 == 10)
-                {
-                    regResult = valueStr[8] == 'X';
-                }
-                else if (c9 == 11)
-                {
-                    regResult = valueStr[8] == 0;
-                }
-                else
-                {
-                    // 十六进制转十进制后进行校验
-                    regResult = Convert.ToInt32(valueStr[8].ToString(), 16) == c9;
-                }
+            }
+            else
+            {
+                return true;
             }
 
             return regResult;
@@ -645,6 +653,8 @@
         /// <summary>
         /// 判断两项成对出现
         /// </summary>
+        /// zouql
+        /// yand    16.10.25 修改校验
         /// <param name="valueArray">被判断的值</param>
         /// <returns></returns>
         public static bool CheckInPairs(string[] valueArray)
@@ -656,14 +666,14 @@
 
             var value1 = string.IsNullOrEmpty(valueArray[0]);
 
-            var value2 = string.IsNullOrEmpty(valueArray[2]);
+            var value2 = string.IsNullOrEmpty(valueArray[1]);
 
-            if ((value1 && value2) || (!value1 && !value2))
+            if (value1 && value2)
             {
-                return true;
+                return false;
             }
 
-            return false;
+            return true;
         }
     }
 

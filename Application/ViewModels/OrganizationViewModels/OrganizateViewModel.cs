@@ -42,6 +42,6 @@
         /// <summary>
         /// 上级机构
         /// </summary>
-        public IEnumerable<ParentViewModel> Parent { get; set; }
+        public ParentViewModel Parent { get; set; }
     }
 }
