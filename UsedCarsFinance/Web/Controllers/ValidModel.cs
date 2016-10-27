@@ -1,4 +1,4 @@
-﻿namespace Web.Controllers.BankCredit
+﻿namespace Web.Controllers
 {
     using System.Text;
     using System.Web.Http;

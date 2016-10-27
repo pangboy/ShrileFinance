@@ -916,6 +916,7 @@
     <Compile Include="Controllers\Sys\MenuController.cs" />
     <Compile Include="Controllers\Account\UserController.cs" />
     <Compile Include="Controllers\Unused\WorkFlowController.cs" />
+    <Compile Include="Controllers\ValidModel.cs" />
     <Compile Include="Controllers\Vehicle\CarHomeController.cs" />
     <Compile Include="Controllers\Vehicle\VehicleIautosController.cs" />
     <Compile Include="Global.asax.cs">

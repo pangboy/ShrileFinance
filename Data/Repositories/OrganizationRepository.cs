@@ -6,7 +6,7 @@
 
     public class OrganizationRepository : BaseRepository<Organization>, IOrganizationRepository
     {
-        public OrganizationRepository(DbContext context) : base(context)
+        public OrganizationRepository(MyContext context) : base(context)
         {
         }
     }
