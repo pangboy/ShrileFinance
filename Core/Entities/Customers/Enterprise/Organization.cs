@@ -10,6 +10,8 @@
             Managers = new List<Manager>();
             Shareholders = new List<Stockholder>();
             AssociatedEnterprises = new List<AssociatedEnterprise>();
+
+            CreatedDate = DateTime.Now;
         }
 
         /// <summary>
@@ -62,6 +64,9 @@
         /// </summary>
         public string LoanCardCode { get; set; }
 
+        /// <summary>
+        /// 是否有上级机构
+        /// </summary>
         public bool HasParent
         {
             get { return Parent != null; }

@@ -56,9 +56,11 @@
             Property(m => m.Parent.InstitutionCreditCode).HasMaxLength(18);
 
             // 集合
-            HasMany(m => m.Managers);
-            HasMany(m => m.Shareholders);
-            HasMany(m => m.AssociatedEnterprises);
+            HasMany(m => m.Managers).WithRequired().Map(m => m.MapKey("OrganizationId"));
+            HasMany(m => m.Shareholders).WithRequired().Map(m => m.MapKey("OrganizationId"));
+            HasMany(m => m.AssociatedEnterprises).WithRequired().Map(m => m.MapKey("OrganizationId"));
+
+            ToTable("CUST_Organization");
         }
     }
 }

@@ -93,19 +93,17 @@
     <Compile Include="AccountAppService.cs" />
     <Compile Include="ViewModels\AccountViewModels\LoginViewModel.cs" />
     <Compile Include="ViewModels\AccountViewModels\RegisterViewModel.cs" />
-    <Compile Include="ViewModels\CustomerViewModels\FamilyBaseViewModel.cs" />
-    <Compile Include="ViewModels\CustomerViewModels\FamilyDeleteRecord.cs" />
-    <Compile Include="ViewModels\CustomerViewModels\OrganizateBaseViewModel.cs" />
-    <Compile Include="ViewModels\CustomerViewModels\OrganizateBasicPropertiesViewModel.cs" />
-    <Compile Include="ViewModels\CustomerViewModels\OrganizateContactInformationViewModel.cs" />
-    <Compile Include="ViewModels\CustomerViewModels\CustomerViewModel.cs" />
-    <Compile Include="ViewModels\CustomerViewModels\OrganizateDeleteRecordViewModel.cs" />
-    <Compile Include="ViewModels\CustomerViewModels\OrganizateExecutivesMajorParticipantViewModel.cs" />
-    <Compile Include="ViewModels\CustomerViewModels\OrganizateInstitutionsStateViewModel.cs" />
-    <Compile Include="ViewModels\CustomerViewModels\OrganizateMainAssociatedEnterpriseViewModel.cs" />
-    <Compile Include="ViewModels\CustomerViewModels\OrganizateMajorShareholdersViewModel.cs" />
-    <Compile Include="ViewModels\CustomerViewModels\OrganizateSuperInstitutionViewModel.cs" />
-    <Compile Include="ViewModels\CustomerViewModels\ValidAttribute.cs" />
+    <Compile Include="ViewModels\OrganizationViewModels\FamilyMemberViewModel.cs" />
+    <Compile Include="ViewModels\OrganizationViewModels\OrganizateViewModel.cs" />
+    <Compile Include="ViewModels\OrganizationViewModels\BaseViewModel.cs" />
+    <Compile Include="ViewModels\OrganizationViewModels\PropertiesViewModel.cs" />
+    <Compile Include="ViewModels\OrganizationViewModels\ContactViewModel.cs" />
+    <Compile Include="ViewModels\OrganizationViewModels\ManagerViewModel.cs" />
+    <Compile Include="ViewModels\OrganizationViewModels\StateViewModel.cs" />
+    <Compile Include="ViewModels\OrganizationViewModels\AssociatedEnterpriseViewModel.cs" />
+    <Compile Include="ViewModels\OrganizationViewModels\StockholderViewModel.cs" />
+    <Compile Include="ViewModels\OrganizationViewModels\ParentViewModel.cs" />
+    <Compile Include="ViewModels\OrganizationViewModels\ValidAttribute.cs" />
     <Compile Include="ViewModels\LitigationViewModels\LitigationViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
