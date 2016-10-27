@@ -21,26 +21,4 @@
             ToTable("CUST_Stockholder");
         }
     }
-
-    public class PersonStockholderConfiguration : EntityTypeConfiguration<PersonStockholder>
-    {
-        public PersonStockholderConfiguration()
-        {
-            Property(m => m.CertificateType).HasMaxLength(2);
-            Property(m => m.CertificateCode).HasMaxLength(20);
-
-            HasMany(m => m.FamilyMembers).WithOptional().Map(m => m.MapKey("PersonStockholderId"));
-        }
-    }
-
-    public class EnterpriseStockholderConfiguration : EntityTypeConfiguration<EnterpriseStockholder>
-    {
-        public EnterpriseStockholderConfiguration()
-        {
-            Property(m => m.RegistraterType).HasMaxLength(2);
-            Property(m => m.RegistraterCode).HasMaxLength(20);
-            Property(m => m.OrganizateCode).HasMaxLength(10);
-            Property(m => m.InstitutionCreditCode).HasMaxLength(18);
-        }
-    }
 }

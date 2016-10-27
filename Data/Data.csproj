@@ -73,9 +73,11 @@
     <Compile Include="ModelConfigurations\AppLotigationConfiguration.cs" />
     <Compile Include="ModelConfigurations\AppLotigationBaseConfiguration.cs" />
     <Compile Include="ModelConfigurations\AssociatedEnterpriseConfiguration.cs" />
+    <Compile Include="ModelConfigurations\EnterpriseStockholderConfiguration.cs" />
     <Compile Include="ModelConfigurations\ManagerConfiguration.cs" />
     <Compile Include="ModelConfigurations\FamilyMemberConfiguration.cs" />
     <Compile Include="ModelConfigurations\OrganizationConfiguration.cs" />
+    <Compile Include="ModelConfigurations\PersonStockholderConfiguration.cs" />
     <Compile Include="ModelConfigurations\StockholderConfiguration.cs" />
     <Compile Include="ModelConfigurations\TypeConfigurationExtensions.cs" />
     <Compile Include="ModelConfigurations\AppUserConfiguration.cs" />

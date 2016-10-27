@@ -65,6 +65,7 @@
     <Compile Include="Entities\Concern\LitigationBasePeriod.cs" />
     <Compile Include="Entities\Concern\Litigation.cs" />
     <Compile Include="Entities\Customers\Customer.cs" />
+    <Compile Include="Entities\Customers\Enterprise\EnterpriseStockholder.cs" />
     <Compile Include="Entities\Customers\Enterprise\Organization.cs" />
     <Compile Include="Entities\Customers\Enterprise\FamilyMember.cs" />
     <Compile Include="Entities\Customers\Enterprise\OrganizationProperties.cs" />
@@ -72,6 +73,7 @@
     <Compile Include="Entities\Customers\Enterprise\Manager.cs" />
     <Compile Include="Entities\Customers\Enterprise\OrganizationState.cs" />
     <Compile Include="Entities\Customers\Enterprise\AssociatedEnterprise.cs" />
+    <Compile Include="Entities\Customers\Enterprise\PersonStockholder.cs" />
     <Compile Include="Entities\Customers\Enterprise\Stockholder.cs" />
     <Compile Include="Entities\Customers\Enterprise\OrganizationParent.cs" />
     <Compile Include="Entities\Customers\IEnterprise.cs" />

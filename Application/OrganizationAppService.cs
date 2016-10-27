@@ -1,10 +1,8 @@
 ﻿namespace Application
 {
     using System;
-    using Core.Entities.Customers.Enterprise;
-    using Core.Interfaces.Repositories;
-    using ViewModels.OrganizationViewModels;
     using AutoMapper;
+    using Core.Interfaces.Repositories;
 
     public class OrganizationAppService
     {
