@@ -2,7 +2,7 @@
 {
     using System.Collections.Generic;
 
-    public class Organization
+    public class OrganizationViewModel
     {
         /// <summary>
         /// 机构基础
