@@ -29,66 +29,81 @@
 
             if (query.method == "ExecutivesMajorParticipant_mod" || query.method == "ExecutivesMajorParticipant_view") {
                 //获取选中行
-                var row = self.parent.$("#ExecutivesMajorParticipant_dg").datagrid('getSelected');
-
-                //$('#TypeDesc').combobox('setValue', row.TypeDesc);
+                var row = self.parent.$("#Managers_dg").datagrid('getSelected');
 
                 if (query.method == "ExecutivesMajorParticipant_mod") {
                     if (row) {
                         //加载数据
-                        $('#content').form('load', row);
+                        LoadDate(row);
                     }
                 } else if (query.method == "ExecutivesMajorParticipant_view") {
                     if (row) {
                         //加载数据
-                        $('#content').form('load', row);
+                        LoadDate(row);
                     }
                     $("#save").linkbutton("disable");
                 }
             }
         }
 
+        // 加载数据
+        function LoadDate(row)
+        {
+            var familyInfoArray = new Array();
+            if (row.FamilyMembers.length>0)
+            {
+                // 显示家族信息section
+                $("input[id=FamilyFiedSetShow]")[0].checked = true;
+                $("section[id=I]").show();
+
+                familyInfoArray = row.FamilyMembers;
+            }
+
+            $(familyInfoArray).each(function (index, item) {
+                // 新增家族信息输入filedset
+                $("section[id=I]>div>div>a[id=Iadd]").click();
+                
+                // 加载家族信息
+                $("section[id=I]").find("fieldset:last").form('load', item);
+            });
+
+            // 加载高管及主要关系人基本信息
+            $('fieldset[id=F]').form('load', row);
+        }
+
         // 提交按钮
         function ExecutivesMajorParticipantSubmit() {
             // 表单验证
             if ($("#content").form("validate")) {
+                // 禁用提交按钮
                 $("#save").linkbutton("disable");
             } else {
                 $.messager.show({ msg: "请填写剩下的必填内容!" });
                 return false;
             }
 
-            // 序列化表单
-            var famlilyInfos = $('#content').serializeArray();
+            // 序列化fieldset 高管及主要关系人信息
+            var obj = $("fieldset[id=F]").serializeJson();
 
-            // 数据组装
-            var obj = {};
-            $(famlilyInfos).each(function (i, e) {
-                if (obj[e.name] !== undefined) {
-                    if (!obj[e.name].push) {
-                        obj[e.name] = [obj[e.name]];
-                    }
-                    obj[e.name].push(e.value || '');
-                } else {
-                    obj[e.name] = e.value || '';
-                }
-            });
-
+            // 序列化fieldset 家族信息
+            obj.FamilyMembers = SerializeFamilyInfos();
+            
             // 更新家族信息表
             if (query.method == "ExecutivesMajorParticipant_mod") {
 
                 //获取选中行
-                var row = self.parent.$("#ExecutivesMajorParticipant_dg").datagrid('getSelected');
+                var row = self.parent.$("#Managers_dg").datagrid('getSelected');
 
                 if (row) {
-                    var RowIndex = self.parent.$("#ExecutivesMajorParticipant_dg").datagrid('getRowIndex', row);
+                    var RowIndex = self.parent.$("#Managers_dg").datagrid('getRowIndex', row);
+
                     //更新行
-                    self.parent.$("#ExecutivesMajorParticipant_dg").datagrid('updateRow', { index: RowIndex, row: obj });
+                    self.parent.$("#Managers_dg").datagrid('updateRow', { index: RowIndex, row: obj });
                 }
             }
             if (query.method == "ExecutivesMajorParticipant_add") {
                 //追加一行
-                self.parent.$("#ExecutivesMajorParticipant_dg").datagrid('appendRow', obj);
+                self.parent.$("#Managers_dg").datagrid('appendRow', obj);
             }
 
             // 清空表单，避免再次打开时闪现之前填入的数据
@@ -173,6 +188,19 @@
             // 为新的fieldset设置name
             $(Obj).parents("section").find("filedset:last").attr("name", "FamilyMembers");
         }
+
+        // 序列化家族信息
+        function SerializeFamilyInfos()
+        {
+            var familyObjs = $("fieldset[id*=I]");
+            var familyArray = new Array();
+
+            $(familyObjs).each(function (index, item) {
+                familyArray.push($(item).serializeJson());
+            });
+
+            return familyArray;
+        }
     </script>
 </head>
 <body>
@@ -190,7 +218,7 @@
                         <label>
                             关系人类型：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="同一人兼任或具有上述多重关系的，分别填报">　</a>
                         </label>
-                        <select class="easyui-combobox  combobox-f combo-f textbox-f" data-options="editable:false,required:true,multiple:true,onSelect:setTxt" name="CertificateCode">
+                        <select class="easyui-combobox  combobox-f combo-f textbox-f" data-options="editable:false,required:true,multiple:true,onSelect:setTxt" name="Type">
                             <option value="0">实际控制人</option>
                             <option value="1">董事长</option>
                             <option value="2">总经理/主要负责人</option>
@@ -198,7 +226,7 @@
                             <option value="4">监事长 </option>
                             <option value="5">法定代表人</option>
                         </select>
-                        <input type="hidden" name="CertificateCode_Txt" value="实际控制人" />
+                        <input type="hidden" name="Type_Txt" value="实际控制人" />
                         <!--<input class="easyui-combobox  combobox-f combo-f textbox-f" checkbox="true" name="ParticipantType" data-options="editable:false,required:true,multiple:true,
                                     valueField: 'label',
                                     textField: 'value',
@@ -281,75 +309,73 @@
                     </div>
                 </div>
             </fieldset>
+        </section>
 
-            <!--家族成员信息-->
-            <section id="I" min="0" max="n" name="FamliySection" style="display:none">
-                <h2>家族成员信息</h2>
-                <div style="background-color:#afe3fa;height:30px ;width:95%">
-                    <div float="right" style="width:100%">
-                        <a style="margin-top: 2px; margin-right: 10px; float: right; font-size: 24px; text-decoration: none" id="Iadd" onclick="AddFamilyFiledset(this)" href="javascript:void(0)">+</a>
-                        <a style=" margin-right: 20px; float: right; font-size: 24px; text-decoration: none" id="Iminus" onclick="Minus(this)" href="javascript:void(0)" hidden="hidden">-</a>
+        <!--家族成员信息-->
+        <section id="I" min="0" max="n" name="FamliySection" style="display:none">
+            <h2>家族成员信息</h2>
+            <div style="background-color:#afe3fa;height:30px ;width:95%">
+                <div float="right" style="width:100%">
+                    <a style="margin-top: 2px; margin-right: 10px; float: right; font-size: 24px; text-decoration: none" id="Iadd" onclick="AddFamilyFiledset(this)" href="javascript:void(0)">+</a>
+                    <a style=" margin-right: 20px; float: right; font-size: 24px; text-decoration: none" id="Iminus" onclick="Minus(this)" href="javascript:void(0)" hidden="hidden">-</a>
+                </div>
+            </div>
+
+            <template id="templateI">
+                <input type="hidden" name="InformationCategories" value="B" placeholder="信息类别">
+
+                <div class="row">
+                    <div class="col-6">
+                        <label>
+                            家族成员关系：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="">　</a>
+                        </label>
+                        <select class="easyui-combobox  combobox-f combo-f textbox-f" data-options="editable:false,required:false" name="Relationship">
+                            <option value="1">配偶</option>
+                            <option value="2">父母</option>
+                            <option value="3">子女</option>
+                            <option value="4">其他血亲</option>
+                            <option value="5">其他姻亲</option>
+                        </select>
+                    </div>
+                    <div class="col-6">
+                        <label>
+                            家族成员姓名：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="">　</a>
+                        </label>
+                        <input class="easyui-textbox textbox-f" data-options="required:true,validType:['ANC','length[1,80]']" name="Name">
                     </div>
                 </div>
 
-                <template id="templateI">
-                    <input type="hidden" name="InformationCategories" value="B" placeholder="信息类别">
-
-                    <div class="row">
-                        <div class="col-6">
-                            <label>
-                                家族成员关系：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="">　</a>
-                            </label>
-                            <select class="easyui-combobox  combobox-f combo-f textbox-f" data-options="editable:false,required:false,onSelect:setTxt" name="Relationship">
-                                <option value="1">配偶</option>
-                                <option value="2">父母</option>
-                                <option value="3">子女</option>
-                                <option value="4">其他血亲</option>
-                                <option value="5">其他姻亲</option>
-                            </select>
-                            <input type="hidden" name="Relationship_Txt" />
-                        </div>
-                        <div class="col-6">
-                            <label>
-                                家族成员姓名：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="">　</a>
-                            </label>
-                            <input class="easyui-textbox textbox-f" data-options="required:true,validType:['ANC','length[1,80]']" name="Name">
-                        </div>
+                <div class="row">
+                    <div class="col-6">
+                        <label>
+                            家族成员证件类型：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="">　</a>
+                        </label>
+                        <select class="easyui-combobox  combobox-f combo-f textbox-f" data-options="editable:false,required:true" name="CertificateType">
+                            <option value=""></option>
+                            <option value="0">身份证</option>
+                            <option value="1">户口簿</option>
+                            <option value="2">护照</option>
+                            <option value="3">军官证</option>
+                            <option value="4">士兵证</option>
+                            <option value="5">港澳居民来往内地通行证</option>
+                            <option value="6">台湾同胞来往内地通行证</option>
+                            <option value="7">临时身份证</option>
+                            <option value="8">外国人居留证</option>
+                            <option value="9">警官证</option>
+                            <option value="A">香港身份证</option>
+                            <option value="B">澳门身份证</option>
+                            <option value="C">台湾身份证</option>
+                            <option value="X">其他证件</option>
+                        </select>
                     </div>
-
-                    <div class="row">
-                        <div class="col-6">
-                            <label>
-                                家族成员证件类型：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="">　</a>
-                            </label>
-                            <select class="easyui-combobox  combobox-f combo-f textbox-f" data-options="editable:false,required:true,onSelect:setTxt" name="CertificateType">
-                                <option value=""></option>
-                                <option value="0">身份证</option>
-                                <option value="1">户口簿</option>
-                                <option value="2">护照</option>
-                                <option value="3">军官证</option>
-                                <option value="4">士兵证</option>
-                                <option value="5">港澳居民来往内地通行证</option>
-                                <option value="6">台湾同胞来往内地通行证</option>
-                                <option value="7">临时身份证</option>
-                                <option value="8">外国人居留证</option>
-                                <option value="9">警官证</option>
-                                <option value="A">香港身份证</option>
-                                <option value="B">澳门身份证</option>
-                                <option value="C">台湾身份证</option>
-                                <option value="X">其他证件</option>
-                            </select>
-                            <input type="hidden" name="CertificateType_Txt" />
-                        </div>
-                        <div class="col-6">
-                            <label>
-                                家族成员证件号码：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="">　</a>
-                            </label>
-                            <input class="easyui-textbox textbox-f" data-options="required:true,validType:['ANC','length[1,20]']" name="CertificateCode">
-                        </div>
+                    <div class="col-6">
+                        <label>
+                            家族成员证件号码：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="">　</a>
+                        </label>
+                        <input class="easyui-textbox textbox-f" data-options="required:true,validType:['ANC','length[1,20]']" name="CertificateCode">
                     </div>
-                </template>
-            </section>
+                </div>
+            </template>
         </section>
 
         <div id="btn">
