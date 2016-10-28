@@ -27,6 +27,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Web", "UsedCarsFinance\Web\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShrileFinance", "ShrileFinance\ShrileFinance.csproj", "{9CB0134E-089C-494C-99B7-CEC9B30864E3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application.Test", "Application.Test\Application.Test.csproj", "{06263515-CDD1-4DC4-ACCE-8AD487D175C4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -73,6 +75,10 @@ Global
 		{9CB0134E-089C-494C-99B7-CEC9B30864E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9CB0134E-089C-494C-99B7-CEC9B30864E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9CB0134E-089C-494C-99B7-CEC9B30864E3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{06263515-CDD1-4DC4-ACCE-8AD487D175C4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{06263515-CDD1-4DC4-ACCE-8AD487D175C4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{06263515-CDD1-4DC4-ACCE-8AD487D175C4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{06263515-CDD1-4DC4-ACCE-8AD487D175C4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
