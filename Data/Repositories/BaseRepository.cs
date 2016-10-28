@@ -33,7 +33,7 @@
             return Entities.Find(key);
         }
 
-        public IQueryable<TEntity> GetAll()
+        public IQueryable<Entity> GetAll()
         {
             return Entities;
         }

@@ -48,7 +48,7 @@
         /// 注册资本（万元）
         /// </summary>
         [Display(Name = "注册资本（万元）"), DataType(DataType.Currency)]
-       // [RegisterCapital(ErrorMessage = "注册资本 保留两位小数")]
+        [RegisterCapital(ErrorMessage = "注册资本 保留两位小数")]
         public decimal RegisterCapital { get; set; }
 
         /// <summary>

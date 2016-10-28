@@ -78,10 +78,10 @@
         [Display(Name = "是否有上级机构")]
         public bool HasParent { get; set; }
 
-        ///// <summary>
-        ///// 创建日期
-        ///// </summary>
-        //[Display(Name = "创建日期")]
-        //public DateTime CreatedDate { get; set; }
+        /// <summary>
+        /// 创建日期
+        /// </summary>
+        [Display(Name = "创建日期")]
+        public DateTime CreatedDate { get; set; }
     }
 }

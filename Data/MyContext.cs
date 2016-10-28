@@ -22,6 +22,8 @@
                 .Add(new OrganizationConfiguration())
                 .Add(new ManagerConfiguration())
                 .Add(new StockholderConfiguration())
+                .Add(new PersonStockholderConfiguration())
+                .Add(new EnterpriseStockholderConfiguration())
                 .Add(new AssociatedEnterpriseConfiguration())
                 .Add(new FamilyMemberConfiguration());
 

@@ -244,3 +244,4 @@ ModelManifest.xml
 # FAKE - F# Make
 .fake/
 /UsedCarsFinance/Model
+/UsedCarsFinance/Web/Borrowers_16.10.27.zip

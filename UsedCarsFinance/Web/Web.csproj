@@ -934,6 +934,7 @@
     <Content Include="Scripts\jquery\jquery-1.12.0.min.map" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Borrowers\OldPages\" />
     <Folder Include="Tests\Content\" />
     <Folder Include="Tests\Scripts\" />
   </ItemGroup>

@@ -10,7 +10,7 @@
     {
         TEntity Get(Guid key);
 
-        IQueryable<TEntity> GetAll();
+        IQueryable<Entity> GetAll();
 
         IQueryable<TEntity> GetAll(Expression<Func<TEntity, bool>> predicate);
 

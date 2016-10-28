@@ -26,7 +26,7 @@ namespace Web.Controllers.Customer
         {
             //if (!ModelState.IsValid)
             //{
-            //    return BadRequest(ValidModel.ShowErrorFirst(ModelState));
+            //     return BadRequest(ValidModel.ShowErrorFirst(ModelState));
             //}
 
             try
@@ -35,7 +35,7 @@ namespace Web.Controllers.Customer
 
                 return Ok();
             }
-            catch (Exception ex)
+            catch (System.Data.Entity.Validation.DbEntityValidationException ex)
             {
                 return BadRequest();
             }
