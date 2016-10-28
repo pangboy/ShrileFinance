@@ -47,7 +47,7 @@
         /// <summary>
         /// 机构信用代码
         /// </summary>
-        [Display(Name = "机构信用代码"), StringLength(18), MinLength(18), AN(ErrorMessage = "机构信用代码 类型错误")]
+        [Display(Name = "机构信用代码"), StringLength(18), MinLength(10), AN(ErrorMessage = "机构信用代码 类型错误")]
         public string InstitutionCreditCode { get; set; }
 
         /// <summary>

@@ -37,7 +37,6 @@ function ChangeType(value) {
         url: "../api/Method/ChangeType",
         statusCode: {
             200: function (data) {
-                debugger
                 $("#C_1" + " #" + ID + "").combobox("loadData", data).combobox("setValue", data[0].value);
             }
         }

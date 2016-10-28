@@ -22,11 +22,11 @@ namespace Web.Controllers.Customer
         /// <param name="value"></param>
         /// <returns></returns>
         [HttpPost]
-        public IHttpActionResult Add(Organization value)
+        public IHttpActionResult Add(OrganizationViewModel value)
         {
             //if (!ModelState.IsValid)
             //{
-            //    return BadRequest(ValidModel.ShowErrorFirst(ModelState));
+            //     return BadRequest(ValidModel.ShowErrorFirst(ModelState));
             //}
 
             try
@@ -35,7 +35,7 @@ namespace Web.Controllers.Customer
 
                 return Ok();
             }
-            catch (System.Data.Entity.Validation.DbEntityValidationException)
+            catch (System.Data.Entity.Validation.DbEntityValidationException ex)
             {
                 return BadRequest();
             }
@@ -47,7 +47,7 @@ namespace Web.Controllers.Customer
         /// yand    16.10.25
         /// <param name="value"></param>
         /// <returns></returns>
-        public IHttpActionResult Modify(Organization value)
+        public IHttpActionResult Modify(OrganizationViewModel value)
         {
             if (!ModelState.IsValid)
             {
@@ -59,9 +59,9 @@ namespace Web.Controllers.Customer
             return Ok();
         }
 
-        public BaseViewModel Get(Guid id)
+        public OrganizationViewModel Get(Guid id)
         {
-            return null;//customerAppService.Get(id);
+            return customerAppService.Get(id);
         }
     }
 }
