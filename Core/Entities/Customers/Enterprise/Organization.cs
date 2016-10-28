@@ -100,16 +100,16 @@
         /// <summary>
         /// 高级主管
         /// </summary>
-        public List<Manager> Managers { get; set; }
+        public virtual List<Manager> Managers { get; set; }
 
         /// <summary>
         /// 重要股东
         /// </summary>
-        public List<Stockholder> Shareholders { get; set; }
+        public virtual List<Stockholder> Shareholders { get; set; }
 
         /// <summary>
         /// 关联企业
         /// </summary>
-        public List<AssociatedEnterprise> AssociatedEnterprises { get; set; }
+        public virtual List<AssociatedEnterprise> AssociatedEnterprises { get; set; }
     }
 }

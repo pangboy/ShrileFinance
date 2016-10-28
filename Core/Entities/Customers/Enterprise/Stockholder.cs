@@ -56,6 +56,5 @@
         /// 家族成员
         /// </summary>
         public List<FamilyMember> FamilyMembers { get; set; }
-
     }
 }
