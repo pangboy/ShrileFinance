@@ -55,9 +55,7 @@
             Core.Entities.Customers.Enterprise.Organization customer = repository.Get(id);
 
             var model = Mapper.Map<ViewModels.OrganizationViewModels.OrganizationViewModel>(customer);
-            model.Base = Mapper.Map(customer, model.Base);
-        
-            model = Mapper.Map(customer, model);
+            model.Base = Mapper.Map<ViewModels.OrganizationViewModels.BaseViewModel>(customer);
 
             return model;
         }
