@@ -1,21 +1,36 @@
-﻿// 时间数据格式转换
-function myformatter(date) {
-    var y = date.getFullYear();
-    var m = date.getMonth() + 1;
-    var d = date.getDate();
-    return y.toString() + (m < 10 ? ('0' + m) : m).toString() + (d < 10 ? ('0' + d) : d).toString();
-}
-function myparser(s) {
-    if (s != "") {
-        var y = s.substring(0, 4);
-        var m = s.substring(4, 6);
-        var d = s.substring(6, 8);
-        var s = Date.parse(y + "-" + m + "-" + d);
-        return new Date(s);
+﻿// Json序列化
+$.fn.serializeJson = function () {
+    var obj = {};
+    var array = this.serializeArray();
+
+    var selector = this.selector;
+
+    if (!!window.ActiveXObject || "ActiveXObject" in window) {
+        array = $(this).parents("form").serializeArray();
+
+        array = $.map(array, function (val) {
+            if ($("[name=" + val.name + "]").parents(selector).length)
+                return val;
+        });
     }
-    else {
-        return new Date();
-    }
+
+    $.each(array, function (i, e) {
+        if (obj[e.name] !== undefined) {
+            if (!obj[e.name].push) {
+                obj[e.name] = [obj[e.name]];
+            }
+            obj[e.name].push(e.value || '');
+        } else {
+            obj[e.name] = e.value || '';
+        }
+    });
+
+    return obj;
+};
+
+// 错误提示
+function ShowError(msg) {
+    $.messager.show({ title: "错误提示", msg: msg });
 }
 
 var _A = 0;

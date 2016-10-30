@@ -26,9 +26,7 @@
 
             if (query.method == "MainAssociatedEnterprise_mod" || query.method == "MainAssociatedEnterprise_view") {
                 //获取选中行
-                var row = self.parent.$("#MainAssociatedEnterprise_dg").datagrid('getSelected');
-
-                //$('#TypeDesc').combobox('setValue', row.TypeDesc);
+                var row = self.parent.$("#AssociatedEnterprises_dg").datagrid('getSelected');
 
                 if (query.method == "MainAssociatedEnterprise_mod") {
                     if (row) {
@@ -56,36 +54,31 @@
             }
 
             // 序列化表单
-            var famlilyInfos = $('#content').serializeArray();
+            var obj = $('#content').serializeJson();
 
-            // 数据组装
-            var obj = {};
-            $(famlilyInfos).each(function (i, e) {
-                if (obj[e.name] !== undefined) {
-                    if (!obj[e.name].push) {
-                        obj[e.name] = [obj[e.name]];
-                    }
-                    obj[e.name].push(e.value || '');
-                } else {
-                    obj[e.name] = e.value || '';
-                }
-            });
+            // 证件类型与证件号码同时出现
+            if ((obj.RegistraterType != '-1' && obj.RegistraterCode.length == 0) || (obj.RegistraterType == '-1' && obj.RegistraterCode.length > 0)) {
+                $.messager.show({ msg: "“登记注册号类型”与“登记注册号码”应同时出现！" });
+                $("#save").linkbutton("enable");
 
+                return false;
+            }
+            
             // 更新家族信息表
             if (query.method == "MainAssociatedEnterprise_mod") {
 
                 //获取选中行
-                var row = self.parent.$("#MainAssociatedEnterprise_dg").datagrid('getSelected');
+                var row = self.parent.$("#AssociatedEnterprises_dg").datagrid('getSelected');
 
                 if (row) {
-                    var RowIndex = self.parent.$("#MainAssociatedEnterprise_dg").datagrid('getRowIndex', row);
+                    var RowIndex = self.parent.$("#AssociatedEnterprises_dg").datagrid('getRowIndex', row);
                     //更新行
-                    self.parent.$("#MainAssociatedEnterprise_dg").datagrid('updateRow', { index: RowIndex, row: obj });
+                    self.parent.$("#AssociatedEnterprises_dg").datagrid('updateRow', { index: RowIndex, row: obj });
                 }
             }
             if (query.method == "MainAssociatedEnterprise_add") {
                 //追加一行
-                self.parent.$("#MainAssociatedEnterprise_dg").datagrid('appendRow', obj);
+                self.parent.$("#AssociatedEnterprises_dg").datagrid('appendRow', obj);
             }
 
             // 清空表单，避免再次打开时闪现之前填入的数据
@@ -139,7 +132,7 @@
                             关联类型：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="除本企业的股东外，与本企业存在直接或间接控制关系的关联企业">　</a>
                         </label>
                         <select class="easyui-combobox  combobox-f combo-f textbox-f" data-options="editable:false,required:true,onSelect:setTxt" name="AssociatedType">
-                            <option value=""></option>
+                            <option value="-1"></option>
                             <option value="20">实际控制人</option>
                             <option value="21">除本企业的股东外，直接或间接控制本企业的关联企业</option>
                             <option value="22">本企业直接或间接控制的关联企业</option>
@@ -161,8 +154,8 @@
                         <label>
                             登记注册号类型：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="">　</a>
                         </label>
-                        <select class="easyui-combobox  combobox-f combo-f textbox-f" data-options="editable:false,required:false" name="RegistraterType">
-                            <option value=""></option>
+                        <select class="easyui-combobox  combobox-f combo-f textbox-f" data-options="editable:false,required:false,onSelect:setTxt" name="RegistraterType">
+                            <option value="-1"></option>
                             <option value="01">工商注册号</option>
                             <option value="02">机关和事业单位登记号</option>
                             <option value="03">社会团体登记号</option>
@@ -188,13 +181,13 @@
                         <label>
                             组织机构代码：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="质检部门颁发给关联企业的组织机构代码">　</a>
                         </label>
-                        <input class="easyui-textbox textbox-f" data-options="required:false,validType:['AN','length[1,10]','OrganizateCode[true]']" name="OrganizateCode">
+                        <input class="easyui-textbox textbox-f" data-options="required:false,validType:['AN','length[10,10]','OrganizateCode[true]']" name="OrganizateCode">
                     </div>
                     <div class="col-6">
                         <label>
                             机构信用代码：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="征信中心赋予该关联企业的18位机构信用代码">　</a>
                         </label>
-                        <input class="easyui-textbox textbox-f" data-options="required:false,validType:['AN','length[1,18]']" name="InstitutionCreditCode">
+                        <input class="easyui-textbox textbox-f" data-options="required:false,validType:['AN','length[10,18]']" name="InstitutionCreditCode">
                     </div>
                 </div>
             </fieldset>

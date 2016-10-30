@@ -29,25 +29,51 @@
 
             if (query.method == "MajorShareholder_mod" || query.method == "MajorShareholder_view") {
                 //获取选中行
-                var row = self.parent.$("#MajorShareholder_dg").datagrid('getSelected');
+                var row = self.parent.$("#Shareholders_dg").datagrid('getSelected');
 
                 //$('#TypeDesc').combobox('setValue', row.TypeDesc);
-                debugger
-
-
                 if (query.method == "MajorShareholder_mod") {
                     if (row) {
                         //加载数据
-                        $('#content').form('load', row);
+                        LoadDate(row);
                     }
                 } else if (query.method == "MajorShareholder_view") {
                     if (row) {
                         //加载数据
-                        $('#content').form('load', row);
+                        LoadDate(row);
                     }
+                    $("input").attr("disable",true);
                     $("#save").linkbutton("disable");
                 }
             }
+        }
+
+        // 加载数据
+        function LoadDate(row) {
+            var familyInfoArray = new Array();
+            if (row.FamilyMembers.length > 0) {
+                // 显示家族信息section
+                $("input[id=FamilyFiedSetShow]")[0].checked = true;
+                $("section[id=I]").show();
+
+                familyInfoArray = row.FamilyMembers;
+            }
+
+            $(familyInfoArray).each(function (index, item) {
+                // 新增家族信息输入filedset
+                $("section[id=I]>div>div>a[id=Iadd]").click();
+
+                // 加载家族信息
+                $("section[id=I]").find("fieldset:last").form('load', item);
+            });
+            
+            // 加载重要股东信息
+            $('fieldset[id=G]').find('div[id*=CardType]').hide();
+            $('fieldset[id=G]').find('div[id=CardType' + row.ShareholdersType + ']').show();
+
+            row.RegistraterTypeModel = row.RegistraterType;
+
+            $('fieldset[id=G]').form('load', row);
         }
 
         // 提交按钮
@@ -56,41 +82,37 @@
             if ($("#content").form("validate")) {
                 $("#save").linkbutton("disable");
             } else {
-                $.messager.show({ msg: "请填写剩下的必填内容!" });
+                $.messager.show({ msg: "请填写剩下的必填内容！" });
                 return false;
             }
 
-            // 序列化表单
-            var famlilyInfos = $('#content').serializeArray();
+            // 序列化fieldset 重要股东信息
+            var obj = $("fieldset[id=G]").serializeJson();
 
-            // 数据组装
-            var obj = {};
-            $(famlilyInfos).each(function (i, e) {
-                if (obj[e.name] !== undefined) {
-                    if (!obj[e.name].push) {
-                        obj[e.name] = [obj[e.name]];
-                    }
-                    obj[e.name].push(e.value || '');
-                } else {
-                    obj[e.name] = e.value || '';
-                }
-            });
+            if (!ValidDate(obj))
+            {
+                $("#save").linkbutton("enable");
+                return false;
+            }
 
-            // 更新家族信息表
+            // 序列化fieldset 家族信息
+            obj.FamilyMembers = SerializeFamilyInfos();
+
+            // 重要股东表
             if (query.method == "MajorShareholder_mod") {
 
                 //获取选中行
-                var row = self.parent.$("#MajorShareholder_dg").datagrid('getSelected');
+                var row = self.parent.$("#Shareholders_dg").datagrid('getSelected');
 
                 if (row) {
-                    var RowIndex = self.parent.$("#MajorShareholder_dg").datagrid('getRowIndex', row);
+                    var RowIndex = self.parent.$("#Shareholders_dg").datagrid('getRowIndex', row);
                     //更新行
-                    self.parent.$("#MajorShareholder_dg").datagrid('updateRow', { index: RowIndex, row: obj });
+                    self.parent.$("#Shareholders_dg").datagrid('updateRow', { index: RowIndex, row: obj });
                 }
             }
             if (query.method == "MajorShareholder_add") {
                 //追加一行
-                self.parent.$("#MajorShareholder_dg").datagrid('appendRow', obj);
+                self.parent.$("#Shareholders_dg").datagrid('appendRow', obj);
             }
 
             // 清空表单，避免再次打开时闪现之前填入的数据
@@ -104,6 +126,24 @@
         function MajorShareholderCancel() {
             // 关闭弹窗
             self.parent.$("#MajorShareholder_dd").dialog({ closed: true });
+        }
+
+        function ValidDate(obj)
+        {
+            // 证件类型与证件号码同时出现
+            if ((obj.RegistraterType != '-1' && obj.RegistraterCode.length == 0) || (obj.RegistraterType == '-1' && obj.RegistraterCode.length > 0)) {
+                ShowError("“证件类型/登记注册号类型”与“证件号码/登记注册号码”应同时出现！" );
+
+                return false;
+            }
+
+            if (obj.RegistraterCode.length + obj.OrganizateCode.length + obj.InstitutionCreditCode.length == 0)
+            {
+                ShowError("“证件号码/登记注册号码”、“组织机构代码”、“机构信用代码”必填其一！");
+
+                return false;
+            }
+            return true;
         }
 
         // 获取Url参数
@@ -145,14 +185,9 @@
         // 股东类型 切换
         function ChangeType() {
             var value = $(this).parents('fieldset').find("input[name=ShareholdersType]").val();
-            if (value == 1) {
-                $(this).parents('fieldset').find('div[id=Reg]').hide();
-                $(this).parents('fieldset').find('div[id=Card]').show();
-            }
-            else {
-                $(this).parents('fieldset').find('div[id=Card]').hide();
-                $(this).parents('fieldset').find('div[id=Reg]').show();
-            }
+            $(this).parents('fieldset').find('div[id*=CardType]').hide();
+            $(this).parents('fieldset').find('div[id=CardType'+value+']').show();
+
 
             // setTxt2
             var currentObj = $(this);
@@ -166,7 +201,7 @@
             $("input[name=" + currentObj.attr('comboname') + '_Txt' + "]:hidden").val(textArray.join("、"));
 
             // 清除 证件类型/登记注册号类型
-            $("input[name=RegistraterType]:hidden").val("");
+            $("input[name=RegistraterType]:hidden").val("-1");
             $("input[name=RegistraterType_Txt]:hidden").val("");
         }
 
@@ -204,6 +239,18 @@
             // 为新的fieldset设置name
             $(Obj).parents("section").find("filedset:last").attr("name", "FamilyMembers");
         }
+
+        // 序列化家族信息
+        function SerializeFamilyInfos() {
+            var familyObjs = $("fieldset[id*=I]");
+            var familyArray = new Array();
+
+            $(familyObjs).each(function (index, item) {
+                familyArray.push($(item).serializeJson());
+            });
+
+            return familyArray;
+        }
     </script>
 
 </head>
@@ -222,7 +269,7 @@
                         <label>
                             股东类型：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="">　</a>
                         </label>
-                        <select class="easyui-combobox  combobox-f combo-f textbox-f" data-options="editable:false,required:true,onSelect:ChangeType" name="ShareholdersType">
+                        <select class="easyui-combobox  combobox-f combo-f textbox-f" data-options="editable:false,required:true,onSelect:ChangeType" name="ShareholdersType" id="ShareholdersType">
                             <option value="0"></option>
                             <option value="1">自然人</option>
                             <option value="2">机构</option>
@@ -239,12 +286,11 @@
                 </div>
 
                 <div class="row">
-
-                    <div class="col-6" id="Card">
+                    <div class="col-6" id="CardType1">
                         <label>
                             证件类型/登记注册号类型：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="当股东类型为自然人时，填写证件类型；当股东类型为机构时，填写登记注册号类型">　</a>
                         </label>
-                        <select class="easyui-combobox  combobox-f combo-f textbox-f" data-options="editable:false,required:false,onSelect:setTxt2" name="RegistraterTypeModel">
+                        <select class="easyui-combobox  combobox-f combo-f textbox-f" data-options="editable:false,required:false,onSelect:setTxt2" name="RegistraterTypeModel" id="RegistraterTypeModel">
                             <option value="-1"></option>
                             <option value="0">身份证</option>
                             <option value="1">户口簿</option>
@@ -262,12 +308,12 @@
                             <option value="X">其他证件</option>
                         </select>
                     </div>
-                    <div class="col-6" id="Reg" style="display:none">
+                    <div class="col-6" id="CardType2" style="display:none">
                         <label>
                             证件类型/登记注册号类型：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="当股东类型为自然人时，填写证件类型；当股东类型为机构时，填写登记注册号类型">　</a>
                         </label>
-                        <select class="easyui-combobox  combobox-f combo-f textbox-f" data-options="editable:false,required:false,onSelect:setTxt2" name="RegistraterTypeModel">
-                            <option value="00"></option>
+                        <select class="easyui-combobox  combobox-f combo-f textbox-f" data-options="editable:false,required:false,onSelect:setTxt2" name="RegistraterTypeModel" id="RegistraterTypeModel2">
+                            <option value="-1"></option>
                             <option value="01">工商注册号</option>
                             <option value="02">机关和事业单位登记号</option>
                             <option value="03">社会团体登记号</option>
@@ -279,7 +325,7 @@
                             <option value="99">其他</option>
                         </select>
                     </div>
-                    <input type="hidden" name="RegistraterType" />
+                    <input type="hidden" name="RegistraterType" value="-1" />
                     <input type="hidden" name="RegistraterType_Txt" />
 
                     <div class="col-6">
@@ -295,13 +341,13 @@
                         <label>
                             组织机构代码：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="质检部门颁发给机构股东的组织机构代码">　</a>
                         </label>
-                        <input class="easyui-textbox textbox-f" data-options="required:false,validType:['AN','length[1,10]','OrganizateCode[true]']" name="OrganizateCode">
+                        <input class="easyui-textbox textbox-f" data-options="required:false,validType:['AN','length[10,10]','OrganizateCode[true]']" name="OrganizateCode">
                     </div>
                     <div class="col-6">
                         <label>
                             机构信用代码：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="征信中心赋予机构股东的18位机构信用代码">　</a>
                         </label>
-                        <input class="easyui-textbox textbox-f" data-options="required:false,validType:['AN','length[1,18]']" name="InstitutionCreditCode">
+                        <input class="easyui-textbox textbox-f" data-options="required:false,validType:['AN','length[10,18]']" name="InstitutionCreditCode">
                     </div>
                 </div>
 
@@ -340,14 +386,13 @@
                         <label>
                             家族成员关系：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="">　</a>
                         </label>
-                        <select class="easyui-combobox  combobox-f combo-f textbox-f" data-options="editable:false,required:false,onSelect:setTxt" name="Relationship">
+                        <select class="easyui-combobox  combobox-f combo-f textbox-f" data-options="editable:false,required:false" name="Relationship">
                             <option value="1">配偶</option>
                             <option value="2">父母</option>
                             <option value="3">子女</option>
                             <option value="4">其他血亲</option>
                             <option value="5">其他姻亲</option>
                         </select>
-                        <input type="hidden" name="Relationship_Txt" />
                     </div>
                     <div class="col-6">
                         <label>
@@ -362,7 +407,7 @@
                         <label>
                             家族成员证件类型：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="">　</a>
                         </label>
-                        <select class="easyui-combobox  combobox-f combo-f textbox-f" data-options="editable:false,required:true,onSelect:setTxt" name="CertificateType">
+                        <select class="easyui-combobox  combobox-f combo-f textbox-f" data-options="editable:false,required:true" name="CertificateType">
                             <option value=""></option>
                             <option value="0">身份证</option>
                             <option value="1">户口簿</option>
@@ -379,7 +424,6 @@
                             <option value="C">台湾身份证</option>
                             <option value="X">其他证件</option>
                         </select>
-                        <input type="hidden" name="CertificateType_Txt" />
                     </div>
                     <div class="col-6">
                         <label>

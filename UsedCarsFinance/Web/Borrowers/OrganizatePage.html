@@ -12,7 +12,6 @@
     <script src="../Scripts/easyui/locale/easyui-lang-zh_CN.js"></script>
     <script src="JS/BorrowerMethod.js"></script>
     <script src="JS/validType.js"></script>
-
     <script type="text/javascript">
         $(function () {
             Init();
@@ -61,9 +60,11 @@
         function checkboxOnclick(Obj, sectionId) {
             Obj.checked = Obj.checked;
 
-            if (Obj.checked) {
-                $(Obj).val(1);
+            if (sectionId == "I") {
+                $("input[name=HasParent]:hidden").val(Obj.checked);
+            }
 
+            if (Obj.checked) {
                 var section = $("section[id=" + sectionId + "]");
 
                 // 点击 + ,添加fileset
@@ -76,8 +77,6 @@
                 section.show();
             }
             else {
-                $(Obj).val(0);
-
                 // 点击 - ，移除fieldset
                 $("section[id=" + sectionId + "]").find('div:hidden').find("a[id*=minus]").click();
 
@@ -105,38 +104,45 @@
             return resultName;
         }
 
-        // 提交
+        // 提交按钮
         function OrganizateSubmit() {
             if ($("#content").form("validate")) {
-                $("#save").linkbutton("disable");
+                $("#submit").linkbutton("disable");
             } else {
-                $.messager.show({ msg: "请填写剩下的必填内容!" });
+                ShowError("请填写剩下的必填内容!" );
                 return false;
             }
 
+            // 构建数据
+            var data = BuidDate();
+            
+            // 验证数据
+            if (!ValidDate(data))
+            {
+                $("#submit").linkbutton("enable");
+                return false;
+            }
 
-
-            var data = {};
-            var section = $("#content").find("section");
-            //序列化数据
-            var temp;
-            for (var i = 0; i < section.length; i++) {
-                var fs = new Array();
-                temp = $(section[i]).attr("id");
-                var fieldset = $(section[i]).children("fieldset");
-                for (var j = 0; j < fieldset.length; j++) {
-                    fs.push($(fieldset[j]).serializeJson())
+            // 提交
+            $.ajax({
+                async: false,
+                data: data,
+                type: "POST",
+                url: "../api/Customer/Add",
+                statusCode: {
+                    200: function (data) {
+                        $.messager.show({ msg: "提交成功！" });
+                    },
+                    500: function (data) {
+                        $.messager.alert('错误', data.responseJSON.ExceptionMessage);
+                    },
+                    400: function (data) {
+                        $.messager.alert('错误', data.responseJSON.Message, "info");
+                    }
                 }
-                data[temp] = fs;
-            }
-            var str = JSON.stringify(data);
-            $("#content").children().children(":hidden").find(":input.validatebox-text").validatebox("disableValidation");
-            if (!$("#content").form("validate")) {
-                $.messager.show({ msg: "请填写剩下的必填内容!" });
-                return false;
-            }
+            });
 
-
+            $("#submit").linkbutton("enable");
         }
 
         // 取消按钮
@@ -144,10 +150,90 @@
             window.opener.location.href = window.opener.location.href;
             window.close()
         }
+
+        // 数据构建
+        function BuidDate()
+        {
+            var data = new Object();
+            data["Base"] = FieldsetSerializeFactory('Base', 'input');
+
+            data["Property"] = FieldsetSerializeFactory('Property', 'input');
+
+            data["Contact"] = FieldsetSerializeFactory('Contact', 'input');
+
+            data["Managers"] = FieldsetSerializeFactory('Managers', 'table');
+
+            data["Shareholders"] = FieldsetSerializeFactory('Shareholders', 'table');
+
+            data["AssociatedEnterprises"] = FieldsetSerializeFactory('AssociatedEnterprises', 'table');
+
+
+            if (data.Base.HasParent)
+            {
+                data["Parent"] = FieldsetSerializeFactory('Parent', 'input');
+            }
+
+            return data;
+        }
+
+        // 数据校验
+        function ValidDate(data)
+        {
+            if (data == null)
+            {
+                return false;
+            }
+
+            if (data.Property.length == 0) {
+                ShowError("机构属性 必填");
+                return false;
+            }
+
+            if (data.Managers.length == 0)
+            {
+                ShowError("高级主管 必填");
+                return false;
+            }
+
+            if (data.Shareholders.length == 0) {
+                ShowError("重要股东 必填");
+                return false;
+            }
+
+            if (data.AssociatedEnterprises.length == 0)
+            {
+                ShowError("主要关联企业 必填");
+                return false;
+            }
+
+            return true;
+        }
+
+        // fieldset 序列化工厂（type: input or table）
+        function FieldsetSerializeFactory(name, type) {
+            if (name == null || type == null || $.inArray(type, ["input", "table"]) == -1) {
+                return null;
+            }
+
+            var json = new Object();
+
+            if ($("fieldset[name=" + name + "]").length > 0) {
+                if (type == "input") {
+                    // 序列化 input
+                    json = $("fieldset[name=" + name + "]").serializeJson();
+                }
+                else {
+                    // 序列化 table
+                    var json = $("fieldset[name=" + name + "]").find("[id=" + name + "_dg" + "]").datagrid("getRows");
+                }
+            }
+
+            return json;
+        }
     </script>
 
     <script type="text/javascript">
-        function Submit() {
+        function TempleSubmit() {
             var base = {
                 CustomerNumber: "123123", ManagementerCode: "11111111111111111111", CustomerType: "1", InstitutionCreditCode: "123123123123123123",
                 OrganizateCode: "", RegistraterType: "01", RegistraterCode: "123123", TaxpayerIdentifyIrsNumber: "123123123", TaxpayerIdentifyLandNumber: "123133213", LoanCardCode: "1111111111112222", HasParent: "false"
@@ -223,6 +309,7 @@
                 InstitutionCreditCode: "124124124124123433",
                 SharesProportion: "10.00"
             }]
+
             var AssociatedEnterprise = [{ AssociatedType: "01", Name: "晟融", RegistraterType: "02", RegistraterCode: "2222222222", OrganizateCode: "L1832212-3", InstitutionCreditCode: "123123123123123111" },
             { AssociatedType: "01", Name: "云为", RegistraterType: "02", RegistraterCode: "3333333333", OrganizateCode: "L1832212-3", InstitutionCreditCode: "333333333333333322" }]
             var Parent = { SuperInstitutionsName: "晟融", RegistraterType: "01", RegistraterCode: "1111111111", OrganizateCode: "2222222222", InstitutionCreditCode: "333333333333333333" }
@@ -397,13 +484,6 @@
                         </label>
                         <input class="easyui-textbox textbox-f" data-options="required:false,validType:['AN','length[1,16]']" name="LoanCardCode">
                     </div>
-                    <!--<div class="col-6">
-                        <label>
-                            数据提取日期：
-                            <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('img/InfoImg.png') no-repeat scroll 0 0" title="">　</a>
-                        </label>
-                        <input class="easyui-datebox datebox-f combo-f textbox-f" data-options="editable:false ,width:407.75, formatter:myformatter,parser:myparser,required:true,validType:['N','length[1,8]']" name="DataExtractionDate">
-                    </div>-->
                 </div>
 
                 <div class="row" style="display:block" id="showSecton">
@@ -414,8 +494,9 @@
                         <span style="display:none"><input type="checkbox" id="TF_F" onclick="checkboxOnclick(this, 'F')" /><span onclick="$(this).parent().find('input[id=TF_F]').click()">填写高管及主要关系人</span>&nbsp;&nbsp;&nbsp;</span>
                         <span style="display:none"><input type="checkbox" id="TF_G" onclick="checkboxOnclick(this, 'G')" /><span onclick="$(this).parent().find('input[id=TF_G]').click()">填写重要股东</span>&nbsp;&nbsp;&nbsp;</span>
                         <span style="display:none"><input type="checkbox" id="TF_H" onclick="checkboxOnclick(this, 'H')" /><span onclick="$(this).parent().find('input[id=TF_H]').click()">填写主要关联企业信息</span>&nbsp;&nbsp;&nbsp;</span>
-                        <span style="display:none"><input type="checkbox" id="TF_I" onclick="checkboxOnclick(this, 'I')" name="HasParent" /><span onclick="$(this).parent().find('input[id=TF_I]').click()">上级机构（主管单位）</span></span>
+                        <span style="display:none"><input type="checkbox" id="TF_I" onclick="checkboxOnclick(this, 'I')" /><span onclick="$(this).parent().find('input[id=TF_I]').click()">上级机构（主管单位）</span></span>
                     </div>
+                    <input name="HasParent" type="hidden" value="false" />
                 </div>
             </fieldset>
         </section>
@@ -465,7 +546,7 @@
                             成立日期：
                             <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('img/InfoImg.png') no-repeat scroll 0 0" title="机构登记注册证书或批文上的成立日期或批准成立日期">　</a>
                         </label>
-                        <input class="easyui-datebox datebox-f combo-f textbox-f" data-options="editable:false ,width:407.75, formatter:myformatter,parser:myparser,required:false,validType:['N','length[1,8]']" name="SetupDate">
+                        <input class="easyui-datebox datebox-f combo-f textbox-f" data-options="editable:false ,width:407.75,required:false,validType:['AN','length[1,10]']" name="SetupDate">
                     </div>
                 </div>
 
@@ -475,7 +556,7 @@
                             证书到期日：
                             <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('img/InfoImg.png') no-repeat scroll 0 0" title="机构登记证书上记载的有效期最终到期日">　</a>
                         </label>
-                        <input class="easyui-datebox datebox-f combo-f textbox-f" data-options="editable:false ,width:407.75, formatter:myformatter,parser:myparser,required:false,validType:['N','length[1,8]']" name="CertificateDueDate">
+                        <input class="easyui-datebox datebox-f combo-f textbox-f" data-options="editable:false ,width:407.75,required:false,validType:['AN','length[1,10]']" name="CertificateDueDate">
                     </div>
 
                 </div>
@@ -659,7 +740,7 @@
                         <label>
                             信息更新日期：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('img/InfoImg.png') no-repeat scroll 0 0" title="">　</a>
                         </label>
-                        <input class="easyui-datebox datebox-f combo-f textbox-f" data-options="editable:false ,width:407.75, formatter:myformatter,parser:myparser,required:true,validType:['N','length[1,8]']" name="InformationUpdateDate">
+                        <input class="easyui-datebox datebox-f combo-f textbox-f" data-options="editable:false ,width:407.75,required:true,validType:['N','length[1,8]']" name="InformationUpdateDate">
                     </div>-->
                 </div>
             </template>
@@ -707,7 +788,7 @@
                         <label>
                             信息更新日期：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('img/InfoImg.png') no-repeat scroll 0 0" title="">　</a>
                         </label>
-                        <input class="easyui-datebox datebox-f combo-f textbox-f" data-options="editable:false ,width:407.75, formatter:myformatter,parser:myparser,required:true,validType:['N','length[1,8]']" name="InformationUpdateDate">
+                        <input class="easyui-datebox datebox-f combo-f textbox-f" data-options="editable:false ,width:407.75,required:true,validType:['N','length[1,8]']" name="InformationUpdateDate">
                     </div>
                 </div>-->
             </template>
@@ -718,7 +799,7 @@
 
             <fieldset id="F">
                 <!--高管及主要关系人-->
-                <table id="ExecutivesMajorParticipant_dg" class="easyui-datagrid" style="width:890px;" data-options="toolbar: '#ExecutivesMajorParticipant_tb',
+                <table id="Managers_dg" class="easyui-datagrid" style="width:890px;" data-options="toolbar: '#ExecutivesMajorParticipant_tb',
                    rownumbers:true,
                    singleSelect:true,
                    onSelect:ExecutivesMajorParticipantSelect,
@@ -756,16 +837,16 @@
 
                 // table 删除按钮
                 function ExecutivesMajorParticipantDelete() {
-                    var row = $('#ExecutivesMajorParticipant_dg').datagrid('getSelected');
+                    var row = $('#Managers_dg').datagrid('getSelected');
 
                     if (row) {
                         $.messager.confirm('确认', '确认删除该家族成员信息?', function (r) {
                             if (r) {
-                                var rowIndex = $('#ExecutivesMajorParticipant_dg').datagrid('getRowIndex', row);
+                                var rowIndex = $('#Managers_dg').datagrid('getRowIndex', row);
 
-                                $('#ExecutivesMajorParticipant_dg').datagrid('deleteRow', rowIndex);
+                                $('#Managers_dg').datagrid('deleteRow', rowIndex);
                             }
-                        })
+                        });
                     }
                 }
 
@@ -774,7 +855,7 @@
                     var url = "ContentPages/ExecutivesMajorParticipantPage.html?method=" + this.id;
 
                     if (this.id != "ExecutivesMajorParticipant_add") {
-                        var row = $('#ExecutivesMajorParticipant_dg').datagrid('getSelected');
+                        var row = $('#Managers_dg').datagrid('getSelected');
 
                         if (!row) {
                             return false;
@@ -798,7 +879,7 @@
 
             <fieldset id="G">
                 <!--重要股东-->
-                <table id="MajorShareholder_dg" class="easyui-datagrid" style="width:890px;" data-options="toolbar: '#MajorShareholder_tb',
+                <table id="Shareholders_dg" class="easyui-datagrid" style="width:890px;" data-options="toolbar: '#MajorShareholder_tb',
                    rownumbers:true,
                    singleSelect:true,
                    onSelect:MajorShareholderSelect,
@@ -839,14 +920,14 @@
 
                 // table 删除按钮
                 function MajorShareholderDelete() {
-                    var row = $('#MajorShareholder_dg').datagrid('getSelected');
+                    var row = $('#Shareholders_dg').datagrid('getSelected');
 
                     if (row) {
                         $.messager.confirm('确认', '确认删除该家族成员信息?', function (r) {
                             if (r) {
-                                var rowIndex = $('#MajorShareholder_dg').datagrid('getRowIndex', row);
+                                var rowIndex = $('#Shareholders_dg').datagrid('getRowIndex', row);
 
-                                $('#MajorShareholder_dg').datagrid('deleteRow', rowIndex);
+                                $('#Shareholders_dg').datagrid('deleteRow', rowIndex);
                             }
                         })
                     }
@@ -857,7 +938,7 @@
                     var url = "ContentPages/MajorShareholderPage.html?method=" + this.id;
 
                     if (this.id != "MajorShareholder_add") {
-                        var row = $('#MajorShareholder_dg').datagrid('getSelected');
+                        var row = $('#Shareholders_dg').datagrid('getSelected');
 
                         if (!row) {
                             return false;
@@ -880,7 +961,7 @@
             <h2>主要关联企业</h2>
             <fieldset id="H">
                 <!--主要关联企业-->
-                <table id="MainAssociatedEnterprise_dg" class="easyui-datagrid" style="width:890px;" data-options="toolbar: '#MainAssociatedEnterprise_tb',
+                <table id="AssociatedEnterprises_dg" class="easyui-datagrid" style="width:890px;" data-options="toolbar: '#MainAssociatedEnterprise_tb',
                    rownumbers:true,
                    singleSelect:true,
                    onSelect:MainAssociatedEnterpriseSelect,
@@ -920,14 +1001,14 @@
 
                     // table 删除按钮
                     function MainAssociatedEnterpriseDelete() {
-                        var row = $('#MainAssociatedEnterprise_dg').datagrid('getSelected');
+                        var row = $('#AssociatedEnterprises_dg').datagrid('getSelected');
 
                         if (row) {
                             $.messager.confirm('确认', '确认删除该家族成员信息?', function (r) {
                                 if (r) {
-                                    var rowIndex = $('#MainAssociatedEnterprise_dg').datagrid('getRowIndex', row);
+                                    var rowIndex = $('#AssociatedEnterprises_dg').datagrid('getRowIndex', row);
 
-                                    $('#MainAssociatedEnterprise_dg').datagrid('deleteRow', rowIndex);
+                                    $('#AssociatedEnterprises_dg').datagrid('deleteRow', rowIndex);
                                 }
                             })
                         }
@@ -938,7 +1019,7 @@
                         var url = "ContentPages/MainAssociatedEnterprisePage.html?method=" + this.id;
 
                         if (this.id != "MainAssociatedEnterprise_add") {
-                            var row = $('#MainAssociatedEnterprise_dg').datagrid('getSelected');
+                            var row = $('#AssociatedEnterprises_dg').datagrid('getSelected');
 
                             if (!row) {
                                 return false;
@@ -1024,7 +1105,7 @@
 
         <div id="btn">
             <a id="submit" class="easyui-linkbutton" data-options="iconCls: 'icon-edit'" style="margin:0 auto" onclick="OrganizateSubmit()">提交</a>
-            <a id="submit" class="easyui-linkbutton" data-options="iconCls: 'icon-redo'" style="margin:0 auto" onclick="OrganizateCancel()">取消</a>
+            <a id="cancel" class="easyui-linkbutton" data-options="iconCls: 'icon-redo'" style="margin:0 auto" onclick="OrganizateCancel()">取消</a>
         </div>
     </form>
 </body>

@@ -84,7 +84,7 @@
                 return true;
             }
 
-            if (valueStr != "")
+            if (!string.IsNullOrEmpty(valueStr))
             {
                 // 基础校验（前8位为数字或者大写英文字母、后1位为校验码）
                 regResult = new Regex(@"^[A-Z0-9]{8}-[A-Z0-9]$").IsMatch(valueStr);
@@ -121,7 +121,6 @@
                         regResult = Trans_32bTo10(valueStr[8]) == c9;
                     }
                 }
-
             }
             else
             {
@@ -136,11 +135,18 @@
         {
             int num = 0;
             if (ch >= 'A' && ch <= 'Z')
+            {
                 num = ch - 'A' + 10;
+            }
             else if (ch >= 'a' && ch <= 'z')
+            {
                 num = ch - 'a' + 36;
+            }
             else
+            {
                 num = ch - '0';
+            }
+
             return num;
         }
     }
@@ -194,9 +200,12 @@
     {
         public override bool IsValid(object value)
         {
-            var valueStr = value == null ? string.Empty : value.ToString();
+            if (value == null || value.ToString().Equals("0"))
+            {
+                return true;
+            }
 
-            return new Regex(@"^d+\.\d{2}$").IsMatch(valueStr);
+            return new Regex(@"^d+\.\d{2}$").IsMatch(value.ToString());
         }
     }
 
@@ -210,7 +219,7 @@
         {
             var valueStr = value == null ? string.Empty : value.ToString();
 
-            return new Regex(@"^d+\.\d{2}$").IsMatch(valueStr);
+            return new Regex(@"^d+\.\d{2}$").IsMatch(valueStr) && Convert.ToDecimal(valueStr) < 100;
         }
     }
     #endregion
@@ -225,7 +234,10 @@
     {
         public override bool IsValid(object value)
         {
-            value = value ?? new BaseViewModel();
+            if (value == null)
+            {
+                return true;
+            }
 
             var basePeriod = value as BaseViewModel;
 
@@ -241,14 +253,12 @@
     {
         public override bool IsValid(object value)
         {
-            value = value ?? new BaseViewModel();
+            if (value == null)
+            {
+                return true;
+            }
 
             var basePeriod = value as BaseViewModel;
-
-            if (string.IsNullOrEmpty(basePeriod.RegistraterType) && string.IsNullOrEmpty(basePeriod.RegistraterCode))
-            {
-                return false;
-            }
 
             return ServiceMethods.CheckInPairs(new string[] { basePeriod.RegistraterType, basePeriod.RegistraterCode });
         }
@@ -263,7 +273,10 @@
     {
         public override bool IsValid(object value)
         {
-            value = value ?? new ManagerViewModel();
+            if (value == null)
+            {
+                return true;
+            }
 
             var executivesMajorParticipantPeriod = value as ManagerViewModel;
 
@@ -280,11 +293,14 @@
     {
         public override bool IsValid(object value)
         {
-            value = value ?? new StockholderViewModel();
+            if (value == null)
+            {
+                return true;
+            }
 
             var executivesMajorParticipantPeriod = value as StockholderViewModel;
 
-            return ServiceMethods.CheckInPairs(new string[] { executivesMajorParticipantPeriod.RegistraterCode, executivesMajorParticipantPeriod.RegistraterType }); 
+            return ServiceMethods.CheckInPairs(new string[] { executivesMajorParticipantPeriod.RegistraterCode, executivesMajorParticipantPeriod.RegistraterType });
         }
     }
 
@@ -295,7 +311,10 @@
     {
         public override bool IsValid(object value)
         {
-            value = value ?? new StockholderViewModel();
+            if (value == null)
+            {
+                return true;
+            }
 
             var executivesMajorParticipantPeriod = value as StockholderViewModel;
 
@@ -318,7 +337,10 @@
     {
         public override bool IsValid(object value)
         {
-            value = value ?? new StockholderViewModel();
+            if (value == null)
+            {
+                return true;
+            }
 
             var executivesMajorParticipantPeriod = value as StockholderViewModel;
 
@@ -326,13 +348,13 @@
             {
                 if (executivesMajorParticipantPeriod.ShareholdersType.Equals("1"))
                 {
-                    var list = new List<string>() { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B", "C", "X" };
+                    var list = new List<string>() { "-1", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B", "C", "X" };
 
                     return list.Contains(executivesMajorParticipantPeriod.RegistraterType);
                 }
                 else
                 {
-                    var list = new List<string>() { "01", "02", "03", "04", "05", "06", "07", "08", "99" };
+                    var list = new List<string>() { "-1", "01", "02", "03", "04", "05", "06", "07", "08", "99" };
 
                     return list.Contains(executivesMajorParticipantPeriod.RegistraterType);
                 }
@@ -352,7 +374,10 @@
     {
         public override bool IsValid(object value)
         {
-            value = value ?? new AssociatedEnterpriseViewModel();
+            if (value == null)
+            {
+                return true;
+            }
 
             var mainAssociatedEnterprisePerid = value as AssociatedEnterpriseViewModel;
 
@@ -369,7 +394,10 @@
     {
         public override bool IsValid(object value)
         {
-            value = value ?? new ParentViewModel();
+            if (value == null)
+            {
+                return true;
+            }
 
             var superInstitutionPeriod = value as ParentViewModel;
 
@@ -388,7 +416,10 @@
     {
         public override bool IsValid(object value)
         {
-            value = value ?? new FamilyMemberViewModel();
+            if (value == null)
+            {
+                return true;
+            }
 
             var basePeriod = value as FamilyMemberViewModel;
 
@@ -406,7 +437,10 @@
     {
         public override bool IsValid(object value)
         {
-            value = value ?? new FamilyMemberViewModel();
+            if (value == null)
+            {
+                return true;
+            }
 
             var basePeriod = value as FamilyMemberViewModel;
 
@@ -427,7 +461,10 @@
     {
         public override bool IsValid(object value)
         {
-            value = value ?? string.Empty;
+            if (value == null)
+            {
+                return true;
+            }
 
             var list = new List<string>() { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B", "C", "X" };
 
@@ -442,7 +479,10 @@
     {
         public override bool IsValid(object value)
         {
-            value = value ?? string.Empty;
+            if (value == null)
+            {
+                return true;
+            }
 
             var list = new List<string>() { "1", "2", "3", "4", "5" };
 
@@ -457,7 +497,10 @@
     {
         public override bool IsValid(object value)
         {
-            value = value ?? string.Empty;
+            if (value == null)
+            {
+                return true;
+            }
 
             var list = new List<string>() { "B", "C", "D", "E", "F", "G", "H", "I" };
 
@@ -472,7 +515,10 @@
     {
         public override bool IsValid(object value)
         {
-            value = value ?? string.Empty;
+            if (value == null)
+            {
+                return true;
+            }
 
             var list = new List<string>() { "0", "1", "2", "3", "4", "5" };
 
@@ -487,7 +533,10 @@
     {
         public override bool IsValid(object value)
         {
-            value = value ?? string.Empty;
+            if (value == null)
+            {
+                return true;
+            }
 
             var list = new List<string>() { "1", "2", "3", "X" };
 
@@ -502,9 +551,12 @@
     {
         public override bool IsValid(object value)
         {
-            value = value ?? string.Empty;
+            if (value == null)
+            {
+                return true;
+            }
 
-            var list = new List<string>() { "01", "02", "03", "04", "05", "06", "07", "08", "99" };
+            var list = new List<string>() { "-1", "01", "02", "03", "04", "05", "06", "07", "08", "99" };
 
             return list.Contains(value.ToString());
         }
@@ -517,7 +569,10 @@
     {
         public override bool IsValid(object value)
         {
-            value = value ?? string.Empty;
+            if (value == null)
+            {
+                return true;
+            }
 
             var list = new List<string>() { "CHN", "HKG", "MAC", "TWN" };
 
@@ -532,7 +587,10 @@
     {
         public override bool IsValid(object value)
         {
-            value = value ?? string.Empty;
+            if (value == null)
+            {
+                return true;
+            }
 
             var list = new List<string>() { "CNY", "HKD", "MOP", "USD", "XAU" };
 
@@ -547,9 +605,12 @@
     {
         public override bool IsValid(object value)
         {
-            value = value ?? string.Empty;
+            if (value == null)
+            {
+                return true;
+            }
 
-            var list = new List<string>() { "1", "2", "3", "4", "7", "9" };
+            var list = new List<string>() { "-1", "1", "2", "3", "4", "7", "9" };
 
             return list.Contains(value.ToString());
         }
@@ -562,9 +623,12 @@
     {
         public override bool IsValid(object value)
         {
-            value = value ?? string.Empty;
+            if (value == null)
+            {
+                return true;
+            }
 
-            var list = new List<string>() { "10", "13", "14", "11", "12", "20", "21", "24", "30", "31", "32", "40", "41", "51", "52", "53", "54", "60", "61", "62", "70", "99" };
+            var list = new List<string>() { "-1", "10", "13", "14", "11", "12", "20", "21", "24", "30", "31", "32", "40", "41", "51", "52", "53", "54", "60", "61", "62", "70", "99" };
 
             return list.Contains(value.ToString());
         }
@@ -577,9 +641,12 @@
     {
         public override bool IsValid(object value)
         {
-            value = value ?? string.Empty;
+            if (value == null)
+            {
+                return true;
+            }
 
-            var list = new List<string>() { "10", "11", "12", "13", "14", "15", "16", "17", "19", "20", "21", "22", "23", "24", "29", "30", "31", "32", "33", "34", "39", "90" };
+            var list = new List<string>() { "-1", "10", "11", "12", "13", "14", "15", "16", "17", "19", "20", "21", "22", "23", "24", "29", "30", "31", "32", "33", "34", "39", "90" };
 
             return list.Contains(value.ToString());
         }
@@ -592,7 +659,10 @@
     {
         public override bool IsValid(object value)
         {
-            value = value ?? string.Empty;
+            if (value == null)
+            {
+                return true;
+            }
 
             var list = new List<string>() { "1", "2", "3", "4", "9", "X" };
 
@@ -607,9 +677,12 @@
     {
         public override bool IsValid(object value)
         {
-            value = value ?? string.Empty;
+            if (value == null)
+            {
+                return true;
+            }
 
-            var list = new List<string>() { "2", "3", "4", "5", "9", "X" };
+            var list = new List<string>() { "-1", "2", "3", "4", "5", "9", "X" };
 
             return list.Contains(value.ToString());
         }
@@ -622,9 +695,12 @@
     {
         public override bool IsValid(object value)
         {
-            value = value ?? string.Empty;
+            if (value == null)
+            {
+                return true;
+            }
 
-            var list = new List<string>() { "1", "2", "9", "X" };
+            var list = new List<string>() { "-1", "1", "2", "9", "X" };
 
             return list.Contains(value.ToString());
         }
@@ -637,7 +713,10 @@
     {
         public override bool IsValid(object value)
         {
-            value = value ?? string.Empty;
+            if (value == null)
+            {
+                return true;
+            }
 
             var list = new List<string>() { "1", "2" };
 
@@ -652,7 +731,10 @@
     {
         public override bool IsValid(object value)
         {
-            value = value ?? string.Empty;
+            if (value == null)
+            {
+                return true;
+            }
 
             var list = new List<string>() { "20", "21", "22", "23", "24" };
 
@@ -679,11 +761,14 @@
                 return false;
             }
 
-            var value1 = string.IsNullOrEmpty(valueArray[0]);
+            valueArray[0] = valueArray[0] ?? string.Empty;
+            valueArray[1] = valueArray[1] ?? string.Empty;
 
-            var value2 = string.IsNullOrEmpty(valueArray[1]);
+            var value1 = string.IsNullOrEmpty(valueArray[0]) || valueArray[1].Equals("-1");
 
-            if (value1 && value2)
+            var value2 = string.IsNullOrEmpty(valueArray[1]) || valueArray[1].Equals("-1");
+
+            if ((!value1 && value2) || (value1 && !value2))
             {
                 return false;
             }
@@ -691,6 +776,5 @@
             return true;
         }
     }
-
     #endregion
 }
