@@ -71,13 +71,9 @@
     <Compile Include="Migrations\201610260709237_Organization.Designer.cs">
       <DependentUpon>201610260709237_Organization.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201610270956148_StockholderUpdate.cs" />
-    <Compile Include="Migrations\201610270956148_StockholderUpdate.Designer.cs">
-      <DependentUpon>201610270956148_StockholderUpdate.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201610280239033_NewStockholderUpdate.cs" />
-    <Compile Include="Migrations\201610280239033_NewStockholderUpdate.Designer.cs">
-      <DependentUpon>201610280239033_NewStockholderUpdate.cs</DependentUpon>
+    <Compile Include="Migrations\201610280239033_StockholderUpdate.cs" />
+    <Compile Include="Migrations\201610280239033_StockholderUpdate.Designer.cs">
+      <DependentUpon>201610280239033_StockholderUpdate.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\201610300351578_AddBorrow2.1.cs" />
     <Compile Include="Migrations\201610300351578_AddBorrow2.1.Designer.cs">
@@ -228,11 +224,8 @@
     <EmbeddedResource Include="Migrations\201610260709237_Organization.resx">
       <DependentUpon>201610260709237_Organization.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201610270956148_StockholderUpdate.resx">
-      <DependentUpon>201610270956148_StockholderUpdate.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201610280239033_NewStockholderUpdate.resx">
-      <DependentUpon>201610280239033_NewStockholderUpdate.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201610280239033_StockholderUpdate.resx">
+      <DependentUpon>201610280239033_StockholderUpdate.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201610300351578_AddBorrow2.1.resx">
       <DependentUpon>201610300351578_AddBorrow2.1.cs</DependentUpon>
