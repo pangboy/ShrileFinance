@@ -75,18 +75,28 @@
     <Compile Include="Migrations\201610280239033_NewStockholderUpdate.Designer.cs">
       <DependentUpon>201610280239033_NewStockholderUpdate.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201610300351578_AddBorrow2.1.cs" />
+    <Compile Include="Migrations\201610300351578_AddBorrow2.1.Designer.cs">
+      <DependentUpon>201610300351578_AddBorrow2.1.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs">
       <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
     </Compile>
-    <Compile Include="ModelConfigurations\AppLotigationConfiguration.cs" />
-    <Compile Include="ModelConfigurations\AppLotigationBaseConfiguration.cs" />
     <Compile Include="ModelConfigurations\AssociatedEnterpriseConfiguration.cs" />
+    <Compile Include="ModelConfigurations\BigEventConfiguration.cs" />
+    <Compile Include="ModelConfigurations\CashFlowConfiguration.cs" />
+    <Compile Include="ModelConfigurations\FinancialAffairsConfiguration.cs" />
+    <Compile Include="ModelConfigurations\LiabilitiesConfiguration.cs" />
+    <Compile Include="ModelConfigurations\LitigationConfigruation.cs" />
     <Compile Include="ModelConfigurations\ManagerConfiguration.cs" />
     <Compile Include="ModelConfigurations\FamilyMemberConfiguration.cs" />
     <Compile Include="ModelConfigurations\OrganizationConfiguration.cs" />
+    <Compile Include="ModelConfigurations\ProfitConfiguration.cs" />
     <Compile Include="ModelConfigurations\StockholderConfiguration.cs" />
     <Compile Include="ModelConfigurations\TypeConfigurationExtensions.cs" />
     <Compile Include="ModelConfigurations\AppUserConfiguration.cs" />
+    <Compile Include="ModelConfigurations\InstitutionIncomeExpenditureConfiguration.cs" />
+    <Compile Include="ModelConfigurations\InstitutionLiabilitiesConfiguration.cs" />
     <Compile Include="Models\CRET_Cities.cs">
       <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
     </Compile>
@@ -219,6 +229,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201610280239033_NewStockholderUpdate.resx">
       <DependentUpon>201610280239033_NewStockholderUpdate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201610300351578_AddBorrow2.1.resx">
+      <DependentUpon>201610300351578_AddBorrow2.1.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

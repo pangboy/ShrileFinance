@@ -93,9 +93,15 @@
     <Compile Include="AccountAppService.cs" />
     <Compile Include="ViewModels\AccountViewModels\LoginViewModel.cs" />
     <Compile Include="ViewModels\AccountViewModels\RegisterViewModel.cs" />
+    <Compile Include="ViewModels\OrganizationViewModels\BigEventViewModel.cs" />
+    <Compile Include="ViewModels\OrganizationViewModels\CashFlowViewModel.cs" />
     <Compile Include="ViewModels\OrganizationViewModels\FamilyMemberViewModel.cs" />
+    <Compile Include="ViewModels\OrganizationViewModels\FinancialAffairsViewModel.cs" />
+    <Compile Include="ViewModels\OrganizationViewModels\LiabilitiesViewModel.cs" />
+    <Compile Include="ViewModels\OrganizationViewModels\LitigationViewModel.cs" />
     <Compile Include="ViewModels\OrganizationViewModels\OrganizateViewModel.cs" />
     <Compile Include="ViewModels\OrganizationViewModels\BaseViewModel.cs" />
+    <Compile Include="ViewModels\OrganizationViewModels\ProfitViewModel.cs" />
     <Compile Include="ViewModels\OrganizationViewModels\PropertiesViewModel.cs" />
     <Compile Include="ViewModels\OrganizationViewModels\ContactViewModel.cs" />
     <Compile Include="ViewModels\OrganizationViewModels\ManagerViewModel.cs" />
@@ -105,6 +111,10 @@
     <Compile Include="ViewModels\OrganizationViewModels\ParentViewModel.cs" />
     <Compile Include="ViewModels\OrganizationViewModels\ValidAttribute.cs" />
     <Compile Include="ViewModels\LitigationViewModels\LitigationViewModel.cs" />
+    <Compile Include="ViewModels\OrganizationViewModels\InstitutionIncomeExpenditureViewModel.cs">
+      <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="ViewModels\OrganizationViewModels\InstitutionLiabilitiesViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Core\Core.csproj">

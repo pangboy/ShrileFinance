@@ -62,9 +62,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Entities\AppUserManager.cs" />
-    <Compile Include="Entities\Concern\LitigationBasePeriod.cs" />
-    <Compile Include="Entities\Concern\Litigation.cs" />
+    <Compile Include="Entities\Customers\Enterprise\Litigation.cs" />
     <Compile Include="Entities\Customers\Customer.cs" />
+    <Compile Include="Entities\Customers\Enterprise\BigEvent.cs" />
+    <Compile Include="Entities\Customers\Enterprise\CashFlow.cs" />
+    <Compile Include="Entities\Customers\Enterprise\FinancialAffairs.cs" />
+    <Compile Include="Entities\Customers\Enterprise\Liabilities.cs">
+      <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
+    </Compile>
     <Compile Include="Entities\Customers\Enterprise\Organization.cs" />
     <Compile Include="Entities\Customers\Enterprise\FamilyMember.cs" />
     <Compile Include="Entities\Customers\Enterprise\OrganizationProperties.cs" />
@@ -72,8 +77,11 @@
     <Compile Include="Entities\Customers\Enterprise\Manager.cs" />
     <Compile Include="Entities\Customers\Enterprise\OrganizationState.cs" />
     <Compile Include="Entities\Customers\Enterprise\AssociatedEnterprise.cs" />
+    <Compile Include="Entities\Customers\Enterprise\Profit.cs" />
     <Compile Include="Entities\Customers\Enterprise\Stockholder.cs" />
     <Compile Include="Entities\Customers\Enterprise\OrganizationParent.cs" />
+    <Compile Include="Entities\Customers\Enterprise\InstitutionIncomeExpenditure.cs" />
+    <Compile Include="Entities\Customers\Enterprise\InstitutionLiabilities.cs" />
     <Compile Include="Entities\Customers\IEnterprise.cs" />
     <Compile Include="Entities\Customers\INaturalPerson.cs" />
     <Compile Include="Entities\Entity.cs" />
@@ -89,6 +97,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Entities\Concern\" />
     <Folder Include="Services\" />
   </ItemGroup>
   <ItemGroup>

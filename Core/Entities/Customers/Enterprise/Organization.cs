@@ -111,5 +111,20 @@
         /// 关联企业
         /// </summary>
         public virtual List<AssociatedEnterprise> AssociatedEnterprises { get; set; }
+
+        /// <summary>
+        /// 财务信息
+        /// </summary>
+        public virtual List<FinancialAffairs> FinancialAffairs { get; set; }
+
+        /// <summary>
+        /// 大事件
+        /// </summary>
+        public virtual List<BigEvent> BigEvent { get; set; }
+
+        /// <summary>
+        /// 诉讼事件
+        /// </summary>
+        public virtual List<Litigation> Litigation { get; set; }
     }
 }

@@ -5,7 +5,7 @@
     /// <summary>
     /// 股东
     /// </summary>
-    public  class Stockholder : Entity, INaturalPerson, IEnterprise
+    public class Stockholder : Entity, INaturalPerson, IEnterprise
     {
         /// <summary>
         /// 股东类型
