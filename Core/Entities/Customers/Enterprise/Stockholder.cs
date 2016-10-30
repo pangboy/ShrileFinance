@@ -5,7 +5,7 @@
     /// <summary>
     /// 股东
     /// </summary>
-    public abstract class Stockholder : Entity
+    public  class Stockholder : Entity, INaturalPerson, IEnterprise
     {
         /// <summary>
         /// 股东类型
@@ -21,34 +21,17 @@
         /// 持股比例
         /// </summary>
         public decimal SharesProportion { get; set; }
-    }
 
-    /// <summary>
-    /// 自然人股东
-    /// </summary>
-    public class PersonStockholder : Stockholder, INaturalPerson
-    {
         /// <summary>
         /// 证件类型
         /// </summary>
-        public string CertificateType { get; set; }
+       public string CertificateType { get; set; }
 
         /// <summary>
         /// 证件号码
         /// </summary>
         public string CertificateCode { get; set; }
 
-        /// <summary>
-        /// 对应的家族成员信息
-        /// </summary>
-        public List<FamilyMember> FamilyMembers { get; set; }
-    }
-
-    /// <summary>
-    /// 企业股东
-    /// </summary>
-    public class EnterpriseStockholder : Stockholder, IEnterprise
-    {
         /// <summary>
         /// 登记注册类型
         /// </summary>
@@ -68,5 +51,10 @@
         /// 机构信用代码
         /// </summary>
         public string InstitutionCreditCode { get; set; }
+
+        /// <summary>
+        /// 家族成员
+        /// </summary>
+        public List<FamilyMember> FamilyMembers { get; set; }
     }
 }

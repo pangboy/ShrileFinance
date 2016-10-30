@@ -244,10 +244,3 @@ ModelManifest.xml
 # FAKE - F# Make
 .fake/
 /UsedCarsFinance/Model
-/UsedCarsFinance/Web/Borrowers_16.10.27.zip
-/UsedCarsFinance/Web
-/Data/Migrations
-/Application.Test/Repositories
-/Application.Test/Application.Test.csproj
-/Application.Test/OrganizationAppServiceTests.cs
-/Application.Test/Properties/AssemblyInfo.cs

@@ -1,10 +1,10 @@
 ﻿namespace Application
 {
     using System;
-    using Core.Entities.Customers.Enterprise;
-    using Core.Interfaces.Repositories;
-    using ViewModels.OrganizationViewModels;
     using AutoMapper;
+    using Core.Interfaces.Repositories;
+    using System.Collections;
+    using System.Collections.Generic;
 
     public class OrganizationAppService
     {
@@ -20,11 +20,11 @@
         /// </summary>
         /// yand    16.10.25
         /// <param name="model">实体</param>
-        public void Create(ViewModels.OrganizationViewModels.Organization model)
+        public void Create(ViewModels.OrganizationViewModels.OrganizationViewModel model)
         {
             var customer = Mapper.Map<Core.Entities.Customers.Enterprise.Organization>(model.Base);
-            customer = Mapper.Map(model, customer);
 
+            customer = Mapper.Map(model, customer);
             repository.Create(customer);
             repository.Commit();
         }
@@ -34,46 +34,11 @@
         /// </summary>
         /// yand    16.10.25
         /// <param name="model">实体</param>
-        public void Modify(ViewModels.OrganizationViewModels.Organization model)
+        public void Modify(ViewModels.OrganizationViewModels.OrganizationViewModel model)
         {
             var customer = new Core.Entities.Customers.Enterprise.Organization()
             {
-                ////Id = model.Id,
-                ////BasicAccountState = model.BasicAccountState,
-                ////BusinessScope = model.BusinessScope,
-                ////CertificateDueDate = model.CertificateDueDate,
-                ////ContactPhone = model.ContactPhone,
-                ////Country = model.Country,
-                ////CustomerNumber = model.CustomerNumber,
-                ////CustomerType = model.CustomerType,
-                ////DataExtractionDate = model.DataExtractionDate,
-                ////EconomicSectorsClassification = model.EconomicSectorsClassification,
-                ////EconomicType = model.EconomicType,
-                ////EnterpriseScale = model.EnterpriseScale,
-                ////FinancialContactPhone = model.FinancialContactPhone,
-                ////InstitutionChName = model.InstitutionChName,
-                ////InstitutionCreditCode = model.InstitutionCreditCode,
-                ////InstitutionsState = model.LoanCardCode,
-                ////LoanCardCode = model.LoanCardCode,
-                ////ManagementerCode = model.ManagementerCode,
-                ////NewaccountlicenseNumber = model.NewaccountlicenseNumber,
-                ////OfficeAddress = model.OfficeAddress,
-                ////OrganizateCode = model.OrganizateCode,
-                ////OrganizationCategory = model.OrganizationCategory,
-                ////OrganizationCategorySubdivision = model.OrganizationCategorySubdivision,
-                ////RegisterAddress = model.RegisterAddress,
-                ////RegisterAdministrativeDivision = model.RegisterAdministrativeDivision,
-                ////RegisterCapital = model.RegisterCapital,
-                ////RegisterCapitalCurrency = model.RegisterCapitalCurrency,
-                ////RegistrationNumber = model.RegistrationNumber,
-                ////RegistrationNumberType = model.RegistrationNumberType,
-                ////SetupDate = model.SetupDate,
-                ////TaxpayerIdentifyIrsNumber = model.TaxpayerIdentifyIrsNumber,
-                ////TaxpayerIdentifyLandNumber = model.TaxpayerIdentifyLandNumber,
-                ////ExecutivesMajorParticipant = model.ExecutivesMajorParticipant,
-                ////MainAssociatedEnterprise = model.MainAssociatedEnterprise,
-                ////Shareholders = model.Shareholders,
-                ////SuperInstitution = model.SuperInstitution
+              
             };
             repository.Modify(customer);
             repository.Commit();
@@ -85,10 +50,14 @@
         /// yand    16.10.25
         /// <param name="id">id</param>
         /// <returns></returns>
-        public ViewModels.OrganizationViewModels.Organization Get(Guid id)
+        public ViewModels.OrganizationViewModels.OrganizationViewModel Get(Guid id)
         {
             Core.Entities.Customers.Enterprise.Organization customer = repository.Get(id);
-            return null;
+
+            var model = Mapper.Map<ViewModels.OrganizationViewModels.OrganizationViewModel>(customer);
+            model.Base = Mapper.Map<ViewModels.OrganizationViewModels.BaseViewModel>(customer);
+
+            return model;
         }
     }
 }
