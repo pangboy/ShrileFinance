@@ -6,8 +6,8 @@
     /// <summary>
     /// 基础段
     /// </summary>
-    [BasePeriod_OR(ErrorMessage = "基础段 组织机构代码和登记注册号码不能同时为空")]
-    [BasePeriod_TN(ErrorMessage = "基础段 登记注册号类型和登记注册号码需成对出现")]
+    [BasePeriod_OR(ErrorMessage = "基础信息 组织机构代码和登记注册号码不能同时为空")]
+    [BasePeriod_TN(ErrorMessage = "基础信息 登记注册号类型和登记注册号码需成对出现")]
     public class BaseViewModel
     {
         public Guid Id { get; set; }

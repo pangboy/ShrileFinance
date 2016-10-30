@@ -41,6 +41,11 @@
                         //加载数据
                         LoadDate(row);
                     }
+
+                    // 禁用fieldset
+                    Disabled($("fieldset"));
+
+                    // 禁用保存按钮
                     $("#save").linkbutton("disable");
                 }
             }
@@ -122,16 +127,9 @@
             self.parent.$("#ExecutivesMajorParticipant_dd").dialog({ closed: true });
         }
 
-        // 获取Url参数
-        function GetQueryString(name) {
-            var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
-            var r = window.location.search.substr(1).match(reg);
-            if (r != null) return unescape(r[2]); return null;
-        }
-
         // 下拉框的文本存入input
         function setTxt() {
-            var currentObj = $(this); //.find('option[value=0]');
+            var currentObj = $(this);
             var inputObj = $(this).parent().find("input[name=" + currentObj.attr('comboname') + "]:hidden");
             var tempArray = new Array();
 
@@ -212,13 +210,14 @@
             <!--<h2>基本属性</h2>-->
             <fieldset id="F">
                 <input type="hidden" name="InformationCategories" value="F" placeholder="信息类别">
+                <input type="hidden" name="Id" value="" placeholder="Guid_Id">
 
                 <div class="row">
                     <div class="col-6">
                         <label>
                             关系人类型：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="同一人兼任或具有上述多重关系的，分别填报">　</a>
                         </label>
-                        <select class="easyui-combobox  combobox-f combo-f textbox-f" data-options="editable:false,required:true,multiple:true,onSelect:setTxt" name="Type">
+                        <select class="easyui-combobox  combobox-f combo-f textbox-f" data-options="value:'',editable:false,required:true,multiple:true,onSelect:setTxt" name="Type">
                             <option value="0">实际控制人</option>
                             <option value="1">董事长</option>
                             <option value="2">总经理/主要负责人</option>
@@ -267,8 +266,7 @@
                         <label>
                             证件类型：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="">　</a>
                         </label>
-                        <select class="easyui-combobox  combobox-f combo-f textbox-f" data-options="editable:false,required:true,onSelect:setTxt" name="CertificateType">
-                            <option value=""></option>
+                        <select class="easyui-combobox  combobox-f combo-f textbox-f" data-options="value:'',editable:false,required:true,onSelect:setTxt" name="CertificateType">
                             <option value="0">身份证</option>
                             <option value="1">户口簿</option>
                             <option value="2">护照</option>
@@ -294,15 +292,6 @@
                     </div>
                 </div>
 
-                <!--<div class="row">
-                    <div class="col-6">
-                        <label>
-                            信息更新日期：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="">　</a>
-                        </label>
-                        <input class="easyui-datebox datebox-f combo-f textbox-f" data-options="editable:false ,width:407.75, formatter:myformatter,parser:myparser,required:true,validType:['N','length[1,8]']" name="InformationUpdateDate">
-                    </div>
-                </div>-->
-
                 <div class="row">
                     <div class="col-12">
                         <input type="checkbox" id="FamilyFiedSetShow" onclick="ShowFamilyFiedSet(this)" /><span onclick="$(this).parent().find('input[type=checkbox]').eq(0).click()">家族成员信息</span>
@@ -323,6 +312,7 @@
 
             <template id="templateI">
                 <input type="hidden" name="InformationCategories" value="B" placeholder="信息类别">
+                <input type="hidden" name="Id" value="" placeholder="Guid_Id">
 
                 <div class="row">
                     <div class="col-6">
@@ -330,6 +320,7 @@
                             家族成员关系：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="">　</a>
                         </label>
                         <select class="easyui-combobox  combobox-f combo-f textbox-f" data-options="editable:false,required:false" name="Relationship">
+                            <option value="">　</option>
                             <option value="1">配偶</option>
                             <option value="2">父母</option>
                             <option value="3">子女</option>
@@ -350,8 +341,7 @@
                         <label>
                             家族成员证件类型：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="">　</a>
                         </label>
-                        <select class="easyui-combobox  combobox-f combo-f textbox-f" data-options="editable:false,required:true" name="CertificateType">
-                            <option value=""></option>
+                        <select class="easyui-combobox  combobox-f combo-f textbox-f" data-options="value:'',editable:false,required:true" name="CertificateType">
                             <option value="0">身份证</option>
                             <option value="1">户口簿</option>
                             <option value="2">护照</option>

@@ -205,7 +205,7 @@
                 return true;
             }
 
-            return new Regex(@"^d+\.\d{2}$").IsMatch(value.ToString());
+            return new Regex(@"^\d+\.\d{2}$").IsMatch(value.ToString());
         }
     }
 
@@ -348,13 +348,13 @@
             {
                 if (executivesMajorParticipantPeriod.ShareholdersType.Equals("1"))
                 {
-                    var list = new List<string>() { "-1", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B", "C", "X" };
+                    var list = new List<string>() { string.Empty, "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B", "C", "X" };
 
                     return list.Contains(executivesMajorParticipantPeriod.RegistraterType);
                 }
                 else
                 {
-                    var list = new List<string>() { "-1", "01", "02", "03", "04", "05", "06", "07", "08", "99" };
+                    var list = new List<string>() { string.Empty, "01", "02", "03", "04", "05", "06", "07", "08", "99" };
 
                     return list.Contains(executivesMajorParticipantPeriod.RegistraterType);
                 }
@@ -556,7 +556,7 @@
                 return true;
             }
 
-            var list = new List<string>() { "-1", "01", "02", "03", "04", "05", "06", "07", "08", "99" };
+            var list = new List<string>() { string.Empty, "01", "02", "03", "04", "05", "06", "07", "08", "99" };
 
             return list.Contains(value.ToString());
         }
@@ -610,7 +610,7 @@
                 return true;
             }
 
-            var list = new List<string>() { "-1", "1", "2", "3", "4", "7", "9" };
+            var list = new List<string>() { string.Empty, "1", "2", "3", "4", "7", "9" };
 
             return list.Contains(value.ToString());
         }
@@ -628,7 +628,7 @@
                 return true;
             }
 
-            var list = new List<string>() { "-1", "10", "13", "14", "11", "12", "20", "21", "24", "30", "31", "32", "40", "41", "51", "52", "53", "54", "60", "61", "62", "70", "99" };
+            var list = new List<string>() { string.Empty, "10", "13", "14", "11", "12", "20", "21", "24", "30", "31", "32", "40", "41", "51", "52", "53", "54", "60", "61", "62", "70", "99" };
 
             return list.Contains(value.ToString());
         }
@@ -646,7 +646,7 @@
                 return true;
             }
 
-            var list = new List<string>() { "-1", "10", "11", "12", "13", "14", "15", "16", "17", "19", "20", "21", "22", "23", "24", "29", "30", "31", "32", "33", "34", "39", "90" };
+            var list = new List<string>() { string.Empty, "10", "11", "12", "13", "14", "15", "16", "17", "19", "20", "21", "22", "23", "24", "29", "30", "31", "32", "33", "34", "39", "90" };
 
             return list.Contains(value.ToString());
         }
@@ -682,7 +682,7 @@
                 return true;
             }
 
-            var list = new List<string>() { "-1", "2", "3", "4", "5", "9", "X" };
+            var list = new List<string>() { string.Empty, "2", "3", "4", "5", "9", "X" };
 
             return list.Contains(value.ToString());
         }
@@ -700,7 +700,7 @@
                 return true;
             }
 
-            var list = new List<string>() { "-1", "1", "2", "9", "X" };
+            var list = new List<string>() { string.Empty, "1", "2", "9", "X" };
 
             return list.Contains(value.ToString());
         }
@@ -764,11 +764,11 @@
             valueArray[0] = valueArray[0] ?? string.Empty;
             valueArray[1] = valueArray[1] ?? string.Empty;
 
-            var value1 = string.IsNullOrEmpty(valueArray[0]) || valueArray[1].Equals("-1");
+            var value1 = string.IsNullOrEmpty(valueArray[0]);
 
-            var value2 = string.IsNullOrEmpty(valueArray[1]) || valueArray[1].Equals("-1");
+            var value2 = string.IsNullOrEmpty(valueArray[1]);
 
-            if ((!value1 && value2) || (value1 && !value2))
+            if (value1 && value2)
             {
                 return false;
             }

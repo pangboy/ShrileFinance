@@ -38,6 +38,11 @@
                         //加载数据
                         $('#content').form('load', row);
                     }
+
+                    // 禁用fieldset
+                    Disabled($("fieldset"));
+
+                    // 禁用保存按钮
                     $("#save").linkbutton("disable");
                 }
             }
@@ -94,13 +99,6 @@
             self.parent.$("#MainAssociatedEnterprise_dd").dialog({ closed: true });
         }
 
-        // 获取Url参数
-        function GetQueryString(name) {
-            var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
-            var r = window.location.search.substr(1).match(reg);
-            if (r != null) return unescape(r[2]); return null;
-        }
-
         // 下拉框的文本存入input
         function setTxt() {
             var currentObj = $(this);
@@ -125,14 +123,14 @@
 
             <fieldset id="H">
                 <input type="hidden" name="InformationCategories" value="H" placeholder="信息类别">
+                <input type="hidden" name="Id" value="" placeholder="Guid_Id">
 
                 <div class="row">
                     <div class="col-6">
                         <label>
                             关联类型：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="除本企业的股东外，与本企业存在直接或间接控制关系的关联企业">　</a>
                         </label>
-                        <select class="easyui-combobox  combobox-f combo-f textbox-f" data-options="editable:false,required:true,onSelect:setTxt" name="AssociatedType">
-                            <option value="-1"></option>
+                        <select class="easyui-combobox  combobox-f combo-f textbox-f" data-options="value:'',editable:false,required:true,onSelect:setTxt" name="AssociatedType">
                             <option value="20">实际控制人</option>
                             <option value="21">除本企业的股东外，直接或间接控制本企业的关联企业</option>
                             <option value="22">本企业直接或间接控制的关联企业</option>
@@ -155,7 +153,7 @@
                             登记注册号类型：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="">　</a>
                         </label>
                         <select class="easyui-combobox  combobox-f combo-f textbox-f" data-options="editable:false,required:false,onSelect:setTxt" name="RegistraterType">
-                            <option value="-1"></option>
+                            <option value="">　</option>
                             <option value="01">工商注册号</option>
                             <option value="02">机关和事业单位登记号</option>
                             <option value="03">社会团体登记号</option>

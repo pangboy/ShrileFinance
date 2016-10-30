@@ -42,7 +42,11 @@
                         //加载数据
                         LoadDate(row);
                     }
-                    $("input").attr("disable",true);
+
+                    // 禁用fieldset
+                    Disabled($("fieldset"));
+
+                    // 禁用保存按钮
                     $("#save").linkbutton("disable");
                 }
             }
@@ -144,13 +148,6 @@
                 return false;
             }
             return true;
-        }
-
-        // 获取Url参数
-        function GetQueryString(name) {
-            var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
-            var r = window.location.search.substr(1).match(reg);
-            if (r != null) return unescape(r[2]); return null;
         }
 
         // 下拉框的文本存入input
@@ -263,14 +260,14 @@
             <h2>重要股东</h2>
             <fieldset id="G">
                 <input type="hidden" name="InformationCategories" value="G" placeholder="信息类别">
+                <input type="hidden" name="Id" value="" placeholder="Guid_Id">
 
                 <div class="row">
                     <div class="col-6">
                         <label>
                             股东类型：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="">　</a>
                         </label>
-                        <select class="easyui-combobox  combobox-f combo-f textbox-f" data-options="editable:false,required:true,onSelect:ChangeType" name="ShareholdersType" id="ShareholdersType">
-                            <option value="0"></option>
+                        <select class="easyui-combobox  combobox-f combo-f textbox-f" data-options="value:'',editable:false,required:true,onSelect:ChangeType" name="ShareholdersType" id="ShareholdersType">
                             <option value="1">自然人</option>
                             <option value="2">机构</option>
                         </select>
@@ -291,7 +288,7 @@
                             证件类型/登记注册号类型：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="当股东类型为自然人时，填写证件类型；当股东类型为机构时，填写登记注册号类型">　</a>
                         </label>
                         <select class="easyui-combobox  combobox-f combo-f textbox-f" data-options="editable:false,required:false,onSelect:setTxt2" name="RegistraterTypeModel" id="RegistraterTypeModel">
-                            <option value="-1"></option>
+                            <option value="">　</option>
                             <option value="0">身份证</option>
                             <option value="1">户口簿</option>
                             <option value="2">护照</option>
@@ -313,7 +310,7 @@
                             证件类型/登记注册号类型：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="当股东类型为自然人时，填写证件类型；当股东类型为机构时，填写登记注册号类型">　</a>
                         </label>
                         <select class="easyui-combobox  combobox-f combo-f textbox-f" data-options="editable:false,required:false,onSelect:setTxt2" name="RegistraterTypeModel" id="RegistraterTypeModel2">
-                            <option value="-1"></option>
+                            <option value="">　</option>
                             <option value="01">工商注册号</option>
                             <option value="02">机关和事业单位登记号</option>
                             <option value="03">社会团体登记号</option>
@@ -325,7 +322,7 @@
                             <option value="99">其他</option>
                         </select>
                     </div>
-                    <input type="hidden" name="RegistraterType" value="-1" />
+                    <input type="hidden" name="RegistraterType" value="" />
                     <input type="hidden" name="RegistraterType_Txt" />
 
                     <div class="col-6">
@@ -380,6 +377,7 @@
 
             <template id="templateI">
                 <input type="hidden" name="InformationCategories" value="B" placeholder="信息类别">
+                <input type="hidden" name="Id" value="" placeholder="Guid_Id">
 
                 <div class="row">
                     <div class="col-6">
@@ -387,6 +385,7 @@
                             家族成员关系：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="">　</a>
                         </label>
                         <select class="easyui-combobox  combobox-f combo-f textbox-f" data-options="editable:false,required:false" name="Relationship">
+                            <option value="">　</option>
                             <option value="1">配偶</option>
                             <option value="2">父母</option>
                             <option value="3">子女</option>
