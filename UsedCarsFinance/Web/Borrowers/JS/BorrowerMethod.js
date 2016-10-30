@@ -120,61 +120,18 @@ function Add(templateId) {
     $.parser.parse("#" + parent.attr("id") + "_" + temp);
 }
 
-// 提交
-function Submit() {
-    var data = {};
-    var section = $("#content").find("section");
-    //序列化数据
-    var temp;
-    for (var i = 0; i < section.length; i++) {
-        var fs = new Array();
-        temp = $(section[i]).attr("id");
-        var fieldset = $(section[i]).children("fieldset");
-        for (var j = 0; j < fieldset.length; j++) {
-            fs.push($(fieldset[j]).serializeJson())
-        }
-        data[temp] = fs;
-    }
-    var str = JSON.stringify(data);
-    $("#content").children().children(":hidden").find(":input.validatebox-text").validatebox("disableValidation");
-    if (!$("#content").form("validate")) {
-        $.messager.show({ msg: "请填写剩下的必填内容!" });
-        return false;
-    }
-
-    $.ajax({
-        async: true,
-        data: { value: str, InfoTypeId: infoTypeId, ReportId: reportId, recordID: recordID, messageTypeID: messageTypeId },
-        method: "POST",
-        url: "../api/DynamicLoad/PostMessageInfo",
-        statusCode: {
-            200: function (data) {
-                if (data == "") {
-                    // 禁用提交、保存草稿和清空草稿按钮
-                    $("#submit").linkbutton("disable");
-                    $("#temp").linkbutton("disable");
-                    $("#clear").linkbutton("disable");
-                    // 删除临时数据
-                    DeleteTempRecord();
-                    top.$.messager.show({ msg: "保存成功！" });
-                    setTimeout(function () {
-                        Cancel();
-                    }, 1000);
-                }
-            },
-            500: function (data) {
-                $.messager.alert('错误', data.responseJSON.ExceptionMessage);
-            },
-            400: function (data) {
-                $.messager.alert('错误', data.responseJSON.Message, "info");
-            }
-        }
-    });
+// 获取Url参数
+function GetQueryString(name) {
+    var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+    var r = window.location.search.substr(1).match(reg);
+    if (r != null) return unescape(r[2]); return null;
 }
 
-// 取消按钮
-function Cancel() {
-    window.opener.location.href = window.opener.location.href;
-    window.close()
+// 禁用
+function Disabled(selector) {
+    selector = selector || "fieldset";
+
+    $(selector).attr("disabled", "disabled");
+    //$(selector + " select.easyui-combobox").combobox("disable");
 }
 

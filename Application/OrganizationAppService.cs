@@ -36,10 +36,15 @@
         /// <param name="model">实体</param>
         public void Modify(ViewModels.OrganizationViewModels.OrganizationViewModel model)
         {
-            var customer = new Core.Entities.Customers.Enterprise.Organization()
-            {
+            //var customer = new Core.Entities.Customers.Enterprise.Organization()
+            //{
               
-            };
+            //};
+
+            var customer = Mapper.Map<Core.Entities.Customers.Enterprise.Organization>(model.Base);
+
+            customer = Mapper.Map(model, customer);
+
             repository.Modify(customer);
             repository.Commit();
         }
