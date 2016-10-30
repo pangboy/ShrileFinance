@@ -58,5 +58,6 @@
         /// 大事件
         /// </summary>
         public IEnumerable<BigEventViewModel> BigEventViewModel { get; set; }
+
     }
 }

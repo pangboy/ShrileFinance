@@ -18,10 +18,11 @@
            rownumbers :true,
            singleSelect :true,
            pagination :true,
-           pageSize :20,
-           pageList :[10,20,30,40,50],
+           pageSize :1,
+           pageList :[1,10,20,30,40,50],
            method :'GET' ,
-           url :'../api/Instance/DoingList' ,
+           url :'../api/Customer/GetPageList' ,
+           queryParams:{Search:'yandong'},
            loadMsg :'正在加载，请稍候...'
            ">
         <thead>

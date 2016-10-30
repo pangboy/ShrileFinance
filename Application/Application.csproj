@@ -103,6 +103,7 @@
     <Compile Include="ViewModels\OrganizationViewModels\FinancialAffairsViewModel.cs" />
     <Compile Include="ViewModels\OrganizationViewModels\LiabilitiesViewModel.cs" />
     <Compile Include="ViewModels\OrganizationViewModels\LitigationViewModel.cs" />
+    <Compile Include="ViewModels\OrganizationViewModels\OragnizateListView.cs" />
     <Compile Include="ViewModels\OrganizationViewModels\OrganizateViewModel.cs" />
     <Compile Include="ViewModels\OrganizationViewModels\BaseViewModel.cs" />
     <Compile Include="ViewModels\OrganizationViewModels\ProfitViewModel.cs" />

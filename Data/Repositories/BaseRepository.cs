@@ -46,7 +46,7 @@
 
         public IPagedList<TEntity> PagedList(Expression<Func<TEntity, bool>> predicate, int pageNumber, int pageSize)
         {
-            return GetAll(predicate).ToPagedList(pageNumber, pageSize);
+            return GetAll(predicate).OrderByDescending(m => m.Id).ToPagedList(pageNumber, pageSize);
         }
 
         public void Create(TEntity entity)

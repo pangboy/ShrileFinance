@@ -233,7 +233,7 @@
     </script>
 
     <script type="text/javascript">
-        function TempleSubmit() {
+        function Submit() {
             var base = {
                 CustomerNumber: "123123", ManagementerCode: "11111111111111111111", CustomerType: "1", InstitutionCreditCode: "123123123123123123",
                 OrganizateCode: "", RegistraterType: "01", RegistraterCode: "123123", TaxpayerIdentifyIrsNumber: "123123123", TaxpayerIdentifyLandNumber: "123133213", LoanCardCode: "1111111111112222", HasParent: "false"
@@ -314,10 +314,10 @@
             { AssociatedType: "01", Name: "云为", RegistraterType: "02", RegistraterCode: "3333333333", OrganizateCode: "L1832212-3", InstitutionCreditCode: "333333333333333322" }]
             var Parent = { SuperInstitutionsName: "晟融", RegistraterType: "01", RegistraterCode: "1111111111", OrganizateCode: "2222222222", InstitutionCreditCode: "333333333333333333" }
 
-            if (!$("#content").form("validate")) {
-                $.messager.show({ msg: "填写剩下的必填内容!" });
-                return false;
-            }
+            //if (!$("#content").form("validate")) {
+            //    $.messager.show({ msg: "填写剩下的必填内容!" });
+            //    return false;
+            //}
 
             var data = {};
             data["Base"] = base;//$("#base").serializeJson();
@@ -1104,7 +1104,7 @@
         </section>
 
         <div id="btn">
-            <a id="submit" class="easyui-linkbutton" data-options="iconCls: 'icon-edit'" style="margin:0 auto" onclick="OrganizateSubmit()">提交</a>
+            <a id="submit" class="easyui-linkbutton" data-options="iconCls: 'icon-edit'" style="margin:0 auto" onclick="Submit()">提交</a>
             <a id="cancel" class="easyui-linkbutton" data-options="iconCls: 'icon-redo'" style="margin:0 auto" onclick="OrganizateCancel()">取消</a>
         </div>
     </form>
