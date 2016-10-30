@@ -7,6 +7,7 @@
     using Core.Entities;
     using Core.Interfaces;
     using Core.Interfaces.Repositories;
+    using X.PagedList;
 
     public abstract class BaseRepository<TEntity> : IRepository<TEntity>
         where TEntity : Entity, IAggregateRoot
@@ -33,7 +34,7 @@
             return Entities.Find(key);
         }
 
-        public IQueryable<Entity> GetAll()
+        public IQueryable<TEntity> GetAll()
         {
             return Entities;
         }
@@ -41,6 +42,11 @@
         public IQueryable<TEntity> GetAll(Expression<Func<TEntity, bool>> predicate)
         {
             return Entities.Where(predicate);
+        }
+
+        public IPagedList<TEntity> PagedList(Expression<Func<TEntity, bool>> predicate, int pageNumber, int pageSize)
+        {
+            return GetAll(predicate).ToPagedList(pageNumber, pageSize);
         }
 
         public void Create(TEntity entity)
