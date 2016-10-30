@@ -4,15 +4,18 @@
     using System.Linq;
     using System.Linq.Expressions;
     using Entities;
+    using X.PagedList;
 
     public interface IRepository<TEntity> : IUnitOfWork
         where TEntity : Entity, IAggregateRoot
     {
         TEntity Get(Guid key);
 
-        IQueryable<Entity> GetAll();
+        IQueryable<TEntity> GetAll();
 
         IQueryable<TEntity> GetAll(Expression<Func<TEntity, bool>> predicate);
+
+        IPagedList<TEntity> PagedList(Expression<Func<TEntity, bool>> predicate, int pageNumber, int pageSize);
 
         void Create(TEntity entity);
 
