@@ -60,6 +60,15 @@
             HasMany(m => m.Shareholders).WithRequired().Map(m => m.MapKey("OrganizationId"));
             HasMany(m => m.AssociatedEnterprises).WithRequired().Map(m => m.MapKey("OrganizationId"));
 
+            // 财务
+            HasMany(m => m.FinancialAffairs).WithOptional().Map(m => m.MapKey("OrganizationId"));
+
+            // 大事件
+            HasMany(m => m.BigEvent).WithOptional().Map(m => m.MapKey("OrganizationId"));
+
+            // 诉讼
+            HasMany(m => m.Litigation).WithOptional().Map(m => m.MapKey("OrganizationId"));
+
             ToTable("CUST_Organization");
         }
     }

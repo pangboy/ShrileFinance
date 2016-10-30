@@ -43,5 +43,20 @@
         /// 上级机构
         /// </summary>
         public ParentViewModel Parent { get; set; }
+
+        /// <summary>
+        /// 财务
+        /// </summary>
+        public IEnumerable<FinancialAffairsViewModel> FinancialAffairsViewModel { get; set; }
+
+        /// <summary>
+        /// 诉讼事件
+        /// </summary>
+        public IEnumerable<LitigationViewModel> LitigationViewModel { get; set; }
+
+        /// <summary>
+        /// 大事件
+        /// </summary>
+        public IEnumerable<BigEventViewModel> BigEventViewModel { get; set; }
     }
 }

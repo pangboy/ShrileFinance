@@ -218,9 +218,9 @@
     },
     SharesProportion: {// 验证持股比例
         validator: function (value) {
-            return /^\d+\.\d{2}$/.test(value) && value>0;
+            return /^\d+\.\d{2}$/.test(value) && value > 0 && value < 100;
         },
-        message: '持股比例大于0且保留两位小数，例如：1.00'
+        message: '持股比例：(0.00,100.00)，且保留两位小数，例如：1.00'
     },
     PositiveNumber: {// 验证正实数
         validator: function (value) {
