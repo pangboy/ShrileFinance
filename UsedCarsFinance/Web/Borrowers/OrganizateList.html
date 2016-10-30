@@ -1,0 +1,46 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>机构信息列表</title>
+    <meta charset="utf-8" />
+    <link href="../Content/easyui/themes/bootstrap/easyui.css" rel="stylesheet" />
+    <link href="../Content/easyui/themes/icon.css" rel="stylesheet" />
+    <link href="../Content/form-bootstrap.css" rel="stylesheet" />
+    <script src="../Scripts/jquery/jquery.js"></script>
+    <script src="../Scripts/easyui/jquery.easyui.js"></script>
+    <script src="../Scripts/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../Scripts/usedcars.js"></script>
+</head>
+<body>
+    <table id="dg" class="easyui-datagrid" data-options="height:630,
+           toolbar :'#tb' ,
+           rownumbers :true,
+           singleSelect :true,
+           pagination :true,
+           pageSize :20,
+           pageList :[10,20,30,40,50],
+           method :'GET' ,
+           url :'../api/Instance/DoingList' ,
+           loadMsg :'正在加载，请稍候...'
+           ">
+        <thead>
+            <tr>
+                <th data-options="field:'InstitutionChName',width:500,align:'center'">机构名称</th>
+                <th data-options="field:'CustomerNumber',width:300,align:'center'">客户号</th>
+                <th data-options="field:'ManagementerCode',width:200,align:'center'">管理行代码</th>
+                <th data-options="field:'LoanCardCode',width:200,align:'center'">中征码</th>
+                <th data-options="field:'InstitutionCreditCode',width:200,align:'center'">机构信用代码</th>
+            </tr>
+        </thead>
+    </table>
+
+    <div id="tb">
+        <div>
+            <a id="add" class="easyui-linkbutton" href="javascript:void(0)" data-options="iconCls:'icon-add',plain:true" style="display:none">添加</a>
+            <a id="mod" class="easyui-linkbutton" href="javascript:void(0)" data-options="iconCls:'icon-edit',plain:true">修改</a>
+            <a id="view" class="easyui-linkbutton" href="javascript:void(0)" data-options="iconCls:'icon-search',plain:true">查看详情</a>
+        </div>
+    </div>
+</body>
+</html>

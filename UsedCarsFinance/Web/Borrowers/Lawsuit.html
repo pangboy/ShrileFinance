@@ -11,51 +11,28 @@
     <script src="../Scripts/easyui/jquery.easyui.js"></script>
     <script src="../Scripts/easyui/locale/easyui-lang-zh_CN.js"></script>
     <script src="../Scripts/usedcars.js"></script>
-    <script>
-        //时间数据的转换
-        function myformatter(date) {
-            var y = date.getFullYear();
-            var m = date.getMonth() + 1;
-            var d = date.getDate();
-            return y.toString() + (m < 10 ? ('0' + m) : m).toString() + (d < 10 ? ('0' + d) : d).toString();
-        }
-        function myparser(s) {
-            if (s != "") {
-                var y = s.substring(0, 4);
-                var m = s.substring(4, 6);
-                var d = s.substring(6, 8);
-                var s = Date.parse(y + "-" + m + "-" + d);
-                return new Date(s);
-            }
-            else {
-                return new Date();
-            }
-        }
-    </script>
 </head>
 <body>
-    <form id="credit_ff" class="container">
-        <fieldset id="credit_info">
+    <form id="ff" class="container">
+        <fieldset id="lawsuit_info">
             <legend>基础段</legend>
 
             <div class="row">
                 <div class="col-6">
                     <label>借款人名称:</label>
-                    <input name="BorrowName" class="easyui-textbox" required />
+                    <input name="BorrowName" class="easyui-textbox" data-options="required:true" />
                 </div>
 
                 <div class="col-6">
                     <label>贷款卡编码:</label>
-                    <input name="LoanCardCode" class="easyui-textbox" required />
+                    <input name="LoanCardCode" class="easyui-textbox" data-options="required:true" />
                 </div>
 
                 <div class="col-6">
                     <label>业务发生日期:</label>
-                    <input class="easyui-datebox" name="BusinessDate" data-options="editable:false ,width:407.75, formatter:myformatter,parser:myparser" />
+                    <input class="easyui-datebox" name="BusinessDate" data-options="editable:false" />
                 </div>
             </div>
-
-           
         </fieldset>
 
         <fieldset id="process_user">
@@ -64,46 +41,45 @@
             <div class="row">
                 <div class="col-6">
                     <label>被起诉记录流水号：:</label>
-                    <select name="ChargedSerialNumber" class="easyui-textbox" data-options="editable:false" required></select>
+                    <input name="ChargedSerialNumber" class="easyui-textbox"  data-options="required:true"/>
                 </div>
 
                 <div class="col-6">
                     <label>起诉人名称：</label>
-                    <select name="ProsecuteName" class="easyui-textbox" data-options="editable:false" required></select>
+                    <input name="ProsecuteName" class="easyui-textbox" data-options="required:true"/>
                 </div>
             </div>
 
             <div class="row">
                 <div class="col-6">
                     <label>币种：</label>
-                    <select name="Currency" class="easyui-combobox" data-options="editable:false" required></select>
+                    <input name="Currency" class="easyui-combobox" data-options="required:true"/>
                 </div>
 
                 <div class="col-6">
                     <label>判决执行金额：</label>
-                    <select name="Money" class="easyui-textbox" data-options="editable:false" required></select>
+                    <input name="Money" class="easyui-textbox" data-options="required:true"/>
                 </div>
             </div>
 
             <div class="row">
                 <div class="col-6">
                     <label>判决执行日期：</label>
-                    <select name="DateTime" class="easyui-combobox" data-options="editable:false" required></select>
+                    <input name="DateTime" class="easyui-combobox" data-options="required:true"/>
                 </div>
             </div>
 
             <div class="row">
                 <div class="col-12">
                     <label>执行结果：</label>
-                    <select name="Result" class="easyui-textbox" data-options="editable:false" required></select>
+                    <input name="Result" class="easyui-textbox" data-options="required:true"/>
                 </div>
             </div>
-
 
             <div class="row">
                 <div class="col-12">
                     <label>被起诉原因：</label>
-                    <select name="Reason" class="easyui-textbox" data-options="editable:false" required></select>
+                    <input name="Reason" class="easyui-textbox" data-options="required:true"/>
                 </div>
             </div>
         </fieldset>

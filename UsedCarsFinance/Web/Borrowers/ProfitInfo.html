@@ -1,0 +1,140 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>利润及利润信息</title>
+    <meta charset="utf-8" />
+    <link href="../Content/easyui/themes/bootstrap/easyui.css" rel="stylesheet" />
+    <link href="../Content/easyui/themes/icon.css" rel="stylesheet" />
+    <link href="../Content/form-bootstrap.css" rel="stylesheet" />
+    <script src="../Scripts/jquery/jquery.js"></script>
+    <script src="../Scripts/easyui/jquery.easyui.js"></script>
+    <script src="../Scripts/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../Scripts/usedcars.js"></script>
+</head>
+<body>
+    <form id="ff" class="container">
+        <fieldset id="profitInfo">
+            <div class="row">
+                <div class="col-6">
+                    <label>营业收入：:</label>
+                    <input name="BusinessIncome" class="easyui-textbox" data-options="required:true" />
+                </div>
+
+                <div class="col-6">
+                    <label>营业成本：</label>
+                    <input name="OperatingCost" class="easyui-textbox" />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6">
+                    <label>营业税金及附加：</label>
+                    <input name="SalesTax" class="easyui-textbox" />
+                </div>
+
+                <div class="col-6">
+                    <label>销售费用：</label>
+                    <input name="SellingExpenses" class="easyui-textbox" />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6">
+                    <label>管理费用：</label>
+                    <input name="ManagementExpenses" class="easyui-textbox" />
+                </div>
+
+                <div class="col-6">
+                    <label>财务费用：</label>
+                    <input name="FinancialExpenses" class="easyui-textbox" data-options="required:true" />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6">
+                    <label>资产减值损失：</label>
+                    <select name="AssetsimpairmentLoss" class="easyui-textbox"></select>
+                </div>
+
+                <div class="col-6">
+                    <label>公允价值变动净收益：</label>
+                    <select name="FairIncome" class="easyui-textbox"></select>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6">
+                    <label>投资净收益：</label>
+                    <input name="NetInvestmentIncome" class="easyui-textbox" />
+                </div>
+
+                <div class="col-6">
+                    <label>对联营企业和合营企业的投资收益：</label>
+                    <input name="EnterpriseInvestmentIncome" class="easyui-textbox" />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6">
+                    <label>营业利润：</label>
+                    <input name="OperatingProfit" class="easyui-textbox" data-options="required:true" />
+                </div>
+
+                <div class="col-6">
+                    <label>营业外收入：</label>
+                    <input name="OperatingIncome" class="easyui-textbox" />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6">
+                    <label>营业外支出：</label>
+                    <input name="OperatingExpenditure" class="easyui-textbox" />
+                </div>
+
+                <div class="col-6">
+                    <label>非流动资产损失：</label>
+                    <input name="NonCurrentAssetsLoss" class="easyui-textbox" />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6">
+                    <label>利润总额：</label>
+                    <input name="GrossProfit" class="easyui-textbox" data-options="required:true" />
+                </div>
+
+                <div class="col-6">
+                    <label>所得税费用：</label>
+                    <input name="IncomeTaxExpense" class="easyui-textbox" />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6">
+                    <label>净利润：</label>
+                    <input name="NetProfit" class="easyui-textbox" data-options="required:true" />
+                </div>
+
+                <div class="col-6">
+                    <label>基本每股收益：</label>
+                    <input name="BasicEarningsShare" class="easyui-textbox" />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6">
+                    <label>稀释每股收益：</label>
+                    <input name="DilutedEarningsShare" class="easyui-textbox" />
+                </div>
+            </div>
+        </fieldset>
+
+        <div id="btn">
+            <!--<a href="javascript:void(0)" id="save" class="easyui-linkbutton" data-options="iconCls:'icon-save',onClick:Submit">保存</a>-->
+            <a href="javascript:void(0)" id="back" class="easyui-linkbutton" data-options="iconCls:'icon-redo'">返回</a>
+        </div>
+    </form>
+</body>
+</html>

@@ -1,0 +1,404 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>现金流量</title>
+	<meta charset="utf-8" />
+    <link href="../Content/easyui/themes/bootstrap/easyui.css" rel="stylesheet" />
+    <link href="../Content/easyui/themes/icon.css" rel="stylesheet" />
+    <link href="../Content/form-bootstrap.css" rel="stylesheet" />
+    <script src="../Scripts/jquery/jquery.js"></script>
+    <script src="../Scripts/easyui/jquery.easyui.js"></script>
+    <script src="../Scripts/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../Scripts/usedcars.js"></script>
+</head>
+<body>
+    <form id="ff" class="container">
+        <fieldset id="profitInfo">
+            <div class="row">
+                <div class="col-6">
+                    <label>销售商品和提供劳务收到的现金：:</label>
+                    <input name="SaleGoodsCash" class="easyui-textbox" data-options="required:true" />
+                </div>
+
+                <div class="col-6">
+                    <label>收到的税费返还：</label>
+                    <input name="TaxesRefunds" class="easyui-textbox" />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6">
+                    <label>收到其他与经营活动有关的现金：</label>
+                    <input name="ReceiveOperatingActivitiesCash" class="easyui-textbox" />
+                </div>
+
+                <div class="col-6">
+                    <label>经营活动现金流入小计：</label>
+                    <input name="OperatingActivitiesCashInflows" class="easyui-textbox" />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6">
+                    <label>购买商品、接受劳务支付的现金：</label>
+                    <input name="BuyGoodsCash" class="easyui-textbox" />
+                </div>
+
+                <div class="col-6">
+                    <label>支付给职工以及为职工支付的现金：</label>
+                    <input name="PayEmployeeCash" class="easyui-textbox" data-options="required:true" />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6">
+                    <label>支付的各项税费：</label>
+                    <select name="PayAllTaxes" class="easyui-textbox"></select>
+                </div>
+
+                <div class="col-6">
+                    <label>支付其他与经营活动有关的现金：</label>
+                    <select name="PayOperatingActivitiesCash" class="easyui-textbox"></select>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6">
+                    <label>经营活动现金流出小计：</label>
+                    <input name="OperatingActivitiesCashOutflows" class="easyui-textbox" />
+                </div>
+
+                <div class="col-6">
+                    <label>经营活动产生的现金流量净额：</label>
+                    <input name="OperatingActivitieCashNet" class="easyui-textbox" />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6">
+                    <label>收回投资所收到的现金：</label>
+                    <input name="RecoveryInvestmentCash" class="easyui-textbox" data-options="required:true" />
+                </div>
+
+                <div class="col-6">
+                    <label>取得投资收益所收到的现金：</label>
+                    <input name="InvestmentIncomeCash" class="easyui-textbox" />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6">
+                    <label>处置固定资产无形资产和其他长期资产所收回的现金净额：</label>
+                    <input name="RecoveryAssetsCash" class="easyui-textbox" />
+                </div>
+
+                <div class="col-6">
+                    <label>处置子公司及其他营业单位收到的现金净额：</label>
+                    <input name="RecoveryChildrenCompanyCash" class="easyui-textbox" />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6">
+                    <label>收到其他与投资活动有关的现金：</label>
+                    <input name="OtherInvestmentCash" class="easyui-textbox" data-options="required:true" />
+                </div>
+
+                <div class="col-6">
+                    <label>投资活动现金流入小计：</label>
+                    <input name="CashInInvestmentActivities" class="easyui-textbox" />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6">
+                    <label>购建固定资产无形资产和其他长期资产所支付的现金：</label>
+                    <input name="BuyAssetsCash" class="easyui-textbox" data-options="required:true" />
+                </div>
+
+                <div class="col-6">
+                    <label>投资所支付的现金：</label>
+                    <input name="InvestmentPaidCash" class="easyui-textbox" />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6">
+                    <label>取得子公司及其他营业单位支付的现金净额：</label>
+                    <input name="GetChildrenComponyCash" class="easyui-textbox" />
+                </div>
+
+                <div class="col-6">
+                    <label>支付其他与投资活动有关的现金：</label>
+                    <input name="PayOtherInvestmentCash" class="easyui-textbox" />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6">
+                    <label>投资活动现金流出小计：</label>
+                    <input name="InvestmentCashOutflow" class="easyui-textbox" data-options="required:true" />
+                </div>
+
+                <div class="col-6">
+                    <label>投资活动产生的现金流量净额：</label>
+                    <input name="InvestmentCashInflow" class="easyui-textbox" />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6">
+                    <label>吸收投资收到的现金：</label>
+                    <input name="AbsorbInvestmentCash" class="easyui-textbox" data-options="required:true" />
+                </div>
+
+                <div class="col-6">
+                    <label>取得借款收到的现金：</label>
+                    <input name="GetLoanCash" class="easyui-textbox" />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6">
+                    <label>收到其他与筹资活动有关的现金：</label>
+                    <input name="GetFinancingCash" class="easyui-textbox" data-options="required:true" />
+                </div>
+
+                <div class="col-6">
+                    <label>筹资活动现金流入小计：</label>
+                    <input name="FinancingCashInflow" class="easyui-textbox" />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6">
+                    <label>偿还债务所支付的现金：</label>
+                    <input name="DebtRedemption" class="easyui-textbox" data-options="required:true" />
+                </div>
+
+                <div class="col-6">
+                    <label>分配股利、利润或偿付利息所支付的现金：</label>
+                    <input name="PayCashForDividend" class="easyui-textbox" />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6">
+                    <label>支付其他与筹资活动有关的现金：</label>
+                    <input name="PayFinancingCash" class="easyui-textbox" data-options="required:true" />
+                </div>
+
+                <div class="col-6">
+                    <label>支付其他与筹资活动有关的现金：</label>
+                    <input name="PayOtherFinancingCash" class="easyui-textbox" />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6">
+                    <label>筹资活动现金流出小计：</label>
+                    <input name="FinancingCashOutflow" class="easyui-textbox" data-options="required:true" />
+                </div>
+
+                <div class="col-6">
+                    <label>筹集活动产生的现金流量净额：</label>
+                    <input name="FinancingNetCash" class="easyui-textbox" />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6">
+                    <label>汇率变动对现金及现金等价物的影响：</label>
+                    <input name="ExchangeRateChangeCash" class="easyui-textbox" data-options="required:true" />
+                </div>
+
+                <div class="col-6">
+                    <label>现金及现金等价物净增加额(五)：</label>
+                    <input name="CashIncrease5" class="easyui-textbox" />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6">
+                    <label>期初现金及现金等价物余额：</label>
+                    <input name="BeginCashBalance" class="easyui-textbox" data-options="required:true" />
+                </div>
+
+                <div class="col-6">
+                    <label>期末现金及现金等价物余额(六)：</label>
+                    <input name="FinalCashBalance6" class="easyui-textbox" />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6">
+                    <label>净利润：</label>
+                    <input name="NetProfit" class="easyui-textbox" data-options="required:true" />
+                </div>
+
+                <div class="col-6">
+                    <label>资产减值准备：</label>
+                    <input name="AssetImpairment" class="easyui-textbox" />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6">
+                    <label> 固定资产折旧、油气资 产折耗、生产性生物资产折旧：</label>
+                    <input name="AssetsDepreciation" class="easyui-textbox" data-options="required:true" />
+                </div>
+
+                <div class="col-6">
+                    <label>无形资产摊销：</label>
+                    <input name="IntangibleAssetsAmortization" class="easyui-textbox" />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6">
+                    <label>长期待摊费用摊销：</label>
+                    <input name="LongPrepaidExpenses" class="easyui-textbox" data-options="required:true" />
+                </div>
+
+                <div class="col-6">
+                    <label>待摊费用减少：</label>
+                    <input name="PrepaidExpensesLessen" class="easyui-textbox" />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6">
+                    <label>预提费用增：</label>
+                    <input name="AccruedExpenses" class="easyui-textbox" data-options="required:true" />
+                </div>
+
+                <div class="col-6">
+                    <label>处置固定资产无形资产和其他长期资产的损失：</label>
+                    <input name="Assetloss" class="easyui-textbox" />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6">
+                    <label>固定资产报废损失：</label>
+                    <input name="FixedAssetsScrap" class="easyui-textbox" data-options="required:true" />
+                </div>
+
+                <div class="col-6">
+                    <label>公允价值变动损失：</label>
+                    <input name="FairChanges" class="easyui-textbox" />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6">
+                    <label>财务费用：</label>
+                    <input name="FinancialExpenses" class="easyui-textbox" data-options="required:true" />
+                </div>
+
+                <div class="col-6">
+                    <label>投资损失：</label>
+                    <input name="InvestmentLosses" class="easyui-textbox" />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6">
+                    <label>递延所得税资产减少：</label>
+                    <input name="DeferredIncomeTaxLessen" class="easyui-textbox" data-options="required:true" />
+                </div>
+
+                <div class="col-6">
+                    <label>递延所得税资产增加：</label>
+                    <input name="DeferredIncomeTaAdd" class="easyui-textbox" />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6">
+                    <label>存货的减少：</label>
+                    <input name="Inventoryreduction" class="easyui-textbox" data-options="required:true" />
+                </div>
+
+                <div class="col-6">
+                    <label>经营性应收项目的减少：</label>
+                    <input name="ReceivableItemLosses" class="easyui-textbox" />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6">
+                    <label>经营性应付项目的增加：</label>
+                    <input name="PayablesAdd" class="easyui-textbox" data-options="required:true" />
+                </div>
+
+                <div class="col-6">
+                    <label>其他：</label>
+                    <input name="Other" class="easyui-textbox" />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6">
+                    <label>经营活动产生的现金流量净额：</label>
+                    <input name="OperatingCashFlowsNet" class="easyui-textbox" data-options="required:true" />
+                </div>
+
+                <div class="col-6">
+                    <label>债务转为资本：</label>
+                    <input name="CapitalDebt" class="easyui-textbox" />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6">
+                    <label>一年内到期的可转换公司债券：</label>
+                    <input name="CorporateBondInYear" class="easyui-textbox" data-options="required:true" />
+                </div>
+
+                <div class="col-6">
+                    <label>融资租入固定资产：</label>
+                    <input name="FinancingFixedAssets" class="easyui-textbox" />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6">
+                    <label>现金的期末余额：</label>
+                    <input name="EndingBalance" class="easyui-textbox" data-options="required:true" />
+                </div>
+
+                <div class="col-6">
+                    <label>现金的期初余额：</label>
+                    <input name="BeginBalance" class="easyui-textbox" />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6">
+                    <label>现金等价物的期末余额：</label>
+                    <input name="CashEquivalentsEndingBalance" class="easyui-textbox" data-options="required:true" />
+                </div>
+
+                <div class="col-6">
+                    <label>现金等价物的期初余额：</label>
+                    <input name="CashEquivalentsBeginBalance" class="easyui-textbox" />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6">
+                    <label>现金及现金等价物净增加额：</label>
+                    <input name="CashEquivalentsNetIncrease" class="easyui-textbox" data-options="required:true" />
+                </div>
+            </div>
+        </fieldset>
+
+        <div id="btn">
+            <!--<a href="javascript:void(0)" id="save" class="easyui-linkbutton" data-options="iconCls:'icon-save',onClick:Submit">保存</a>-->
+            <a href="javascript:void(0)" id="back" class="easyui-linkbutton" data-options="iconCls:'icon-redo'">返回</a>
+        </div>
+    </form>
+</body>
+</html>

@@ -156,6 +156,7 @@
     <Content Include="BankInfo\Meta\MetaList.html" />
     <Content Include="BankInfo\SegmentRules\SegmentRulesEdit.html" />
     <Content Include="BankInfo\SegmentRules\SegmentRulesList.html" />
+    <Content Include="Borrowers\CashFlowInfo.html" />
     <Content Include="Borrowers\ContentPages\ExecutivesMajorParticipantPage.html" />
     <Content Include="Borrowers\ContentPages\FamilyPage.html" />
     <Content Include="Borrowers\ContentPages\MainAssociatedEnterprisePage.html" />
@@ -163,13 +164,14 @@
     <Content Include="Borrowers\FamilyInfo.html" />
     <Content Include="Borrowers\FamilyInfoDel.html" />
     <Content Include="Borrowers\img\InfoImg.png" />
-    <Content Include="Borrowers\Institution.html" />
     <Content Include="Borrowers\JS\BorrowerMethod.js" />
     <Content Include="Borrowers\JS\validType.js" />
     <Content Include="Borrowers\Lawsuit.html" />
     <Content Include="Borrowers\OrganizateInfo.html" />
     <Content Include="Borrowers\OrganizateInfoDel.html" />
+    <Content Include="Borrowers\OrganizateList.html" />
     <Content Include="Borrowers\OrganizatePage.html" />
+    <Content Include="Borrowers\ProfitInfo.html" />
     <Content Include="Finance\Loan.html" />
     <Content Include="Finance\Operation.html" />
     <Content Include="Flow\FlowTest\Frame.html" />
