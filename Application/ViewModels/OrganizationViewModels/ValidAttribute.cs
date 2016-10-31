@@ -768,12 +768,12 @@
 
             var value2 = string.IsNullOrEmpty(valueArray[1]);
 
-            if (value1 && value2)
+            if ((value1 && value2) || (!value1 && !value2))
             {
-                return false;
+                return true;
             }
 
-            return true;
+            return false;
         }
     }
     #endregion
