@@ -1,0 +1,635 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" data-options="required:false,validType:['PositiveNumber','Amount','length[0,20]']" />
+    <title>资产负债</title>
+    <meta charset="utf-8" data-options="required:false,validType:['PositiveNumber','Amount','length[0,20]']" />
+    <link href="../../Content/easyui/themes/bootstrap/easyui.css" rel="stylesheet">
+    <link href="../../Content/easyui/themes/icon.css" rel="stylesheet">
+    <link href="../../Content/form-bootstrap.css" rel="stylesheet">
+    <script src="../../Scripts/jquery/jquery.js"></script>
+    <script src="../../Scripts/easyui/jquery.easyui.js"></script>
+    <script src="../../Scripts/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../JS/BorrowerMethod.js"></script>
+    <script src="../JS/validType.js"></script>
+
+    <script type="text/javascript">
+        var query = new Object();
+
+        $(function () {
+            Init();
+        });
+
+        // 初始化
+        function Init() {
+            query.method = GetQueryString("method");
+
+            if (query.method == "Liabilities_mod" || query.method == "Liabilities_view") {
+                //获取选中行
+                var row = self.parent.$("#Liabilities_dg").datagrid('getSelected');
+
+                if (query.method == "Liabilities_mod") {
+                    if (row) {
+                        //加载数据
+                        LoadDate(row);
+                    }
+                } else if (query.method == "Liabilities_view") {
+                    if (row) {
+                        //加载数据
+                        LoadDate(row);
+                    }
+
+                    // 禁用fieldset
+                    Disabled($("fieldset"));
+
+                    // 禁用保存按钮
+                    $("#save").linkbutton("disable");
+                }
+            }
+        }
+
+        // 加载数据
+        function LoadDate(row) {
+            // 加载资产负债
+            $('fieldset[id=Liabilities]').form('load', row);
+        }
+
+        // 提交按钮
+        function LiabilitiesSubmit() {
+            // 表单验证
+            if ($("#content").form("validate")) {
+                // 禁用提交按钮
+                $("#save").linkbutton("disable");
+            } else {
+                $.messager.show({ msg: "请填写剩下的必填内容!" });
+                return false;
+            }
+
+            // 序列化fieldset 资产负债
+            var obj = $("fieldset[id=Liabilities]").serializeJson();
+            
+            // 更新资产负债表
+            if (query.method == "Liabilities_mod") {
+                //获取选中行
+                var row = self.parent.$("#Liabilities_dg").datagrid('getSelected');
+
+                if (row) {
+                    var RowIndex = self.parent.$("#Liabilities_dg").datagrid('getRowIndex', row);
+
+                    //更新行
+                    self.parent.$("#Liabilities_dg").datagrid('updateRow', { index: RowIndex, row: obj });
+                }
+            }
+            if (query.method == "Liabilities_add") {
+                //追加一行
+                self.parent.$("#Liabilities_dg").datagrid('appendRow', obj);
+            }
+
+            // 清空表单，避免再次打开时闪现之前填入的数据
+            $('input[type=reset]').click();
+
+            // 关闭弹窗
+            self.parent.$("#Liabilities_dd").dialog({ closed: true });
+        }
+
+        // 取消按钮
+        function LiabilitiesCancel() {
+            // 清空表单，避免再次打开时闪现之前填入的数据
+            $('input[type=reset]').click();
+
+            // 关闭弹窗
+            self.parent.$("#Liabilities_dd").dialog({ closed: true });
+        }
+    </script>
+</head>
+<body>
+    <form class="container" id="content">
+        <h1 style="text-align:center">
+            资产负债
+        </h1>
+        <section>
+            <fieldset id="Liabilities" name="Liabilities">
+                <div class="row">
+                    <div class="col-6">
+                        <label>
+                            货币资金：
+                            <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="货币资金">　</a>
+                        </label>
+                        <input name="MonetaryFund" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Amount','length[0,20]']" />
+                    </div>
+
+                    <div class="col-6">
+                        <label>
+                            交易资产：
+                            <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="交易资产">　</a>
+                        </label>
+                        <input name="TransactionAssets" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Amount','length[0,20]']" />
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-6">
+                        <label>
+                            应收票据：
+                            <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="应收票据">　</a>
+                        </label>
+                        <input name="NoteReceivable" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Amount','length[0,20]']" />
+                    </div>
+
+                    <div class="col-6">
+                        <label>
+                            应收账款：
+                            <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="应收账款">　</a>
+                        </label>
+                        <input name="AccountsReceivable" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Amount','length[0,20]']" />
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-6">
+                        <label>
+                            预付账款：
+                            <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="预付账款">　</a>
+                        </label>
+                        <input name="AdvancePayment" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Amount','length[0,20]']" />
+                    </div>
+
+                    <div class="col-6">
+                        <label>
+                            应收利息：
+                            <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="应收利息">　</a>
+                        </label>
+                        <input name="InterestReceivable" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Amount','length[0,20]']" />
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-6">
+                        <label>
+                            应收股利：
+                            <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="应收股利">　</a>
+                        </label>
+                        <input name="DividendsReceivable" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Amount','length[0,20]']" />
+                    </div>
+
+                    <div class="col-6">
+                        <label>
+                            其他应收款：
+                            <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="其他应收款">　</a>
+                        </label>
+                        <input name="OtherReceivables" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Amount','length[0,20]']" />
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-6">
+                        <label>
+                            存货：
+                            <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="存货">　</a>
+                        </label>
+                        <input name="Inventory" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Amount','length[0,20]']" />
+                    </div>
+
+                    <div class="col-6">
+                        <label>
+                            一年内到期的非流动资产：
+                            <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="一年内到期的非流动资产">　</a>
+                        </label>
+                        <input name="NonCurrentAssetsInYear" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Amount','length[0,20]']" />
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-6">
+                        <label>
+                            其他流动资产：
+                            <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="其他流动资产">　</a>
+                        </label>
+                        <input name="OtherCurrentAssets" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Amount','length[0,20]']" />
+                    </div>
+
+                    <div class="col-6">
+                        <label>
+                            流动资产合计：
+                            <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="流动资产合计">　</a>
+                        </label>
+                        <input name="TotalCurrentAssets" class="easyui-textbox" data-options="required:true,validType:['PositiveNumber','Amount','length[0,20]']" />
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-6">
+                        <label>
+                            可供出售的资产：
+                            <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="可供出售的资产">　</a>
+                        </label>
+                        <input name="CanSaleAsset" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Amount','length[0,20]']" />
+                    </div>
+
+                    <div class="col-6">
+                        <label>
+                            持有至到期的投资：
+                            <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="持有至到期的投资">　</a>
+                        </label>
+                        <input name="MaturityInvestment" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Amount','length[0,20]']" />
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-6">
+                        <label>
+                            长期股权投资：
+                            <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="长期股权投资">　</a>
+                        </label>
+                        <input name="LongEquity" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Amount','length[0,20]']" />
+                    </div>
+
+                    <div class="col-6">
+                        <label>
+                            长期应收款：
+                            <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="长期应收款">　</a>
+                        </label>
+                        <input name="LongReceivables" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Amount','length[0,20]']" />
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-6">
+                        <label>
+                            投资性房地产：
+                            <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="投资性房地产">　</a>
+                        </label>
+                        <input name="InvestmentRealEstate" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Amount','length[0,20]']" />
+                    </div>
+
+                    <div class="col-6">
+                        <label>
+                            固定资产：
+                            <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="固定资产">　</a>
+                        </label>
+                        <input name="FixedAssets" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Amount','length[0,20]']" />
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-6">
+                        <label>
+                            在建工程：
+                            <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="在建工程">　</a>
+                        </label>
+                        <input name="ConstructionProject" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Amount','length[0,20]']" />
+                    </div>
+
+                    <div class="col-6">
+                        <label>
+                            工程物资：
+                            <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="工程物资">　</a>
+                        </label>
+                        <input name="EngineeringMaterials" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Amount','length[0,20]']" />
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-6">
+                        <label>
+                            固定资产清理：
+                            <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="固定资产清理">　</a>
+                        </label>
+                        <input name="FixedAssetsLiquidation" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Amount','length[0,20]']" />
+                    </div>
+
+                    <div class="col-6">
+                        <label>
+                            生产性生物资产：
+                            <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="生产性生物资产">　</a>
+                        </label>
+                        <input name="ProductiveBiologicalAssets" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Amount','length[0,20]']" />
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-6">
+                        <label>
+                            油气资产：
+                            <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="油气资产">　</a>
+                        </label>
+                        <input name="OilGasAssets" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Amount','length[0,20]']" />
+                    </div>
+
+                    <div class="col-6">
+                        <label>
+                            无形资产：
+                            <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="无形资产">　</a>
+                        </label>
+                        <input name="IntangibleAssets" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Amount','length[0,20]']" />
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-6">
+                        <label>
+                            开发支出：
+                            <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="开发支出">　</a>
+                        </label>
+                        <input name="DevelopmentExpenditure" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Amount','length[0,20]']" />
+                    </div>
+                    <div class="col-6">
+                        <label>
+                            商誉：
+                            <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="商誉">　</a>
+                        </label>
+                        <input name="Goodwill" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Amount','length[0,20]']" />
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-6">
+                        <label>
+                            长期待摊费用：
+                            <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="长期待摊费用">　</a>
+                        </label>
+                        <input name="LongArepaidExpenses" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Amount','length[0,20]']" />
+                    </div>
+                    <div class="col-6">
+                        <label>
+                            递延所得税资产：
+                            <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="递延所得税资产">　</a>
+                        </label>
+                        <input name="DeferredTaxAssets" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Amount','length[0,20]']" />
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-6">
+                        <label>
+                            其他非流动资产：
+                            <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="其他非流动资产">　</a>
+                        </label>
+                        <input name="OtherNonCurrentAssets" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Amount','length[0,20]']" />
+                    </div>
+                    <div class="col-6">
+                        <label>
+                            非流动资产合计：
+                            <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="非流动资产合计">　</a>
+                        </label>
+                        <input name="TotalNonCurrentAssets" class="easyui-textbox" data-options="required:true,validType:['PositiveNumber','Amount','length[0,20]']" />
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-6">
+                        <label>
+                            资产总计：
+                            <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="资产总计">　</a>
+                        </label>
+                        <input name="TotalAssets" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Amount','length[0,20]']" />
+                    </div>
+                    <div class="col-6">
+                        <label>
+                            短期借款：
+                            <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="短期借款">　</a>
+                        </label>
+                        <input name="ShortLoan" class="easyui-textbox" data-options="required:true,validType:['PositiveNumber','Amount','length[0,20]']" />
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-6">
+                        <label>
+                            交易性金融负债：
+                            <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="交易性金融负债">　</a>
+                        </label>
+                        <input name="TransactionalFinancialLiabilities" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Amount','length[0,20]']" />
+                    </div>
+                    <div class="col-6">
+                        <label>
+                            应付票据：
+                            <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="应付票据">　</a>
+                        </label>
+                        <input name="NotesPayable" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Amount','length[0,20]']" />
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-6">
+                        <label>
+                            应付账款：
+                            <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="应付账款">　</a>
+                        </label>
+                        <input name="AccountsPayable" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Amount','length[0,20]']" />
+                    </div>
+                    <div class="col-6">
+                        <label>
+                            预收账款：
+                            <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="预收账款">　</a>
+                        </label>
+                        <input name="AccountsAdvance" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Amount','length[0,20]']" />
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-6">
+                        <label>
+                            应付利息：
+                            <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="应付利息">　</a>
+                        </label>
+                        <input name="InterestPayable" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Amount','length[0,20]']" />
+                    </div>
+                    <div class="col-6">
+                        <label>
+                            应付职工薪酬：
+                            <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="应付职工薪酬">　</a>
+                        </label>
+                        <input name="EmployeesSalary" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Amount','length[0,20]']" />
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-6">
+                        <label>
+                            应交税费：
+                            <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="应交税费">　</a>
+                        </label>
+                        <input name="PayTax" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Amount','length[0,20]']" />
+                    </div>
+                    <div class="col-6">
+                        <label>
+                            应付股利：
+                            <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="应付股利">　</a>
+                        </label>
+                        <input name="PayDividend" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Amount','length[0,20]']" />
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-6">
+                        <label>
+                            一年内到期的非流动负债：
+                            <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="一年内到期的非流动负债">　</a>
+                        </label>
+                        <input name="NonCurrentLiabilitiesInYear" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Amount','length[0,20]']" />
+                    </div>
+                    <div class="col-6">
+                        <label>
+                            其他流动负债：
+                            <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="其他流动负债">　</a>
+                        </label>
+                        <input name="OtherCurrentLiabilities" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Amount','length[0,20]']" />
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-6">
+                        <label>
+                            流动负债合计：
+                            <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="流动负债合计">　</a>
+                        </label>
+                        <input name="TotalCurrentLiabilities" class="easyui-textbox" data-options="required:true,validType:['PositiveNumber','Amount','length[0,20]']" />
+                    </div>
+                    <div class="col-6">
+                        <label>
+                            长期借款：
+                            <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="长期借款">　</a>
+                        </label>
+                        <input name="LongLoan" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Amount','length[0,20]']" />
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-6">
+                        <label>
+                            应付债券：
+                            <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="应付债券">　</a>
+                        </label>
+                        <input name="BondPayable" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Amount','length[0,20]']" />
+                    </div>
+                    <div class="col-6">
+                        <label>
+                            长期应付款：
+                            <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="长期应付款">　</a>
+                        </label>
+                        <input name="LongAcountsPayable" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Amount','length[0,20]']" />
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-6">
+                        <label>
+                            专项应付款：
+                            <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="专项应付款">　</a>
+                        </label>
+                        <input name="SpecialPayment" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Amount','length[0,20]']" />
+                    </div>
+                    <div class="col-6">
+                        <label>
+                            预计负债：
+                            <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="预计负债">　</a>
+                        </label>
+                        <input name="EstimatedLiabilities" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Amount','length[0,20]']" />
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-6">
+                        <label>
+                            递延所得税负债：
+                            <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="递延所得税负债">　</a>
+                        </label>
+                        <input name="DeferredTaxLiability" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Amount','length[0,20]']" />
+                    </div>
+                    <div class="col-6">
+                        <label>
+                            其他非流动负债：
+                            <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="其他非流动负债">　</a>
+                        </label>
+                        <input name="OtherNonCurrentLiabilities" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Amount','length[0,20]']" />
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-6">
+                        <label>
+                            非流动负债合计：
+                            <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="非流动负债合计">　</a>
+                        </label>
+                        <input name="TotalNonNurrentLiabilities" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Amount','length[0,20]']" />
+                    </div>
+                    <div class="col-6">
+                        <label>
+                            负债合计：
+                            <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="负债合计">　</a>
+                        </label>
+                        <input name="TotalLiabilities" class="easyui-textbox" data-options="required:true,validType:['PositiveNumber','Amount','length[0,20]']" />
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-6">
+                        <label>
+                            实收资本：
+                            <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="实收资本">　</a>
+                        </label>
+                        <input name="PaidCapital" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Amount','length[0,20]']" />
+                    </div>
+                    <div class="col-6">
+                        <label>
+                            资本公积：
+                            <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="资本公积">　</a>
+                        </label>
+                        <input name="CapitalReserve" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Amount','length[0,20]']" />
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-6">
+                        <label>
+                            库存股：
+                            <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="库存股">　</a>
+                        </label>
+                        <input name="Stock" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Amount','length[0,20]']" />
+                    </div>
+                    <div class="col-6">
+                        <label>
+                            盈余公积：
+                            <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="盈余公积">　</a>
+                        </label>
+                        <input name="SurplusReserve" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Amount','length[0,20]']" />
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-6">
+                        <label>
+                            未分配利润：
+                            <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="未分配利润">　</a>
+                        </label>
+                        <input name="NoProfit" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Amount','length[0,20]']" />
+                    </div>
+                    <div class="col-6">
+                        <label>
+                            所有者权益合计：
+                            <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="所有者权益合计">　</a>
+                        </label>
+                        <input name="TotalOwnersEquity" class="easyui-textbox" data-options="required:true,validType:['PositiveNumber','Amount','length[0,20]']" />
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-6">
+                        <label>
+                            负债和所有者权益合计：
+                            <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="负债和所有者权益合计">　</a>
+                        </label>
+                        <input name="TotalLiabilitiesCapital" class="easyui-textbox" data-options="required:true,validType:['PositiveNumber','Amount','length[0,20]']" />
+                    </div>
+                </div>
+            </fieldset>
+        </section>
+        <div id="btn">
+            <a id="save" class="easyui-linkbutton" href="javascript:void(0)" data-options="iconCls:'icon-save',onClick:LiabilitiesSubmit">保存</a>
+            <a id="back" class="easyui-linkbutton" href="javascript:void(0)" data-options="iconCls:'icon-redo',onClick:LiabilitiesCancel">返回</a>
+            <input type="reset" style="display:none" />
+        </div>
+    </form>
+</body>
+</html>

@@ -43,6 +43,9 @@
 
             // 清空表单
             $("input[type=reset]").click();
+
+            // 客户类型恢复默认值
+            $("#CustomerType_Text").textbox();
         }
 
         // 设置部分section显示
@@ -70,12 +73,12 @@
             }
 
             if (Obj.checked) {
-                var section = $("section[id=" + sectionId + "]");
+                var section = $("section[id*=" + sectionId + "]");
 
                 // 点击 + ,添加fileset
                 section.find('div:hidden').find("a[id=" + sectionId + "add]").click();
 
-                // 对新增的fieldset设置name
+                // 对新增(显示)的fieldset设置name
                 section.find('fieldset').attr('name', getFieldsetName(sectionId));
 
                 // 显示section
@@ -86,7 +89,7 @@
                 $("section[id=" + sectionId + "]").find('div:hidden').find("a[id*=minus]").click();
 
                 // 隐藏section
-                $("section[id=" + sectionId + "]").hide();
+                $("section[id*=" + sectionId + "]").hide();
             }
         }
 
@@ -96,7 +99,8 @@
                 return "";
             }
 
-            var IdArray = new Array("B-Base", "C-Property", "D-State", "E-Contact", "F-Managers", "G-Shareholders", "H-AssociatedEnterprises", "I-Parent");
+            var IdArray = new Array("B-Base", "C-Property", "D-State", "E-Contact", "F-Managers", "G-Shareholders", "H-AssociatedEnterprises", 
+                "I-Parent", "J-CashFlow", "K-Litigation", "L-BigEvent");
             var resultName = "";
 
             for (var i = 0; i < IdArray.length; i++) {
@@ -177,6 +181,39 @@
             $(["Managers", "Shareholders", "AssociatedEnterprises"]).each(function (index, item) {
                 FieldsetLoadDateFactory(item, "table", resultDate[item]);
             });
+
+            // 加载财务信息
+            if (resultDate.CashFlow != undefined)
+            {
+                // 显示财务 fieldset
+                $("fieldset[id=Base]").find("input[id=TF_J]").click();
+
+                // 加载财务基本信息
+                FieldsetLoadDateFactory("FinancialAffairs", "text", resultDate.FinancialAffairs);
+
+                // 加载现金流量、资产负债、利润利润分配、事业单位收入支出、事业单位资产负债
+                $(["CashFlow", "Liabilities", "Profit", "IncomeExpenditur", "InstitutionLiabilities"]).each(function (index, item) {
+                    FieldsetLoadDateFactory(item, "table", resultDate.FinancialAffairs[item]);
+                });
+            }
+
+            // 加载诉讼事件
+            if (resultDate.Litigation != undefined) {
+                // 显示诉讼事件 fieldset
+                $("fieldset[id=Base]").find("input[id=TF_K]").click();
+
+                // 加载诉讼事件
+                FieldsetLoadDateFactory("Litigation", "table", resultDate.Litigation);
+            }
+
+            // 加载大事件
+            if (resultDate.BigEvent != undefined) {
+                // 显示大事件 fieldset
+                $("fieldset[id=Base]").find("input[id=TF_L]").click();
+
+                // 加载大事件
+                FieldsetLoadDateFactory("BigEvent", "table", resultDate.BigEvent);
+            }
         }
 
         // 提交按钮
@@ -263,6 +300,28 @@
             if (data.Base.HasParent) {
                 data["Parent"] = FieldsetSerializeFactory('Parent', 'text');
             }
+
+            // 序列化财务信息
+            if ($("div#showSecton").find("input[id=TF_J]")[0].checked==true) {
+                // 序列化财务基本信息
+                data.FinancialAffairs = FieldsetSerializeFactory("FinancialAffairs", "text");
+
+                // 加载现金流量、资产负债、利润利润分配、事业单位收入支出、事业单位资产负债
+                $(["CashFlow", "Liabilities", "Profit", "IncomeExpenditur", "InstitutionLiabilities"]).each(function (index, item) {
+                    data.FinancialAffairs[item]= FieldsetSerializeFactory(item, "table");
+                });
+            }
+
+            // 序列化诉讼事件
+            if ($("div#showSecton").find("input[id=TF_K]")[0].checked == true) {
+                data.Litigation = FieldsetLoadDateFactory("Litigation", "text");
+            }
+
+            // 序列化大事件
+            if ($("div#showSecton").find("input[id=TF_L]")[0].checked == true) {
+                data.BigEvent = FieldsetLoadDateFactory("BigEvent", "text");
+            }
+
 
             return data;
         }
@@ -562,7 +621,6 @@
 
             <fieldset id="Base">
                 <input type="hidden" name="InformationCategories" value="B" placeholder="信息类别">
-
                 <input type="hidden" name="Id" value="" placeholder="Guid_Id">
 
                 <div class="row">
@@ -589,7 +647,7 @@
                             客户类型：
                             <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('img/InfoImg.png') no-repeat scroll 0 0" title="">　</a>
                         </label>
-                        <input class="easyui-textbox textbox-f" data-options="required:false,readonly:true,value:'仅是信贷户客户'" name="CustomerType_Text">
+                        <input class="easyui-textbox textbox-f" data-options="required:false,readonly:true,value:'仅是信贷户客户'" id="CustomerType_Text">
                         <input type="hidden" value="2" name="CustomerType" />
                     </div>
                     <div class="col-6">
@@ -681,9 +739,12 @@
                         <span style="display:none"><input type="checkbox" id="TF_F" onclick="checkboxOnclick(this, 'F')" /><span onclick="$(this).parent().find('input[id=TF_F]').click()">填写高管及主要关系人</span>&nbsp;&nbsp;&nbsp;</span>
                         <span style="display:none"><input type="checkbox" id="TF_G" onclick="checkboxOnclick(this, 'G')" /><span onclick="$(this).parent().find('input[id=TF_G]').click()">填写重要股东</span>&nbsp;&nbsp;&nbsp;</span>
                         <span style="display:none"><input type="checkbox" id="TF_H" onclick="checkboxOnclick(this, 'H')" /><span onclick="$(this).parent().find('input[id=TF_H]').click()">填写主要关联企业信息</span>&nbsp;&nbsp;&nbsp;</span>
-                        <span style="display:none"><input type="checkbox" id="TF_I" onclick="checkboxOnclick(this, 'I')" /><span onclick="$(this).parent().find('input[id=TF_I]').click()">上级机构（主管单位）</span></span>
+                        <span style="display:none"><input type="checkbox" id="TF_I" onclick="checkboxOnclick(this, 'I')" /><span onclick="$(this).parent().find('input[id=TF_I]').click()">上级机构（主管单位）</span>&nbsp;&nbsp;&nbsp;</span>
+                        <span style="display:none"><input type="checkbox" id="TF_J" onclick="checkboxOnclick(this, 'J')" /><span onclick="$(this).parent().find('input[id=TF_J]').click()">财务</span>&nbsp;&nbsp;&nbsp;</span>
+                        <span style="display:none"><input type="checkbox" id="TF_K" onclick="checkboxOnclick(this, 'K')" /><span onclick="$(this).parent().find('input[id=TF_K]').click()">诉讼事件</span>&nbsp;&nbsp;&nbsp;</span>
+                        <span style="display:none"><input type="checkbox" id="TF_L" onclick="checkboxOnclick(this, 'L')" /><span onclick="$(this).parent().find('input[id=TF_L]').click()">大事件</span></span>
                     </div>
-                    <input name="HasParent" type="hidden" value="false" onclick="$(this).parent().find('#TF_I').click()" />
+                    <input name="HasParent" type="hidden" value="false" onclick="$(this).parent().find('#TF_I').click()" placeholder="是否有上级机构" />
                 </div>
             </fieldset>
         </section>
@@ -894,20 +955,6 @@
                 <input type="hidden" name="Id" value="" placeholder="Guid_Id">
 
                 <div class="row">
-                    <!--<div class="col-6">
-                        <label>
-                            基本户状态：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('img/InfoImg.png') no-repeat scroll 0 0" title="标识基本户账户目前的状态">　</a>
-                        </label>
-                        <select class="easyui-combobox  combobox-f combo-f textbox-f" data-options="editable:false,required:false,validType:['AN','length[1,1]']" name="BasicAccountState">
-                            <option value="">　</option>
-                            <option value="1">正常</option>
-                            <option value="2">久悬</option>
-                            <option value="3">注销</option>
-                            <option value="4">待审核</option>
-                            <option value="9">其他</option>
-                            <option value="X">未知</option>
-                        </select>
-                    </div>-->
                     <div class="col-6">
                         <label>
                             企业规模：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('img/InfoImg.png') no-repeat scroll 0 0" title="按照工业和信息化部、国家统计局、发展改革委、财政部联合印发的《关于印发中小企业划型标准规定的通知》（工信部联企业〔2011〕300号）执行">　</a>
@@ -922,9 +969,7 @@
                             <option value="X">未知</option>
                         </select>
                     </div>
-                    <!--</div>
-
-                    <div class="row">-->
+                    
                     <div class="col-6">
                         <label>
                             机构状态：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('img/InfoImg.png') no-repeat scroll 0 0" title="机构目前的活动状态，其中注销状态是指机构从登记部门注销登记或注销备案">　</a>
@@ -937,12 +982,6 @@
                             <option value="X">未知</option>
                         </select>
                     </div>
-                    <!--<div class="col-6">
-                        <label>
-                            信息更新日期：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('img/InfoImg.png') no-repeat scroll 0 0" title="">　</a>
-                        </label>
-                        <input class="easyui-datebox datebox-f combo-f textbox-f" data-options="editable:false ,width:407.75,required:true,validType:['N','length[1,8]']" name="InformationUpdateDate">
-                    </div>-->
                 </div>
             </template>
         </section>
@@ -1298,6 +1337,594 @@
                     </div>
                 </div>
             </template>
+        </section>
+
+        <section id="J" min="0" max="1">
+            <h2>财务信息</h2>
+
+            <div style="background-color:#afe3fa;height:30px ;width:95%;display:none">
+                <div float="right" style="width:100%">
+                    <a style="margin-top: 2px; margin-right: 10px; float: right; font-size: 24px; text-decoration: none" id="Jadd" onclick="Add(this.id)" href="javascript:void(0)">+</a>
+                    <a style=" margin-right: 20px; float: right; font-size: 24px; text-decoration: none" id="Jminus" onclick="Minus(this)" href="javascript:void(0)" hidden="hidden">-</a>
+                </div>
+            </div>
+
+            <template id="templateJ">
+                <input type="hidden" name="Id" value="" placeholder="Guid_Id">
+
+                <div class="row">
+                    <div class="col-6">
+                        <label>
+                            报表年份：
+                            <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('img/InfoImg.png') no-repeat scroll 0 0" title="报表年份">　</a>
+                        </label>
+                        <input class="easyui-textbox textbox-f" data-options="required:false,validType:['N','length[4,4]','EffectiveYear']" name="Year">
+                    </div>
+                    <div class="col-6">
+                        <label>
+                            报表类型细分：
+                            <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('img/InfoImg.png') no-repeat scroll 0 0" title="报表类型细分">　</a>
+                        </label>
+                        <input class="easyui-textbox textbox-f" data-options="required:false,validType:['N','length[0,2]']" name="TypeSubdivision">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-6">
+                        <label>
+                            审计事务所：
+                            <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('img/InfoImg.png') no-repeat scroll 0 0" title="审计事务所">　</a>
+                        </label>
+                        <input class="easyui-textbox textbox-f" data-options="required:false,validType:['ANC','length[0,80]','EffectiveYear']" name="AuditFirm">
+                    </div>
+                    <div class="col-6">
+                        <label>
+                            审计人员名称：
+                            <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('img/InfoImg.png') no-repeat scroll 0 0" title="审计人员名称">　</a>
+                        </label>
+                        <input class="easyui-textbox textbox-f" data-options="required:false,validType:['ANC','length[0,20]']" name="AuditorName">
+                    </div>
+                </div>
+            </template>
+        </section>
+
+        <section id="J0" min="0" max="1">
+            <fieldset id="J1" name="CashFlow">
+                <!--现金流量-->
+                <table id="CashFlow_dg" class="easyui-datagrid" style="width:890px;" data-options="toolbar: '#CashFlow_tb',
+                   rownumbers:true,
+                   singleSelect:true,
+                   onSelect:CashFlowSelect,
+                   title:'现金流量'
+                   ">
+                    <thead>
+                        <tr>
+                            <th data-options="field:'Id',hidden:true">Id</th>
+
+                            <th data-options="field:'OperatingActivitiesCashInflows',width:120,align:'center'">经营活动现金流入小计</th>
+                            <th data-options="field:'OperatingActivitiesCashOutflows',width:120,align:'center'">经营活动现金流出小计</th>
+                            <th data-options="field:'CashInInvestmentActivities',width:120,align:'center'">投资活动现金流入小计</th>
+                            <th data-options="field:'InvestmentCashOutflow',width:120,align:'center'">投资活动现金流出小计</th>
+                            <th data-options="field:'FinancingCashInflow',width:120,align:'center'">筹资活动现金流入小计</th>
+                            <th data-options="field:'FinancingCashOutflow',width:120,align:'center'">筹资活动现金流出小计</th>
+                        </tr>
+                    </thead>
+                </table>
+
+                <div id="CashFlow_tb" style="height:30px;">
+                    <a id="CashFlow_add" class="easyui-linkbutton" href="javascript:void(0)" data-options="onClick:CashFlowEdit,iconCls:'icon-add',plain:true">添加</a>
+                    <a id="CashFlow_mod" class="easyui-linkbutton" href="javascript:void(0)" data-options="onClick:CashFlowEdit,iconCls:'icon-edit',plain:true,disabled:true">编辑</a>
+                    <a id="CashFlow_del" class="easyui-linkbutton" href="javascript:void(0)" data-options="onClick:CashFlowDelete,iconCls:'icon-remove',plain:true,disabled:true">删除</a>
+                    <a id="CashFlow_view" class="easyui-linkbutton" href="javascript:void(0)" data-options="onClick:CashFlowEdit,iconCls:'icon-search',plain:true,disabled:true">查看</a>
+                </div>
+                <script type="text/javascript">
+                    // table onSelect事件
+                    function CashFlowSelect(index, row) {
+                        if (row) {
+                            $("#CashFlow_mod").linkbutton("enable");
+                            $("#CashFlow_del").linkbutton("enable");
+                            $("#CashFlow_view").linkbutton("enable");
+                        }
+                    }
+
+                    // table 删除按钮
+                    function CashFlowDelete() {
+                        var row = $('#CashFlow_dg').datagrid('getSelected');
+
+                        if (row) {
+                            $.messager.confirm('确认', '确认删除该家族成员信息?', function (r) {
+                                if (r) {
+                                    var rowIndex = $('#CashFlow_dg').datagrid('getRowIndex', row);
+
+                                    $('#CashFlow_dg').datagrid('deleteRow', rowIndex);
+                                }
+                            })
+                        }
+                    }
+
+                    // table 添加/编辑按钮
+                    function CashFlowEdit() {
+                        var url = "ContentPages/CashFlowPage.html?method=" + this.id;
+
+                        if (this.id != "CashFlow_add") {
+                            var row = $('#CashFlow_dg').datagrid('getSelected');
+
+                            if (!row) {
+                                return false;
+                            }
+                        }
+
+                        $("#CashFlow_frame").attr("src", url);
+
+                        // 打开弹窗
+                        $("#CashFlow_dd").dialog({ closed: false });
+                    }
+                </script>
+                <div id="CashFlow_dd" class="easyui-dialog" data-options="title:'主要关联企业',width:'80%',height:'600px',top:2100,modal:true,closed:true">
+                    <iframe id="CashFlow_frame" name="CashFlow_frame" src="about:blank" style="width:100%;height:99%; border:0;"></iframe>
+                </div>
+            </fieldset>
+
+            <fieldset id="J2" name="Liabilities">
+                <!--资产负债-->
+                <table id="Liabilities_dg" class="easyui-datagrid" style="width:890px;" data-options="toolbar: '#Liabilities_tb',
+                   rownumbers:true,
+                   singleSelect:true,
+                   onSelect:LiabilitiesSelect,
+                   title:'资产负债'
+                   ">
+                    <thead>
+                        <tr>
+                            <th data-options="field:'Id',hidden:true">Id</th>
+
+                            <th data-options="field:'TotalCurrentAssets',width:120,align:'center'">流动资产合计</th>
+                            <th data-options="field:'TotalNonCurrentAssets',width:120,align:'center'">非流动资产合计</th>
+                            <th data-options="field:'TotalCurrentLiabilities',width:120,align:'center'">流动负债合计</th>
+                            <th data-options="field:'TotalLiabilities',width:120,align:'center'">负债合计</th>
+                            <th data-options="field:'TotalOwnersEquity',width:120,align:'center'">所有者权益合计</th>
+                            <th data-options="field:'TotalLiabilitiesCapital',width:120,align:'center'">负债和所有者权益合计</th>
+                        </tr>
+                    </thead>
+                </table>
+
+                <div id="Liabilities_tb" style="height:30px;">
+                    <a id="Liabilities_add" class="easyui-linkbutton" href="javascript:void(0)" data-options="onClick:LiabilitiesEdit,iconCls:'icon-add',plain:true">添加</a>
+                    <a id="Liabilities_mod" class="easyui-linkbutton" href="javascript:void(0)" data-options="onClick:LiabilitiesEdit,iconCls:'icon-edit',plain:true,disabled:true">编辑</a>
+                    <a id="Liabilities_del" class="easyui-linkbutton" href="javascript:void(0)" data-options="onClick:LiabilitiesDelete,iconCls:'icon-remove',plain:true,disabled:true">删除</a>
+                    <a id="Liabilities_view" class="easyui-linkbutton" href="javascript:void(0)" data-options="onClick:LiabilitiesEdit,iconCls:'icon-search',plain:true,disabled:true">查看</a>
+                </div>
+                <script type="text/javascript">
+                    // table onSelect事件
+                    function LiabilitiesSelect(index, row) {
+                        if (row) {
+                            $("#Liabilities_mod").linkbutton("enable");
+                            $("#Liabilities_del").linkbutton("enable");
+                            $("#Liabilities_view").linkbutton("enable");
+                        }
+                    }
+
+                    // table 删除按钮
+                    function LiabilitiesDelete() {
+                        var row = $('#Liabilities_dg').datagrid('getSelected');
+
+                        if (row) {
+                            $.messager.confirm('确认', '确认删除该家族成员信息?', function (r) {
+                                if (r) {
+                                    var rowIndex = $('#Liabilities_dg').datagrid('getRowIndex', row);
+
+                                    $('#Liabilities_dg').datagrid('deleteRow', rowIndex);
+                                }
+                            })
+                        }
+                    }
+
+                    // table 添加/编辑按钮
+                    function LiabilitiesEdit() {
+                        var url = "ContentPages/LiabilitiesPage.html?method=" + this.id;
+
+                        if (this.id != "Liabilities_add") {
+                            var row = $('#Liabilities_dg').datagrid('getSelected');
+
+                            if (!row) {
+                                return false;
+                            }
+                        }
+
+                        $("#Liabilities_frame").attr("src", url);
+
+                        // 打开弹窗
+                        $("#Liabilities_dd").dialog({ closed: false });
+                    }
+                </script>
+                <div id="Liabilities_dd" class="easyui-dialog" data-options="title:'主要关联企业',width:'80%',height:'600px',top:2100,modal:true,closed:true">
+                    <iframe id="Liabilities_frame" name="Liabilities_frame" src="about:blank" style="width:100%;height:99%; border:0;"></iframe>
+                </div>
+            </fieldset>
+
+            <fieldset id="J3" name="Profit">
+                <!--利润以及利润分配-->
+                <table id="Profit_dg" class="easyui-datagrid" style="width:890px;" data-options="toolbar: '#Profit_tb',
+                   rownumbers:true,
+                   singleSelect:true,
+                   onSelect:ProfitSelect,
+                   title:'利润以及利润分配'
+                   ">
+                    <thead>
+                        <tr>
+                            <th data-options="field:'Id',hidden:true">Id</th>
+
+                            <th data-options="field:'BusinessIncome',width:120,align:'center'">营业收入</th>
+                            <th data-options="field:'OperatingCost',width:120,align:'center'">营业成本</th>
+                            <th data-options="field:'FinancialExpenses',width:120,align:'center'">财务费用</th>
+                            <th data-options="field:'OperatingProfit',width:120,align:'center'">营业利润</th>
+                            <th data-options="field:'GrossProfit',width:120,align:'center'">利润总额</th>
+                            <th data-options="field:'NetProfit',width:120,align:'center'">净利润</th>
+                        </tr>
+                    </thead>
+                </table>
+
+                <div id="Profit_tb" style="height:30px;">
+                    <a id="Profit_add" class="easyui-linkbutton" href="javascript:void(0)" data-options="onClick:ProfitEdit,iconCls:'icon-add',plain:true">添加</a>
+                    <a id="Profit_mod" class="easyui-linkbutton" href="javascript:void(0)" data-options="onClick:ProfitEdit,iconCls:'icon-edit',plain:true,disabled:true">编辑</a>
+                    <a id="Profit_del" class="easyui-linkbutton" href="javascript:void(0)" data-options="onClick:ProfitDelete,iconCls:'icon-remove',plain:true,disabled:true">删除</a>
+                    <a id="Profit_view" class="easyui-linkbutton" href="javascript:void(0)" data-options="onClick:ProfitEdit,iconCls:'icon-search',plain:true,disabled:true">查看</a>
+                </div>
+                <script type="text/javascript">
+                    // table onSelect事件
+                    function ProfitSelect(index, row) {
+                        if (row) {
+                            $("#Profit_mod").linkbutton("enable");
+                            $("#Profit_del").linkbutton("enable");
+                            $("#Profit_view").linkbutton("enable");
+                        }
+                    }
+
+                    // table 删除按钮
+                    function ProfitDelete() {
+                        var row = $('#Profit_dg').datagrid('getSelected');
+
+                        if (row) {
+                            $.messager.confirm('确认', '确认删除该家族成员信息?', function (r) {
+                                if (r) {
+                                    var rowIndex = $('#Profit_dg').datagrid('getRowIndex', row);
+
+                                    $('#Profit_dg').datagrid('deleteRow', rowIndex);
+                                }
+                            })
+                        }
+                    }
+
+                    // table 添加/编辑按钮
+                    function ProfitEdit() {
+                        var url = "ContentPages/ProfitPage.html?method=" + this.id;
+
+                        if (this.id != "Profit_add") {
+                            var row = $('#Profit_dg').datagrid('getSelected');
+
+                            if (!row) {
+                                return false;
+                            }
+                        }
+
+                        $("#Profit_frame").attr("src", url);
+
+                        // 打开弹窗
+                        $("#Profit_dd").dialog({ closed: false });
+                    }
+                </script>
+                <div id="Profit_dd" class="easyui-dialog" data-options="title:'主要关联企业',width:'80%',height:'600px',top:2100,modal:true,closed:true">
+                    <iframe id="Profit_frame" name="Profit_frame" src="about:blank" style="width:100%;height:99%; border:0;"></iframe>
+                </div>
+            </fieldset>
+
+            <fieldset id="J4" name="IncomeExpenditur">
+                <!--事业单位收入支出-->
+                <table id="IncomeExpenditur_dg" class="easyui-datagrid" style="width:890px;" data-options="toolbar: '#IncomeExpenditur_tb',
+                   rownumbers:true,
+                   singleSelect:true,
+                   onSelect:IncomeExpenditurSelect,
+                   title:'事业单位收入支出'
+                   ">
+                    <thead>
+                        <tr>
+                            <th data-options="field:'Id',hidden:true">Id</th>
+
+                            <th data-options="field:'收入总计',width:120,align:'center'">收入总计</th>
+                            <th data-options="field:'专款小计',width:120,align:'center'">专款小计</th>
+                            <th data-options="field:'事业结余',width:120,align:'center'">事业结余</th>
+                            <th data-options="field:'正常收入结余',width:120,align:'center'">正常收入结余</th>
+                            <th data-options="field:'经营结余',width:120,align:'center'">经营结余</th>
+                            <th data-options="field:'应交所得税',width:120,align:'center'">应交所得税</th>
+                        </tr>
+                    </thead>
+                </table>
+
+                <div id="IncomeExpenditur_tb" style="height:30px;">
+                    <a id="IncomeExpenditur_add" class="easyui-linkbutton" href="javascript:void(0)" data-options="onClick:IncomeExpenditurEdit,iconCls:'icon-add',plain:true">添加</a>
+                    <a id="IncomeExpenditur_mod" class="easyui-linkbutton" href="javascript:void(0)" data-options="onClick:IncomeExpenditurEdit,iconCls:'icon-edit',plain:true,disabled:true">编辑</a>
+                    <a id="IncomeExpenditur_del" class="easyui-linkbutton" href="javascript:void(0)" data-options="onClick:IncomeExpenditurDelete,iconCls:'icon-remove',plain:true,disabled:true">删除</a>
+                    <a id="IncomeExpenditur_view" class="easyui-linkbutton" href="javascript:void(0)" data-options="onClick:IncomeExpenditurEdit,iconCls:'icon-search',plain:true,disabled:true">查看</a>
+                </div>
+                <script type="text/javascript">
+                    // table onSelect事件
+                    function IncomeExpenditurSelect(index, row) {
+                        if (row) {
+                            $("#IncomeExpenditur_mod").linkbutton("enable");
+                            $("#IncomeExpenditur_del").linkbutton("enable");
+                            $("#IncomeExpenditur_view").linkbutton("enable");
+                        }
+                    }
+
+                    // table 删除按钮
+                    function IncomeExpenditurDelete() {
+                        var row = $('#IncomeExpenditur_dg').datagrid('getSelected');
+
+                        if (row) {
+                            $.messager.confirm('确认', '确认删除该家族成员信息?', function (r) {
+                                if (r) {
+                                    var rowIndex = $('#IncomeExpenditur_dg').datagrid('getRowIndex', row);
+
+                                    $('#IncomeExpenditur_dg').datagrid('deleteRow', rowIndex);
+                                }
+                            })
+                        }
+                    }
+
+                    // table 添加/编辑按钮
+                    function IncomeExpenditurEdit() {
+                        var url = "ContentPages/IncomeExpenditurPage.html?method=" + this.id;
+
+                        if (this.id != "IncomeExpenditur_add") {
+                            var row = $('#IncomeExpenditur_dg').datagrid('getSelected');
+
+                            if (!row) {
+                                return false;
+                            }
+                        }
+
+                        $("#IncomeExpenditur_frame").attr("src", url);
+
+                        // 打开弹窗
+                        $("#IncomeExpenditur_dd").dialog({ closed: false });
+                    }
+                </script>
+                <div id="IncomeExpenditur_dd" class="easyui-dialog" data-options="title:'主要关联企业',width:'80%',height:'600px',top:2100,modal:true,closed:true">
+                    <iframe id="IncomeExpenditur_frame" name="IncomeExpenditur_frame" src="about:blank" style="width:100%;height:99%; border:0;"></iframe>
+                </div>
+            </fieldset>
+
+            <fieldset id="J5" name="InstitutionLiabilities">
+                <!--事业单位资产负债-->
+                <table id="InstitutionLiabilities_dg" class="easyui-datagrid" style="width:890px;" data-options="toolbar: '#InstitutionLiabilities_tb',
+                   rownumbers:true,
+                   singleSelect:true,
+                   onSelect:InstitutionLiabilitiesSelect,
+                   title:'事业单位资产负债'
+                   ">
+                    <thead>
+                        <tr>
+                            <th data-options="field:'Id',hidden:true">Id</th>
+
+                            <th data-options="field:'现金',width:120,align:'center'">现金</th>
+                            <th data-options="field:'资产合计',width:120,align:'center'">资产合计</th>
+                            <th data-options="field:'支出合计',width:120,align:'center'">支出合计</th>
+                            <th data-options="field:'资产部类总计',width:120,align:'center'">资产部类总计</th>
+                            <th data-options="field:'净资产合计',width:120,align:'center'">净资产合计</th>
+                            <th data-options="field:'收入合计',width:120,align:'center'">收入合计</th>
+                            <th data-options="field:'负债部类总计',width:120,align:'center'">负债部类总计</th>
+                        </tr>
+                    </thead>
+                </table>
+
+                <div id="InstitutionLiabilities_tb" style="height:30px;">
+                    <a id="InstitutionLiabilities_add" class="easyui-linkbutton" href="javascript:void(0)" data-options="onClick:InstitutionLiabilitiesEdit,iconCls:'icon-add',plain:true">添加</a>
+                    <a id="InstitutionLiabilities_mod" class="easyui-linkbutton" href="javascript:void(0)" data-options="onClick:InstitutionLiabilitiesEdit,iconCls:'icon-edit',plain:true,disabled:true">编辑</a>
+                    <a id="InstitutionLiabilities_del" class="easyui-linkbutton" href="javascript:void(0)" data-options="onClick:InstitutionLiabilitiesDelete,iconCls:'icon-remove',plain:true,disabled:true">删除</a>
+                    <a id="InstitutionLiabilities_view" class="easyui-linkbutton" href="javascript:void(0)" data-options="onClick:InstitutionLiabilitiesEdit,iconCls:'icon-search',plain:true,disabled:true">查看</a>
+                </div>
+                <script type="text/javascript">
+                    // table onSelect事件
+                    function InstitutionLiabilitiesSelect(index, row) {
+                        if (row) {
+                            $("#InstitutionLiabilities_mod").linkbutton("enable");
+                            $("#InstitutionLiabilities_del").linkbutton("enable");
+                            $("#InstitutionLiabilities_view").linkbutton("enable");
+                        }
+                    }
+
+                    // table 删除按钮
+                    function InstitutionLiabilitiesDelete() {
+                        var row = $('#InstitutionLiabilities_dg').datagrid('getSelected');
+
+                        if (row) {
+                            $.messager.confirm('确认', '确认删除该家族成员信息?', function (r) {
+                                if (r) {
+                                    var rowIndex = $('#InstitutionLiabilities_dg').datagrid('getRowIndex', row);
+
+                                    $('#InstitutionLiabilities_dg').datagrid('deleteRow', rowIndex);
+                                }
+                            })
+                        }
+                    }
+
+                    // table 添加/编辑按钮
+                    function InstitutionLiabilitiesEdit() {
+                        var url = "ContentPages/InstitutionLiabilitiesPage.html?method=" + this.id;
+
+                        if (this.id != "InstitutionLiabilities_add") {
+                            var row = $('#InstitutionLiabilities_dg').datagrid('getSelected');
+
+                            if (!row) {
+                                return false;
+                            }
+                        }
+
+                        $("#InstitutionLiabilities_frame").attr("src", url);
+
+                        // 打开弹窗
+                        $("#InstitutionLiabilities_dd").dialog({ closed: false });
+                    }
+                </script>
+                <div id="InstitutionLiabilities_dd" class="easyui-dialog" data-options="title:'主要关联企业',width:'80%',height:'600px',top:2100,modal:true,closed:true">
+                    <iframe id="InstitutionLiabilities_frame" name="InstitutionLiabilities_frame" src="about:blank" style="width:100%;height:99%; border:0;"></iframe>
+                </div>
+            </fieldset>
+        </section>
+
+        <section id="K">
+            <h2>诉讼事件</h2>
+
+            <fieldset id="K" name="Litigation">
+                <!--诉讼事件-->
+                <table id="Litigation_dg" class="easyui-datagrid" style="width:890px;" data-options="toolbar: '#Litigation_tb',
+                   rownumbers:true,
+                   singleSelect:true,
+                   onSelect:LitigationSelect,
+                   title:'诉讼事件'
+                   ">
+                    <thead>
+                        <tr>
+                            <th data-options="field:'Id',hidden:true">Id</th>
+
+                            <th data-options="field:'ChargedSerialNumber',width:120,align:'center'">被起诉流水号</th>
+                            <th data-options="field:'ProsecuteName',width:120,align:'center'">起诉人姓名</th>
+                            <th data-options="field:'Money',width:120,align:'center'">判决执行金额</th>
+                            <th data-options="field:'DateTime',width:120,align:'center'">判决执行日期</th>
+                            <th data-options="field:'Result',width:120,align:'center'">执行结果</th>
+                            <th data-options="field:'Reason',width:240,align:'center'">被起诉原因</th>
+                        </tr>
+                    </thead>
+                </table>
+
+                <div id="Litigation_tb" style="height:30px;">
+                    <a id="Litigation_add" class="easyui-linkbutton" href="javascript:void(0)" data-options="onClick:LitigationEdit,iconCls:'icon-add',plain:true">添加</a>
+                    <a id="Litigation_mod" class="easyui-linkbutton" href="javascript:void(0)" data-options="onClick:LitigationEdit,iconCls:'icon-edit',plain:true,disabled:true">编辑</a>
+                    <a id="Litigation_del" class="easyui-linkbutton" href="javascript:void(0)" data-options="onClick:LitigationDelete,iconCls:'icon-remove',plain:true,disabled:true">删除</a>
+                    <a id="Litigation_view" class="easyui-linkbutton" href="javascript:void(0)" data-options="onClick:LitigationEdit,iconCls:'icon-search',plain:true,disabled:true">查看</a>
+                </div>
+                <script type="text/javascript">
+                    // table onSelect事件
+                    function LitigationSelect(index, row) {
+                        if (row) {
+                            $("#Litigation_mod").linkbutton("enable");
+                            $("#Litigation_del").linkbutton("enable");
+                            $("#Litigation_view").linkbutton("enable");
+                        }
+                    }
+
+                    // table 删除按钮
+                    function LitigationDelete() {
+                        var row = $('#Litigation_dg').datagrid('getSelected');
+
+                        if (row) {
+                            $.messager.confirm('确认', '确认删除该家族成员信息?', function (r) {
+                                if (r) {
+                                    var rowIndex = $('#Litigation_dg').datagrid('getRowIndex', row);
+
+                                    $('#Litigation_dg').datagrid('deleteRow', rowIndex);
+                                }
+                            })
+                        }
+                    }
+
+                    // table 添加/编辑按钮
+                    function LitigationEdit() {
+                        var url = "ContentPages/LitigationPage.html?method=" + this.id;
+
+                        if (this.id != "Litigation_add") {
+                            var row = $('#Litigation_dg').datagrid('getSelected');
+
+                            if (!row) {
+                                return false;
+                            }
+                        }
+
+                        $("#Litigation_frame").attr("src", url);
+
+                        // 打开弹窗
+                        $("#Litigation_dd").dialog({ closed: false });
+                    }
+                </script>
+                <div id="Litigation_dd" class="easyui-dialog" data-options="title:'主要关联企业',width:'80%',height:'600px',top:2100,modal:true,closed:true">
+                    <iframe id="Litigation_frame" name="Litigation_frame" src="about:blank" style="width:100%;height:99%; border:0;"></iframe>
+                </div>
+            </fieldset>
+        </section>
+
+        <section id="L">
+            <h2>大事件</h2>
+
+            <fieldset id="K" name="BigEvent">
+                <!--大事件-->
+                <table id="BigEvent_dg" class="easyui-datagrid" style="width:890px;" data-options="toolbar: '#BigEvent_tb',
+                   rownumbers:true,
+                   singleSelect:true,
+                   onSelect:BigEventSelect,
+                   title:'大事件'
+                   ">
+                    <thead>
+                        <tr>
+                            <th data-options="field:'Id',hidden:true">Id</th>
+
+                            <th data-options="field:'BigEventNumber',width:220,align:'center'">大事件流水号</th>
+                            <th data-options="field:'BigEventDescription',width:500,align:'center'">大事件描</th>
+                        </tr>
+                    </thead>
+                </table>
+
+                <div id="BigEvent_tb" style="height:30px;">
+                    <a id="BigEvent_add" class="easyui-linkbutton" href="javascript:void(0)" data-options="onClick:BigEventEdit,iconCls:'icon-add',plain:true">添加</a>
+                    <a id="BigEvent_mod" class="easyui-linkbutton" href="javascript:void(0)" data-options="onClick:BigEventEdit,iconCls:'icon-edit',plain:true,disabled:true">编辑</a>
+                    <a id="BigEvent_del" class="easyui-linkbutton" href="javascript:void(0)" data-options="onClick:BigEventDelete,iconCls:'icon-remove',plain:true,disabled:true">删除</a>
+                    <a id="BigEvent_view" class="easyui-linkbutton" href="javascript:void(0)" data-options="onClick:BigEventEdit,iconCls:'icon-search',plain:true,disabled:true">查看</a>
+                </div>
+                <script type="text/javascript">
+                    // table onSelect事件
+                    function BigEventSelect(index, row) {
+                        if (row) {
+                            $("#BigEvent_mod").linkbutton("enable");
+                            $("#BigEvent_del").linkbutton("enable");
+                            $("#BigEvent_view").linkbutton("enable");
+                        }
+                    }
+
+                    // table 删除按钮
+                    function BigEventDelete() {
+                        var row = $('#BigEvent_dg').datagrid('getSelected');
+
+                        if (row) {
+                            $.messager.confirm('确认', '确认删除该家族成员信息?', function (r) {
+                                if (r) {
+                                    var rowIndex = $('#BigEvent_dg').datagrid('getRowIndex', row);
+
+                                    $('#BigEvent_dg').datagrid('deleteRow', rowIndex);
+                                }
+                            })
+                        }
+                    }
+
+                    // table 添加/编辑按钮
+                    function BigEventEdit() {
+                        var url = "ContentPages/BigEventPage.html?method=" + this.id;
+
+                        if (this.id != "BigEvent_add") {
+                            var row = $('#BigEvent_dg').datagrid('getSelected');
+
+                            if (!row) {
+                                return false;
+                            }
+                        }
+
+                        $("#BigEvent_frame").attr("src", url);
+
+                        // 打开弹窗
+                        $("#BigEvent_dd").dialog({ closed: false });
+                    }
+                </script>
+                <div id="BigEvent_dd" class="easyui-dialog" data-options="title:'主要关联企业',width:'80%',height:'600px',top:2100,modal:true,closed:true">
+                    <iframe id="BigEvent_frame" name="BigEvent_frame" src="about:blank" style="width:100%;height:99%; border:0;"></iframe>
+                </div>
+            </fieldset>
         </section>
 
         <div id="btn">
