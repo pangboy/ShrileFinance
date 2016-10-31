@@ -193,10 +193,10 @@
     }
 
     /// <summary>
-    /// 注册资本保留2位小数
+    /// 金额（保留2位小数）
     /// </summary>
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = true)]
-    public class RegisterCapitalAttribute : ValidationAttribute
+    public class AmountAttribute : ValidationAttribute
     {
         public override bool IsValid(object value)
         {
