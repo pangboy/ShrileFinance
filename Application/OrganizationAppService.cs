@@ -7,6 +7,7 @@
     using System.Collections.Generic;
     using X.PagedList;
     using ViewModels.OrganizationViewModels;
+    using ViewModels;
     using System.Linq;
 
     public class OrganizationAppService
@@ -37,11 +38,11 @@
         /// </summary>
         /// yand    16.10.25
         /// <param name="model">实体</param>
-        public void Modify(ViewModels.OrganizationViewModels.OrganizationViewModel model)
+        public void Modify(OrganizationViewModel model)
         {
             var customer = Mapper.Map<Core.Entities.Customers.Enterprise.Organization>(model.Base);
-
-            customer = Mapper.Map(model, customer);
+            //var organizate = repository.Get(model.Base.Id);
+            //organizate = Mapper.Map(model, customer);
             repository.Modify(customer);
             repository.Commit();
         }
@@ -55,9 +56,9 @@
         public ViewModels.OrganizationViewModels.OrganizationViewModel Get(Guid id)
         {
             Core.Entities.Customers.Enterprise.Organization customer = repository.Get(id);
-
-            var model = Mapper.Map<ViewModels.OrganizationViewModels.OrganizationViewModel>(customer);
-            model.Base = Mapper.Map<ViewModels.OrganizationViewModels.BaseViewModel>(customer);
+           
+            var model = Mapper.Map<OrganizationViewModel>(customer);
+            model.Base = Mapper.Map<BaseViewModel>(customer);
 
             return model;
         }

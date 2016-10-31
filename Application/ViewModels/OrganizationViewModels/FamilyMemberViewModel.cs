@@ -1,5 +1,6 @@
 ﻿namespace Application.ViewModels.OrganizationViewModels
 {
+    using System;
     using System.ComponentModel.DataAnnotations;
 
     /// <summary>
@@ -8,6 +9,7 @@
     [FBasePeriod_FOR(ErrorMessage = "家族成员证件号码和证件类型成对出现")]
     public class FamilyMemberViewModel
     {
+        public Guid Id { get; set; }
         /// <summary>
         /// 家族成员关系
         /// </summary>

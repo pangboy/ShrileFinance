@@ -55,6 +55,6 @@
         /// <summary>
         /// 家族成员
         /// </summary>
-        public List<FamilyMember> FamilyMembers { get; set; }
+        public virtual List<FamilyMember> FamilyMembers { get; set; }
     }
 }

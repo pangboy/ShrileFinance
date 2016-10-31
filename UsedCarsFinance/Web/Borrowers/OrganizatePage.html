@@ -200,7 +200,7 @@
 
             // 提交
             var method = GetQueryString("method");
-
+            var query = {};
             if (method == "mod")
             {
                 query.Method = "Modify";
@@ -1305,7 +1305,7 @@
         </section>
 
         <div id="btn">
-            <a id="submit" class="easyui-linkbutton" data-options="iconCls: 'icon-edit'" style="margin:0 auto" onclick="Submit()">提交</a>
+            <a id="submit" class="easyui-linkbutton" data-options="iconCls: 'icon-edit'" style="margin:0 auto" onclick="OrganizateSubmit()">提交</a>
             <a id="cancel" class="easyui-linkbutton" data-options="iconCls: 'icon-redo'" style="margin:0 auto" onclick="OrganizateCancel()">取消</a>
             <input type="reset" hidden />
         </div>

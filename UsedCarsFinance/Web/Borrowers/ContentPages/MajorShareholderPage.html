@@ -239,13 +239,13 @@
 
         // 序列化家族信息
         function SerializeFamilyInfos() {
+
             var familyObjs = $("fieldset[id*=I]");
             var familyArray = new Array();
 
             $(familyObjs).each(function (index, item) {
                 familyArray.push($(item).serializeJson());
             });
-
             return familyArray;
         }
     </script>

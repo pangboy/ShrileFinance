@@ -47,17 +47,16 @@
         /// <summary>
         /// 财务
         /// </summary>
-        public IEnumerable<FinancialAffairsViewModel> FinancialAffairsViewModel { get; set; }
+        public IEnumerable<FinancialAffairsViewModel> FinancialAffairs { get; set; }
 
         /// <summary>
         /// 诉讼事件
         /// </summary>
-        public IEnumerable<LitigationViewModel> LitigationViewModel { get; set; }
+        public IEnumerable<LitigationViewModel> Litigation { get; set; }
 
         /// <summary>
         /// 大事件
         /// </summary>
-        public IEnumerable<BigEventViewModel> BigEventViewModel { get; set; }
-
+        public IEnumerable<BigEventViewModel> BigEvent { get; set; }
     }
 }
