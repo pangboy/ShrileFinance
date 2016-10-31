@@ -56,6 +56,7 @@
 
         public void Modify(TEntity entity)
         {
+            Entities.Attach(entity);
             Context.Entry(entity).State = EntityState.Modified;
         }
 
