@@ -199,17 +199,18 @@
             }
 
             // 提交
-            var method = GetQueryString("method");
+            var query = {};
+            query.method = GetQueryString("method");
 
-            if (method == "mod")
+            if (query.method == "mod")
             {
                 query.Method = "Modify";
             }
-            else if (method == "add")
+            else if (query.method == "add")
             {
                 query.Method = "Add";
             }
-
+            
             if ($.inArray(query.Method, ["Add", "Modify"]) != -1) {
                 var url = "../api/Customer/" + query.Method;
 
@@ -271,12 +272,7 @@
             if (data == null) {
                 return false;
             }
-
-            if (data.Property.length == 0) {
-                ShowError("机构属性 必填");
-                return false;
-            }
-
+            
             if (data.Managers.length == 0) {
                 ShowError("高级主管 必填");
                 return false;
@@ -1305,7 +1301,7 @@
         </section>
 
         <div id="btn">
-            <a id="submit" class="easyui-linkbutton" data-options="iconCls: 'icon-edit'" style="margin:0 auto" onclick="Submit()">提交</a>
+            <a id="submit" class="easyui-linkbutton" data-options="iconCls: 'icon-edit'" style="margin:0 auto" onclick="OrganizateSubmit()">提交</a>
             <a id="cancel" class="easyui-linkbutton" data-options="iconCls: 'icon-redo'" style="margin:0 auto" onclick="OrganizateCancel()">取消</a>
             <input type="reset" hidden />
         </div>

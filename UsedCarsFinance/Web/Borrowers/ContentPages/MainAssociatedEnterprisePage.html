@@ -60,9 +60,9 @@
 
             // 序列化表单
             var obj = $('#content').serializeJson();
-
+            
             // 证件类型与证件号码同时出现
-            if ((obj.RegistraterType != '-1' && obj.RegistraterCode.length == 0) || (obj.RegistraterType == '-1' && obj.RegistraterCode.length > 0)) {
+            if (!((obj.RegistraterType == '' && obj.RegistraterCode.length == 0) || (obj.RegistraterType != '' && obj.RegistraterCode.length > 0))) {
                 $.messager.show({ msg: "“登记注册号类型”与“登记注册号码”应同时出现！" });
                 $("#save").linkbutton("enable");
 

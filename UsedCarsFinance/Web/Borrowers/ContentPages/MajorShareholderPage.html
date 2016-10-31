@@ -132,10 +132,11 @@
             self.parent.$("#MajorShareholder_dd").dialog({ closed: true });
         }
 
+        // 数据校验
         function ValidDate(obj)
         {
             // 证件类型与证件号码同时出现
-            if ((obj.RegistraterType != '-1' && obj.RegistraterCode.length == 0) || (obj.RegistraterType == '-1' && obj.RegistraterCode.length > 0)) {
+            if (!((obj.RegistraterType != '' && obj.RegistraterCode.length > 0) || (obj.RegistraterType == '' && obj.RegistraterCode.length == 0))) {
                 ShowError("“证件类型/登记注册号类型”与“证件号码/登记注册号码”应同时出现！" );
 
                 return false;
@@ -198,7 +199,7 @@
             $("input[name=" + currentObj.attr('comboname') + '_Txt' + "]:hidden").val(textArray.join("、"));
 
             // 清除 证件类型/登记注册号类型
-            $("input[name=RegistraterType]:hidden").val("-1");
+            $("input[name=RegistraterType]:hidden").val("");
             $("input[name=RegistraterType_Txt]:hidden").val("");
         }
 
