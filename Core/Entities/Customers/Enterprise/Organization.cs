@@ -95,7 +95,7 @@
         /// <summary>
         /// 上级机构
         /// </summary>
-        public OrganizationParent Parent { get; set; }
+        public virtual OrganizationParent Parent { get; set; }
 
         /// <summary>
         /// 高级主管
@@ -115,7 +115,7 @@
         /// <summary>
         /// 财务信息
         /// </summary>
-        public FinancialAffairs FinancialAffairs { get; set; }
+        public virtual FinancialAffairs FinancialAffairs { get; set; }
 
         /// <summary>
         /// 大事件

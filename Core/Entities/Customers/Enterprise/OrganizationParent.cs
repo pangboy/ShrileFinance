@@ -3,7 +3,7 @@
     /// <summary>
     /// 上级机构（主管单位）段
     /// </summary>
-    public class OrganizationParent : IEnterprise
+    public class OrganizationParent : Entity, IEnterprise
     {
         /// <summary>
         /// 上级机构名称

@@ -32,7 +32,8 @@
                 .Add(new LiabilitiesConfiguration())
                 .Add(new LitigationConfigruation())
                 .Add(new ProfitConfiguration())
-                .Add(new FinancialAffairsConfiguration());
+                .Add(new FinancialAffairsConfiguration())
+                .Add(new ParentConfigration());
 
             base.OnModelCreating(modelBuilder);
         }
