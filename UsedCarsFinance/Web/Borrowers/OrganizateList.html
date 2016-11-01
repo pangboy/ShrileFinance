@@ -14,6 +14,7 @@
 </head>
 <body>
     <table id="dg" class="easyui-datagrid" data-options="height:630,
+           onSelect:PrganizateSelect,
            toolbar :'#tb' ,
            rownumbers :true,
            singleSelect :true,
@@ -22,7 +23,7 @@
            pageList :[1,10,20,30,40,50],
            method :'GET' ,
            url :'../api/Customer/GetPageList' ,
-           queryParams:{Search:'yandong'},
+           queryParams:{Search:'严冬真'},
            loadMsg :'正在加载，请稍候...'
            ">
         <thead>
@@ -38,10 +39,59 @@
 
     <div id="tb">
         <div>
-            <a id="add" class="easyui-linkbutton" href="javascript:void(0)" data-options="iconCls:'icon-add',plain:true" style="display:none">添加</a>
-            <a id="mod" class="easyui-linkbutton" href="javascript:void(0)" data-options="iconCls:'icon-edit',plain:true">修改</a>
-            <a id="view" class="easyui-linkbutton" href="javascript:void(0)" data-options="iconCls:'icon-search',plain:true">查看详情</a>
+            <a id="add" class="easyui-linkbutton" href="javascript:void(0)" data-options="iconCls:'icon-add',plain:true,onClick:PrganizateEdit," >添加</a>
+            <a id="mod" class="easyui-linkbutton" href="javascript:void(0)" data-options="iconCls:'icon-edit',plain:true,onClick:PrganizateEdit," >修改</a>
+            <a id="view" class="easyui-linkbutton" href="javascript:void(0)" data-options="iconCls:'icon-search',plain:true,onClick:PrganizateEdit," >查看详情</a>
         </div>
+    </div>
+
+    <script type="text/javascript">
+                    // table onSelect事件
+                    function PrganizateSelect(index, row) {
+                        if (row) {
+                            $("#mod").linkbutton("enable");
+                            $("#del").linkbutton("enable");
+                            $("#view").linkbutton("enable");
+                        }
+                    }
+
+                    // table 删除按钮
+                    function PrganizateDelete() {
+                        var row = $('#dg').datagrid('getSelected');
+
+                        if (row) {
+                            $.messager.confirm('确认', '确认删除该家族成员信息?', function (r) {
+                                if (r) {
+                                    var rowIndex = $('#dg').datagrid('getRowIndex', row);
+
+                                    $('#dg').datagrid('deleteRow', rowIndex);
+                                }
+                            })
+                        }
+                    }
+
+                    // table 添加/编辑按钮
+                    function PrganizateEdit() {
+                        var url = "OrganizatePage.html?method=" + this.id;
+
+                        if (this.id != "add") {
+                            var row = $('#dg').datagrid('getSelected');
+                            if (row) {
+                                url += "&Id=" + row.Id;
+                            }
+                            else {
+                                return false;
+                            }
+                        }
+
+                        $("#Organizate_frame").attr("src", url);
+
+                        // 打开弹窗
+                        $("#Organizate_dd").dialog({ closed: false });
+                    }
+    </script>
+    <div id="Organizate_dd" class="easyui-dialog" data-options="title:'机构信息',width:'100%',height:'700px',top:0,modal:true,closed:true">
+        <iframe id="Organizate_frame" name="Prganizate_frame" src="about:blank" style="width:100%;height:100%; border:0;"></iframe>
     </div>
 </body>
 </html>

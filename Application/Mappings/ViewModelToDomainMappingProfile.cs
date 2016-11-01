@@ -23,6 +23,15 @@
             CreateMap<OrganizationViewModel, Core.Entities.Customers.Enterprise.Organization>();
             CreateMap<ContactViewModel, Core.Entities.Customers.Enterprise.OrganizationContact>();
             CreateMap<FamilyMemberViewModel, Core.Entities.Customers.Enterprise.FamilyMember>();
+
+            CreateMap<CashFlowViewModel, Core.Entities.Customers.Enterprise.CashFlow>();
+            CreateMap<LiabilitiesViewModel, Core.Entities.Customers.Enterprise.Liabilities>();
+            CreateMap<LitigationViewModel, Core.Entities.Customers.Enterprise.Litigation>();
+            CreateMap<BigEventViewModel, Core.Entities.Customers.Enterprise.BigEvent>();
+            CreateMap<ProfitViewModel, Core.Entities.Customers.Enterprise.Profit>();
+            CreateMap<InstitutionIncomeExpenditureViewModel, Core.Entities.Customers.Enterprise.InstitutionIncomeExpenditure>();
+            CreateMap<InstitutionLiabilitiesViewModel, Core.Entities.Customers.Enterprise.InstitutionLiabilities>();
+
         }
     }
 }

@@ -5,7 +5,7 @@
     /// <summary>
     /// 事业单位资产负债
     /// </summary>
-    public class InstitutionLiabilitiesViewModel : FinancialAffairsViewModel
+    public class InstitutionLiabilitiesViewModel 
     {
         [Required]
         public decimal 现金 { get; set; }

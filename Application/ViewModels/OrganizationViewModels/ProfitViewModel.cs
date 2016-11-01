@@ -5,7 +5,7 @@
     /// <summary>
     /// 利润以及利润分配
     /// </summary>
-    public class ProfitViewModel : FinancialAffairsViewModel
+    public class ProfitViewModel 
     {
         /// <summary>
         /// 营业收入

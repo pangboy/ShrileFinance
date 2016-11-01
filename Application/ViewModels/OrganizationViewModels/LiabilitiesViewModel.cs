@@ -5,7 +5,7 @@
     /// <summary>
     /// 资产负债
     /// </summary>
-    public class LiabilitiesViewModel : FinancialAffairsViewModel
+    public class LiabilitiesViewModel 
     {
         /// <summary>
         /// 货币资金

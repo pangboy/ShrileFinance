@@ -5,7 +5,7 @@
     /// <summary>
     /// 现金流
     /// </summary>
-    public class CashFlowViewModel : FinancialAffairsViewModel
+    public class CashFlowViewModel 
     {
         /// <summary>
         /// 销售商品和提供劳务收到的现金

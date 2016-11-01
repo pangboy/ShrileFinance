@@ -241,7 +241,7 @@
 
             var basePeriod = value as BaseViewModel;
 
-            return ServiceMethods.CheckInPairs(new string[] { basePeriod.OrganizateCode, basePeriod.RegistraterCode });
+            return !(string.IsNullOrEmpty(basePeriod.OrganizateCode) && string.IsNullOrEmpty(basePeriod.RegistraterCode));
         }
     }
 
@@ -381,7 +381,7 @@
 
             var mainAssociatedEnterprisePerid = value as AssociatedEnterpriseViewModel;
 
-            return ServiceMethods.CheckInPairs(new string[] { mainAssociatedEnterprisePerid.RegistraterCode, mainAssociatedEnterprisePerid.OrganizateCode });
+            return !(string.IsNullOrEmpty(mainAssociatedEnterprisePerid.RegistraterCode) && string.IsNullOrEmpty(mainAssociatedEnterprisePerid.OrganizateCode) && string.IsNullOrEmpty(mainAssociatedEnterprisePerid.InstitutionCreditCode));
         }
     }
     #endregion
@@ -401,7 +401,7 @@
 
             var superInstitutionPeriod = value as ParentViewModel;
 
-            return ServiceMethods.CheckInPairs(new string[] { superInstitutionPeriod.RegistraterCode, superInstitutionPeriod.OrganizateCode });
+            return !(string.IsNullOrEmpty(superInstitutionPeriod.RegistraterCode) && string.IsNullOrEmpty(superInstitutionPeriod.OrganizateCode) && string.IsNullOrEmpty(superInstitutionPeriod.InstitutionCreditCode));
         }
     }
     #endregion

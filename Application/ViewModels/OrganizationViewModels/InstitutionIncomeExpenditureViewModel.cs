@@ -5,7 +5,7 @@
     /// <summary>
     /// 事业单位收入支出
     /// </summary>
-    public class InstitutionIncomeExpenditureViewModel : FinancialAffairsViewModel
+    public class InstitutionIncomeExpenditureViewModel 
     {
         public decimal 财政补助收入 { get; set; }
 
