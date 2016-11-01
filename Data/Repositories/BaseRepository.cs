@@ -8,8 +8,6 @@
     using Core.Interfaces;
     using Core.Interfaces.Repositories;
     using X.PagedList;
-    using System.Data.Entity.Infrastructure;
-    using System.Reflection;
 
     public abstract class BaseRepository<TEntity> : IRepository<TEntity>
         where TEntity : Entity, IAggregateRoot
@@ -58,8 +56,6 @@
 
         public void Modify(TEntity entity)
         {
-            Context.Set<TEntity>()
-            .AsNoTracking();
             Context.Entry(entity).State = EntityState.Modified;
         }
 

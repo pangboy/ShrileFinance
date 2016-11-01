@@ -160,18 +160,25 @@
     <Content Include="BankInfo\Meta\MetaList.html" />
     <Content Include="BankInfo\SegmentRules\SegmentRulesEdit.html" />
     <Content Include="BankInfo\SegmentRules\SegmentRulesList.html" />
-    <Content Include="Borrowers\CashFlowInfo.html" />
+    <Content Include="Borrowers\ContentPages\BigEventPage.html" />
+    <Content Include="Borrowers\ContentPages\LitigationPage.html" />
+    <Content Include="Borrowers\OldPages\CashFlowInfo.html" />
+    <Content Include="Borrowers\ContentPages\CashFlowPage.html" />
     <Content Include="Borrowers\ContentPages\ExecutivesMajorParticipantPage.html" />
-    <Content Include="Borrowers\ContentPages\FamilyPage.html" />
+    <Content Include="Borrowers\ContentPages\IncomeExpenditurPage.html" />
+    <Content Include="Borrowers\ContentPages\InstitutionLiabilitiesPage.html" />
+    <Content Include="Borrowers\ContentPages\LiabilitiesPage.html" />
+    <Content Include="Borrowers\ContentPages\ProfitPage.html" />
+    <Content Include="Borrowers\OldPages\FamilyPage.html" />
     <Content Include="Borrowers\ContentPages\MainAssociatedEnterprisePage.html" />
     <Content Include="Borrowers\ContentPages\MajorShareholderPage.html" />
-    <Content Include="Borrowers\FamilyInfo.html" />
+    <Content Include="Borrowers\OldPages\FamilyInfo.html" />
     <Content Include="Borrowers\FamilyInfoDel.html" />
     <Content Include="Borrowers\img\InfoImg.png" />
     <Content Include="Borrowers\JS\BorrowerMethod.js" />
     <Content Include="Borrowers\JS\validType.js" />
     <Content Include="Borrowers\Lawsuit.html" />
-    <Content Include="Borrowers\OrganizateInfo.html" />
+    <Content Include="Borrowers\OldPages\OrganizateInfo.html" />
     <Content Include="Borrowers\OrganizateInfoDel.html" />
     <Content Include="Borrowers\OrganizateList.html" />
     <Content Include="Borrowers\OrganizatePage.html" />
@@ -940,7 +947,6 @@
     <Content Include="Scripts\jquery\jquery-1.12.0.min.map" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Borrowers\OldPages\" />
     <Folder Include="Tests\Content\" />
     <Folder Include="Tests\Scripts\" />
   </ItemGroup>

@@ -51,6 +51,8 @@
 
         public decimal 经营支出 { get; set; }
 
+        public decimal 销售税金1 { get; set; }
+
         public decimal 经营支出小计 { get; set; }
 
         public decimal 拨出专款 { get; set; }

@@ -1,0 +1,284 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" data-options="required:false,validType:['PositiveNumber','Amount','length[0,20]']" />
+    <title>利润以及利润分配</title>
+    <meta charset="utf-8" data-options="required:false,validType:['PositiveNumber','Amount','length[0,20]']" />
+    <link href="../../Content/easyui/themes/bootstrap/easyui.css" rel="stylesheet">
+    <link href="../../Content/easyui/themes/icon.css" rel="stylesheet">
+    <link href="../../Content/form-bootstrap.css" rel="stylesheet">
+    <script src="../../Scripts/jquery/jquery.js"></script>
+    <script src="../../Scripts/easyui/jquery.easyui.js"></script>
+    <script src="../../Scripts/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../JS/BorrowerMethod.js"></script>
+    <script src="../JS/validType.js"></script>
+
+    <script type="text/javascript">
+        var query = new Object();
+
+        $(function () {
+            Init();
+        });
+
+        // 初始化
+        function Init() {
+            query.method = GetQueryString("method");
+
+            if (query.method == "Profit_mod" || query.method == "Profit_view") {
+                //获取选中行
+                var row = self.parent.$("#Profit_dg").datagrid('getSelected');
+
+                if (query.method == "Profit_mod") {
+                    if (row) {
+                        //加载数据
+                        LoadDate(row.CarshFolwJson);
+                    }
+                } else if (query.method == "Profit_view") {
+                    if (row) {
+                        //加载数据
+                        LoadDate(row.CarshFolwJson);
+                    }
+
+                    // 禁用fieldset
+                    Disabled($("fieldset"));
+
+                    // 禁用保存按钮
+                    $("#save").linkbutton("disable");
+                }
+            }
+        }
+
+        // 加载数据
+        function LoadDate(row) {
+            // 加载高管及主要关系人基本信息
+            $('fieldset[id=Profit]').form('load', row);
+        }
+
+        // 提交按钮
+        function ProfitSubmit() {
+            // 表单验证
+            if ($("#content").form("validate")) {
+                // 禁用提交按钮
+                $("#save").linkbutton("disable");
+            } else {
+                $.messager.show({ msg: "请填写剩下的必填内容!" });
+                return false;
+            }
+
+            // 序列化fieldset 利润利润分配
+            var obj = $("fieldset[id=Profit]").serializeJson();
+            
+            // 更新利润利润分配表
+            if (query.method == "Profit_mod") {
+
+                //获取选中行
+                var row = self.parent.$("#Profit_dg").datagrid('getSelected');
+
+                if (row) {
+                    var RowIndex = self.parent.$("#Profit_dg").datagrid('getRowIndex', row);
+
+                    //更新行
+                    self.parent.$("#Profit_dg").datagrid('updateRow', { index: RowIndex, row: obj });
+                }
+            }
+            if (query.method == "Profit_add") {
+                //追加一行
+                self.parent.$("#Profit_dg").datagrid('appendRow', obj);
+            }
+
+            // 清空表单，避免再次打开时闪现之前填入的数据
+            $('input[type=reset]').click();
+
+            // 关闭弹窗
+            self.parent.$("#Profit_dd").dialog({ closed: true });
+        }
+
+        // 取消按钮
+        function ProfitCancel() {
+            // 清空表单，避免再次打开时闪现之前填入的数据
+            $('input[type=reset]').click();
+
+            // 关闭弹窗
+            self.parent.$("#Profit_dd").dialog({ closed: true });
+        }
+    </script>
+</head>
+<body>
+    <form class="container" id="content">
+        <h1 style="text-align:center">
+            利润以及利润分配
+        </h1>
+        <section>
+            <fieldset id="Profit" name="Profit">
+                <div class="row">
+                    <div class="col-6">
+                        <label>
+                            营业收入：
+                            <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="营业收入">　</a>
+                        </label>
+                        <input name="BusinessIncome" class="easyui-textbox" data-options="required:true,validType:['PositiveNumber','Amount','length[0,20]']" />
+                    </div>
+                    <div class="col-6">
+                        <label>
+                            营业成本：
+                            <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="营业成本">　</a>
+                        </label>
+                        <input name="OperatingCost" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Amount','length[0,20]']" />
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-6">
+                        <label>
+                            营业税金及附加：
+                            <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="营业税金及附加">　</a>
+                        </label>
+                        <input name="SalesTax" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Amount','length[0,20]']" />
+                    </div>
+                    <div class="col-6">
+                        <label>
+                            销售费用：
+                            <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="销售费用">　</a>
+                        </label>
+                        <input name="SellingExpenses" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Amount','length[0,20]']" />
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-6">
+                        <label>
+                            管理费用：
+                            <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="管理费用">　</a>
+                        </label>
+                        <input name="ManagementExpenses" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Amount','length[0,20]']" />
+                    </div>
+                    <div class="col-6">
+                        <label>
+                            财务费用：
+                            <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="财务费用">　</a>
+                        </label>
+                        <input name="FinancialExpenses" class="easyui-textbox" data-options="required:true,validType:['PositiveNumber','Amount','length[0,20]']" />
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-6">
+                        <label>
+                            资产减值损失：
+                            <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="资产减值损失">　</a>
+                        </label>
+                        <input name="AssetsimpairmentLoss" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Amount','length[0,20]']" />
+                    </div>
+                    <div class="col-6">
+                        <label>
+                            公允价值变动净收益：
+                            <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="公允价值变动净收益">　</a>
+                        </label>
+                        <input name="FairIncome" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Amount','length[0,20]']" />
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-6">
+                        <label>
+                            投资净收益：
+                            <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="投资净收益">　</a>
+                        </label>
+                        <input name="NetInvestmentIncome" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Amount','length[0,20]']" />
+                    </div>
+                    <div class="col-6">
+                        <label>
+                            对联营企业和合营企业的投资收益：
+                            <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="对联营企业和合营企业的投资收益">　</a>
+                        </label>
+                        <input name="EnterpriseInvestmentIncome" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Amount','length[0,20]']" />
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-6">
+                        <label>
+                            营业利润：
+                            <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="营业利润">　</a>
+                        </label>
+                        <input name="OperatingProfit" class="easyui-textbox" data-options="required:true,validType:['PositiveNumber','Amount','length[0,20]']" />
+                    </div>
+                    <div class="col-6">
+                        <label>
+                            营业外收入：
+                            <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="营业外收入">　</a>
+                        </label>
+                        <input name="OperatingIncome" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Amount','length[0,20]']" />
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-6">
+                        <label>
+                            营业外支出：
+                            <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="营业外支出">　</a>
+                        </label>
+                        <input name="OperatingExpenditure" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Amount','length[0,20]']" />
+                    </div>
+                    <div class="col-6">
+                        <label>
+                            非流动资产损失：
+                            <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="非流动资产损失">　</a>
+                        </label>
+                        <input name="NonCurrentAssetsLoss" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Amount','length[0,20]']" />
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-6">
+                        <label>
+                            利润总额：
+                            <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="利润总额">　</a>
+                        </label>
+                        <input name="GrossProfit" class="easyui-textbox" data-options="required:true,validType:['PositiveNumber','Amount','length[0,20]']" />
+                    </div>
+                    <div class="col-6">
+                        <label>
+                            所得税费用：
+                            <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="所得税费用">　</a>
+                        </label>
+                        <input name="IncomeTaxExpense" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Amount','length[0,20]']" />
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-6">
+                        <label>
+                            净利润：
+                            <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="净利润">　</a>
+                        </label>
+                        <input name="NetProfit" class="easyui-textbox" data-options="required:true,validType:['PositiveNumber','Amount','length[0,20]']" />
+                    </div>
+                    <div class="col-6">
+                        <label>
+                            基本每股收益：
+                            <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="基本每股收益">　</a>
+                        </label>
+                        <input name="BasicEarningsShare" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Amount','length[0,20]']" />
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-6">
+                        <label>
+                            稀释每股收益：
+                            <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="稀释每股收益">　</a>
+                        </label>
+                        <input name="DilutedEarningsShare" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Amount','length[0,20]']" />
+                    </div>
+                </div>
+            </fieldset>
+        </section>
+        <div id="btn">
+            <a id="save" class="easyui-linkbutton" href="javascript:void(0)" data-options="iconCls:'icon-save',onClick:ProfitSubmit">保存</a>
+            <a id="back" class="easyui-linkbutton" href="javascript:void(0)" data-options="iconCls:'icon-redo',onClick:ProfitCancel">返回</a>
+            <input type="reset" style="display:none" />
+        </div>
+    </form>
+</body>
+</html>

@@ -149,9 +149,9 @@
         public decimal PayCashForDividend { get; set; }
 
         /// <summary>
-        /// 支付其他与筹资活动有关的现金
+        /// 其他
         /// </summary>
-        public decimal PayFinancingCash { get; set; }
+        //public decimal PayFinancingCash { get; set; }
 
         /// <summary>
         /// 支付其他与筹资活动有关的现金
