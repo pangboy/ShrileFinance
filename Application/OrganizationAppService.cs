@@ -95,6 +95,7 @@
             var list = pagedlist.Select(m =>
                 new OragnizateListItemViewModel
                 {
+                    Id=m.Id,
                     CustomerNumber = m.CustomerNumber,
                     InstitutionChName = m.Property.InstitutionChName,
                     InstitutionCreditCode = m.InstitutionCreditCode,

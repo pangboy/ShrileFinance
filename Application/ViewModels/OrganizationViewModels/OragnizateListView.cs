@@ -1,7 +1,13 @@
 ﻿namespace Application.ViewModels.OrganizationViewModels
 {
+    using System;
+
     public class OragnizateListItemViewModel
     {
+        /// <summary>
+        /// GuidId
+        /// </summary>
+        public Guid Id { get; set; }
         /// <summary>
         /// 客户号
         /// </summary>

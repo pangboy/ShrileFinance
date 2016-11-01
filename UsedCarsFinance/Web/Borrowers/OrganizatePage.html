@@ -80,7 +80,7 @@
                 section.find('div:hidden').find("a[id=" + sectionId + "add]").click();
 
                 // 对新增(显示)的fieldset设置name
-                section.find('fieldset').attr('name', getFieldsetName(sectionId));
+                $("section[id=" + sectionId + "]").find('fieldset').attr('name', getFieldsetName(sectionId));
                 
                 // 清空fieldset下的table
                 section.find('fieldset').find("table[id*=_dg]").each(function (index, item) {
@@ -111,7 +111,7 @@
             }
 
             var IdArray = new Array("B-Base", "C-Property", "D-State", "E-Contact", "F-Managers", "G-Shareholders", "H-AssociatedEnterprises", 
-                "I-Parent", "J-CashFlow", "K-Litigation", "L-BigEvent");
+                "I-Parent", "J-FinancialAffairsBase", "K-Litigation", "L-BigEvent");
             var resultName = "";
 
             for (var i = 0; i < IdArray.length; i++) {
@@ -175,11 +175,12 @@
             if (!resultDate) {
                 return null;
             }
-
+            
             // 加载基础信息
             FieldsetLoadDateFactory("Base", "text", resultDate.Base);
 
             if (resultDate.Base != undefined && resultDate.Base.HasParent != undefined && resultDate.Base.HasParent == true) {
+                // 显示上级机构（主管单位）
                 $("fieldset[id=Base]").find("input[name=HasParent]:hidden").click();
             }
 
@@ -194,13 +195,13 @@
             });
 
             // 加载财务信息
-            if (resultDate.CashFlow != undefined)
+            if (resultDate.FinancialAffairs != undefined && resultDate.FinancialAffairs.length > 0)
             {
                 // 显示财务 fieldset
                 $("fieldset[id=Base]").find("input[id=TF_J]").click();
 
                 // 加载财务基本信息
-                FieldsetLoadDateFactory("FinancialAffairs", "text", resultDate.FinancialAffairs);
+                FieldsetLoadDateFactory("FinancialAffairsBase", "text", resultDate.FinancialAffairs);
 
                 // 加载现金流量、资产负债、利润利润分配、事业单位收入支出、事业单位资产负债
                 $(["CashFlow", "Liabilities", "Profit", "IncomeExpenditur", "InstitutionLiabilities"]).each(function (index, item) {
@@ -209,7 +210,7 @@
             }
 
             // 加载诉讼事件
-            if (resultDate.Litigation != undefined) {
+            if (resultDate.Litigation != undefined && resultDate.Litigation.length>0) {
                 // 显示诉讼事件 fieldset
                 $("fieldset[id=Base]").find("input[id=TF_K]").click();
 
@@ -218,7 +219,7 @@
             }
 
             // 加载大事件
-            if (resultDate.BigEvent != undefined) {
+            if (resultDate.BigEvent != undefined && resultDate.BigEvent.length>0) {
                 // 显示大事件 fieldset
                 $("fieldset[id=Base]").find("input[id=TF_L]").click();
 
@@ -245,7 +246,6 @@
                 $("#submit").linkbutton("enable");
                 return false;
             }
-
             // 提交
             var query = {};
             query.method = GetQueryString("method");
@@ -285,8 +285,11 @@
 
         // 取消按钮
         function OrganizateCancel() {
-            window.opener.location.href = window.opener.location.href;
-            window.close()
+            // 清空表单，避免再次打开时闪现之前填入的数据
+            $('input[type=reset]').click();
+
+            // 关闭弹窗
+            self.parent.$("#Organizate_dd").dialog({ closed: true });
         }
 
         // 数据构建
@@ -314,25 +317,28 @@
             // 序列化财务信息
             if ($("div#showSecton").find("input[id=TF_J]")[0].checked==true) {
                 // 序列化财务基本信息
-                data.FinancialAffairs = FieldsetSerializeFactory("FinancialAffairs", "text");
-
+                data.FinancialAffairs = FieldsetSerializeFactory("FinancialAffairsBase", "text");
+                
                 // 加载现金流量、资产负债、利润利润分配、事业单位收入支出、事业单位资产负债
                 $(["CashFlow", "Liabilities", "Profit", "IncomeExpenditur", "InstitutionLiabilities"]).each(function (index, item) {
-                    data.FinancialAffairs[item]= FieldsetSerializeFactory(item, "table");
+                    var itemValue = FieldsetSerializeFactory(item, "table");
+                    
+                    if (itemValue.length > 0)
+                    {
+                        data.FinancialAffairs[item] = itemValue;
+                    }
                 });
             }
 
             // 序列化诉讼事件
             if ($("div#showSecton").find("input[id=TF_K]")[0].checked == true) {
-                data.Litigation = FieldsetLoadDateFactory("Litigation", "text");
+                data.Litigation = FieldsetSerializeFactory("Litigation", "table");
             }
-
+            
             // 序列化大事件
             if ($("div#showSecton").find("input[id=TF_L]")[0].checked == true) {
-                data.BigEvent = FieldsetLoadDateFactory("BigEvent", "text");
+                data.BigEvent = FieldsetSerializeFactory("BigEvent", "table");
             }
-
-
             return data;
         }
 
@@ -357,6 +363,60 @@
                 return false;
             }
 
+            // 财务判断
+            if ($("div#showSecton").find("input[id=TF_J]")[0].checked == true) {
+                // 序列化财务基本信息
+                if (data.FinancialAffairs == undefined)
+                {
+                    ShowError("请填写财务信息！");
+
+                    return false;
+                }
+                else {
+                    var tableCount = 0;
+                    if (data.FinancialAffairs.CashFlow!=undefined && data.FinancialAffairs.CashFlow.length>0) {
+                        tableCount = 1;
+                    }
+                    else if (data.FinancialAffairs.Liabilities != undefined && data.FinancialAffairs.Liabilities.length > 0) {
+                        tableCount = 1;
+                    }
+                    else if (data.FinancialAffairs.Profit != undefined && data.FinancialAffairs.Profit.length > 0) {
+                        tableCount = 1;
+                    }
+                    else if (data.FinancialAffairs.IncomeExpenditur != undefined && data.FinancialAffairs.IncomeExpenditur.length > 0) {
+                        tableCount = 1;
+                    }
+                    else if (data.FinancialAffairs.InstitutionLiabilities != undefined && data.FinancialAffairs.InstitutionLiabilities.length > 0) {
+                        tableCount = 1;
+                    }
+
+                    if (tableCount == 0)
+                    {
+                        ShowError("财务 现金流量、资产负债、利润以及利润分配、事业单位收入支出、事业单位资产负债不可同时为空！");
+
+                        return false;
+                    }
+                }
+            }
+
+            // 诉讼事件判断
+            if ($("div#showSecton").find("input[id=TF_K]")[0].checked == true) {
+                if (data.Litigation == undefined || data.Litigation.length==0) {
+                    ShowError("请填写诉讼事件！");
+
+                    return false;
+                }
+            }
+            
+            // 大事件判断
+            if ($("div#showSecton").find("input[id=TF_L]")[0].checked == true) {
+                if (data.BigEvent == undefined || data.BigEvent.length == 0) {
+                    ShowError("请填写大事件！");
+
+                    return false;
+                }
+            }
+            
             return true;
         }
 
@@ -1050,7 +1110,8 @@
                     <thead>
                         <tr>
                             <th data-options="field:'InformationCategories',hidden:true">信息类别</th>
-                            <th data-options="field:'Id',hidden:true">Id</th>
+                            <th data-options="field:'Id',hidden:true">GuId</th>
+
                             <th data-options="field:'Type',width:200,align:'center',hidden:true">关系人类型</th>
                             <th data-options="field:'Type_Txt',width:200,align:'center'">关系人类型</th>
                             <th data-options="field:'Name',width:200,align:'center'">姓名</th>
@@ -1131,7 +1192,8 @@
                     <thead>
                         <tr>
                             <th data-options="field:'InformationCategories',hidden:true">信息类别</th>
-                            <th data-options="field:'Id',hidden:true">Id</th>
+                            <th data-options="field:'Id',hidden:true">GuiId</th>
+
                             <th data-options="field:'ShareholdersType',hidden:true"></th>
                             <th data-options="field:'ShareholdersType_Txt',width:100,align:'center'">股东类型</th>
                             <th data-options="field:'ShareholdersName',width:100,align:'center'">股东名称</th>
@@ -1214,7 +1276,8 @@
                     <thead>
                         <tr>
                             <th data-options="field:'InformationCategories',hidden:true">信息类别</th>
-                            <th data-options="field:'Id',hidden:true">Id</th>
+                            <th data-options="field:'Id',hidden:true">GuiId</th>
+
                             <th data-options="field:'AssociatedType',width:200,align:'center',hidden:true"></th>
                             <th data-options="field:'AssociatedType_Txt',width:100,align:'center'">关联类型</th>
                             <th data-options="field:'Name',width:110,align:'center'">关联企业名称</th>
@@ -1368,14 +1431,14 @@
                             报表年份：
                             <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('img/InfoImg.png') no-repeat scroll 0 0" title="报表年份">　</a>
                         </label>
-                        <input class="easyui-textbox textbox-f" data-options="required:false,validType:['N','length[4,4]','EffectiveYear']" name="Year">
+                        <input class="easyui-textbox textbox-f" data-options="required:true,validType:['N','length[4,4]','EffectiveYear']" name="Year">
                     </div>
                     <div class="col-6">
                         <label>
                             报表类型细分：
                             <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('img/InfoImg.png') no-repeat scroll 0 0" title="报表类型细分">　</a>
                         </label>
-                        <input class="easyui-textbox textbox-f" data-options="required:false,validType:['N','length[0,2]']" name="TypeSubdivision">
+                        <input class="easyui-textbox textbox-f" data-options="required:true,validType:['N','length[0,2]']" name="TypeSubdivision">
                     </div>
                 </div>
 
@@ -1385,14 +1448,14 @@
                             审计事务所：
                             <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('img/InfoImg.png') no-repeat scroll 0 0" title="审计事务所">　</a>
                         </label>
-                        <input class="easyui-textbox textbox-f" data-options="required:false,validType:['ANC','length[0,80]','EffectiveYear']" name="AuditFirm">
+                        <input class="easyui-textbox textbox-f" data-options="required:true,validType:['ANC','length[0,80]']" name="AuditFirm">
                     </div>
                     <div class="col-6">
                         <label>
                             审计人员名称：
                             <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('img/InfoImg.png') no-repeat scroll 0 0" title="审计人员名称">　</a>
                         </label>
-                        <input class="easyui-textbox textbox-f" data-options="required:false,validType:['ANC','length[0,20]']" name="AuditorName">
+                        <input class="easyui-textbox textbox-f" data-options="required:true,validType:['ANC','length[0,20]']" name="AuditorName">
                     </div>
                 </div>
             </template>
@@ -1409,7 +1472,7 @@
                    ">
                     <thead>
                         <tr>
-                            <th data-options="field:'Id',hidden:true">Id</th>
+                            <th data-options="field:'Id',hidden:true">GuId</th>
 
                             <th data-options="field:'OperatingActivitiesCashInflows',width:120,align:'center'">经营活动现金流入小计</th>
                             <th data-options="field:'OperatingActivitiesCashOutflows',width:120,align:'center'">经营活动现金流出小计</th>
