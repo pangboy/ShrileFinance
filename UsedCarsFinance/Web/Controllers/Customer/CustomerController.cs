@@ -44,10 +44,10 @@ namespace Web.Controllers.Customer
         /// <returns></returns>
         public IHttpActionResult Modify(OrganizationViewModel value)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+            //if (!ModelState.IsValid)
+            //{
+            //    return BadRequest(ModelState);
+            //}
 
             customerAppService.Modify(value);
 
