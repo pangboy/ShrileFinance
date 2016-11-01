@@ -13,6 +13,7 @@
             CreateMap<Core.Entities.Customers.Enterprise.OrganizationProperties,PropertiesViewModel>();
             CreateMap<Core.Entities.Customers.Enterprise.OrganizationState,StateViewModel >();
             CreateMap<Core.Entities.Customers.Enterprise.Manager,ManagerViewModel>();
+            CreateMap<Core.Entities.Customers.Enterprise.FinancialAffairs, FinancialAffairsViewModel>();
             CreateMap<Core.Entities.Customers.Enterprise.Organization,BaseViewModel>();
             CreateMap<Core.Entities.Customers.Enterprise.Stockholder,StockholderViewModel>();
             CreateMap<Core.Entities.Customers.Enterprise.Organization,OrganizationViewModel>();

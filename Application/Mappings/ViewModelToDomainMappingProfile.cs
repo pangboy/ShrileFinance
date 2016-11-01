@@ -2,6 +2,7 @@
 {
     using AutoMapper;
     using Core.Entities;
+    using Core.Entities.Customers.Enterprise;
     using ViewModels.OrganizationViewModels;
 
     public class ViewModelToDomainMappingProfile : Profile
@@ -17,6 +18,7 @@
             CreateMap<StateViewModel, Core.Entities.Customers.Enterprise.OrganizationState>();
             CreateMap<ManagerViewModel, Core.Entities.Customers.Enterprise.Manager>();
             CreateMap<BaseViewModel, Core.Entities.Customers.Enterprise.Organization>();
+            CreateMap<FinancialAffairsViewModel, Core.Entities.Customers.Enterprise.FinancialAffairs>();
             CreateMap<StockholderViewModel, Core.Entities.Customers.Enterprise.Stockholder>();
             CreateMap<OrganizationViewModel, Core.Entities.Customers.Enterprise.Organization>();
             CreateMap<ContactViewModel, Core.Entities.Customers.Enterprise.OrganizationContact>();

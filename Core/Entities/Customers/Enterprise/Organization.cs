@@ -115,7 +115,7 @@
         /// <summary>
         /// 财务信息
         /// </summary>
-        public virtual List<FinancialAffairs> FinancialAffairs { get; set; }
+        public FinancialAffairs FinancialAffairs { get; set; }
 
         /// <summary>
         /// 大事件

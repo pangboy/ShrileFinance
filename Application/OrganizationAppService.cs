@@ -41,10 +41,25 @@
         public void Modify(OrganizationViewModel model)
         {
             var customer = Mapper.Map<Core.Entities.Customers.Enterprise.Organization>(model.Base);
-            //var organizate = repository.Get(model.Base.Id);
-            //organizate = Mapper.Map(model, customer);
-            repository.Modify(customer);
-            repository.Commit();
+            customer = Mapper.Map(model, customer);
+
+            try
+            {
+                var organizate = repository.Get(model.Base.Id);
+                //Mapper.Map(model.Base, organizate);
+               //// organizate.Managers.RemoveRange(0, organizate.Managers.Count);
+               // organizate.Managers.Clear();
+               // organizate.Shareholders.Clear();
+               // organizate.BigEvent.Clear();
+               // organizate.Litigation.Clear();
+               // organizate.AssociatedEnterprises.Clear();
+               // organizate = Mapper.Map(model, organizate);
+                repository.Modify(customer);
+                repository.Commit();
+            }
+            catch (Exception ex)
+            {
+            }
         }
 
         /// <summary>
@@ -56,7 +71,7 @@
         public ViewModels.OrganizationViewModels.OrganizationViewModel Get(Guid id)
         {
             Core.Entities.Customers.Enterprise.Organization customer = repository.Get(id);
-           
+
             var model = Mapper.Map<OrganizationViewModel>(customer);
             model.Base = Mapper.Map<BaseViewModel>(customer);
 

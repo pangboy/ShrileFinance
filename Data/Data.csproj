@@ -79,6 +79,14 @@
     <Compile Include="Migrations\201610300351578_AddBorrow2.1.Designer.cs">
       <DependentUpon>201610300351578_AddBorrow2.1.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201610310751231_UpdateFinanceAffairs.cs" />
+    <Compile Include="Migrations\201610310751231_UpdateFinanceAffairs.Designer.cs">
+      <DependentUpon>201610310751231_UpdateFinanceAffairs.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201611010205396_OrganizationReleation.cs" />
+    <Compile Include="Migrations\201611010205396_OrganizationReleation.Designer.cs">
+      <DependentUpon>201611010205396_OrganizationReleation.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs">
       <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
     </Compile>
@@ -229,6 +237,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201610300351578_AddBorrow2.1.resx">
       <DependentUpon>201610300351578_AddBorrow2.1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201610310751231_UpdateFinanceAffairs.resx">
+      <DependentUpon>201610310751231_UpdateFinanceAffairs.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611010205396_OrganizationReleation.resx">
+      <DependentUpon>201611010205396_OrganizationReleation.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

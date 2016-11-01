@@ -27,6 +27,11 @@
         /// </summary>
         public string AuditorName { get; set; }
 
+        ///// <summary>
+        ///// 机构
+        ///// </summary>
+        //public Organization Organization { get; set; }
+
         /// <summary>
         /// 现金流量
         /// </summary>

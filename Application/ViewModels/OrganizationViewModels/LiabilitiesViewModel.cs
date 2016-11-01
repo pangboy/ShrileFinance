@@ -162,12 +162,13 @@
         /// <summary>
         /// 资产总计
         /// </summary>
+        [Required]
+
         public decimal TotalAssets { get; set; }
 
         /// <summary>
         /// 短期借款
         /// </summary>
-        [Required]
         public decimal ShortLoan { get; set; }
 
         /// <summary>

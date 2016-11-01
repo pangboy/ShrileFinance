@@ -47,7 +47,7 @@
         /// <summary>
         /// 财务
         /// </summary>
-        public IEnumerable<FinancialAffairsViewModel> FinancialAffairs { get; set; }
+        public FinancialAffairsViewModel FinancialAffairs { get; set; }
 
         /// <summary>
         /// 诉讼事件

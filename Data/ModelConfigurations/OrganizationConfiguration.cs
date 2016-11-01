@@ -56,12 +56,12 @@
             Property(m => m.Parent.InstitutionCreditCode).HasMaxLength(18);
 
             // 集合
-            HasMany(m => m.Managers).WithRequired().Map(m => m.MapKey("OrganizationId"));
-            HasMany(m => m.Shareholders).WithRequired().Map(m => m.MapKey("OrganizationId"));
-            HasMany(m => m.AssociatedEnterprises).WithRequired().Map(m => m.MapKey("OrganizationId"));
+            HasMany(m => m.Managers).WithOptional().Map(m => m.MapKey("OrganizationId"));
+            HasMany(m => m.Shareholders).WithOptional().Map(m => m.MapKey("OrganizationId"));
+            HasMany(m => m.AssociatedEnterprises).WithOptional().Map(m => m.MapKey("OrganizationId"));
 
             // 财务
-            HasMany(m => m.FinancialAffairs).WithOptional().Map(m => m.MapKey("OrganizationId"));
+            HasOptional(m => m.FinancialAffairs).WithOptionalPrincipal().Map(m => m.MapKey("OrganizationId")).WillCascadeOnDelete();
 
             // 大事件
             HasMany(m => m.BigEvent).WithOptional().Map(m => m.MapKey("OrganizationId"));
