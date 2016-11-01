@@ -193,16 +193,16 @@
             $(["Managers", "Shareholders", "AssociatedEnterprises"]).each(function (index, item) {
                 FieldsetLoadDateFactory(item, "table", resultDate[item]);
             });
-
+            
             // 加载财务信息
-            if (resultDate.FinancialAffairs != undefined && resultDate.FinancialAffairs.length > 0)
+            if (resultDate.FinancialAffairs != undefined && resultDate.FinancialAffairs!=null)
             {
                 // 显示财务 fieldset
                 $("fieldset[id=Base]").find("input[id=TF_J]").click();
-
+                
                 // 加载财务基本信息
                 FieldsetLoadDateFactory("FinancialAffairsBase", "text", resultDate.FinancialAffairs);
-
+                
                 // 加载现金流量、资产负债、利润利润分配、事业单位收入支出、事业单位资产负债
                 $(["CashFlow", "Liabilities", "Profit", "IncomeExpenditur", "InstitutionLiabilities"]).each(function (index, item) {
                     FieldsetLoadDateFactory(item, "table", resultDate.FinancialAffairs[item]);
@@ -217,12 +217,12 @@
                 // 加载诉讼事件
                 FieldsetLoadDateFactory("Litigation", "table", resultDate.Litigation);
             }
-
+            
             // 加载大事件
             if (resultDate.BigEvent != undefined && resultDate.BigEvent.length>0) {
                 // 显示大事件 fieldset
                 $("fieldset[id=Base]").find("input[id=TF_L]").click();
-
+                
                 // 加载大事件
                 FieldsetLoadDateFactory("BigEvent", "table", resultDate.BigEvent);
             }
