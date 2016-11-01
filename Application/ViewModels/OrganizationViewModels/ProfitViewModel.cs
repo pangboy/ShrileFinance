@@ -8,6 +8,11 @@
     public class ProfitViewModel 
     {
         /// <summary>
+        /// 报表类型
+        /// </summary>
+        public int Type { get; set; }
+
+        /// <summary>
         /// 营业收入
         /// </summary>
         [Required]

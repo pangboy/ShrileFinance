@@ -1438,7 +1438,11 @@
                             报表类型细分：
                             <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('img/InfoImg.png') no-repeat scroll 0 0" title="报表类型细分">　</a>
                         </label>
-                        <input class="easyui-textbox textbox-f" data-options="required:true,validType:['N','length[0,2]']" name="TypeSubdivision">
+                        <select class="easyui-combobox  combobox-f combo-f textbox-f" data-options="editable:false,required:true,value:''" name="TypeSubdivision">
+                            <option value="1">本部报表</option>
+                            <option value="2">合并报表</option>
+                            <option value="9">未知</option>
+                        </select>
                     </div>
                 </div>
 
@@ -1474,12 +1478,12 @@
                         <tr>
                             <th data-options="field:'Id',hidden:true">GuId</th>
 
-                            <th data-options="field:'OperatingActivitiesCashInflows',width:120,align:'center'">经营活动现金流入小计</th>
-                            <th data-options="field:'OperatingActivitiesCashOutflows',width:120,align:'center'">经营活动现金流出小计</th>
-                            <th data-options="field:'CashInInvestmentActivities',width:120,align:'center'">投资活动现金流入小计</th>
-                            <th data-options="field:'InvestmentCashOutflow',width:120,align:'center'">投资活动现金流出小计</th>
-                            <th data-options="field:'FinancingCashInflow',width:120,align:'center'">筹资活动现金流入小计</th>
-                            <th data-options="field:'FinancingCashOutflow',width:120,align:'center'">筹资活动现金流出小计</th>
+                            <th data-options="field:'OperatingActivitiesCashInflows',width:135,align:'center'">经营活动现金流入小计</th>
+                            <th data-options="field:'OperatingActivitiesCashOutflows',width:135,align:'center'">经营活动现金流出小计</th>
+                            <th data-options="field:'CashInInvestmentActivities',width:135,align:'center'">投资活动现金流入小计</th>
+                            <th data-options="field:'InvestmentCashOutflow',width:135,align:'center'">投资活动现金流出小计</th>
+                            <th data-options="field:'FinancingCashInflow',width:135,align:'center'">筹资活动现金流入小计</th>
+                            <th data-options="field:'FinancingCashOutflow',width:135,align:'center'">筹资活动现金流出小计</th>
                         </tr>
                     </thead>
                 </table>
@@ -1550,12 +1554,12 @@
                         <tr>
                             <th data-options="field:'Id',hidden:true">Id</th>
 
-                            <th data-options="field:'TotalCurrentAssets',width:120,align:'center'">流动资产合计</th>
-                            <th data-options="field:'TotalNonCurrentAssets',width:120,align:'center'">非流动资产合计</th>
-                            <th data-options="field:'TotalCurrentLiabilities',width:120,align:'center'">流动负债合计</th>
-                            <th data-options="field:'TotalLiabilities',width:120,align:'center'">负债合计</th>
-                            <th data-options="field:'TotalOwnersEquity',width:120,align:'center'">所有者权益合计</th>
-                            <th data-options="field:'TotalLiabilitiesCapital',width:120,align:'center'">负债和所有者权益合计</th>
+                            <th data-options="field:'TotalCurrentAssets',width:135,align:'center'">流动资产合计</th>
+                            <th data-options="field:'TotalNonCurrentAssets',width:135,align:'center'">非流动资产合计</th>
+                            <th data-options="field:'TotalCurrentLiabilities',width:135,align:'center'">流动负债合计</th>
+                            <th data-options="field:'TotalLiabilities',width:135,align:'center'">负债合计</th>
+                            <th data-options="field:'TotalOwnersEquity',width:135,align:'center'">所有者权益合计</th>
+                            <th data-options="field:'TotalLiabilitiesCapital',width:145,align:'center'">负债和所有者权益合计</th>
                         </tr>
                     </thead>
                 </table>

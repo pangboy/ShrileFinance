@@ -534,6 +534,19 @@
                         <input name="负债部类总计" class="easyui-textbox" data-options="required:true,validType:['PositiveNumber','Amount','length[0,20]']" />
                     </div>
                 </div>
+
+                <div class="row">
+                    <div class="col-6">
+                        <label>
+                            报表类型：
+                            <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="现金及现金等价物净增加额">　</a>
+                        </label>
+                        <select class="easyui-combobox  combobox-f combo-f textbox-f" data-options="editable:false,required:true,value:''" name="Type">
+                            <option value="11">年报期初数</option>
+                            <option value="12">年报期末数</option>
+                        </select>
+                    </div>
+                </div>
             </fieldset>
         </section>
         <div id="btn">

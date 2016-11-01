@@ -7,6 +7,11 @@
     /// </summary>
     public class InstitutionIncomeExpenditureViewModel 
     {
+        /// <summary>
+        /// 报表类型
+        /// </summary>
+        public int Type { get; set; }
+
         public decimal 财政补助收入 { get; set; }
 
         public decimal 上级补助收入 { get; set; }

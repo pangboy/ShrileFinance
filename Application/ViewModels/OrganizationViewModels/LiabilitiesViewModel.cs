@@ -8,6 +8,11 @@
     public class LiabilitiesViewModel 
     {
         /// <summary>
+        /// 报表类型
+        /// </summary>
+        public int Type { get; set; }
+
+        /// <summary>
         /// 货币资金
         /// </summary>
         public decimal MonetaryFund { get; set; }

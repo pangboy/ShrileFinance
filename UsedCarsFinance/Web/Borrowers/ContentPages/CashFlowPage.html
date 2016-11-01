@@ -646,6 +646,21 @@
                         </label>
                         <input name="CashEquivalentsNetIncrease" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Amount','length[0,20]']" />
                     </div>
+                    <div class="col-6">
+                        <label>
+                            报表类型：
+                            <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="现金及现金等价物净增加额">　</a>
+                        </label>
+                        <select class="easyui-combobox  combobox-f combo-f textbox-f" data-options="editable:false,required:true,value:''" name="Type">
+                            <option value="10">年报</option>
+                            <option value="20">上半年</option>
+                            <option value="30">下半年</option>
+                            <option value="40">第一季度</option>
+                            <option value="50">第二季度</option>
+                            <option value="60">第三季度</option>
+                            <option value="70">第四季度</option>
+                        </select>
+                    </div>
                 </div>
             </fieldset>
         </section>
