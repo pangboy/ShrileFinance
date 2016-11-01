@@ -7,6 +7,11 @@
     /// </summary>
     public class InstitutionLiabilitiesViewModel 
     {
+        /// <summary>
+        /// 报表类型
+        /// </summary>
+        public int Type { get; set; }
+
         [Required]
         public decimal 现金 { get; set; }
 
