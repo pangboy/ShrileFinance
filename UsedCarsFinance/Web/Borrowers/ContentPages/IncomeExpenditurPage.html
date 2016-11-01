@@ -67,8 +67,7 @@
 
             // 序列化fieldset 事业单位收入支出
             var obj = $("fieldset[id=IncomeExpenditur]").serializeJson();
-            obj.CarshFolwJson = $("fieldset[id=IncomeExpenditur]").serializeJson();
-            debugger
+            
             // 更新事业单位收入支出表
             if (query.method == "IncomeExpenditur_mod") {
 
@@ -301,11 +300,21 @@
                 <div class="row">
                     <div class="col-6">
                         <label>
+                            销售税金：
+                            <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="销售税金">　</a>
+                        </label>
+                        <input name="销售税金1" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Amount','length[0,20]']" />
+                    </div>
+                    <div class="col-6">
+                        <label>
                             经营支出小计：
                             <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="经营支出小计">　</a>
                         </label>
                         <input name="经营支出小计" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Amount','length[0,20]']" />
                     </div>
+                </div>
+
+                <div class="row">
                     <div class="col-6">
                         <label>
                             拨出专款：
@@ -313,9 +322,6 @@
                         </label>
                         <input name="拨出专款" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Amount','length[0,20]']" />
                     </div>
-                </div>
-
-                <div class="row">
                     <div class="col-6">
                         <label>
                             专款支出：
@@ -323,6 +329,9 @@
                         </label>
                         <input name="专款支出" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Amount','length[0,20]']" />
                     </div>
+                </div>
+
+                <div class="row">
                     <div class="col-6">
                         <label>
                             专款小计：
@@ -330,9 +339,6 @@
                         </label>
                         <input name="专款小计" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Amount','length[0,20]']" />
                     </div>
-                </div>
-
-                <div class="row">
                     <div class="col-6">
                         <label>
                             支出总计：
@@ -340,6 +346,9 @@
                         </label>
                         <input name="支出总计" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Amount','length[0,20]']" />
                     </div>
+                </div>
+
+                <div class="row">
                     <div class="col-6">
                         <label>
                             事业结余：
@@ -347,9 +356,6 @@
                         </label>
                         <input name="事业结余" class="easyui-textbox" data-options="required:true,validType:['PositiveNumber','Amount','length[0,20]']" />
                     </div>
-                </div>
-
-                <div class="row">
                     <div class="col-6">
                         <label>
                             正常收入结余：
@@ -357,6 +363,9 @@
                         </label>
                         <input name="正常收入结余" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Amount','length[0,20]']" />
                     </div>
+                </div>
+
+                <div class="row">
                     <div class="col-6">
                         <label>
                             收回以前年度事业支出：
@@ -364,9 +373,6 @@
                         </label>
                         <input name="收回以前年度事业支出" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Amount','length[0,20]']" />
                     </div>
-                </div>
-
-                <div class="row">
                     <div class="col-6">
                         <label>
                             经营结余：
@@ -374,6 +380,9 @@
                         </label>
                         <input name="经营结余" class="easyui-textbox" data-options="required:true,validType:['PositiveNumber','Amount','length[0,20]']" />
                     </div>
+                </div>
+
+                <div class="row">
                     <div class="col-6">
                         <label>
                             以前年度经营亏损：
@@ -381,9 +390,6 @@
                         </label>
                         <input name="以前年度经营亏损" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Amount','length[0,20]']" />
                     </div>
-                </div>
-
-                <div class="row">
                     <div class="col-6">
                         <label>
                             结余分配：
@@ -391,6 +397,9 @@
                         </label>
                         <input name="结余分配" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Amount','length[0,20]']" />
                     </div>
+                </div>
+
+                <div class="row">
                     <div class="col-6">
                         <label>
                             应交所得税：
@@ -398,9 +407,6 @@
                         </label>
                         <input name="应交所得税" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Amount','length[0,20]']" />
                     </div>
-                </div>
-
-                <div class="row">
                     <div class="col-6">
                         <label>
                             提取专用基金：
@@ -408,6 +414,9 @@
                         </label>
                         <input name="提取专用基金" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Amount','length[0,20]']" />
                     </div>
+                </div>
+
+                <div class="row">
                     <div class="col-6">
                         <label>
                             转入事业基金：
@@ -415,9 +424,6 @@
                         </label>
                         <input name="转入事业基金" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Amount','length[0,20]']" />
                     </div>
-                </div>
-
-                <div class="row">
                     <div class="col-6">
                         <label>
                             其他结余分配：

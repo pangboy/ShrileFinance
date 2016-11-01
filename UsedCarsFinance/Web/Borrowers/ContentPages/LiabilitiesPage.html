@@ -117,7 +117,6 @@
                         </label>
                         <input name="MonetaryFund" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Amount','length[0,20]']" />
                     </div>
-
                     <div class="col-6">
                         <label>
                             交易资产：
@@ -135,7 +134,6 @@
                         </label>
                         <input name="NoteReceivable" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Amount','length[0,20]']" />
                     </div>
-
                     <div class="col-6">
                         <label>
                             应收账款：
@@ -153,7 +151,6 @@
                         </label>
                         <input name="AdvancePayment" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Amount','length[0,20]']" />
                     </div>
-
                     <div class="col-6">
                         <label>
                             应收利息：
@@ -171,7 +168,6 @@
                         </label>
                         <input name="DividendsReceivable" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Amount','length[0,20]']" />
                     </div>
-
                     <div class="col-6">
                         <label>
                             其他应收款：
@@ -189,7 +185,6 @@
                         </label>
                         <input name="Inventory" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Amount','length[0,20]']" />
                     </div>
-
                     <div class="col-6">
                         <label>
                             一年内到期的非流动资产：
@@ -207,7 +202,6 @@
                         </label>
                         <input name="OtherCurrentAssets" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Amount','length[0,20]']" />
                     </div>
-
                     <div class="col-6">
                         <label>
                             流动资产合计：
@@ -225,7 +219,6 @@
                         </label>
                         <input name="CanSaleAsset" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Amount','length[0,20]']" />
                     </div>
-
                     <div class="col-6">
                         <label>
                             持有至到期的投资：
@@ -243,7 +236,6 @@
                         </label>
                         <input name="LongEquity" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Amount','length[0,20]']" />
                     </div>
-
                     <div class="col-6">
                         <label>
                             长期应收款：
@@ -261,7 +253,6 @@
                         </label>
                         <input name="InvestmentRealEstate" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Amount','length[0,20]']" />
                     </div>
-
                     <div class="col-6">
                         <label>
                             固定资产：
@@ -279,7 +270,6 @@
                         </label>
                         <input name="ConstructionProject" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Amount','length[0,20]']" />
                     </div>
-
                     <div class="col-6">
                         <label>
                             工程物资：
@@ -297,7 +287,6 @@
                         </label>
                         <input name="FixedAssetsLiquidation" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Amount','length[0,20]']" />
                     </div>
-
                     <div class="col-6">
                         <label>
                             生产性生物资产：
@@ -315,7 +304,6 @@
                         </label>
                         <input name="OilGasAssets" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Amount','length[0,20]']" />
                     </div>
-
                     <div class="col-6">
                         <label>
                             无形资产：
@@ -382,14 +370,14 @@
                             资产总计：
                             <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="资产总计">　</a>
                         </label>
-                        <input name="TotalAssets" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Amount','length[0,20]']" />
+                        <input name="TotalAssets" class="easyui-textbox" data-options="required:true,validType:['PositiveNumber','Amount','length[0,20]']" />
                     </div>
                     <div class="col-6">
                         <label>
                             短期借款：
                             <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="短期借款">　</a>
                         </label>
-                        <input name="ShortLoan" class="easyui-textbox" data-options="required:true,validType:['PositiveNumber','Amount','length[0,20]']" />
+                        <input name="ShortLoan" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Amount','length[0,20]']" />
                     </div>
                 </div>
 
@@ -447,11 +435,22 @@
                 <div class="row">
                     <div class="col-6">
                         <label>
+                            其他应付款：
+                            <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="其他应付款">　</a>
+                        </label>
+                        <input name="OtherPayable" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Amount','length[0,20]']" />
+                    </div>
+                    <div class="col-6">
+                        <label>
                             应交税费：
                             <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="应交税费">　</a>
                         </label>
                         <input name="PayTax" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Amount','length[0,20]']" />
                     </div>
+                    
+                </div>
+
+                <div class="row">
                     <div class="col-6">
                         <label>
                             应付股利：
@@ -459,9 +458,6 @@
                         </label>
                         <input name="PayDividend" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Amount','length[0,20]']" />
                     </div>
-                </div>
-
-                <div class="row">
                     <div class="col-6">
                         <label>
                             一年内到期的非流动负债：
@@ -469,6 +465,9 @@
                         </label>
                         <input name="NonCurrentLiabilitiesInYear" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Amount','length[0,20]']" />
                     </div>
+                </div>
+
+                <div class="row">
                     <div class="col-6">
                         <label>
                             其他流动负债：
@@ -476,9 +475,6 @@
                         </label>
                         <input name="OtherCurrentLiabilities" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Amount','length[0,20]']" />
                     </div>
-                </div>
-
-                <div class="row">
                     <div class="col-6">
                         <label>
                             流动负债合计：
@@ -486,6 +482,9 @@
                         </label>
                         <input name="TotalCurrentLiabilities" class="easyui-textbox" data-options="required:true,validType:['PositiveNumber','Amount','length[0,20]']" />
                     </div>
+                </div>
+
+                <div class="row">
                     <div class="col-6">
                         <label>
                             长期借款：
@@ -493,9 +492,6 @@
                         </label>
                         <input name="LongLoan" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Amount','length[0,20]']" />
                     </div>
-                </div>
-
-                <div class="row">
                     <div class="col-6">
                         <label>
                             应付债券：
@@ -503,6 +499,9 @@
                         </label>
                         <input name="BondPayable" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Amount','length[0,20]']" />
                     </div>
+                </div>
+
+                <div class="row">
                     <div class="col-6">
                         <label>
                             长期应付款：
@@ -510,9 +509,6 @@
                         </label>
                         <input name="LongAcountsPayable" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Amount','length[0,20]']" />
                     </div>
-                </div>
-
-                <div class="row">
                     <div class="col-6">
                         <label>
                             专项应付款：
@@ -520,6 +516,9 @@
                         </label>
                         <input name="SpecialPayment" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Amount','length[0,20]']" />
                     </div>
+                </div>
+
+                <div class="row">
                     <div class="col-6">
                         <label>
                             预计负债：
@@ -527,9 +526,6 @@
                         </label>
                         <input name="EstimatedLiabilities" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Amount','length[0,20]']" />
                     </div>
-                </div>
-
-                <div class="row">
                     <div class="col-6">
                         <label>
                             递延所得税负债：
@@ -537,6 +533,9 @@
                         </label>
                         <input name="DeferredTaxLiability" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Amount','length[0,20]']" />
                     </div>
+                </div>
+
+                <div class="row">
                     <div class="col-6">
                         <label>
                             其他非流动负债：
@@ -544,16 +543,16 @@
                         </label>
                         <input name="OtherNonCurrentLiabilities" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Amount','length[0,20]']" />
                     </div>
-                </div>
-
-                <div class="row">
                     <div class="col-6">
                         <label>
                             非流动负债合计：
                             <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="非流动负债合计">　</a>
                         </label>
-                        <input name="TotalNonNurrentLiabilities" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Amount','length[0,20]']" />
+                        <input name="TotalNonNurrentLiabilities" class="easyui-textbox" data-options="required:true,validType:['PositiveNumber','Amount','length[0,20]']" />
                     </div>
+                </div>
+
+                <div class="row">
                     <div class="col-6">
                         <label>
                             负债合计：
@@ -561,9 +560,6 @@
                         </label>
                         <input name="TotalLiabilities" class="easyui-textbox" data-options="required:true,validType:['PositiveNumber','Amount','length[0,20]']" />
                     </div>
-                </div>
-
-                <div class="row">
                     <div class="col-6">
                         <label>
                             实收资本：
@@ -571,6 +567,9 @@
                         </label>
                         <input name="PaidCapital" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Amount','length[0,20]']" />
                     </div>
+                </div>
+
+                <div class="row">
                     <div class="col-6">
                         <label>
                             资本公积：
@@ -578,16 +577,16 @@
                         </label>
                         <input name="CapitalReserve" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Amount','length[0,20]']" />
                     </div>
-                </div>
-
-                <div class="row">
                     <div class="col-6">
                         <label>
-                            库存股：
-                            <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="库存股">　</a>
+                            减：库存股：
+                            <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="减：库存股">　</a>
                         </label>
                         <input name="Stock" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Amount','length[0,20]']" />
                     </div>
+                </div>
+
+                <div class="row">
                     <div class="col-6">
                         <label>
                             盈余公积：
@@ -595,9 +594,6 @@
                         </label>
                         <input name="SurplusReserve" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Amount','length[0,20]']" />
                     </div>
-                </div>
-
-                <div class="row">
                     <div class="col-6">
                         <label>
                             未分配利润：
@@ -605,6 +601,9 @@
                         </label>
                         <input name="NoProfit" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Amount','length[0,20]']" />
                     </div>
+                </div>
+
+                <div class="row">
                     <div class="col-6">
                         <label>
                             所有者权益合计：
@@ -612,9 +611,6 @@
                         </label>
                         <input name="TotalOwnersEquity" class="easyui-textbox" data-options="required:true,validType:['PositiveNumber','Amount','length[0,20]']" />
                     </div>
-                </div>
-
-                <div class="row">
                     <div class="col-6">
                         <label>
                             负债和所有者权益合计：

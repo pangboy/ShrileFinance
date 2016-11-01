@@ -1,9 +1,9 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" data-options="required:false,validType:['PositiveNumber','Amount','length[0,20]']" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" data-options="required:true,validType:['PositiveNumber','Amount','length[0,20]']" />
     <title>诉讼事件</title>
-    <meta charset="utf-8" data-options="required:false,validType:['PositiveNumber','Amount','length[0,20]']" />
+    <meta charset="utf-8" data-options="required:true,validType:['PositiveNumber','Amount','length[0,20]']" />
     <link href="../../Content/easyui/themes/bootstrap/easyui.css" rel="stylesheet">
     <link href="../../Content/easyui/themes/icon.css" rel="stylesheet">
     <link href="../../Content/form-bootstrap.css" rel="stylesheet">
@@ -62,7 +62,7 @@
                 $("#save").linkbutton("disable");
             } else {
                 $.messager.show({ msg: "请填写剩下的必填内容!" });
-                return false;
+                return true;
             }
 
             // 序列化fieldset 诉讼事件
@@ -111,19 +111,22 @@
         <section>
             <fieldset id="Litigation" name="Litigation">
                 <div class="row">
-                    <div class="col-6">
+                    <div class="col-12">
                         <label>
                             被起诉流水号：
                             <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="被起诉流水号">　</a>
                         </label>
-                        <input name="ChargedSerialNumber" class="easyui-textbox" data-options="required:true,validType:['PositiveNumber','Amount','length[0,20]']" />
+                        <input name="ChargedSerialNumber" class="easyui-textbox" data-options="required:true,validType:['ANC','length[0,60]']" />
                     </div>
-                    <div class="col-6">
+                </div>
+
+                <div class="row">
+                    <div class="col-12">
                         <label>
                             起诉人姓名：
                             <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="起诉人姓名">　</a>
                         </label>
-                        <input name="ProsecuteName" class="easyui-textbox" data-options="required:true,validType:['PositiveNumber','Amount','length[0,20]']" />
+                        <input name="ProsecuteName" class="easyui-textbox" data-options="required:true,validType:['ANC','length[0,80]']" />
                     </div>
                 </div>
 
@@ -145,12 +148,12 @@
                 </div>
 
                 <div class="row">
-                    <div class="col-6">
+                    <div class="col-12">
                         <label>
                             执行结果：
                             <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="执行结果">　</a>
                         </label>
-                        <input name="Result" class="easyui-textbox" data-options="required:true,validType:['PositiveNumber','Amount','length[0,20]']" />
+                        <input name="Result" class="easyui-textbox" data-options="required:true,multiline:true,validType:['length[0,100]'],height:100" />
                     </div>
                 </div>
 
@@ -160,7 +163,7 @@
                             被起诉原因：
                             <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="被起诉原因">　</a>
                         </label>
-                        <input name="Reason" class="easyui-textbox" data-options="required:true,multiline:true,validType:['length[0,250]'],height:200" />
+                        <input name="Reason" class="easyui-textbox" data-options="required:true,multiline:true,validType:['length[0,300]'],height:200" />
                     </div>
                 </div>
             </fieldset>

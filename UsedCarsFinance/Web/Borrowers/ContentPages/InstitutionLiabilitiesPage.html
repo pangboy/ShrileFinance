@@ -24,16 +24,16 @@
         function Init() {
             query.method = GetQueryString("method");
 
-            if (query.method == "IncomeExpenditur_mod" || query.method == "IncomeExpenditur_view") {
+            if (query.method == "InstitutionLiabilities_mod" || query.method == "InstitutionLiabilities_view") {
                 //获取选中行
-                var row = self.parent.$("#IncomeExpenditur_dg").datagrid('getSelected');
+                var row = self.parent.$("#InstitutionLiabilities_dg").datagrid('getSelected');
 
-                if (query.method == "IncomeExpenditur_mod") {
+                if (query.method == "InstitutionLiabilities_mod") {
                     if (row) {
                         //加载数据
                         LoadDate(row.CarshFolwJson);
                     }
-                } else if (query.method == "IncomeExpenditur_view") {
+                } else if (query.method == "InstitutionLiabilities_view") {
                     if (row) {
                         //加载数据
                         LoadDate(row.CarshFolwJson);
@@ -51,11 +51,11 @@
         // 加载数据
         function LoadDate(row) {
             // 加载高管及主要关系人基本信息
-            $('fieldset[id=IncomeExpenditur]').form('load', row);
+            $('fieldset[id=InstitutionLiabilities]').form('load', row);
         }
 
         // 提交按钮
-        function IncomeExpenditurSubmit() {
+        function InstitutionLiabilitiesSubmit() {
             // 表单验证
             if ($("#content").form("validate")) {
                 // 禁用提交按钮
@@ -66,41 +66,40 @@
             }
 
             // 序列化fieldset 事业单位资产负债
-            var obj = $("fieldset[id=IncomeExpenditur]").serializeJson();
-            obj.CarshFolwJson = $("fieldset[id=IncomeExpenditur]").serializeJson();
+            var obj = $("fieldset[id=InstitutionLiabilities]").serializeJson();
             debugger
             // 更新事业单位资产负债表
-            if (query.method == "IncomeExpenditur_mod") {
+            if (query.method == "InstitutionLiabilities_mod") {
 
                 //获取选中行
-                var row = self.parent.$("#IncomeExpenditur_dg").datagrid('getSelected');
+                var row = self.parent.$("#InstitutionLiabilities_dg").datagrid('getSelected');
 
                 if (row) {
-                    var RowIndex = self.parent.$("#IncomeExpenditur_dg").datagrid('getRowIndex', row);
+                    var RowIndex = self.parent.$("#InstitutionLiabilities_dg").datagrid('getRowIndex', row);
 
                     //更新行
-                    self.parent.$("#IncomeExpenditur_dg").datagrid('updateRow', { index: RowIndex, row: obj });
+                    self.parent.$("#InstitutionLiabilities_dg").datagrid('updateRow', { index: RowIndex, row: obj });
                 }
             }
-            if (query.method == "IncomeExpenditur_add") {
+            if (query.method == "InstitutionLiabilities_add") {
                 //追加一行
-                self.parent.$("#IncomeExpenditur_dg").datagrid('appendRow', obj);
+                self.parent.$("#InstitutionLiabilities_dg").datagrid('appendRow', obj);
             }
 
             // 清空表单，避免再次打开时闪现之前填入的数据
             $('input[type=reset]').click();
 
             // 关闭弹窗
-            self.parent.$("#IncomeExpenditur_dd").dialog({ closed: true });
+            self.parent.$("#InstitutionLiabilities_dd").dialog({ closed: true });
         }
 
         // 取消按钮
-        function IncomeExpenditurCancel() {
+        function InstitutionLiabilitiesCancel() {
             // 清空表单，避免再次打开时闪现之前填入的数据
             $('input[type=reset]').click();
 
             // 关闭弹窗
-            self.parent.$("#IncomeExpenditur_dd").dialog({ closed: true });
+            self.parent.$("#InstitutionLiabilities_dd").dialog({ closed: true });
         }
     </script>
 </head>
@@ -110,7 +109,7 @@
             事业单位资产负债
         </h1>
         <section>
-            <fieldset id="IncomeExpenditur" name="IncomeExpenditur">
+            <fieldset id="InstitutionLiabilities" name="InstitutionLiabilities">
                 <div class="row">
                     <div class="col-6">
                         <label>
@@ -538,8 +537,8 @@
             </fieldset>
         </section>
         <div id="btn">
-            <a id="save" class="easyui-linkbutton" href="javascript:void(0)" data-options="iconCls:'icon-save',onClick:IncomeExpenditurSubmit">保存</a>
-            <a id="back" class="easyui-linkbutton" href="javascript:void(0)" data-options="iconCls:'icon-redo',onClick:IncomeExpenditurCancel">返回</a>
+            <a id="save" class="easyui-linkbutton" href="javascript:void(0)" data-options="iconCls:'icon-save',onClick:InstitutionLiabilitiesSubmit">保存</a>
+            <a id="back" class="easyui-linkbutton" href="javascript:void(0)" data-options="iconCls:'icon-redo',onClick:InstitutionLiabilitiesCancel">返回</a>
             <input type="reset" style="display:none" />
         </div>
     </form>

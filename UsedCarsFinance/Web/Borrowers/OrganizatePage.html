@@ -72,6 +72,7 @@
                 $("input[name=HasParent]:hidden").val(Obj.checked);
             }
 
+            // 被选中后，执行以下操作
             if (Obj.checked) {
                 var section = $("section[id*=" + sectionId + "]");
 
@@ -80,6 +81,16 @@
 
                 // 对新增(显示)的fieldset设置name
                 section.find('fieldset').attr('name', getFieldsetName(sectionId));
+                
+                // 清空fieldset下的table
+                section.find('fieldset').find("table[id*=_dg]").each(function (index, item) {
+                    var count = $(item).datagrid('getRows').length;
+                    
+                    for (var i = 0; i < count; i++)
+                    {
+                        $(item).datagrid('deleteRow',0);
+                    }
+                });
 
                 // 显示section
                 section.show();
