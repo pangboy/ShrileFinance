@@ -120,6 +120,7 @@
       <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
     </Compile>
     <Compile Include="ViewModels\OrganizationViewModels\InstitutionLiabilitiesViewModel.cs" />
+    <Compile Include="ViewModels\PagedListViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Core\Core.csproj">

@@ -30,6 +30,7 @@
         }
 
         function LoadData(financeId) {
+            // 加载产品信息
             $.ajax({
                 async: false,
                 type: "Get",
@@ -45,6 +46,7 @@
                 }
             });
 
+            // 加载车辆价格信息
             $.ajax({
                 async: false,
                 type: "Get",
@@ -60,6 +62,7 @@
                 }
             });
 
+            // 加载ReviewInfo
             $.ajax({
                 async: false,
                 type: "Get",
@@ -69,7 +72,6 @@
                     200: function (data) {
                         // 加载车辆评估价格
                         if (data != null) {
-
                             if (data.ApprovalFinanceRatio != 0) {
                                 $("input[textboxname = 'ApprovalFinanceRatio']").textbox("setValue", data.ApprovalFinanceRatio);
                             }
@@ -105,7 +107,7 @@
                                 validator: function (value, param) {
                                     return parseFloat(value) >= param[0] && parseFloat(value) <= param[1];
                                 },
-                                message: '融资比例介于' + data.MinFinancingRatio + '%至' + data.MaxFinancingRatio + '%之间！'
+                                message: '融资比例介于' + data.MinFinancingRatio + '%至' + data.MaxFinancingRatio + '%之间，请修改建议融资金额或审批融资金额'
                             }
                         });
                         // 融资比例添加验证
@@ -139,6 +141,7 @@
             });
         }
 
+        // 金融手续费onChange事件
         function CostChange(newValue) {
             var value;
             if (newValue == undefined) {
@@ -157,6 +160,31 @@
             }
 
             $("input[textboxname=FinalCost]").textbox("setValue", parseFloat(produceCost) + value);
+        }
+
+        // 建议融资金额onChang事件
+        function AdvicefinanceMoneylChange(newValue) {
+            if (newValue != undefined && newValue.length > 0) {
+                // 获取审批融资金额
+                var ApprovalPrincipal = $("input[textboxname=ApprovalPrincipal]").textbox("getValue");
+                if (ApprovalPrincipal != undefined && ApprovalPrincipal.length > 0) {
+                    // 融资比例赋值
+                    $("input[textboxname=ApprovalFinanceRatio]").textbox("setValue", parseInt(100 * parseFloat(ApprovalPrincipal) / newValue));
+                }
+            }
+        }
+
+        // 审批融资金额onChang事件
+        function ApprovalPrincipalChange(newValue) {
+            if (newValue != undefined && newValue.length > 0)
+            {
+                // 获取建议融资金额
+                var AdvicefinanceMoney = $("input[textboxname=AdvicefinanceMoney]").textbox("getValue");
+                if (AdvicefinanceMoney != undefined && AdvicefinanceMoney.length > 0) {
+                    // 融资比例赋值
+                    $("input[textboxname=ApprovalFinanceRatio]").textbox("setValue", parseInt(100 * newValue / parseFloat(AdvicefinanceMoney)));
+                }
+            }
         }
 
         // 加载临时数据
@@ -181,6 +209,7 @@
             }
         }
 
+        // 初审/复审 状态改变
         function ChangeStatus(status) {
 
             if (status == "0") {
@@ -192,14 +221,14 @@
                 $("#RepaymentDate").addClass("hidden");
                 // 复审(建议融资金额、月供额度、融资比例、金融手续费不可编辑)
                 $('#AdvicefinanceMoney').textbox("readonly", true);
-                $('#ApprovalFinanceRatio').textbox("readonly", true);
+                //$('#ApprovalFinanceRatio').textbox("readonly", true);
                 $('#Payment').textbox("readonly", true);
                 $('#FinanceCost').textbox("readonly", true);
             }
             else
             {
                 $('#AdvicefinanceMoney').textbox("readonly", false);
-                $('#ApprovalFinanceRatio').textbox("readonly", false);
+                //$('#ApprovalFinanceRatio').textbox("readonly", false);
                 $('#Payment').textbox("readonly", false);
                 $('#FinanceCost').textbox("readonly", false);
             }
@@ -209,8 +238,6 @@
                 LoadTempData();
             }
         }
-
-
 
         // 验证数据
         function ValidData() {
@@ -263,12 +290,12 @@
             <div class="row">
                 <div class="col-6">
                     <label>建议融资金额:</label>
-                    <input id ="AdvicefinanceMoney" name="AdvicefinanceMoney" class="easyui-textbox" data-options="required:true,validType:'Price'" />
+                    <input id ="AdvicefinanceMoney" name="AdvicefinanceMoney" class="easyui-textbox" data-options="required:true,validType:'Price',onChange:AdvicefinanceMoneylChange" />
                     <span class="unit">万元</span>
                 </div>
                 <div class="col-6">
                     <label>融资比例:</label>
-                    <input id ="ApprovalFinanceRatio" name="ApprovalFinanceRatio" class="easyui-textbox" data-options="required:true,validType:['Price']" />
+                    <input id ="ApprovalFinanceRatio" name="ApprovalFinanceRatio" class="easyui-textbox" data-options="required:false,validType:['Price'],readonly:true" />
                     <span class="unit">%</span>
                 </div>
             </div>
@@ -276,7 +303,7 @@
             <div class="row">
                 <div class="col-6">
                     <label>审批融资金额:</label>
-                    <input name="ApprovalPrincipal" class="easyui-textbox" data-options="required:true,validType:'Price'" />
+                    <input id="ApprovalPrincipal" name="ApprovalPrincipal" class="easyui-textbox" data-options="required:true,validType:'Price',onChange:ApprovalPrincipalChange" />
                     <span class="unit">万元</span>
                 </div>
                 <div class="col-6">

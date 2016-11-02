@@ -5,8 +5,13 @@
     /// <summary>
     /// 资产负债
     /// </summary>
-    public class LiabilitiesViewModel : FinancialAffairsViewModel
+    public class LiabilitiesViewModel 
     {
+        /// <summary>
+        /// 报表类型
+        /// </summary>
+        public int Type { get; set; }
+
         /// <summary>
         /// 货币资金
         /// </summary>
@@ -162,12 +167,13 @@
         /// <summary>
         /// 资产总计
         /// </summary>
+        [Required]
+
         public decimal TotalAssets { get; set; }
 
         /// <summary>
         /// 短期借款
         /// </summary>
-        [Required]
         public decimal ShortLoan { get; set; }
 
         /// <summary>

@@ -24,5 +24,6 @@
         /// 证件号码
         /// </summary>
         public string CertificateCode { get; set; }
+
     }
 }

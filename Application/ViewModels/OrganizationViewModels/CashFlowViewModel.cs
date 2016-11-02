@@ -5,8 +5,13 @@
     /// <summary>
     /// 现金流
     /// </summary>
-    public class CashFlowViewModel : FinancialAffairsViewModel
+    public class CashFlowViewModel 
     {
+        /// <summary>
+        /// 报表类型
+        /// </summary>
+        public int Type { get; set; }
+
         /// <summary>
         /// 销售商品和提供劳务收到的现金
         /// </summary>
@@ -149,7 +154,7 @@
         public decimal PayCashForDividend { get; set; }
 
         /// <summary>
-        /// 支付其他与筹资活动有关的现金
+        /// 其他
         /// </summary>
         public decimal PayFinancingCash { get; set; }
 

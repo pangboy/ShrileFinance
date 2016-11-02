@@ -61,9 +61,10 @@
             // 序列化表单
             var obj = $('#content').serializeJson();
             
-            // 证件类型与证件号码同时出现
-            if (!((obj.RegistraterType == '' && obj.RegistraterCode.length == 0) || (obj.RegistraterType != '' && obj.RegistraterCode.length > 0))) {
-                $.messager.show({ msg: "“登记注册号类型”与“登记注册号码”应同时出现！" });
+            
+            // 数据校验
+            if (!ValidData(obj))
+            {
                 $("#save").linkbutton("enable");
 
                 return false;
@@ -91,6 +92,32 @@
 
             // 关闭弹窗
             self.parent.$("#MainAssociatedEnterprise_dd").dialog({ closed: true });
+        }
+
+        // 数据校验
+        function ValidData(data)
+        {
+            if (!data)
+            {
+                return false;
+            }
+
+            // 证件类型与证件号码同时出现
+            if (!((data.RegistraterType == '' && data.RegistraterCode.length == 0) || (data.RegistraterType != '' && data.RegistraterCode.length > 0))) {
+                ShowError("“登记注册号类型”与“登记注册号码”应同时出现！");
+
+                return false;
+            }
+
+            // 登记注册号码、组织机构代码和机构信用代码不能同时为空
+            if (data.RegistraterCode.length == 0 && data.OrganizateCode.length == 0 && data.InstitutionCreditCode.length==0)
+            {
+                ShowError("登记注册号码、组织机构代码和机构信用代码不能同时为空");
+
+                return false;
+            }
+
+            return true;
         }
 
         // 取消按钮
@@ -185,7 +212,7 @@
                         <label>
                             机构信用代码：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="征信中心赋予该关联企业的18位机构信用代码">　</a>
                         </label>
-                        <input class="easyui-textbox textbox-f" data-options="required:false,validType:['AN','length[10,18]']" name="InstitutionCreditCode">
+                        <input class="easyui-textbox textbox-f" data-options="required:false,validType:['AN','length[18,18]']" name="InstitutionCreditCode">
                     </div>
                 </div>
             </fieldset>

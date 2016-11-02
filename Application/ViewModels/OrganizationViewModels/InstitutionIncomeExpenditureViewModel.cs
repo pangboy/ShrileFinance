@@ -5,8 +5,13 @@
     /// <summary>
     /// 事业单位收入支出
     /// </summary>
-    public class InstitutionIncomeExpenditureViewModel : FinancialAffairsViewModel
+    public class InstitutionIncomeExpenditureViewModel 
     {
+        /// <summary>
+        /// 报表类型
+        /// </summary>
+        public int Type { get; set; }
+
         public decimal 财政补助收入 { get; set; }
 
         public decimal 上级补助收入 { get; set; }
@@ -50,6 +55,8 @@
         public decimal 事业支出小计 { get; set; }
 
         public decimal 经营支出 { get; set; }
+
+        public decimal 销售税金1 { get; set; }
 
         public decimal 经营支出小计 { get; set; }
 

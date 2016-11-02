@@ -42,7 +42,9 @@
 
         public decimal 事业支出 { get; set; } 
 
-        public decimal 经营支出 { get; set; } 
+        public decimal 经营支出 { get; set; }
+
+        public decimal 销售税金1 { get; set; }
 
         public decimal 成本费用 { get; set; } 
 

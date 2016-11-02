@@ -42,6 +42,9 @@ var _F = 0;
 var _G = 0;
 var _H = 0;
 var _I = 0;
+var _J = 0;
+var _K = 0;
+var _L = 0;
 
 //减
 function Minus(value) {

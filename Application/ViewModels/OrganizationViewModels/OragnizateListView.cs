@@ -1,28 +1,36 @@
 ﻿namespace Application.ViewModels.OrganizationViewModels
 {
-    using System.Collections.Generic;
-    using X.PagedList;
-
-    public class PagedListViewModel<Entity>
-    {
-        public PagedListViewModel(IPagedList<Entity> entitys)
-        {
-            rows = entitys;
-            total = entitys.TotalItemCount;
-        }
-
-        public IEnumerable<Entity> rows { get; set; }
-
-        public int total { get; set; }
-    }
+    using System;
 
     public class OragnizateListItemViewModel
     {
+        /// <summary>
+        /// GuidId
+        /// </summary>
+        public Guid Id { get; set; }
+        /// <summary>
+        /// 客户号
+        /// </summary>
         public string CustomerNumber { get; set; }
 
+        /// <summary>
+        /// 管理行代码
+        /// </summary>
         public string ManagementerCode { get; set; }
+
+        /// <summary>
+        /// 机构名称
+        /// </summary>
         public string InstitutionChName { get; set; }
+
+        /// <summary>
+        /// 中征码
+        /// </summary>
         public string LoanCardCode { get; set; }
+
+        /// <summary>
+        /// 机构信用代码
+        /// </summary>
         public string InstitutionCreditCode { get; set; }
     }
 }

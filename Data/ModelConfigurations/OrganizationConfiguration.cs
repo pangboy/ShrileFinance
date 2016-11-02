@@ -49,19 +49,15 @@
             Property(m => m.Contact.FinancialContactPhone).HasMaxLength(35);
 
             // 上级机构
-            Property(m => m.Parent.SuperInstitutionsName).IsRequired().HasMaxLength(80);
-            Property(m => m.Parent.RegistraterType).HasMaxLength(2);
-            Property(m => m.Parent.RegistraterCode).HasMaxLength(20);
-            Property(m => m.Parent.OrganizateCode).HasMaxLength(10);
-            Property(m => m.Parent.InstitutionCreditCode).HasMaxLength(18);
+            HasOptional(m => m.Parent).WithOptionalPrincipal().Map(m => m.MapKey("OrganizationId")).WillCascadeOnDelete();
 
             // 集合
-            HasMany(m => m.Managers).WithRequired().Map(m => m.MapKey("OrganizationId"));
-            HasMany(m => m.Shareholders).WithRequired().Map(m => m.MapKey("OrganizationId"));
-            HasMany(m => m.AssociatedEnterprises).WithRequired().Map(m => m.MapKey("OrganizationId"));
+            HasMany(m => m.Managers).WithOptional().Map(m => m.MapKey("OrganizationId"));
+            HasMany(m => m.Shareholders).WithOptional().Map(m => m.MapKey("OrganizationId"));
+            HasMany(m => m.AssociatedEnterprises).WithOptional().Map(m => m.MapKey("OrganizationId"));
 
             // 财务
-            HasMany(m => m.FinancialAffairs).WithOptional().Map(m => m.MapKey("OrganizationId"));
+            HasOptional(m => m.FinancialAffairs).WithOptionalPrincipal().Map(m => m.MapKey("OrganizationId")).WillCascadeOnDelete();
 
             // 大事件
             HasMany(m => m.BigEvent).WithOptional().Map(m => m.MapKey("OrganizationId"));

@@ -7,6 +7,7 @@
     using System.Collections.Generic;
     using X.PagedList;
     using ViewModels.OrganizationViewModels;
+    using ViewModels;
     using System.Linq;
 
     public class OrganizationAppService
@@ -37,13 +38,28 @@
         /// </summary>
         /// yand    16.10.25
         /// <param name="model">实体</param>
-        public void Modify(ViewModels.OrganizationViewModels.OrganizationViewModel model)
+        public void Modify(OrganizationViewModel model)
         {
             var customer = Mapper.Map<Core.Entities.Customers.Enterprise.Organization>(model.Base);
-
             customer = Mapper.Map(model, customer);
-            repository.Modify(customer);
-            repository.Commit();
+
+            try
+            {
+                var organizate = repository.Get(model.Base.Id);
+                //Mapper.Map(model.Base, organizate);
+               //// organizate.Managers.RemoveRange(0, organizate.Managers.Count);
+               // organizate.Managers.Clear();
+               // organizate.Shareholders.Clear();
+               // organizate.BigEvent.Clear();
+               // organizate.Litigation.Clear();
+               // organizate.AssociatedEnterprises.Clear();
+               // organizate = Mapper.Map(model, organizate);
+                repository.Modify(customer);
+                repository.Commit();
+            }
+            catch (Exception ex)
+            {
+            }
         }
 
         /// <summary>
@@ -56,8 +72,8 @@
         {
             Core.Entities.Customers.Enterprise.Organization customer = repository.Get(id);
 
-            var model = Mapper.Map<ViewModels.OrganizationViewModels.OrganizationViewModel>(customer);
-            model.Base = Mapper.Map<ViewModels.OrganizationViewModels.BaseViewModel>(customer);
+            var model = Mapper.Map<OrganizationViewModel>(customer);
+            model.Base = Mapper.Map<BaseViewModel>(customer);
 
             return model;
         }
@@ -79,6 +95,7 @@
             var list = pagedlist.Select(m =>
                 new OragnizateListItemViewModel
                 {
+                    Id=m.Id,
                     CustomerNumber = m.CustomerNumber,
                     InstitutionChName = m.Property.InstitutionChName,
                     InstitutionCreditCode = m.InstitutionCreditCode,

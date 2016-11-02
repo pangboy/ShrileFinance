@@ -5,8 +5,13 @@
     /// <summary>
     /// 利润以及利润分配
     /// </summary>
-    public class ProfitViewModel : FinancialAffairsViewModel
+    public class ProfitViewModel 
     {
+        /// <summary>
+        /// 报表类型
+        /// </summary>
+        public int Type { get; set; }
+
         /// <summary>
         /// 营业收入
         /// </summary>

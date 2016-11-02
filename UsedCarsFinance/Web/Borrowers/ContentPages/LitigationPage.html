@@ -1,0 +1,178 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" data-options="required:true,validType:['PositiveNumber','Amount','length[0,20]']" />
+    <title>诉讼事件</title>
+    <meta charset="utf-8" data-options="required:true,validType:['PositiveNumber','Amount','length[0,20]']" />
+    <link href="../../Content/easyui/themes/bootstrap/easyui.css" rel="stylesheet">
+    <link href="../../Content/easyui/themes/icon.css" rel="stylesheet">
+    <link href="../../Content/form-bootstrap.css" rel="stylesheet">
+    <script src="../../Scripts/jquery/jquery.js"></script>
+    <script src="../../Scripts/easyui/jquery.easyui.js"></script>
+    <script src="../../Scripts/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../JS/BorrowerMethod.js"></script>
+    <script src="../JS/validType.js"></script>
+
+    <script type="text/javascript">
+        var query = new Object();
+
+        $(function () {
+            Init();
+        });
+
+        // 初始化
+        function Init() {
+            query.method = GetQueryString("method");
+
+            if (query.method == "Litigation_mod" || query.method == "Litigation_view") {
+                //获取选中行
+                var row = self.parent.$("#Litigation_dg").datagrid('getSelected');
+
+                if (query.method == "Litigation_mod") {
+                    if (row) {
+                        //加载数据
+                        LoadDate(row);
+                    }
+                } else if (query.method == "Litigation_view") {
+                    if (row) {
+                        //加载数据
+                        LoadDate(row);
+                    }
+
+                    // 禁用fieldset
+                    Disabled($("fieldset"));
+
+                    // 禁用保存按钮
+                    $("#save").linkbutton("disable");
+                }
+            }
+        }
+
+        // 加载数据
+        function LoadDate(row) {
+            // 加载高管及主要关系人基本信息
+            $('fieldset[id=Litigation]').form('load', row);
+        }
+
+        // 提交按钮
+        function LitigationSubmit() {
+            // 表单验证
+            if ($("#content").form("validate")) {
+                // 禁用提交按钮
+                $("#save").linkbutton("disable");
+            } else {
+                $.messager.show({ msg: "请填写剩下的必填内容!" });
+                return true;
+            }
+
+            // 序列化fieldset 诉讼事件
+            var obj = $("fieldset[id=Litigation]").serializeJson();
+            
+            // 更新诉讼事件表
+            if (query.method == "Litigation_mod") {
+
+                //获取选中行
+                var row = self.parent.$("#Litigation_dg").datagrid('getSelected');
+
+                if (row) {
+                    var RowIndex = self.parent.$("#Litigation_dg").datagrid('getRowIndex', row);
+
+                    //更新行
+                    self.parent.$("#Litigation_dg").datagrid('updateRow', { index: RowIndex, row: obj });
+                }
+            }
+            if (query.method == "Litigation_add") {
+                //追加一行
+                self.parent.$("#Litigation_dg").datagrid('appendRow', obj);
+            }
+
+            // 清空表单，避免再次打开时闪现之前填入的数据
+            $('input[type=reset]').click();
+
+            // 关闭弹窗
+            self.parent.$("#Litigation_dd").dialog({ closed: true });
+        }
+
+        // 取消按钮
+        function LitigationCancel() {
+            // 清空表单，避免再次打开时闪现之前填入的数据
+            $('input[type=reset]').click();
+
+            // 关闭弹窗
+            self.parent.$("#Litigation_dd").dialog({ closed: true });
+        }
+    </script>
+</head>
+<body>
+    <form class="container" id="content">
+        <h1 style="text-align:center">
+            诉讼事件
+        </h1>
+        <section>
+            <fieldset id="Litigation" name="Litigation">
+                <div class="row">
+                    <div class="col-12">
+                        <label>
+                            被起诉流水号：
+                            <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="被起诉流水号">　</a>
+                        </label>
+                        <input name="ChargedSerialNumber" class="easyui-textbox" data-options="required:true,validType:['ANC','length[0,60]']" />
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-12">
+                        <label>
+                            起诉人姓名：
+                            <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="起诉人姓名">　</a>
+                        </label>
+                        <input name="ProsecuteName" class="easyui-textbox" data-options="required:true,validType:['ANC','length[0,80]']" />
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-6">
+                        <label>
+                            判决执行金额：
+                            <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="判决执行金额">　</a>
+                        </label>
+                        <input name="Money" class="easyui-textbox" data-options="required:true,validType:['PositiveNumber','Amount','length[0,20]']" />
+                    </div>
+                    <div class="col-6">
+                        <label>
+                            判决执行日期：
+                            <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="判决执行日期">　</a>
+                        </label>
+                        <input name="DateTime" class="easyui-datebox" data-options="editable:false,required:true,validType:['length[0,10]'],width:410" />
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-12">
+                        <label>
+                            执行结果：
+                            <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="执行结果">　</a>
+                        </label>
+                        <input name="Result" class="easyui-textbox" data-options="required:true,multiline:true,validType:['length[0,100]'],height:100" />
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-12">
+                        <label>
+                            被起诉原因：
+                            <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="被起诉原因">　</a>
+                        </label>
+                        <input name="Reason" class="easyui-textbox" data-options="required:true,multiline:true,validType:['length[0,300]'],height:200" />
+                    </div>
+                </div>
+            </fieldset>
+        </section>
+        <div id="btn">
+            <a id="save" class="easyui-linkbutton" href="javascript:void(0)" data-options="iconCls:'icon-save',onClick:LitigationSubmit">保存</a>
+            <a id="back" class="easyui-linkbutton" href="javascript:void(0)" data-options="iconCls:'icon-redo',onClick:LitigationCancel">返回</a>
+            <input type="reset" style="display:none" />
+        </div>
+    </form>
+</body>
+</html>
