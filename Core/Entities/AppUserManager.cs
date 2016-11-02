@@ -21,5 +21,12 @@
                 RequireUppercase = false
             };
         }
+
+        public bool CheckUsername(string username)
+        {
+            var user = this.FindByName(username);
+
+            return user != null;
+        }
     }
 }

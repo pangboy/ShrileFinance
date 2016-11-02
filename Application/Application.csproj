@@ -95,6 +95,7 @@
     </Compile>
     <Compile Include="Startup.cs" />
     <Compile Include="AccountAppService.cs" />
+    <Compile Include="ViewModels\AccountViewModels\ChangePasswordViewModel.cs" />
     <Compile Include="ViewModels\AccountViewModels\LoginViewModel.cs" />
     <Compile Include="ViewModels\AccountViewModels\RegisterViewModel.cs" />
     <Compile Include="ViewModels\OrganizationViewModels\BigEventViewModel.cs" />

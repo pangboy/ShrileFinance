@@ -54,14 +54,14 @@
             }
         }
 
-        public async Task<IHttpActionResult> Create(RegisterViewModel model)
+        public async Task<IHttpActionResult> Create(UserViewModel model)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var result = await service.Create(model);
+            var result = await service.CreateUserAsync(model);
 
             if (!result.Succeeded)
             {

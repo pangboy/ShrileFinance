@@ -3,14 +3,14 @@
     using AutoMapper;
     using Core.Entities;
     using Core.Entities.Customers.Enterprise;
+    using ViewModels.AccountViewModels;
     using ViewModels.OrganizationViewModels;
 
     public class ViewModelToDomainMappingProfile : Profile
     {
         public ViewModelToDomainMappingProfile()
         {
-            CreateMap<ViewModels.AccountViewModels.LoginViewModel, AppUser>();
-            CreateMap<ViewModels.AccountViewModels.RegisterViewModel, AppUser>();
+            CreateMap<UserViewModel, AppUser>();
 
             CreateMap<AssociatedEnterpriseViewModel, Core.Entities.Customers.Enterprise.AssociatedEnterprise>();
             CreateMap<ParentViewModel, Core.Entities.Customers.Enterprise.OrganizationParent>();
