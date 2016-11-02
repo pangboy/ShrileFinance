@@ -31,7 +31,7 @@
             ChangeStatus(query);
 
             // 加载页面时，必须这句，不然上传框样式会有问题
-            setTimeout(InitDetePic(20, ReferenceIdstr), 10);
+            setTimeout(InitDetePic(0, ReferenceIdstr), 10);
         })
 
         function LoadData(financeId) {
@@ -43,6 +43,10 @@
             LoadFinanceList();
             GetReferenceID();
 
+            // 隐藏所有图片文件名div容器
+            $("table").find("tr>td>div").hide();
+
+            // 加载图片
             $.ajax({
                 async: false,
                 type: "Get",
@@ -55,7 +59,9 @@
                         for (var j = 0; j < input.length; j++) {
                             for (var k = 0; k < data.length; k++) {
                                 if (input[j].value == data[k].ReferenceId) {
-                                    $(input[j]).parent().next().next().append("<span style='margin-left:6px;background-color:wheat'>" + data[k].OldName + data[k].ExtName + "</span>");
+                                    $(input[j]).parent().next().next().find('div').append("<span style='margin-left:6px;background-color:wheat;float:left'>" + data[k].OldName + data[k].ExtName + "</span>");
+                                    // 显示图片文件名div容器
+                                    $(input[j]).parent().next().next().find('div').show();
                                 }
                             }
                         }
@@ -94,6 +100,7 @@
     </script>
 </head>
 <body>
+    <!--Button-->
     <div id="linkBtn">
         <div id="fieldsetBtn">
             <div style="float:left;width:700px;height:25px;">
@@ -139,7 +146,7 @@
                 <tr>
                     <td><input name="cb" type="checkbox" class="easyui-validatebox" value="1"><input name="ReferenceId" type="hidden" /><input name="ReferencedModule" type="hidden" value="2" /></td>
                     <td><label onclick="labelcheck(this)">客户融资申请表</label></td>
-                    <td></td>
+                    <td><div style="overflow-y:scroll;overflow-x:hidden;max-width:740px;max-height:100px"></div></td>
                 </tr>
             </table>
         </fieldset>
@@ -150,17 +157,17 @@
                 <tr>
                     <td><input name="cb" type="checkbox" class="easyui-validatebox" value="2"><input name="ReferenceId" type="hidden" /><input name="ReferencedModule" type="hidden" value="2" /></td>
                     <td><label onclick="labelcheck(this)">车辆登记证书</label></td>
-                    <td></td>
+                    <td><div style="overflow-y:scroll;overflow-x:hidden;max-width:740px;max-height:100px"></div></td>
                 </tr>
                 <tr>
                     <td><input name="cb" type="checkbox" class="easyui-validatebox" value="3"><input name="ReferenceId" type="hidden" /><input name="ReferencedModule" type="hidden" value="2" /></td>
                     <td><label onclick="labelcheck(this)">车辆行驶证</label></td>
-                    <td></td>
+                    <td><div style="overflow-y:scroll;overflow-x:hidden;max-width:740px;max-height:100px"></div></td>
                 </tr>
                 <tr>
                     <td><input name="cb" type="checkbox" class="easyui-validatebox" value="4"><input name="ReferenceId" type="hidden" /><input name="ReferencedModule" type="hidden" value="2" /></td>
                     <td><label onclick="labelcheck(this)">车辆照片</label></td>
-                    <td></td>
+                    <td><div style="overflow-y:scroll;overflow-x:hidden;max-width:740px;max-height:100px"></div></td>
                 </tr>
             </table>
         </fieldset>
@@ -172,47 +179,47 @@
                 <tr>
                     <td><input name="cb" type="checkbox" class="easyui-validatebox" value="1"><input name="ReferenceId" type="hidden" /><input name="ReferencedModule" type="hidden" value="3" /></td>
                     <td><label onclick="labelcheck(this)">身份证正反面</label></td>
-                    <td></td>
+                    <td><div style="overflow-y:scroll;overflow-x:hidden;max-width:740px;max-height:100px"></div></td>
                 </tr>
                 <tr>
                     <td><input name="cb" type="checkbox" class="easyui-validatebox" value="2"><input name="ReferenceId" type="hidden" /><input name="ReferencedModule" type="hidden" value="3" /></td>
                     <td><label onclick="labelcheck(this)">户口本复印件</label></td>
-                    <td></td>
+                    <td><div style="overflow-y:scroll;overflow-x:hidden;max-width:740px;max-height:100px"></div></td>
                 </tr>
                 <tr>
                     <td><input name="cb" type="checkbox" class="easyui-validatebox" value="3"><input name="ReferenceId" type="hidden" /><input name="ReferencedModule" type="hidden" value="3" /></td>
                     <td><label onclick="labelcheck(this)">结婚证/未婚承诺书</label></td>
-                    <td></td>
+                    <td><div style="overflow-y:scroll;overflow-x:hidden;max-width:740px;max-height:100px"></div></td>
                 </tr>
                 <tr>
                     <td><input name="cb" type="checkbox" class="easyui-validatebox" value="4"><input name="ReferenceId" type="hidden" /><input name="ReferencedModule" type="hidden" value="3" /></td>
                     <td><label onclick="labelcheck(this)">驾驶证</label></td>
-                    <td></td>
+                    <td><div style="overflow-y:scroll;overflow-x:hidden;max-width:740px;max-height:100px"></div></td>
                 </tr>
                 <tr>
                     <td><input name="cb" type="checkbox" class="easyui-validatebox" value="5"><input name="ReferenceId" type="hidden" /><input name="ReferencedModule" type="hidden" value="3" /></td>
                     <td><label onclick="labelcheck(this)">居住证明</label></td>
-                    <td></td>
+                    <td><div style="overflow-y:scroll;overflow-x:hidden;max-width:740px;max-height:100px"></div></td>
                 </tr>
                 <tr>
                     <td><input name="cb" type="checkbox" class="easyui-validatebox" value="6"><input name="ReferenceId" type="hidden" /><input name="ReferencedModule" type="hidden" value="3" /></td>
                     <td><label onclick="labelcheck(this)">家访照片</label></td>
-                    <td></td>
+                    <td><div style="overflow-y:scroll;overflow-x:hidden;max-width:740px;max-height:100px"></div></td>
                 </tr>
                 <tr>
                     <td><input name="cb" type="checkbox" class="easyui-validatebox" value="7"><input name="ReferenceId" type="hidden" /><input name="ReferencedModule" type="hidden" value="3" /></td>
                     <td><label onclick="labelcheck(this)">银行流水</label></td>
-                    <td></td>
+                    <td><div style="overflow-y:scroll;overflow-x:hidden;max-width:740px;max-height:100px"></div></td>
                 </tr>
                 <tr>
                     <td><input name="cb" type="checkbox" class="easyui-validatebox" value="8"><input name="ReferenceId" type="hidden" /><input name="ReferencedModule" type="hidden" value="3" /></td>
                     <td><label onclick="labelcheck(this)">征信报告</label></td>
-                    <td></td>
+                    <td><div style="overflow-y:scroll;overflow-x:hidden;max-width:740px;max-height:100px"></div></td>
                 </tr>
                 <tr>
                     <td><input name="cb" type="checkbox" class="easyui-validatebox" value="9"><input name="ReferenceId" type="hidden" /><input name="ReferencedModule" type="hidden" value="3" /></td>
                     <td><label onclick="labelcheck(this)">客户其他资信证明</label></td>
-                    <td></td>
+                    <td><div style="overflow-y:scroll;overflow-x:hidden;max-width:740px;max-height:100px"></div></td>
                 </tr>
             </table>
         </fieldset>
@@ -223,47 +230,47 @@
                 <tr>
                     <td><input name="cb" type="checkbox" class="easyui-validatebox" value="1"><input name="ReferenceId" type="hidden" /><input name="ReferencedModule" type="hidden" value="3" /></td>
                     <td><label onclick="labelcheck(this)">身份证正反面</label></td>
-                    <td></td>
+                    <td><div style="overflow-y:scroll;overflow-x:hidden;max-width:740px;max-height:100px"></div></td>
                 </tr>
                 <tr>
                     <td><input name="cb" type="checkbox" class="easyui-validatebox" value="2"><input name="ReferenceId" type="hidden" /><input name="ReferencedModule" type="hidden" value="3" /></td>
                     <td><label onclick="labelcheck(this)">户口本复印件</label></td>
-                    <td></td>
+                    <td><div style="overflow-y:scroll;overflow-x:hidden;max-width:740px;max-height:100px"></div></td>
                 </tr>
                 <tr>
                     <td><input name="cb" type="checkbox" class="easyui-validatebox" value="3"><input name="ReferenceId" type="hidden" /><input name="ReferencedModule" type="hidden" value="3" /></td>
                     <td><label onclick="labelcheck(this)">结婚证/未婚承诺书</label></td>
-                    <td></td>
+                    <td><div style="overflow-y:scroll;overflow-x:hidden;max-width:740px;max-height:100px"></div></td>
                 </tr>
                 <tr>
                     <td><input name="cb" type="checkbox" class="easyui-validatebox" value="4"><input name="ReferenceId" type="hidden" /><input name="ReferencedModule" type="hidden" value="3" /></td>
                     <td><label onclick="labelcheck(this)">驾驶证</label></td>
-                    <td></td>
+                    <td><div style="overflow-y:scroll;overflow-x:hidden;max-width:740px;max-height:100px"></div></td>
                 </tr>
                 <tr>
                     <td><input name="cb" type="checkbox" class="easyui-validatebox" value="5"><input name="ReferenceId" type="hidden" /><input name="ReferencedModule" type="hidden" value="3" /></td>
                     <td><label onclick="labelcheck(this)">居住证明</label></td>
-                    <td></td>
+                    <td><div style="overflow-y:scroll;overflow-x:hidden;max-width:740px;max-height:100px"></div></td>
                 </tr>
                 <tr>
                     <td><input name="cb" type="checkbox" class="easyui-validatebox" value="6"><input name="ReferenceId" type="hidden" /><input name="ReferencedModule" type="hidden" value="3" /></td>
                     <td><label onclick="labelcheck(this)">家访照片</label></td>
-                    <td></td>
+                    <td><div style="overflow-y:scroll;overflow-x:hidden;max-width:740px;max-height:100px"></div></td>
                 </tr>
                 <tr>
                     <td><input name="cb" type="checkbox" class="easyui-validatebox" value="7"><input name="ReferenceId" type="hidden" /><input name="ReferencedModule" type="hidden" value="3" /></td>
                     <td><label onclick="labelcheck(this)">银行流水</label></td>
-                    <td></td>
+                    <td><div style="overflow-y:scroll;overflow-x:hidden;max-width:740px;max-height:100px"></div></td>
                 </tr>
                 <tr>
                     <td><input name="cb" type="checkbox" class="easyui-validatebox" value="8"><input name="ReferenceId" type="hidden" /><input name="ReferencedModule" type="hidden" value="3" /></td>
                     <td><label onclick="labelcheck(this)">征信报告</label></td>
-                    <td></td>
+                    <td><div style="overflow-y:scroll;overflow-x:hidden;max-width:740px;max-height:100px"></div></td>
                 </tr>
                 <tr>
                     <td><input name="cb" type="checkbox" class="easyui-validatebox" value="9"><input name="ReferenceId" type="hidden" /><input name="ReferencedModule" type="hidden" value="3" /></td>
                     <td><label onclick="labelcheck(this)">客户其他资信证明</label></td>
-                    <td></td>
+                    <td><div style="overflow-y:scroll;overflow-x:hidden;max-width:740px;max-height:100px"></div></td>
                 </tr>
             </table>
         </fieldset>
@@ -276,47 +283,47 @@
                 <tr>
                     <td><input name="cb" type="checkbox" class="easyui-validatebox" value="1"><input name="ReferenceId" type="hidden" /><input name="ReferencedModule" type="hidden" value="3" /></td>
                     <td><label onclick="labelcheck(this)">身份证正反面</label></td>
-                    <td></td>
+                    <td><div style="overflow-y:scroll;overflow-x:hidden;max-width:740px;max-height:100px"></div></td>
                 </tr>
                 <tr>
                     <td><input name="cb" type="checkbox" class="easyui-validatebox" value="2"><input name="ReferenceId" type="hidden" /><input name="ReferencedModule" type="hidden" value="3" /></td>
                     <td><label onclick="labelcheck(this)">户口本复印件</label></td>
-                    <td></td>
+                    <td><div style="overflow-y:scroll;overflow-x:hidden;max-width:740px;max-height:100px"></div></td>
                 </tr>
                 <tr>
                     <td><input name="cb" type="checkbox" class="easyui-validatebox" value="3"><input name="ReferenceId" type="hidden" /><input name="ReferencedModule" type="hidden" value="3" /></td>
                     <td><label onclick="labelcheck(this)">结婚证/未婚承诺书</label></td>
-                    <td></td>
+                    <td><div style="overflow-y:scroll;overflow-x:hidden;max-width:740px;max-height:100px"></div></td>
                 </tr>
                 <tr>
                     <td><input name="cb" type="checkbox" class="easyui-validatebox" value="4"><input name="ReferenceId" type="hidden" /><input name="ReferencedModule" type="hidden" value="3" /></td>
                     <td><label onclick="labelcheck(this)">驾驶证</label></td>
-                    <td></td>
+                    <td><div style="overflow-y:scroll;overflow-x:hidden;max-width:740px;max-height:100px"></div></td>
                 </tr>
                 <tr>
                     <td><input name="cb" type="checkbox" class="easyui-validatebox" value="5"><input name="ReferenceId" type="hidden" /><input name="ReferencedModule" type="hidden" value="3" /></td>
                     <td><label onclick="labelcheck(this)">居住证明</label></td>
-                    <td></td>
+                    <td><div style="overflow-y:scroll;overflow-x:hidden;max-width:740px;max-height:100px"></div></td>
                 </tr>
                 <tr>
                     <td><input name="cb" type="checkbox" class="easyui-validatebox" value="6"><input name="ReferenceId" type="hidden" /><input name="ReferencedModule" type="hidden" value="3" /></td>
                     <td><label onclick="labelcheck(this)">家访照片</label></td>
-                    <td></td>
+                    <td><div style="overflow-y:scroll;overflow-x:hidden;max-width:740px;max-height:100px"></div></td>
                 </tr>
                 <tr>
                     <td><input name="cb" type="checkbox" class="easyui-validatebox" value="7"><input name="ReferenceId" type="hidden" /><input name="ReferencedModule" type="hidden" value="3" /></td>
                     <td><label onclick="labelcheck(this)">银行流水</label></td>
-                    <td></td>
+                    <td><div style="overflow-y:scroll;overflow-x:hidden;max-width:740px;max-height:100px"></div></td>
                 </tr>
                 <tr>
                     <td><input name="cb" type="checkbox" class="easyui-validatebox" value="8"><input name="ReferenceId" type="hidden" /><input name="ReferencedModule" type="hidden" value="3" /></td>
                     <td><label onclick="labelcheck(this)">征信报告</label></td>
-                    <td></td>
+                    <td><div style="overflow-y:scroll;overflow-x:hidden;max-width:740px;max-height:100px"></div></td>
                 </tr>
                 <tr>
                     <td><input name="cb" type="checkbox" class="easyui-validatebox" value="9"><input name="ReferenceId" type="hidden" /><input name="ReferencedModule" type="hidden" value="3" /></td>
                     <td><label onclick="labelcheck(this)">客户其他资信证明</label></td>
-                    <td></td>
+                    <td><div style="overflow-y:scroll;overflow-x:hidden;max-width:740px;max-height:100px"></div></td>
                 </tr>
             </table>
         </fieldset>

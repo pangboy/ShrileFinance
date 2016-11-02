@@ -1,8 +1,6 @@
 ﻿$.extend($.fn.validatebox.defaults.rules, {
     AN: {
         validator: function (value) {
-            debugger
-
             return !/[\u4E00-\u9FA5\uF900-\uFA2D]/.test(value);
         },
         message: '只能输入字母或数字或字母数字组合'

@@ -32,23 +32,22 @@
 
             // 定时保存草稿数据
             AutoSaveData();
-
-            
         })
 
         window.onload = function () {
-            if (infoTypeIdArray.join(',').indexOf(infoTypeId) == -1) {
+            if ($.inArray(infoTypeId, infoTypeIdArray) == -1) {
                 // 绑定事件(企业)
                 BindInfoEventEnterprise(infoTypeId);
             }
+            else {
+                setTimeout(function () {
+                    // "还款频率"
+                    TermsFrequency();
 
-            setTimeout(function () {
-                // "还款频率"
-                TermsFrequency();
-
-                // 账户拥有者信息提示
-                AcountMasterTip();
-            }, 2000);
+                    // 账户拥有者信息提示
+                    AcountMasterTip();
+                }, 2000);
+            }
         }
 
         //页面加载

@@ -32,29 +32,36 @@
             LoadData(query.FinanceId);
 
             //加载页面时，必须这句，不然上传框样式会有问题
-            setTimeout(InitDetePic(20, ReferenceIdstr), 10);
+            setTimeout(InitDetePic(0, ReferenceIdstr), 10);
         })
 
         // 加载数据
-        function LoadData(financeId)
-        {
+        function LoadData(financeId) {
             $("input[name='ApplicantId']").val(financeId);
 
             GetReferenceID();//绑定已经申请过得REf_ID
+            
+            // 隐藏所有图片文件名div容器
+            $("table").find("tr>td>div").hide();
 
+            // 加载图片
             $.ajax({
                 async: false,
                 type: "Get",
                 data: { financeid: financeId },
                 url: "../api/ImageUpload/GetAll",
-                success: function (data) {debugger
+                success: function (data) {
                     var fieldset = $(".container").find("fieldset");
                     for (var i = 0; i < fieldset.length ; i++) {
                         var input = $($(".container").find("fieldset")[i]).find("input[name='ReferenceId']");
+
                         for (var j = 0; j < input.length; j++) {
                             for (var k = 0; k < data.length; k++) {
                                 if (input[j].value == data[k].ReferenceId) {
-                                    $(input[j]).parent().next().next().append("<span style='margin-left:6px;background-color:wheat'>" + data[k].OldName + data[k].ExtName + "</span>");
+                                    // 显示图片文件名div容器
+                                    $(input[j]).parent().next().next().find('div').show();
+
+                                    $(input[j]).parent().next().next().find("div").append("<span style='margin-left:6px;background-color:wheat;float:left'>" + data[k].OldName + data[k].ExtName + "</span>");
                                 }
                             }
                         }
@@ -65,9 +72,8 @@
 
         // 切换页面状态
         function ChangeStatus(query) {
-            
-            if (query.Status == undefined)
-            {
+
+            if (query.Status == undefined) {
                 query.Status = "0";
             }
 
@@ -108,7 +114,7 @@
     </script>
 </head>
 <body>
-
+    <!--Button-->
     <div id="linkBtn">
         <div id="fieldsetBtn">
             <div style="float:left;width:700px;height:25px;">
@@ -155,28 +161,28 @@
                 <tr>
                     <td><input id="5" name="cb" type="checkbox" class="easyui-validatebox" value="5"><input name="ReferenceId" type="hidden" /><input name="ReferencedModule" type="hidden" value="2" /></td>
                     <td><label onclick="labelcheck(this)">抵押登记后的车辆登记证书</label></td>
-                    <td></td>
+                    <td><div style="overflow-y:scroll;overflow-x:hidden;max-width:740px;max-height:100px"></div></td>
                 </tr>
                 <tr>
                     <td><input id="6" name="cb" type="checkbox" class="easyui-validatebox" value="6"><input name="ReferenceId" type="hidden" /><input name="ReferencedModule" type="hidden" value="2" /></td>
                     <td><label onclick="labelcheck(this)">新办理的行驶证</label></td>
-                    <td></td>
+                    <td><div style="overflow-y:scroll;overflow-x:hidden;max-width:740px;max-height:100px"></div></td>
                 </tr>
 
                 <tr>
                     <td><input id="7" name="cb" type="checkbox" class="easyui-validatebox" value="7"><input name="ReferenceId" type="hidden" /><input name="ReferencedModule" type="hidden" value="2" /></td>
                     <td><label onclick="labelcheck(this)">建设银行卡</label></td>
-                    <td></td>
+                    <td><div style="overflow-y:scroll;overflow-x:hidden;max-width:740px;max-height:100px"></div></td>
                 </tr>
                 <tr>
                     <td><input id="8" name="cb" type="checkbox" class="easyui-validatebox" value="8"><input name="ReferenceId" type="hidden" /><input name="ReferencedModule" type="hidden" value="2" /></td>
                     <td><label onclick="labelcheck(this)">客户面签视频及照片</label></td>
-                    <td></td>
+                    <td><div style="overflow-y:scroll;overflow-x:hidden;max-width:740px;max-height:100px"></div></td>
                 </tr>
                 <tr>
                     <td><input id="9" name="cb" type="checkbox" class="easyui-validatebox" value="9"><input name="ReferenceId" type="hidden" /><input name="ReferencedModule" type="hidden" value="2" /></td>
                     <td><label onclick="labelcheck(this)">商业保险保单</label></td>
-                    <td></td>
+                    <td><div style="overflow-y:scroll;overflow-x:hidden;max-width:740px;max-height:100px"></div></td>
                 </tr>
             </table>
         </fieldset>
@@ -188,54 +194,54 @@
                 <tr>
                     <td><input id="10" name="cb" type="checkbox" class="easyui-validatebox" value="10"><input name="ReferenceId" type="hidden" /><input name="ReferencedModule" type="hidden" value="2" /></td>
                     <td><label onclick="labelcheck(this)">融资租赁合同</label></td>
-                    <td></td>
+                    <td><div style="overflow-y:scroll;overflow-x:hidden;max-width:740px;max-height:100px"></div></td>
                 </tr>
                 <tr>
                     <td><input id="11" name="cb" type="checkbox" class="easyui-validatebox" value="11"><input name="ReferenceId" type="hidden" /><input name="ReferencedModule" type="hidden" value="2" /></td>
                     <td><label onclick="labelcheck(this)">新办理的行驶证</label></td>
-                    <td></td>
+                    <td><div style="overflow-y:scroll;overflow-x:hidden;max-width:740px;max-height:100px"></div></td>
                 </tr>
 
                 <tr>
                     <td><input id="12" name="cb" type="checkbox" class="easyui-validatebox" value="12"><input name="ReferenceId" type="hidden" /><input name="ReferencedModule" type="hidden" value="2" /></td>
                     <td><label onclick="labelcheck(this)">车辆抵押合同</label></td>
-                    <td></td>
+                    <td><div style="overflow-y:scroll;overflow-x:hidden;max-width:740px;max-height:100px"></div></td>
                 </tr>
                 <tr>
                     <td><input id="13" name="cb" type="checkbox" class="easyui-validatebox" value="13"><input name="ReferenceId" type="hidden" /><input name="ReferencedModule" type="hidden" value="2" /></td>
                     <td><label onclick="labelcheck(this)">渠道保证合同</label></td>
-                    <td></td>
+                    <td><div style="overflow-y:scroll;overflow-x:hidden;max-width:740px;max-height:100px"></div></td>
                 </tr>
 
                 <tr>
                     <td><input id="14" name="cb" type="checkbox" class="easyui-validatebox" value="14"><input name="ReferenceId" type="hidden" /><input name="ReferencedModule" type="hidden" value="2" /></td>
                     <td><label onclick="labelcheck(this)">付款指示函</label></td>
-                    <td></td>
+                    <td><div style="overflow-y:scroll;overflow-x:hidden;max-width:740px;max-height:100px"></div></td>
                 </tr>
                 <tr>
                     <td><input id="15" name="cb" type="checkbox" class="easyui-validatebox" value="15"><input name="ReferenceId" type="hidden" /><input name="ReferencedModule" type="hidden" value="2" /></td>
                     <td><label onclick="labelcheck(this)">收据</label></td>
-                    <td></td>
+                    <td><div style="overflow-y:scroll;overflow-x:hidden;max-width:740px;max-height:100px"></div></td>
                 </tr>
                 <tr>
                     <td><input id="16" name="cb" type="checkbox" class="easyui-validatebox" value="16"><input name="ReferenceId" type="hidden" /><input name="ReferencedModule" type="hidden" value="2" /></td>
                     <td><label onclick="labelcheck(this)">建行扣划款授权书</label></td>
-                    <td></td>
+                    <td><div style="overflow-y:scroll;overflow-x:hidden;max-width:740px;max-height:100px"></div></td>
                 </tr>
                 <tr>
                     <td><input id="17" name="cb" type="checkbox" class="easyui-validatebox" value="17"><input name="ReferenceId" type="hidden" /><input name="ReferencedModule" type="hidden" value="2" /></td>
                     <td><label onclick="labelcheck(this)">还款计划表</label></td>
-                    <td></td>
+                    <td><div style="overflow-y:scroll;overflow-x:hidden;max-width:740px;max-height:100px"></div></td>
                 </tr>
                 <tr>
                     <td><input id="18" name="cb" type="checkbox" class="easyui-validatebox" value="18"><input name="ReferenceId" type="hidden" /><input name="ReferencedModule" type="hidden" value="2" /></td>
                     <td><label onclick="labelcheck(this)">车辆买卖合同</label></td>
-                    <td></td>
+                    <td><div style="overflow-y:scroll;overflow-x:hidden;max-width:740px;max-height:100px"></div></td>
                 </tr>
                 <tr>
                     <td><input id="19" name="cb" type="checkbox" class="easyui-validatebox" value="19"><input name="ReferenceId" type="hidden" /><input name="ReferencedModule" type="hidden" value="2" /></td>
                     <td><label onclick="labelcheck(this)">渠向经销商转账证明</label></td>
-                    <td></td>
+                    <td><div style="overflow-y:scroll;overflow-x:hidden;max-width:740px;max-height:100px"></div></td>
                 </tr>
             </table>
         </fieldset>

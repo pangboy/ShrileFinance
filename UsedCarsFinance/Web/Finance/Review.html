@@ -242,7 +242,8 @@
         // 验证数据
         function ValidData() {
             if (!$("#review_info").form("validate")) {
-                //  $.messager.show({ msg: "请填写剩下的必填内容!" });
+                debugger
+                 $.messager.show({ msg: "请填写剩下的必填内容!" });
                 return false;
             }
 
@@ -259,7 +260,7 @@
 
             result["formName"] = "审批信息";
             result["buildData"] = value;
-
+            debugger
             return result;
         }
     </script>

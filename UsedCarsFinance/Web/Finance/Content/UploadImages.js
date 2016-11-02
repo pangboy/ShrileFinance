@@ -204,7 +204,10 @@ function InitDetePic(count, RefId) {
             ddClose();
         },
         onUploadSuccess: function (file, data, response) {
-            $(thirdth).append("<span style='margin-left:6px;background-color:wheat'>" + file.name + "</span>");
+            // 显示图片文件名div容器
+            $(thirdth).find("div").show();
+
+            $(thirdth).find("div").append("<span style='margin-left:6px;background-color:wheat;float:left'>" + file.name + "</span>");
         }
     });
     $("#pic_upload").css("float", "left").find("object").css("left", "0");
@@ -228,7 +231,9 @@ function Add() {
         $.messager.show({ msg: "请选中要上传的一项!" });
     }
     if (ckcheckedlength == 1) {
-        thirdth = $("input:checked")[0].parentNode.parentNode.children[2];
+        //thirdth = $("input:checked")[0].parentNode.parentNode.children[2];
+        
+        thirdth = $("input:checked").parent().parent().find('td').eq(2);
         var RefModule = $("input:checked")[0].parentNode.children[2].value;
         var RefSId = $("input:checked")[0].value;
         var financeId = "";
@@ -239,9 +244,10 @@ function Add() {
             var applicantid = $("input:checked").parents("fieldset").find("input[name='ApplicantId']").val();
             financeId = applicantid;
         }
+        
         getOneRef(financeId, RefSId, RefModule);//查找是否存在引用数据
         $("#dd_upload").dialog({ top: $(document).scrollTop() + 300 }).dialog("open");
-        InitDetePic(20, ReferenceIdstr);
+        InitDetePic(0, ReferenceIdstr);
     }
 }
 
@@ -261,9 +267,12 @@ function del() {
             });
         }
         for (var k = 0; k < ckcheckedlength; k++) {
-            var delthirdth = $(ckchecked[k]).parent().next().next();
+            var delthirdth = $(ckchecked[k]).parent().next().next().find("div");
             $(ckchecked[k]).attr("checked", false);
             delthirdth.empty();
+
+            // 隐藏图片文件名div容器
+            delthirdth.hide();
         }
     }
     else {
