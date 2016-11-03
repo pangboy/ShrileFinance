@@ -16,7 +16,7 @@ namespace DAL.Finance
 		public VehicleInfo Find(int financeId)
 		{
 			string findStatement =
-				"SELECT VehicleKey, BuyCarPrice, RegisterCity, SallerName, PlateNo, FrameNo, EngineNo, RegisterDate, RunningMiles, FactoryDate, BuyCarYears, Color FROM FANC_VehicleInfo WHERE FinanceId = @ID";
+                "SELECT VehicleKey, BuyCarPrice, RegisterCity, SallerName, PlateNo, FrameNo, EngineNo, RegisterDate, RunningMiles, FactoryDate, BuyCarYears,Color FROM FANC_VehicleInfo WHERE FinanceId = @ID";
 
 			return AbstractFind(findStatement, financeId);
 		}
@@ -45,7 +45,7 @@ namespace DAL.Finance
 			DHelper.AddParameter(comm, "@RunningMiles", SqlDbType.NVarChar, value.RunningMiles);
 			DHelper.AddParameter(comm, "@FactoryDate", SqlDbType.NVarChar, value.FactoryDate);
 			DHelper.AddParameter(comm, "@BuyCarYears", SqlDbType.NVarChar, value.BuyCarYears);
-			DHelper.AddParameter(comm, "@Color", SqlDbType.NVarChar, value.Color);
+            DHelper.AddParameter(comm, "@Color", SqlDbType.NVarChar, value.Color);
 
 			DHelper.ExecuteNonQuery(comm);
 		}
@@ -88,7 +88,7 @@ namespace DAL.Finance
 			DHelper.AddParameter(comm, "@RunningMiles", SqlDbType.NVarChar, value.RunningMiles);
 			DHelper.AddParameter(comm, "@FactoryDate", SqlDbType.NVarChar, value.FactoryDate);
 			DHelper.AddParameter(comm, "@BuyCarYears", SqlDbType.NVarChar, value.BuyCarYears);
-			DHelper.AddParameter(comm, "@Color", SqlDbType.NVarChar, value.Color);
+            DHelper.AddParameter(comm, "@Color", SqlDbType.NVarChar, value.Color);
 
 			return DHelper.ExecuteNonQuery(comm);
 		}

@@ -160,7 +160,6 @@
                 $("#tabs").tabs("add", {
                     title: this.Name
                 });
-
                 var Link = this.Link + "?Status=" + this.Status + "";
                 if (this.IsHandler) {
 
@@ -236,6 +235,7 @@
                         }
                         else {
                             if (formId == frames[j].name) {
+                                debugger
                                 valid = frames[j].ValidData();
                                 if (valid == false) {
                                     top.$.messager.show({ msg: frames[j].BuildData().formName + "中必填项未填写" })

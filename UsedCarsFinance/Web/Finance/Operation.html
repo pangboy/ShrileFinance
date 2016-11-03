@@ -150,8 +150,16 @@
                     200: function (data) {
                         if (data.length > 0) {
                             // 加载银行信息
-                            $("#CreditInfo").form("load", data[0]);
-                            $("#ApplicantInfo").form("load", data[1]);
+                            $(data).each(function (i, e) {
+                                if (e.CreditId != undefined)
+                                {
+                                    $("#CreditInfo").form("load", e);
+                                }
+
+                                if (e.ApplicantId != undefined ) {
+                                    $("#ApplicantInfo").form("load", e);
+                                }
+                            });
                         }
                     }
                 }
@@ -166,7 +174,6 @@
                 statusCode: {
                     200: function (data) {
                         if (data) {
-                            debugger
                             $("input[textboxname = 'ApplicantName']").textbox("setValue", data.Name);
                             $("input[name='ApplicantId']").val(data.ApplicantId);
                         }
@@ -200,20 +207,6 @@
                 }
                 
                 $("#financeScope").form("load",data.Finance);
-
-                //$("input[textboxname = 'ActualVehiclePrice']").textbox("setValue", data.Finance.ActualVehiclePrice);
-                //$("input[textboxname = 'ActualPurchaseTaxPrice']").textbox("setValue", data.Finance.ActualPurchaseTaxPrice);
-                //$("input[textboxname = 'ActualBusinessInsurancePrice']").textbox("setValue", data.Finance.ActualBusinessInsurancePrice);
-                //$("input[textboxname = 'ActualTafficCompulsoryInsurancePrice']").textbox("setValue", data.Finance.ActualTafficCompulsoryInsurancePrice);
-                //$("input[textboxname = 'ActualVehicleVesselTaxPrice']").textbox("setValue", data.Finance.ActualVehicleVesselTaxPrice);
-                //$("input[textboxname = 'ActualExtendedWarrantyInsurancePrice']").textbox("setValue", data.Finance.ActualExtendedWarrantyInsurancePrice);
-                //$("input[textboxname = 'ActualOtherPrice']").textbox("setValue", data.Finance.ActualOtherPrice);
-
-                //$("input[textboxname = 'MarginMoney']").textbox("setValue", data.Finance.MarginMoney);
-                //$("input[textboxname = 'PaymonthlyMoney']").textbox("setValue", data.Finance.PaymonthlyMoney);
-                //$("input[textboxname = 'OnepayInterestMoney']").textbox("setValue", data.Finance.OnepayInterestMoney);
-                //$("input[textboxname = 'ActualcashMoney']").textbox("setValue", data.Finance.ActualcashMoney);
-
                 // 加载银行信息
                 $("#CreditInfo").form("load", data.BankInfos[0]);
                 $("#ApplicantInfo").form("load", data.BankInfos[1]);
@@ -334,16 +327,16 @@
                         <label>还款用户:</label>
                         <input name="ApplicantId" type="hidden" />
                         <input name="ApplicantName" class="easyui-textbox" data-options="
-                                editable:false,
+                                readonly:true,
                                 required:true "/>
                     </div>
                     <div class="col-6">
                         <label>开户行:</label>
-                        <input name="BankName" class="easyui-textbox" data-options="required:true" />
+                        <input name="BankName" class="easyui-textbox" data-options="required:true, readonly:true" />
                     </div>
                     <div class="col-6">
                         <label>卡号:</label>
-                        <input name="BankCard" class="easyui-textbox" data-options="required:true" />
+                        <input name="BankCard" class="easyui-textbox" data-options="required:true,  readonly:true" />
                     </div>
                 </div>
             </fieldset>
@@ -383,29 +376,35 @@
             <div class="row">
                 <div class="col-6">
                     <label>车牌号:</label>
-                    <input name="PlateNo" class="easyui-textbox" data-options="required:true,validType:'PlateNo'" />
+                    <input name="PlateNo" class="easyui-textbox" data-options="required:true,validType:'PlateNo',readonly:true " />
                 </div>
                 <div class="col-6">
                     <label>车架号:</label>
-                    <input name="FrameNo" class="easyui-textbox" data-options="required:true,validType:'length[17,17]'" />
+                    <input name="FrameNo" class="easyui-textbox" data-options="required:true,validType:'length[17,17]',readonly:true " />
                 </div>
             </div>
             <div class="row">
                 <div class="col-6">
                     <label>发动机号:</label>
-                    <input name="EngineNo" class="easyui-textbox" data-options="required:true" />
+                    <input name="EngineNo" class="easyui-textbox" data-options="required:true,readonly:true " />
+                </div>
+
+                <div class="col-6">
+                    <label>行驶里程:</label>
+                    <input name="RunningMiles" class="easyui-textbox" data-options="required:true,readonly:true " />
+                    <span class="unit">公里</span>
                 </div>
             </div>
             <div class="row">
                 <div class="col-6">
                     <label>购买价格:</label>
-                    <input name="BuyCarPrice" class="easyui-textbox" data-options="validType:'Price',required:true" />
+                    <input name="BuyCarPrice" class="easyui-textbox" data-options="validType:'Price',required:true,readonly:true " />
                     <span class="unit">万元</span>
                 </div>
 
                 <div class="col-6">
                     <label>上牌城市:</label>
-                    <input name="RegisterCity" class="easyui-textbox" data-options="required:true" />
+                    <input name="RegisterCity" class="easyui-textbox" data-options="required:true,readonly:true " />
                 </div>
             </div>
             <script>

@@ -183,6 +183,7 @@
     <Content Include="Borrowers\OrganizateList.html" />
     <Content Include="Borrowers\OrganizatePage.html" />
     <Content Include="Borrowers\ProfitInfo.html" />
+    <Content Include="Finance\InfoAdditional.html" />
     <Content Include="Finance\Loan.html" />
     <Content Include="Finance\Operation.html" />
     <Content Include="Flow\FlowTest\Frame.html" />

@@ -193,6 +193,32 @@ namespace BLL.Flow.Script
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        public bool SaveInfoAdditionalData(string data)
+        {
+            bool result = true;
+            var _operate = new Finance.Operating();
+            var _finance = new Finance.Finance();
+
+            JObject jo = (JObject)JsonConvert.DeserializeObject(data);
+
+            StringReader sr = new StringReader(jo["D11"].ToString());
+            OperatingInfo operatingInfo = (OperatingInfo)_serializer.Deserialize(new JsonTextReader(sr), typeof(OperatingInfo));
+
+            using (TransactionScope scope = new TransactionScope())
+            {
+                result &= _finance.ModifyInfoAdditional(operatingInfo);
+
+                if (result) scope.Complete();
+            }
+
+            return result;
+        }
+
+        /// <summary>
         /// 节点邮件通知
         /// </summary>
         /// <param name="actionInfo">节点通知</param>
