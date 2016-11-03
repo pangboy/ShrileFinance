@@ -84,9 +84,36 @@
 
         // 定时服务
         function AutoSaveData() {
-            setTimeout(function () {
-                $("#saveTempData").click();
-                AutoSaveData();
+            //setTimeout(function () {
+            //    $("#saveTempData").click();
+            //    AutoSaveData();
+            //}, 180000);
+
+            // 每3分钟点击一次保存草稿按钮
+            var IntervalHandler = setInterval(function () {
+                // 判断是否存在保存草稿按钮
+                if ($("a[id=saveTempData]:visible")[0] != undefined) {
+                    $.ajax({
+                        async: true,
+                        type: "GET",
+                        url: "../api/User/CurrentUser",
+                        statusCode: {
+                            200: function (data) {
+                                // 用户存在
+                                if (data != undefined) {
+                                    if (data.Message == undefined) {
+                                        $("a[id=saveTempData]:visible").click();
+                                    }
+                                    else {
+                                        // 清除定时器
+                                        clearInterval(IntervalHandler);
+                                        //$.messager.show({ msg: "登陆过期，请重新登陆！" });
+                                    }
+                                }
+                            }
+                        }
+                    });
+                }
             }, 180000);
         }
 
