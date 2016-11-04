@@ -219,11 +219,12 @@
             if (status != "1") {
                 // 复审(隐藏还款日期)
                 $("#RepaymentDate").addClass("hidden");
+
                 // 复审(建议融资金额、月供额度、融资比例、金融手续费不可编辑)
-                $('#AdvicefinanceMoney').textbox("readonly", true);
+                //$('#AdvicefinanceMoney').textbox("readonly", true);
                 //$('#ApprovalFinanceRatio').textbox("readonly", true);
-                $('#Payment').textbox("readonly", true);
-                $('#FinanceCost').textbox("readonly", true);
+                //$('#Payment').textbox("readonly", true);
+                //$('#FinanceCost').textbox("readonly", true);
             }
             else
             {
