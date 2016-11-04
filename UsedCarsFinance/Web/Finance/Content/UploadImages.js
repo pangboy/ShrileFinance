@@ -1,8 +1,14 @@
 ﻿var tempfs;
+
+// 担保人模版
 var GuaranteeTemp = "";
+
+// 联系人模版
 var ContactsTemp = "";
 
+// 全选
 var CAll = false;
+
 //全选、反选功能
 function checkall() {
     var objectCb = $("input[name='cb']");
@@ -89,6 +95,7 @@ function LoadFinanceList() {
     $("#ContactsDiv").append(ContactsTemp);
 }
 
+// 克隆模版
 function CopyTemp(name, Rcount, TempFieldsetLegend, applicantId) {
     tempfs.attr('id', name + Rcount);
     tempfs.find("input[name='ApplicantId']").val(applicantId);//赋值applicantid
@@ -102,6 +109,7 @@ function CopyTemp(name, Rcount, TempFieldsetLegend, applicantId) {
     }
 }
 
+// label for input[type=checkbox]
 function labelcheck(lab) {
     if ($(lab).parent().prev().children().first().prop("checked")) {
         $(lab).parent().prev().children().first().removeProp("checked");
@@ -191,11 +199,27 @@ function view() {
 
 // 初始化图片影像上传控件（count:uploadLimit，RefId:formDate.ReferenceId）
 function InitDetePic(count, RefId) {
+    // 文件格式扩展名
+    var fileTypeExts = {};
+
+    // 图片格式
+    fileTypeExts.PicTypeExts = "*.jpg;*.png;*.jpeg;*.gif;*.bmp;";
+
+    // office格式
+    fileTypeExts.WordTypeExts = "*.pdf;*.docx;*.docm;*.dotx;*.dotm;*.dot;*.html;*.rtf;*.mht;*.mhtml;*.xml;*.odt;";
+    fileTypeExts.ExcelTypeExts = "*.xl;*.xlsx;*.xlsm;*.xlsb;*.xlam;*.xltx;*.xls;*.xlt;*.xla;*.xlm;*.xlw;*odc;*.ods;";
+    fileTypeExts.PowerPointTypeExts = "*.pptx;*.ppt;*.pptm;*.ppsx;*.pps;*.ppsm;*.potx;*.pot;*.potm;*.odp;";
+
+    // 视频格式
+    fileTypeExts.VideoTypeExts = "*.mp4;*.wmv;*.avi;*.3gp;*.rm;*.rmvb;*.amv;*.dmv;";
+
+    var fileTypeExts = fileTypeExts.PicTypeExts + fileTypeExts.WordTypeExts + fileTypeExts.ExcelTypeExts + fileTypeExts.PowerPointTypeExts + fileTypeExts.VideoTypeExts;
+
     $("#pic_upload").uploadify({
         auto: false,
         buttonText: "选择",
         fileSizeLimit: "500MB",
-        fileTypeExts: "*.jpg;*.bmp;*.png;*.jpeg;*.rm;*.rmvb;*.mp4;*.wmv;*.avi;*.3gp;*.amv;*.dmv;",
+        fileTypeExts: fileTypeExts,
         height: 20,
         width: 60,
         queueID: "file_queue",
@@ -219,6 +243,7 @@ function InitDetePic(count, RefId) {
     $("#pic_upload").css("float", "left").find("object").css("left", "0");
 }
 
+// 上传窗体关闭
 function ddClose() {
     $('#dd_upload').dialog({
         closed: true,
@@ -298,9 +323,16 @@ function getOneRef(financeId, RefSId, RefModule) {
     });
 }
 
+// 最大编号
 var maxNumber = 0;
+
+// 当前照片序号
 var current = 0;
+
+// 开始/结束
 var stopORstart = "stop";
+
+// 初始化照片查看
 function initpic() {
     if (maxNumber <= 1) {
         $("#BigPleft_absolute").hide();
@@ -319,6 +351,7 @@ function initpic() {
     autoChange();
 }
 
+// 显示
 function shows(index) {
     for (var i = 1; i <= maxNumber; i++) {
         document.getElementById("t" + i).style.backgroundColor = "white";
@@ -332,6 +365,7 @@ function shows(index) {
     }
 }
 
+// 启动自动播放
 function OpenAutoChange() {
     if (stopORstart == "start") {
         autoChange();
@@ -345,6 +379,7 @@ function OpenAutoChange() {
     }
 }
 
+// 每2秒自动播放下一张图片
 function autoChange() {
     shows(1);//默认加载第一张图片
     if (stopORstart == "start") {
@@ -358,12 +393,15 @@ function autoChange() {
     }
 }
 
+// 上一张图片
 function PreviousPic() {
     current--;
     if (current < 1)
         current = maxNumber;
     shows(current);
 }
+
+// 下一张图片
 function NextPic() {
     current++;
     if (current > maxNumber)
