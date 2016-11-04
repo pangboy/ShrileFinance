@@ -1,4 +1,5 @@
 ﻿using System.Transactions;
+using Application;
 using DAL.BankCredit;
 using Models.BankCredit;
 
@@ -7,6 +8,12 @@ namespace BLL.BankCredit
     public class TempRecord
     {
         private static readonly TempRecordMapper TempInfoMapper = new TempRecordMapper();
+        private AccountAppService service;
+
+        public TempRecord(AccountAppService service)
+        {
+            this.service = service;
+        }
 
         /// <summary>
         /// 增加一条临时数据记录
@@ -17,7 +24,7 @@ namespace BLL.BankCredit
         public bool Add(TempRecordInfo values)
         {
             // 获取当前用户ID
-            int userId = new BLL.User.User().CurrentUser().UserId;
+            string userId = service.CurrentUser().Id;
             values.UserId = userId;
             TempInfoMapper.Insert(values);
 
@@ -33,7 +40,7 @@ namespace BLL.BankCredit
         public bool Modify(TempRecordInfo value)
         {
             // 获取当前用户ID
-            int userId = new BLL.User.User().CurrentUser().UserId;
+            string userId = service.CurrentUser().Id;
             value.UserId = userId;
 
             return TempInfoMapper.Update(value) > 0;
@@ -49,7 +56,7 @@ namespace BLL.BankCredit
         public bool DeleteByInfoTypeIdAndReportId(int infoTypeId, int reportId)
         {
             // 获取当前用户ID
-            int userId = new BLL.User.User().CurrentUser().UserId;
+            string userId = service.CurrentUser().Id;
 
             return TempInfoMapper.Delete(infoTypeId, reportId, userId) > 0;
         }
@@ -64,7 +71,7 @@ namespace BLL.BankCredit
         public TempRecordInfo Get(int infoTypeId, int reportId)
         {
             // 获取当前用户ID
-            int userId = new BLL.User.User().CurrentUser().UserId;
+            string userId = service.CurrentUser().Id;
 
             return TempInfoMapper.Find(infoTypeId, reportId, userId);
         }

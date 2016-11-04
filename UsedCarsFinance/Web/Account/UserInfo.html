@@ -21,7 +21,7 @@
             uc.form.LoadForm({
                 url: "../api/User/CurrentUser",
                 onLoadSuccess: function (data) {
-                    return data.user;
+                    return data;
                 }
             })
         }
@@ -48,7 +48,6 @@
 
             <div id="data">
                 <input name="UserId" type="hidden" />
-                <input name="RoleId" type="hidden" />
             </div>
 
             <div class="row">

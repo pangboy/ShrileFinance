@@ -46,9 +46,9 @@ function Login() {
 
 		$.ajax({
 			async: false,
-			data: { username: username, password: password },
+			data: { Username: username, password: Password },
 			url: "api/User/SignIn",
-			method: "GET",
+			method: "POST",
 			statusCode: {
 				200: function (data) {
 					location.href = "Index.html";

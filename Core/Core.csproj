@@ -65,7 +65,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Entities\AppUserManager.cs" />
+    <Compile Include="Entities\Identity\AppRole.cs" />
+    <Compile Include="Entities\Identity\AppRoleManager.cs" />
+    <Compile Include="Entities\Identity\AppUserManager.cs" />
     <Compile Include="Entities\Customers\Enterprise\Litigation.cs" />
     <Compile Include="Entities\Customers\Customer.cs" />
     <Compile Include="Entities\Customers\Enterprise\BigEvent.cs" />
@@ -89,7 +91,7 @@
     <Compile Include="Entities\Customers\IEnterprise.cs" />
     <Compile Include="Entities\Customers\INaturalPerson.cs" />
     <Compile Include="Entities\Entity.cs" />
-    <Compile Include="Entities\AppUser.cs" />
+    <Compile Include="Entities\Identity\AppUser.cs" />
     <Compile Include="Entities\Finance\Contact.cs" />
     <Compile Include="Entities\Finance\Credit.cs" />
     <Compile Include="Entities\Finance\Finance.cs" />

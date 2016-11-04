@@ -9,6 +9,7 @@ using System.Data;
 using Models.BankCredit;
 using System.Transactions;
 using System.Web;
+using Application;
 
 namespace BLL.BankCredit
 {
@@ -17,6 +18,12 @@ namespace BLL.BankCredit
         private readonly static DAL.BankCredit.ReportFilesMapper reportFilesMapper = new DAL.BankCredit.ReportFilesMapper();
         private readonly static DAL.BankCredit.MessageTypeMapper messageTypeMapper = new DAL.BankCredit.MessageTypeMapper();
         private readonly static DAL.BankCredit.ReportMapper reportMapper = new DAL.BankCredit.ReportMapper();
+        private AccountAppService service;
+
+        public ReportFiles(AccountAppService service)
+        {
+            this.service = service;
+        }
 
         /// <summary>
         /// 添加
@@ -34,7 +41,7 @@ namespace BLL.BankCredit
             value.ServiceObj = Convert.ToInt32(data["serviceObj"].ToString());
             value.ReportState = 3;//编辑状态
             value.CreateTime = DateTime.Now;
-            value.Operator = new BLL.User.User().CurrentUser().Name;
+            value.Operator = service.CurrentUser().Name;
             //获取报文类型列表
             List<MessageTypeInfo> list = messageTypeMapper.List(value.MessageFileId);
             ReportInfo report = new ReportInfo();
@@ -103,7 +110,7 @@ namespace BLL.BankCredit
         /// <returns></returns>
         public ReportFilesInfo GetByOperator(int reportFilesId)
         {
-            string Operator = new BLL.User.User().CurrentUser().Name;
+            string Operator = service.CurrentUser().Name;
             return reportFilesMapper.FindByOperator(reportFilesId, Operator);
         }
 

@@ -23,7 +23,7 @@ namespace DAL.BankCredit
             DHelper.AddParameter(comm, "@Context", SqlDbType.Text, values.Context);
             DHelper.AddParameter(comm, "@BIT_ID", SqlDbType.NVarChar, values.InfoTypeId);
             DHelper.AddParameter(comm, "@ReportID", SqlDbType.Int, values.ReportId);
-            DHelper.AddParameter(comm, "@UI_ID", SqlDbType.Int, values.UserId);
+            DHelper.AddParameter(comm, "@UI_ID", SqlDbType.NVarChar, values.UserId);
 
             values.TempInfoId = Convert.ToInt32(DHelper.ExecuteScalar(comm));
         }
@@ -48,7 +48,7 @@ namespace DAL.BankCredit
             DHelper.AddInParameter(comm, "@Context", SqlDbType.Text, value.Context);
             DHelper.AddInParameter(comm, "@BIT_ID", SqlDbType.NVarChar, value.InfoTypeId);
             DHelper.AddInParameter(comm, "@ReportID", SqlDbType.Int, value.ReportId);
-            DHelper.AddInParameter(comm, "@UI_ID", SqlDbType.Int, value.UserId);
+            DHelper.AddInParameter(comm, "@UI_ID", SqlDbType.NVarChar, value.UserId);
 
             return Convert.ToInt32(DHelper.ExecuteNonQuery(comm));
         }
@@ -61,7 +61,7 @@ namespace DAL.BankCredit
         /// <param name="reportId">报文标识</param>
         /// <param name="userId">用户ID</param>
         /// <returns></returns>
-        public int Delete(int infoTypeId, int reportId, int userId)
+        public int Delete(int infoTypeId, int reportId, string userId)
         {
             SqlCommand comm = DHelper.GetSqlCommand(@"
                     DELETE Bank_TempRecord WHERE BIT_ID = @BIT_ID AND ReportID = @ReportID AND UI_ID = @UI_ID
@@ -69,7 +69,7 @@ namespace DAL.BankCredit
 
             DHelper.AddInParameter(comm, "@BIT_ID", SqlDbType.Int, infoTypeId);
             DHelper.AddInParameter(comm, "@ReportID", SqlDbType.Int, reportId);
-            DHelper.AddInParameter(comm, "@UI_ID", SqlDbType.Int, userId);
+            DHelper.AddInParameter(comm, "@UI_ID", SqlDbType.NVarChar, userId);
 
             return Convert.ToInt32(DHelper.ExecuteNonQuery(comm));
         }
@@ -97,14 +97,14 @@ namespace DAL.BankCredit
         /// <param name="reportId">报文标识</param>
         /// <param name="userId">用户ID</param>
         /// <returns></returns>
-        public TempRecordInfo Find(int infoTypeId, int reportId, int userId)
+        public TempRecordInfo Find(int infoTypeId, int reportId, string userId)
         {
             SqlCommand comm = DHelper.GetSqlCommand(@"
                 SELECT * FROM Bank_TempRecord WHERE BIT_ID = @BIT_ID AND ReportID = @ReportID AND UI_ID = @UI_ID
             ");
             DHelper.AddInParameter(comm, "@BIT_ID", SqlDbType.Int, infoTypeId);
             DHelper.AddInParameter(comm, "@ReportID", SqlDbType.Int, reportId);
-            DHelper.AddInParameter(comm, "@UI_ID", SqlDbType.Int, userId);
+            DHelper.AddInParameter(comm, "@UI_ID", SqlDbType.NVarChar, userId);
 
             return Load(DHelper.ExecuteDataTable(comm));
         }

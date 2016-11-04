@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace Models.BankCredit
 {
+    // TODO: TempRecordInfo Migrations
     /// <summary>
     /// 信息草稿实体
     /// yangj   2016.09.21
@@ -38,6 +39,6 @@ namespace Models.BankCredit
         /// 用户ID
         /// </summary>
         [Alias("UI_ID")]
-        public int UserId { get; set; }
+        public string UserId { get; set; }
     }
 }

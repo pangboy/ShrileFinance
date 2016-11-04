@@ -15,7 +15,7 @@ namespace DAL.User
 		/// qiy		16.03.08
 		/// <param name="roleId"></param>
 		/// <returns></returns>
-		public List<int> FindByRole(int roleId)
+		public List<int> FindByRole(string roleId)
 		{
 			List<int> result = new List<int>();
 
@@ -23,7 +23,7 @@ namespace DAL.User
 				"SELECT MenuId FROM USER_Permissions WHERE RoleId = @RoleId"
 			);
 
-			DHelper.AddParameter(comm, "@RoleId", SqlDbType.Int, roleId);
+			DHelper.AddParameter(comm, "@RoleId", SqlDbType.NVarChar, roleId);
 
 			DataTable dt = DHelper.ExecuteDataTable(comm);
 

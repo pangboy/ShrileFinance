@@ -3,19 +3,26 @@ using System.Collections.Generic;
 using System.Data;
 using System.Web.Http;
 using Models.Sys;
+using Application;
 
 namespace Web.Controllers.Sys
 {
 	public class MenuController : ApiController
 	{
-		private static readonly BLL.Sys.Menu _menu = new BLL.Sys.Menu();
+		private readonly BLL.Sys.Menu _menu;
 
-		/// <summary>
-		/// 仅获取授权的菜单树(首页菜单)
-		/// </summary>
-		/// yand    15.11.23
-		/// <returns></returns>
-		[HttpGet]
+        public MenuController(AccountAppService service)
+        {
+            service.User = this.User;
+            _menu = new BLL.Sys.Menu(service);
+        }
+
+        /// <summary>
+        /// 仅获取授权的菜单树(首页菜单)
+        /// </summary>
+        /// yand    15.11.23
+        /// <returns></returns>
+        [HttpGet]
 		public List<MenuInfo> GetOnlyAuthorization()
 		{
 			List<MenuInfo> menuInfo = _menu.GetOnlyAuthorization();
@@ -30,7 +37,7 @@ namespace Web.Controllers.Sys
 		/// qiy		15.12.29
 		/// <returns></returns>
 		[HttpGet]
-		public List<MenuInfo> Tree(int roleId)
+		public List<MenuInfo> Tree(string roleId)
 		{
 			List<MenuInfo> menus = _menu.GetByRole(roleId);
 

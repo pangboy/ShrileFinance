@@ -1,11 +1,18 @@
 ﻿using System.Web.Http;
+using Application;
 using Models.BankCredit;
 
 namespace Web.Controllers.BankCredit
 {
     public class TempRecordController : ApiController
     {
-        private static readonly BLL.BankCredit.TempRecord TempRecord = new BLL.BankCredit.TempRecord();
+        private readonly BLL.BankCredit.TempRecord TempRecord;
+
+        public TempRecordController(AccountAppService service)
+        {
+            service.User = this.User;
+            TempRecord = new BLL.BankCredit.TempRecord(service);
+        }
 
         /// <summary>
         /// 临时数据保存

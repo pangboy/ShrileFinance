@@ -10,12 +10,19 @@ using Models.BankCredit;
 using System.IO;
 using System.Net.Http.Headers;
 using System.Web;
+using Application;
 
 namespace Web.Controllers.BankCredit
 {
     public class ReportFilesController : ApiController
     {
-        private readonly static BLL.BankCredit.ReportFiles _files = new BLL.BankCredit.ReportFiles();
+        private readonly BLL.BankCredit.ReportFiles _files;
+
+        public ReportFilesController(AccountAppService service)
+        {
+            service.User = this.User;
+            _files = new BLL.BankCredit.ReportFiles(service);
+        }
 
         /// <summary>
         /// 分页
@@ -100,7 +107,7 @@ namespace Web.Controllers.BankCredit
         [HttpGet]
         public object SendReportFile(int fileId)
         {
-            return new BLL.BankCredit.ReportFiles().SendReportFileInfo(fileId) ? true :false ;
+            return _files.SendReportFileInfo(fileId) ? true :false ;
         }
 
         /// <summary>
@@ -113,7 +120,7 @@ namespace Web.Controllers.BankCredit
         [HttpGet]
         public IHttpActionResult Save(int fileId, string FilesName, string Remarks)
         {
-            return new BLL.BankCredit.ReportFiles().Save(fileId, FilesName, Remarks) ? (IHttpActionResult)Ok() : BadRequest("保存失败");
+            return _files.Save(fileId, FilesName, Remarks) ? (IHttpActionResult)Ok() : BadRequest("保存失败");
         }
 
         /// <summary>

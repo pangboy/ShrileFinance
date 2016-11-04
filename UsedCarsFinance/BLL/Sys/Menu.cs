@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using Application;
 using Models;
 using Models.Sys;
 
@@ -11,17 +12,23 @@ namespace BLL.Sys
 		//声明对映射类的全局实例, 通过缓存提高效率
 		private readonly static DAL.Sys.MenuMapper menuMapper = new DAL.Sys.MenuMapper();
 		private readonly static DAL.User.PermissionsMapper permissionsMapper = new DAL.User.PermissionsMapper();
+        private AccountAppService service;
 
-		/// <summary>
-		/// 仅获取授权的菜单树
-		/// </summary>
-		/// yand    15.11.23
-		/// qiy		15.11.27	考虑安全性, 角色标识从当前用户中获取.
-		/// qiy		15.12.25	优化查询
-		/// <returns></returns>
-		public List<MenuInfo> GetOnlyAuthorization()
+        public Menu(AccountAppService service)
+        {
+            this.service = service;
+        }
+
+        /// <summary>
+        /// 仅获取授权的菜单树
+        /// </summary>
+        /// yand    15.11.23
+        /// qiy		15.11.27	考虑安全性, 角色标识从当前用户中获取.
+        /// qiy		15.12.25	优化查询
+        /// <returns></returns>
+        public List<MenuInfo> GetOnlyAuthorization()
 		{
-			int roleId = new User.User().CurrentUser().RoleId;
+            string roleId = service.CurrentRole().Id;
 
 			List<MenuInfo> result = GetWithPermissions(roleId);
 
@@ -43,7 +50,7 @@ namespace BLL.Sys
 		/// qiy		15.12.25	优化查询方式
 		/// <param name="roleId"></param>
 		/// <returns></returns>
-		public List<MenuInfo> GetByRole(int? roleId)
+		public List<MenuInfo> GetByRole(string roleId)
 		{
 			List<MenuInfo> menus = GetWithPermissions(roleId);
 
@@ -57,10 +64,10 @@ namespace BLL.Sys
 		/// qiy		15.12.28
 		/// <param name="roleId">角色标识(可选)</param>
 		/// <returns></returns>
-		private List<MenuInfo> GetWithPermissions(int? roleId)
+		private List<MenuInfo> GetWithPermissions(string roleId)
 		{
 			List<MenuInfo> menus = menuMapper.FindALL();
-			List<int> permissions = (roleId.HasValue) ? permissionsMapper.FindByRole(roleId.Value) : new List<int>(0);
+			List<int> permissions = !string.IsNullOrEmpty(roleId) ? permissionsMapper.FindByRole(roleId) : new List<int>(0);
 
 			foreach (MenuInfo menu in menus)
 			{
