@@ -111,11 +111,14 @@ function CopyTemp(name, Rcount, TempFieldsetLegend, applicantId) {
 
 // label for input[type=checkbox]
 function labelcheck(lab) {
-    if ($(lab).parent().prev().children().first().prop("checked")) {
-        $(lab).parent().prev().children().first().removeProp("checked");
-    } else {
-        $(lab).parent().prev().children().first().prop("checked", true);
-    }
+    // 点击对应的checkbox
+    $(lab).parent().parent().find("td>input[type=checkbox]").click();
+
+    //if ($(lab).parent().prev().children().first().prop("checked")) {
+    //    $(lab).parent().prev().children().first().removeProp("checked");
+    //} else {
+    //    $(lab).parent().prev().children().first().prop("checked", true);
+    //}
 }
 
 // 获取所有引用，并将引用Id设为对应checkbox的值
@@ -161,7 +164,7 @@ function view() {
         $("#dd_upload_view").dialog({ top: $(document).scrollTop() + 100 }).dialog("open");
         maxNumber = 0
         var imageCount = 0;
-      
+
         $.ajax({
             async: false,
             type: "Get",
@@ -255,7 +258,7 @@ function ddClose() {
 //上传方法
 function Add() {
     var ckcheckedlength = $("input:checked").length;
-    
+
     if (ckcheckedlength == 1) {
         thirdth = $("input:checked").parent().parent().find('td').eq(2);
         var RefModule = $("input:checked")[0].parentNode.children[2].value;
@@ -407,4 +410,33 @@ function NextPic() {
     if (current > maxNumber)
         current = 1;
     shows(current);
+}
+
+// checkbox绑定onClick事件
+function InputBindonClick() {
+    $("div.container").find("fieldset:visible").find("input[type=checkbox]:visible").each(function (i, e) {
+        $(e).click(function () {
+            ChecboxSingleCheck(e);
+        });
+    });
+}
+
+// checkbox单选
+function ChecboxSingleCheck(inputObj) {
+    var inputchecboxs = $("div.container").find("fieldset:visible").find("input[type=checkbox]:checked");
+    
+    var inputObjState = $(inputObj)[0].checked;
+
+    if ($("input#cball")[0].checked == false) {
+        $(inputchecboxs).each(function (i, e) {
+            if ($(e)[0].checked == true) {
+                $(e).click();
+            }
+        });
+
+        // 点击需要被选中的按钮
+        if (inputObjState == true) {
+            $(inputObj).click();
+        }
+    }
 }
