@@ -95,17 +95,33 @@
     <Compile Include="Migrations\201611011134263_CreateParent.Designer.cs">
       <DependentUpon>201611011134263_CreateParent.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201611060359527_UseIdentity.cs" />
+    <Compile Include="Migrations\201611060359527_UseIdentity.Designer.cs">
+      <DependentUpon>201611060359527_UseIdentity.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201611060427119_Flow.cs" />
+    <Compile Include="Migrations\201611060427119_Flow.Designer.cs">
+      <DependentUpon>201611060427119_Flow.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs">
       <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
     </Compile>
+    <Compile Include="ModelConfigurations\ActionConfiguration.cs" />
     <Compile Include="ModelConfigurations\AssociatedEnterpriseConfiguration.cs" />
     <Compile Include="ModelConfigurations\BigEventConfiguration.cs" />
     <Compile Include="ModelConfigurations\CashFlowConfiguration.cs" />
     <Compile Include="ModelConfigurations\FinancialAffairsConfiguration.cs" />
+    <Compile Include="ModelConfigurations\FlowConfiguration.cs" />
+    <Compile Include="ModelConfigurations\FormConfiguration.cs" />
+    <Compile Include="ModelConfigurations\FormNodeConfiguration.cs" />
+    <Compile Include="ModelConfigurations\FormRoleConfiguration.cs" />
+    <Compile Include="ModelConfigurations\InstanceConfiguration.cs" />
     <Compile Include="ModelConfigurations\LiabilitiesConfiguration.cs" />
     <Compile Include="ModelConfigurations\LitigationConfigruation.cs" />
+    <Compile Include="ModelConfigurations\LogConfiguration.cs" />
     <Compile Include="ModelConfigurations\ManagerConfiguration.cs" />
     <Compile Include="ModelConfigurations\FamilyMemberConfiguration.cs" />
+    <Compile Include="ModelConfigurations\NodeConfiguration.cs" />
     <Compile Include="ModelConfigurations\OrganizationConfiguration.cs">
       <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
     </Compile>
@@ -260,6 +276,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201611011134263_CreateParent.resx">
       <DependentUpon>201611011134263_CreateParent.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611060359527_UseIdentity.resx">
+      <DependentUpon>201611060359527_UseIdentity.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611060427119_Flow.resx">
+      <DependentUpon>201611060427119_Flow.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

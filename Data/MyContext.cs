@@ -19,12 +19,19 @@
 
             modelBuilder.Configurations
                 .Add(new AppUserConfiguration())
+                .Add(new FlowConfiguration())
+                .Add(new NodeConfiguration())
+                .Add(new ActionConfiguration())
+                .Add(new InstanceConfiguration())
+                .Add(new LogConfiguration())
+                .Add(new FormConfiguration())
+                .Add(new FormNodeConfiguration())
+                .Add(new FormRoleConfiguration())
                 .Add(new OrganizationConfiguration())
                 .Add(new ManagerConfiguration())
                 .Add(new StockholderConfiguration())
                 .Add(new AssociatedEnterpriseConfiguration())
                 .Add(new FamilyMemberConfiguration())
-
                 .Add(new BigEventConfiguration())
                 .Add(new CashFlowConfiguration())
                 .Add(new InstitutionIncomeExpenditureConfiguration())

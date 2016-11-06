@@ -65,6 +65,19 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Entities\Flow\Action.cs" />
+    <Compile Include="Entities\Flow\ActionAllocationEnum.cs" />
+    <Compile Include="Entities\Flow\ActionTypeEnum.cs" />
+    <Compile Include="Entities\Flow\Flow.cs" />
+    <Compile Include="Entities\Flow\FormRole.cs" />
+    <Compile Include="Entities\Flow\Form.cs" />
+    <Compile Include="Entities\Flow\FormNode.cs" />
+    <Compile Include="Entities\Flow\FormStateEnum.cs" />
+    <Compile Include="Entities\Flow\Instance.cs" />
+    <Compile Include="Entities\Flow\InstanceStatusEnum.cs" />
+    <Compile Include="Entities\Flow\Log.cs" />
+    <Compile Include="Entities\Flow\LogOpinion.cs" />
+    <Compile Include="Entities\Flow\Node.cs" />
     <Compile Include="Entities\Identity\AppRole.cs" />
     <Compile Include="Entities\Identity\AppRoleManager.cs" />
     <Compile Include="Entities\Identity\AppUserManager.cs" />
