@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace Core.Entities.Flow
+﻿namespace Core.Entities.Flow
 {
+    using System;
+
     public class Action : Entity
     {
         public string Name { get; set; }

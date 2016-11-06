@@ -144,7 +144,6 @@ namespace Data.Migrations
                 .ForeignKey("dbo.AspNetRoles", t => t.RoleId, cascadeDelete: true)
                 .Index(t => t.RoleId)
                 .Index(t => t.FormId);
-            
         }
         
         public override void Down()
