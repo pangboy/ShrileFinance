@@ -9,6 +9,9 @@
     using ViewModels.OrganizationViewModels;
     using ViewModels;
     using System.Linq;
+    using System.IO;
+    using System.Runtime.Serialization.Formatters.Binary;
+    using Core.Entities.Customers.Enterprise;
 
     public class OrganizationAppService
     {
@@ -45,16 +48,17 @@
 
             try
             {
-                var organizate = repository.Get(model.Base.Id);
-                //Mapper.Map(model.Base, organizate);
-               //// organizate.Managers.RemoveRange(0, organizate.Managers.Count);
-               // organizate.Managers.Clear();
-               // organizate.Shareholders.Clear();
-               // organizate.BigEvent.Clear();
-               // organizate.Litigation.Clear();
-               // organizate.AssociatedEnterprises.Clear();
-               // organizate = Mapper.Map(model, organizate);
+                //var organizate = repository.Get(model.Base.Id);
+                //// organizate.Managers.RemoveRange(0, organizate.Managers.Count);
+                // organizate.Managers.Clear();
+                // organizate.Shareholders.Clear();
+                // organizate.BigEvent.Clear();
+                // organizate.Litigation.Clear();
+                // organizate.AssociatedEnterprises.Clear();
+                // organizate = Mapper.Map(model, organizate);
+                // organizate.Managers.RemoveAt(0);
                 repository.Modify(customer);
+
                 repository.Commit();
             }
             catch (Exception ex)

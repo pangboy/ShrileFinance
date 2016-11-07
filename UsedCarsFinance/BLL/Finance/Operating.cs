@@ -91,7 +91,6 @@ namespace BLL.Finance
                     vehicle.EngineNo = operatingInfo.VehicleInfo.EngineNo;
                     vehicle.BuyCarPrice = operatingInfo.VehicleInfo.BuyCarPrice;
                     vehicle.RegisterCity = operatingInfo.VehicleInfo.RegisterCity;
-
                     result &= VehicleInfoMapper.Update(operatingInfo.Finance.FinanceId.Value, vehicle) > 0;
                 }
 

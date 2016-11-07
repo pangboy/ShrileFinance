@@ -15,6 +15,11 @@ namespace BLL.Finance
         /// <returns>添加结果</returns>
         public bool Add(BankInfo bankInfo)
         {
+            if (bankInfo == null)
+            {
+                return true;
+            }
+
             bankMapper.Insert(bankInfo);
             return bankInfo.BankId > 0;
         }

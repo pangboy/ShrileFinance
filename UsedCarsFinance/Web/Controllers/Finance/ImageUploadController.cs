@@ -1,14 +1,14 @@
-﻿using Models.Sys;
-using System.Data;
-using System.Net.Http;
-using System.Web.Http;
-using Web.Controllers.Sys;
-
-namespace Web.Controllers.Finance
+﻿namespace Web.Controllers.Finance
 {
+    using System.Data;
+    using System.Net.Http;
+    using System.Web.Http;
+    using Models.Sys;
+    using Web.Controllers.Sys;
+
     public class ImageUploadController : ApiController
     {
-        private readonly static BLL.Finance.ImageUpload imageUpload = new BLL.Finance.ImageUpload();
+        private static readonly BLL.Finance.ImageUpload ImageUploadInstance = new BLL.Finance.ImageUpload();
 
         /// <summary>
         /// 获取融资id所有文件
@@ -19,7 +19,7 @@ namespace Web.Controllers.Finance
         [HttpGet]
         public DataTable GetAll(int financeid)
         {
-            return imageUpload.ListByfinanceid(financeid);
+            return ImageUploadInstance.ListByfinanceid(financeid);
         }
 
         /// <summary>
@@ -30,7 +30,7 @@ namespace Web.Controllers.Finance
         [HttpGet]
         public DataTable GetAllRef(int financeid)
         {
-            return imageUpload.RefListByfinanceid(financeid);
+            return ImageUploadInstance.RefListByfinanceid(financeid);
         }
 
         /// <summary>
@@ -42,7 +42,7 @@ namespace Web.Controllers.Finance
         [HttpGet]
         public DataTable GetFiles(int ReferenceId)
         {
-            return imageUpload.GetFiles(ReferenceId);
+            return ImageUploadInstance.GetFiles(ReferenceId);
         }
 
         /// <summary>
@@ -53,7 +53,7 @@ namespace Web.Controllers.Finance
         [HttpDelete]
         public IHttpActionResult Delete(int referenceId)
         {
-            imageUpload.Delete(referenceId);
+            ImageUploadInstance.Delete(referenceId);
 
             return Ok();
         }
@@ -63,10 +63,10 @@ namespace Web.Controllers.Finance
         /// </summary>
         /// cais    16.04.08
         /// <param name="referenceId">标识</param>
-        /// <returns></returns>
+        /// <returns>引用</returns>
         public ReferenceInfo Get(int referenceId)
         {
-            return imageUpload.Get(referenceId);
+            return ImageUploadInstance.Get(referenceId);
         }
 
         /// <summary>
@@ -76,23 +76,21 @@ namespace Web.Controllers.Finance
         /// <param name="referencedId">被引用标识</param>
         /// <param name="referencedModule">被引用模块</param>
         /// <param name="referencedSid">被引用子标识</param>
-        /// <returns></returns>
+        /// <returns>引用</returns>
         public ReferenceInfo Get(int? referencedId, int? referencedModule, int? referencedSid = null)
         {
-            return imageUpload.Get(referencedId, referencedModule, referencedSid);
+            return ImageUploadInstance.Get(referencedId, referencedModule, referencedSid);
         }
-
-
 
         /// <summary>
         /// 修改引用
         /// </summary>
         /// cais    16.04.08
         /// <param name="referenceInfo">值</param>
-        /// <returns></returns>
+        /// <returns>修改结果</returns>
         public bool Put(ReferenceInfo referenceInfo)
         {
-            return imageUpload.Modify(referenceInfo);
+            return ImageUploadInstance.Modify(referenceInfo);
         }
 
         /// <summary>
@@ -104,13 +102,13 @@ namespace Web.Controllers.Finance
         [HttpGet]
         public HttpResponseMessage Download(string references)
         {
-            FileInfo compressFile = imageUpload.Download(imageUpload.StringtoList(references));
+            FileInfo compressFile = ImageUploadInstance.Download(ImageUploadInstance.StringtoList(references));
 
-            imageUpload.DeleteFileByDate(compressFile);
+            ImageUploadInstance.DeleteFileByDate(compressFile);
 
-            FileController _fileController = new FileController();
+            ////FileController _fileController = new FileController();
 
-            HttpResponseMessage response = _fileController.GetDownloadResponse(compressFile);
+            HttpResponseMessage response = new FileController().GetDownloadResponse(compressFile);
 
             return response;
         }

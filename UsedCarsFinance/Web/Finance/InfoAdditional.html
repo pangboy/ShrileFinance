@@ -1,0 +1,247 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>信息补充</title>
+    <meta charset="utf-8" />
+    <link href="../Content/easyui/themes/bootstrap/easyui.css" rel="stylesheet" />
+    <link href="../Content/easyui/themes/icon.css" rel="stylesheet" />
+    <link href="../Content/form-bootstrap.css" rel="stylesheet" />
+    <script src="../Scripts/jquery/jquery.js"></script>
+    <script src="../Scripts/easyui/jquery.easyui.js"></script>
+    <script src="../Scripts/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../Scripts/usedcars.js"></script>
+    <script>
+        uc.form = new UCForm("#ff");
+        var query = $.extend(uc.GetParams(), parent.flow.InstanceData);
+
+        $(function () {
+            Init();
+        });
+        function Init() {
+            //合并URL参数和流程参数
+            LoadBankInfo(query.FinanceId);
+            LoadBrand();
+            LoadFinanceData(query.FinanceId);
+            $("input[name=FinanceId]").val(query.FinanceId);
+            // 还款账户
+            BankInfo(query);
+        }
+
+        function BankInfo(query) {
+            // 还款账户
+            $.ajax({
+                method: "GET",
+                async: true,
+                url: "../api/Applicant/Option",
+                data: { financeId: query.FinanceId },
+                statusCode: {
+                    200: function (data) {
+                        if (data) {
+                            $("input[textboxname = 'ApplicantName']").textbox("setValue", data.Name);
+                            $("input[name='ApplicantId']").val(data.ApplicantId);
+                        }
+                    }
+                }
+            });
+        }
+
+        // 加载银行信息
+        function LoadBankInfo(financeId) {
+            $.ajax({
+                method: "GET",
+                async: true,
+                url: "../api/Finance/LoanBankInfoLoad",
+                data: { financeId: financeId },
+                statusCode: {
+                    200: function (data) {
+                    if (data.length > 0) {
+                        // 加载放款账号银行信息
+                            $(data).each(function (i, e) {
+                                if (e.ApplicantId != undefined) {
+                                    $("#ApplicantInfo").form("load", e);
+                                }
+                            });
+                        }
+                    }
+                }
+            });
+        }
+
+            // 加载融资信息
+            function LoadFinanceData(financeId) {
+                uc.form.LoadForm({
+                    async: false,
+                    params: { financeId: financeId },
+                    url: "../api/Finance/Get",
+                    onLoadSuccess: function (data) {
+                        // 加载车辆信息
+                        uc.form.Load(data.VehicleInfo, "#finance_ff");
+                        // 加载车辆品牌等信息
+                        $("select[comboname='MakeCode']").combobox("unselect", data.VehicleInfo.MakeCode).combobox("select", data.VehicleInfo.MakeCode);
+                        $("select[comboname='FamilyCode']").combobox("select", data.VehicleInfo.FamilyCode);
+                        $("select[comboname='VehicleKey']").combobox("select", data.VehicleInfo.VehicleKey);
+                    }
+                });
+            }
+            // 验证数据
+            function ValidData() {
+                //申请信息验证
+                if (!$("#ff").form("validate")) {
+                    // $.messager.show({ msg: "请填写剩下的必填内容!" });
+
+                    return false;
+                }
+
+                return true;
+            }
+
+            // 构建数据
+            function BuildData() {
+                var bankInfo = $("#bankInfo").serializeJson();
+                var CarInfo = $("#carInfo").serializeJson();
+                var creditInfo = null;
+                var applicantInfo = $("#ApplicantInfo").serializeJson();
+                var value = $.extend({
+                    BankInfos: [creditInfo, applicantInfo],
+                    VehicleInfo: CarInfo,
+                    Finance: $("input[name=FinanceId]").serializeJson()//query.FinanceId
+                }, $("input[name=FinanceId]").val());
+
+                var result = {};
+                result["formName"] = "信息补充";
+                result["buildData"] = value;
+
+                return result;
+            }
+    </script>
+</head>
+<body>
+    <form id="ff" class="container">
+        <input name="FinanceId" type="hidden" />
+        <!--客户开户信息 -->
+        <fieldset id="ApplicantInfo">
+            <legend>还款账号信息</legend>
+            <div class="row">
+                <div class="col-6">
+                    <label>还款用户:</label>
+                    <input name="ApplicantId" type="hidden" />
+                    <input name="ApplicantName" class="easyui-textbox" data-options="required:true,readonly:true " />
+                </div>
+                <div class="col-6">
+                    <label>开户行:</label>
+                    <input name="BankName" class="easyui-textbox" data-options="required:true" />
+                </div>
+                <div class="col-6">
+                    <label>卡号:</label>
+                    <input name="BankCard" class="easyui-textbox" data-options="required:true" />
+                </div>
+            </div>
+        </fieldset>
+
+        <!-- 车辆信息 -->
+        <fieldset id="carInfo">
+            <legend>车辆信息</legend>
+            <div class="row">
+                <div class="col-6">
+                    <label>车辆品牌:</label>
+                    <select name="MakeCode" disabled class="easyui-combobox" data-options="
+                            onSelect:SelectModel,
+                            required:true,
+                            "></select>
+                </div>
+
+                <div class="col-6">
+                    <label>车辆系列:</label>
+                    <select name="FamilyCode" disabled class="easyui-combobox" data-options="
+                            onSelect:SelectCarConfigure,
+                            required:true"></select>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12">
+                    <label>车辆车型:</label>
+                    <select name="VehicleKey" disabled class="easyui-combobox" data-options="
+                            required:true,
+                            "></select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-6">
+                    <label>车牌号:</label>
+                    <input name="PlateNo" class="easyui-textbox" data-options="required:true,validType:'PlateNo'" />
+                </div>
+                <div class="col-6">
+                    <label>车架号:</label>
+                    <input name="FrameNo" class="easyui-textbox" data-options="required:true,validType:'length[17,17]'" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-6">
+                    <label>发动机号:</label>
+                    <input name="EngineNo" class="easyui-textbox" data-options="required:true" />
+                </div>
+
+                <div class="col-6">
+                    <label>行驶里程:</label>
+                    <input name="RunningMiles" class="easyui-textbox" data-options="required:true" />
+                    <span class="unit">公里</span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-6">
+                    <label>购买价格:</label>
+                    <input name="BuyCarPrice" class="easyui-textbox" data-options="validType:'Price',required:true" />
+                    <span class="unit">万元</span>
+                </div>
+
+                <div class="col-6">
+                    <label>上牌城市:</label>
+                    <input name="RegisterCity" class="easyui-textbox" data-options="required:true" />
+                </div>
+            </div>
+            <script>
+                // 加载车牌
+                function LoadBrand() {
+                    $.ajax({
+                        async: false,
+                        method: "GET",
+                        url: '../api/CarHome/GetBrand',
+                        statusCode: {
+                            200: function (data) {
+                                $("select[comboname='MakeCode']").combobox("loadData", data);
+                            }
+                        }
+                    });
+                }
+
+                // 品牌选择
+                function SelectModel(record) {
+                    $("select[comboname='FamilyCode']").combobox("clear");
+                    $("select[comboname='VehicleKey']").combobox("clear");
+                    $.ajax({
+                        async: false,
+                        data: { brandCode: record.value },
+                        method: 'GET',
+                        url: '../api/CarHome/GetSeries',
+                        statusCode: { 200: function (data) { $("select[comboname='FamilyCode']").combobox("loadData", data); } }
+                    });
+                }
+
+                // 系列选择
+                function SelectCarConfigure(record) {
+                    $("select[comboname='VehicleKey']").combobox("clear");
+                    $.ajax({
+                        async: false,
+                        data: { brandCode: $("select[comboname='MakeCode']").combobox("getValue"), seriesCode: record.value },
+                        method: 'GET',
+                        url: '../api/CarHome/GetVehicle',
+                        statusCode: { 200: function (data) { $("select[comboname='VehicleKey']").combobox("loadData", data); } }
+                    });
+                }
+            </script>
+        </fieldset>
+    </form>
+</body>
+</html>

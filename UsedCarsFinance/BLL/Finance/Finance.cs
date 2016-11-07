@@ -197,7 +197,6 @@ namespace BLL.Finance
                     vehicle.FactoryDate = vehicleInfo.FactoryDate;
                     vehicle.BuyCarYears = vehicleInfo.BuyCarYears;
                     vehicle.Color = vehicleInfo.Color;
-
                     result &= vehicleMapper.Update(finance.FinanceId.Value, vehicleInfo) > 0;
                 }
                 else
@@ -280,7 +279,7 @@ namespace BLL.Finance
 
             using (TransactionScope scope = new TransactionScope())
             {
-                if (vehicle != null)
+                if (vehicle != null && vehicleInfo != null)
                 {
                     // 车辆基本信息修改
                     vehicle.VehicleKey = vehicleInfo.VehicleKey ?? vehicle.VehicleKey;
@@ -295,7 +294,6 @@ namespace BLL.Finance
                     vehicle.FactoryDate = vehicleInfo.FactoryDate ?? vehicle.FactoryDate;
                     vehicle.BuyCarYears = vehicleInfo.BuyCarYears ?? vehicle.BuyCarYears;
                     vehicle.Color = vehicleInfo.Color ?? vehicle.Color;
-
                     result &= vehicleMapper.Update(finance.FinanceId.Value, vehicle) > 0;
                 }
 
@@ -304,7 +302,7 @@ namespace BLL.Finance
                 finance.OnepayInterestMoney = financeInfo.OnepayInterestMoney;
                 finance.ActualcashMoney = financeInfo.ActualcashMoney;
 
-                if (financeExtra != null)
+                if (financeExtra != null && financeExtraInfo!=null)
                 {
                     // 添加融资实际金额
                     financeExtra.ActualVehiclePrice = financeExtraInfo.ActualVehiclePrice;
@@ -322,11 +320,68 @@ namespace BLL.Finance
 
                 if (bankList != null)
                 {
-                    foreach (var bank in bankList)
-                    {
-                        bank.FinanceId = finance.FinanceId.Value;
-                        result &= _bankInfo.Add(bank);
-                    }
+                    bankList.ForEach(delegate(BankInfo bank) {
+                        if (bank != null)
+                        {
+                            bank.FinanceId = finance.FinanceId.Value;
+                            result &= _bankInfo.Add(bank);
+                        }
+                    });
+                }
+
+                if (result)
+                    scope.Complete();
+            }
+
+            return result;
+        }
+        /// <summary>
+        /// 信息补充
+        /// </summary>
+        /// yand    16.11.02
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public bool ModifyInfoAdditional(OperatingInfo value)
+        {
+            bool result = true;
+            var _bankInfo = new Bank();
+
+            var financeInfo = value.Finance;
+            var bankList = value.BankInfos;
+            var vehicleInfo = value.VehicleInfo;
+
+            FinanceExtraInfo financeExtra = new FinanceExtra().Get(financeInfo.FinanceId.Value);
+            VehicleInfo vehicle = new Vehicle().Get(financeInfo.FinanceId.Value);
+
+            using (TransactionScope scope = new TransactionScope())
+            {
+                if (vehicle != null && vehicleInfo != null)
+                {
+                    // 车辆基本信息修改
+                    vehicle.VehicleKey = vehicleInfo.VehicleKey ?? vehicle.VehicleKey;
+                    vehicle.BuyCarPrice = vehicleInfo.BuyCarPrice ?? vehicle.BuyCarPrice;
+                    vehicle.RegisterCity = vehicleInfo.RegisterCity ?? vehicle.RegisterCity;
+                    vehicle.SallerName = vehicleInfo.SallerName ?? vehicle.SallerName;
+                    vehicle.PlateNo = vehicleInfo.PlateNo ?? vehicle.PlateNo;
+                    vehicle.FrameNo = vehicleInfo.FrameNo ?? vehicle.FrameNo;
+                    vehicle.EngineNo = vehicleInfo.EngineNo ?? vehicle.EngineNo;
+                    vehicle.RegisterDate = vehicleInfo.RegisterDate ?? vehicle.RegisterDate;
+                    vehicle.RunningMiles = vehicleInfo.RunningMiles ?? vehicle.RunningMiles;
+                    vehicle.FactoryDate = vehicleInfo.FactoryDate ?? vehicle.FactoryDate;
+                    vehicle.BuyCarYears = vehicleInfo.BuyCarYears ?? vehicle.BuyCarYears;
+                    vehicle.Color = vehicleInfo.Color ?? vehicle.Color;
+                    result &= vehicleMapper.Update(financeInfo.FinanceId.Value, vehicle) > 0;
+                }
+
+                if (bankList != null)
+                {
+                    bankList.ForEach(delegate (BankInfo bank) {
+                        if (bank != null)
+                        {
+                            bank.FinanceId = financeInfo.FinanceId.Value;
+                            result &= _bankInfo.Add(bank);
+                        }
+                    });
                 }
 
                 if (result)

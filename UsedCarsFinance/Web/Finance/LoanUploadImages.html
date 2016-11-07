@@ -23,6 +23,7 @@
         }
 
         $(function () {
+            // 获取流程参数
             var query = $.extend(uc.GetParams(), parent.flow.InstanceData);
 
             // 切换页面状态
@@ -33,6 +34,9 @@
 
             //加载页面时，必须这句，不然上传框样式会有问题
             setTimeout(InitDetePic(0, ReferenceIdstr), 10);
+
+            // 单选
+            InputBindonClick();
         })
 
         // 加载数据
@@ -101,6 +105,7 @@
         function ValidData() {
             return true;
         }
+
         // 构建数据
         function BuildData() {
             var value = {};
