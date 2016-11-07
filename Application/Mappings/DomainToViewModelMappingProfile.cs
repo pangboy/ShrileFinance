@@ -2,31 +2,38 @@
 {
     using AutoMapper;
     using ViewModels.OrganizationViewModels;
+    using Core.Entities.Customers.Enterprise;
+    using Core.Entities.Produce;
+    using ViewModels.ProduceViewModel;
 
     public class DomainToViewModelMappingProfile : Profile
     {
         public DomainToViewModelMappingProfile()
         {
-            CreateMap< Core.Entities.Customers.Enterprise.Organization,OrganizationViewModel>();
-            CreateMap<Core.Entities.Customers.Enterprise.AssociatedEnterprise,AssociatedEnterpriseViewModel>();
-            CreateMap<Core.Entities.Customers.Enterprise.OrganizationParent,ParentViewModel>();
-            CreateMap<Core.Entities.Customers.Enterprise.OrganizationProperties,PropertiesViewModel>();
-            CreateMap<Core.Entities.Customers.Enterprise.OrganizationState,StateViewModel >();
-            CreateMap<Core.Entities.Customers.Enterprise.Manager,ManagerViewModel>();
-            CreateMap<Core.Entities.Customers.Enterprise.FinancialAffairs, FinancialAffairsViewModel>();
-            CreateMap<Core.Entities.Customers.Enterprise.Organization,BaseViewModel>();
-            CreateMap<Core.Entities.Customers.Enterprise.Stockholder,StockholderViewModel>();
-            CreateMap<Core.Entities.Customers.Enterprise.Organization,OrganizationViewModel>();
-            CreateMap<Core.Entities.Customers.Enterprise.OrganizationContact,ContactViewModel>();
-            CreateMap<Core.Entities.Customers.Enterprise.FamilyMember,FamilyMemberViewModel>();
+            CreateMap<Organization,OrganizationViewModel>();
+            CreateMap<AssociatedEnterprise,AssociatedEnterpriseViewModel>();
+            CreateMap<OrganizationParent,ParentViewModel>();
+            CreateMap<OrganizationProperties,PropertiesViewModel>();
+            CreateMap<OrganizationState,StateViewModel >();
+            CreateMap<Manager,ManagerViewModel>();
+            CreateMap<FinancialAffairs, FinancialAffairsViewModel>();
+            CreateMap<Organization,BaseViewModel>();
+            CreateMap<Stockholder,StockholderViewModel>();
+            CreateMap<Organization,OrganizationViewModel>();
+            CreateMap<OrganizationContact,ContactViewModel>();
+            CreateMap<FamilyMember,FamilyMemberViewModel>();
 
-            CreateMap<Core.Entities.Customers.Enterprise.CashFlow, CashFlowViewModel>();
-            CreateMap<Core.Entities.Customers.Enterprise.Liabilities, LiabilitiesViewModel>();
-            CreateMap<Core.Entities.Customers.Enterprise.Litigation, LitigationViewModel>();
-            CreateMap<Core.Entities.Customers.Enterprise.BigEvent,BigEventViewModel>();
-            CreateMap<Core.Entities.Customers.Enterprise.Profit,ProfitViewModel > ();
-            CreateMap<Core.Entities.Customers.Enterprise.InstitutionIncomeExpenditure, InstitutionIncomeExpenditureViewModel>();
-            CreateMap<Core.Entities.Customers.Enterprise.InstitutionLiabilities, InstitutionLiabilitiesViewModel>();
+            CreateMap<CashFlow, CashFlowViewModel>();
+            CreateMap<Liabilities, LiabilitiesViewModel>();
+            CreateMap<Litigation, LitigationViewModel>();
+            CreateMap<BigEvent,BigEventViewModel>();
+            CreateMap<Profit,ProfitViewModel > ();
+            CreateMap<InstitutionIncomeExpenditure, InstitutionIncomeExpenditureViewModel>();
+            CreateMap<InstitutionLiabilities, InstitutionLiabilitiesViewModel>();
+
+            CreateMap<Produce, ProduceViewModel>();
+            CreateMap<FinancingItem, FinancingItemViewModel>();
+            CreateMap<FinancingProject, FinancingProjectViewModel>();
         }
     }
 }

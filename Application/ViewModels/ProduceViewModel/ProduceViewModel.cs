@@ -1,16 +1,9 @@
-﻿namespace Core.Entities.Produce
+﻿namespace Application.ViewModels.ProduceViewModel
 {
     using System;
-    using System.Collections.Generic;
-    using Interfaces;
 
-    public class Produce : Entity, IAggregateRoot
+    public class ProduceViewModel
     {
-        public Produce()
-        {
-            CreatedDate = DateTime.Now;
-        }
-
         /// <summary>
         /// 产品代码
         /// </summary>
@@ -100,6 +93,5 @@
         /// <summary>
         /// 每个产品对应的融资项
         /// </summary>
-        public virtual ICollection<FinancingItem> FinancingItems { get; set; }
     }
 }

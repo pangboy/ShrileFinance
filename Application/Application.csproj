@@ -85,10 +85,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FinancingProjectAppService.cs" />
     <Compile Include="OrganizationAppService.cs" />
-    <Compile Include="LawsuitAppService.cs" />
     <Compile Include="Mappings\DomainToViewModelMappingProfile.cs" />
     <Compile Include="Mappings\ViewModelToDomainMappingProfile.cs" />
+    <Compile Include="ProduceAppService.cs" />
     <Compile Include="Startup\Startup.Autofac.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
@@ -116,12 +117,16 @@
     <Compile Include="ViewModels\OrganizationViewModels\StockholderViewModel.cs" />
     <Compile Include="ViewModels\OrganizationViewModels\ParentViewModel.cs" />
     <Compile Include="ViewModels\OrganizationViewModels\ValidAttribute.cs" />
-    <Compile Include="ViewModels\LitigationViewModels\LitigationViewModel.cs" />
     <Compile Include="ViewModels\OrganizationViewModels\InstitutionIncomeExpenditureViewModel.cs">
       <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
     </Compile>
     <Compile Include="ViewModels\OrganizationViewModels\InstitutionLiabilitiesViewModel.cs" />
     <Compile Include="ViewModels\PagedListViewModel.cs" />
+    <Compile Include="ViewModels\ProduceViewModel\FinancingProjectViewModel.cs" />
+    <Compile Include="ViewModels\ProduceViewModel\FinancingItemViewModel.cs" />
+    <Compile Include="ViewModels\ProduceViewModel\FinancingItemListViewModel.cs" />
+    <Compile Include="ViewModels\ProduceViewModel\ProduceListViewModel.cs" />
+    <Compile Include="ViewModels\ProduceViewModel\ProduceViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Core\Core.csproj">

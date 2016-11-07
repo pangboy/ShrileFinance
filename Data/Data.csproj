@@ -95,12 +95,17 @@
     <Compile Include="Migrations\201611011134263_CreateParent.Designer.cs">
       <DependentUpon>201611011134263_CreateParent.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201611060907042_AddProduceModule.cs" />
+    <Compile Include="Migrations\201611060907042_AddProduceModule.Designer.cs">
+      <DependentUpon>201611060907042_AddProduceModule.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs">
       <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
     </Compile>
     <Compile Include="ModelConfigurations\AssociatedEnterpriseConfiguration.cs" />
     <Compile Include="ModelConfigurations\BigEventConfiguration.cs" />
     <Compile Include="ModelConfigurations\CashFlowConfiguration.cs" />
+    <Compile Include="ModelConfigurations\FinancingProjectConfigration.cs" />
     <Compile Include="ModelConfigurations\FinancialAffairsConfiguration.cs" />
     <Compile Include="ModelConfigurations\LiabilitiesConfiguration.cs" />
     <Compile Include="ModelConfigurations\LitigationConfigruation.cs" />
@@ -110,7 +115,9 @@
       <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
     </Compile>
     <Compile Include="ModelConfigurations\ParentConfigration.cs" />
+    <Compile Include="ModelConfigurations\FinancingItemConfigration.cs" />
     <Compile Include="ModelConfigurations\ProfitConfiguration.cs" />
+    <Compile Include="ModelConfigurations\ProduceConfigration.cs" />
     <Compile Include="ModelConfigurations\StockholderConfiguration.cs" />
     <Compile Include="ModelConfigurations\TypeConfigurationExtensions.cs" />
     <Compile Include="ModelConfigurations\AppUserConfiguration.cs" />
@@ -221,7 +228,9 @@
     </Compile>
     <Compile Include="Repositories\AppUserStore.cs" />
     <Compile Include="Repositories\BaseRepository.cs" />
+    <Compile Include="Repositories\FinancingProjectRepository.cs" />
     <Compile Include="Repositories\OrganizationRepository.cs" />
+    <Compile Include="Repositories\ProduceRepository.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Core\Core.csproj">
@@ -260,6 +269,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201611011134263_CreateParent.resx">
       <DependentUpon>201611011134263_CreateParent.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611060907042_AddProduceModule.resx">
+      <DependentUpon>201611060907042_AddProduceModule.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

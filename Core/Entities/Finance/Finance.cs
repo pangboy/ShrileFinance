@@ -1,8 +1,8 @@
 ﻿namespace Core.Entities.Finance
 {
     using System;
-    using Produce;
     using Interfaces;
+    using Produce;
 
     public class Finance : Entity, IAggregateRoot
     {

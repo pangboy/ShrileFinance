@@ -3,15 +3,10 @@
     using System;
     using AutoMapper;
     using Core.Interfaces.Repositories;
-    using System.Collections;
-    using System.Collections.Generic;
     using X.PagedList;
     using ViewModels.OrganizationViewModels;
     using ViewModels;
     using System.Linq;
-    using System.IO;
-    using System.Runtime.Serialization.Formatters.Binary;
-    using Core.Entities.Customers.Enterprise;
 
     public class OrganizationAppService
     {
@@ -22,12 +17,7 @@
             this.repository = repository;
         }
 
-        /// <summary>
-        /// 提交
-        /// </summary>
-        /// yand    16.10.25
-        /// <param name="model">实体</param>
-        public void Create(ViewModels.OrganizationViewModels.OrganizationViewModel model)
+        public void Create(OrganizationViewModel model)
         {
             var customer = Mapper.Map<Core.Entities.Customers.Enterprise.Organization>(model.Base);
 
@@ -36,11 +26,6 @@
             repository.Commit();
         }
 
-        /// <summary>
-        /// 修改
-        /// </summary>
-        /// yand    16.10.25
-        /// <param name="model">实体</param>
         public void Modify(OrganizationViewModel model)
         {
             var customer = Mapper.Map<Core.Entities.Customers.Enterprise.Organization>(model.Base);
@@ -66,13 +51,7 @@
             }
         }
 
-        /// <summary>
-        /// 根据ID获取客户信息
-        /// </summary>
-        /// yand    16.10.25
-        /// <param name="id">id</param>
-        /// <returns></returns>
-        public ViewModels.OrganizationViewModels.OrganizationViewModel Get(Guid id)
+        public OrganizationViewModel Get(Guid id)
         {
             Core.Entities.Customers.Enterprise.Organization customer = repository.Get(id);
 

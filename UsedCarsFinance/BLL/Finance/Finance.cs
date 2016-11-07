@@ -370,6 +370,11 @@ namespace BLL.Finance
                     vehicle.FactoryDate = vehicleInfo.FactoryDate ?? vehicle.FactoryDate;
                     vehicle.BuyCarYears = vehicleInfo.BuyCarYears ?? vehicle.BuyCarYears;
                     vehicle.Color = vehicleInfo.Color ?? vehicle.Color;
+
+                    vehicle.NewCarEngineNo = vehicleInfo.NewCarEngineNo ?? vehicleInfo.NewCarEngineNo;
+                    vehicle.NewCarFrameNo = vehicleInfo.NewCarFrameNo ?? vehicleInfo.NewCarFrameNo;
+                    vehicle.NewCarPlateNo = vehicleInfo.NewCarPlateNo ?? vehicleInfo.NewCarPlateNo;
+                    vehicle.Mileage = vehicleInfo.Mileage ?? vehicleInfo.Mileage;
                     result &= vehicleMapper.Update(financeInfo.FinanceId.Value, vehicle) > 0;
                 }
 

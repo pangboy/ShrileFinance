@@ -12,7 +12,7 @@
     <script type="text/javascript">
         uc.grid = new UCGrid("#dg");
         function BeforeLoad(param) {
-            param.ProductCodeOrName = $("#ProductCodeOrName").textbox("getValue");
+            param.Search = $("#ProductCodeOrName").textbox("getValue");
         }
 
         function Reload() {
@@ -38,16 +38,13 @@
     </script>
 </head>
 <body>
-    <table id="dg" class="easyui-datagrid" data-options="
-        height: 630,
-        toolbar: '#tb',
-        rownumbers:true,
+    <table id="dg" class="easyui-datagrid" data-options="height:630,toolbar:'#tb',rownumbers:true,
         singleSelect: true,
         pagination: true,
         pageSize: 20,
         pageList: [10,20,30,40,50],
         method: 'GET',
-        url: '../api/Produce/GetAll',
+        url: '../api/Produce/GetPageList',
         loadMsg: '正在加载，请稍候...',
         onBeforeLoad: BeforeLoad
         ">
