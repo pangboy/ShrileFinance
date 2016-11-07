@@ -8,7 +8,7 @@
 
         public Guid NodeId { get; set; }
 
-        public Guid TransferId { get; set; }
+        public Guid? TransferId { get; set; }
 
         public ActionTypeEnum Type { get; set; }
 
