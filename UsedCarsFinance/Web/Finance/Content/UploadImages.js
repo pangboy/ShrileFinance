@@ -1,8 +1,14 @@
 ﻿var tempfs;
+
+// 担保人模版
 var GuaranteeTemp = "";
+
+// 联系人模版
 var ContactsTemp = "";
 
+// 全选
 var CAll = false;
+
 //全选、反选功能
 function checkall() {
     var objectCb = $("input[name='cb']");
@@ -89,6 +95,7 @@ function LoadFinanceList() {
     $("#ContactsDiv").append(ContactsTemp);
 }
 
+// 克隆模版
 function CopyTemp(name, Rcount, TempFieldsetLegend, applicantId) {
     tempfs.attr('id', name + Rcount);
     tempfs.find("input[name='ApplicantId']").val(applicantId);//赋值applicantid
@@ -102,12 +109,16 @@ function CopyTemp(name, Rcount, TempFieldsetLegend, applicantId) {
     }
 }
 
+// label for input[type=checkbox]
 function labelcheck(lab) {
-    if ($(lab).parent().prev().children().first().prop("checked")) {
-        $(lab).parent().prev().children().first().removeProp("checked");
-    } else {
-        $(lab).parent().prev().children().first().prop("checked", true);
-    }
+    // 点击对应的checkbox
+    $(lab).parent().parent().find("td>input[type=checkbox]").click();
+
+    //if ($(lab).parent().prev().children().first().prop("checked")) {
+    //    $(lab).parent().prev().children().first().removeProp("checked");
+    //} else {
+    //    $(lab).parent().prev().children().first().prop("checked", true);
+    //}
 }
 
 // 获取所有引用，并将引用Id设为对应checkbox的值
@@ -153,7 +164,7 @@ function view() {
         $("#dd_upload_view").dialog({ top: $(document).scrollTop() + 100 }).dialog("open");
         maxNumber = 0
         var imageCount = 0;
-      
+
         $.ajax({
             async: false,
             type: "Get",
@@ -191,11 +202,27 @@ function view() {
 
 // 初始化图片影像上传控件（count:uploadLimit，RefId:formDate.ReferenceId）
 function InitDetePic(count, RefId) {
+    // 文件格式扩展名
+    var fileTypeExts = {};
+
+    // 图片格式
+    fileTypeExts.PicTypeExts = "*.jpg;*.png;*.jpeg;*.gif;*.bmp;";
+
+    // office格式
+    fileTypeExts.WordTypeExts = "*.pdf;*.docx;*.docm;*.dotx;*.dotm;*.dot;*.html;*.rtf;*.mht;*.mhtml;*.xml;*.odt;";
+    fileTypeExts.ExcelTypeExts = "*.xl;*.xlsx;*.xlsm;*.xlsb;*.xlam;*.xltx;*.xls;*.xlt;*.xla;*.xlm;*.xlw;*odc;*.ods;";
+    fileTypeExts.PowerPointTypeExts = "*.pptx;*.ppt;*.pptm;*.ppsx;*.pps;*.ppsm;*.potx;*.pot;*.potm;*.odp;";
+
+    // 视频格式
+    fileTypeExts.VideoTypeExts = "*.mp4;*.wmv;*.avi;*.3gp;*.rm;*.rmvb;*.amv;*.dmv;";
+
+    var fileTypeExts = fileTypeExts.PicTypeExts + fileTypeExts.WordTypeExts + fileTypeExts.ExcelTypeExts + fileTypeExts.PowerPointTypeExts + fileTypeExts.VideoTypeExts;
+
     $("#pic_upload").uploadify({
         auto: false,
         buttonText: "选择",
         fileSizeLimit: "500MB",
-        fileTypeExts: "*.jpg;*.bmp;*.png;*.jpeg;*.rm;*.rmvb;*.mp4;*.wmv;*.avi;*.3gp;*.amv;*.dmv;",
+        fileTypeExts: fileTypeExts,
         height: 20,
         width: 60,
         queueID: "file_queue",
@@ -219,6 +246,7 @@ function InitDetePic(count, RefId) {
     $("#pic_upload").css("float", "left").find("object").css("left", "0");
 }
 
+// 上传窗体关闭
 function ddClose() {
     $('#dd_upload').dialog({
         closed: true,
@@ -230,7 +258,7 @@ function ddClose() {
 //上传方法
 function Add() {
     var ckcheckedlength = $("input:checked").length;
-    
+
     if (ckcheckedlength == 1) {
         thirdth = $("input:checked").parent().parent().find('td').eq(2);
         var RefModule = $("input:checked")[0].parentNode.children[2].value;
@@ -298,9 +326,16 @@ function getOneRef(financeId, RefSId, RefModule) {
     });
 }
 
+// 最大编号
 var maxNumber = 0;
+
+// 当前照片序号
 var current = 0;
+
+// 开始/结束
 var stopORstart = "stop";
+
+// 初始化照片查看
 function initpic() {
     if (maxNumber <= 1) {
         $("#BigPleft_absolute").hide();
@@ -319,6 +354,7 @@ function initpic() {
     autoChange();
 }
 
+// 显示
 function shows(index) {
     for (var i = 1; i <= maxNumber; i++) {
         document.getElementById("t" + i).style.backgroundColor = "white";
@@ -332,6 +368,7 @@ function shows(index) {
     }
 }
 
+// 启动自动播放
 function OpenAutoChange() {
     if (stopORstart == "start") {
         autoChange();
@@ -345,6 +382,7 @@ function OpenAutoChange() {
     }
 }
 
+// 每2秒自动播放下一张图片
 function autoChange() {
     shows(1);//默认加载第一张图片
     if (stopORstart == "start") {
@@ -358,15 +396,47 @@ function autoChange() {
     }
 }
 
+// 上一张图片
 function PreviousPic() {
     current--;
     if (current < 1)
         current = maxNumber;
     shows(current);
 }
+
+// 下一张图片
 function NextPic() {
     current++;
     if (current > maxNumber)
         current = 1;
     shows(current);
+}
+
+// checkbox绑定onClick事件
+function InputBindonClick() {
+    $("div.container").find("fieldset:visible").find("input[type=checkbox]:visible").each(function (i, e) {
+        $(e).click(function () {
+            ChecboxSingleCheck(e);
+        });
+    });
+}
+
+// checkbox单选
+function ChecboxSingleCheck(inputObj) {
+    var inputchecboxs = $("div.container").find("fieldset:visible").find("input[type=checkbox]:checked");
+    
+    var inputObjState = $(inputObj)[0].checked;
+
+    if ($("input#cball")[0].checked == false) {
+        $(inputchecboxs).each(function (i, e) {
+            if ($(e)[0].checked == true) {
+                $(e).click();
+            }
+        });
+
+        // 点击需要被选中的按钮
+        if (inputObjState == true) {
+            $(inputObj).click();
+        }
+    }
 }
