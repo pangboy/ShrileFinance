@@ -8,7 +8,7 @@
     {
         public Node()
         {
-            Actions = new HashSet<Action>();
+            Actions = new HashSet<FAction>();
         }
 
         public string Name { get; set; }
@@ -21,6 +21,6 @@
 
         public virtual AppRole Role { get; set; }
 
-        public virtual ICollection<Action> Actions { get; set; }
+        public virtual ICollection<FAction> Actions { get; set; }
     }
 }

@@ -3,7 +3,7 @@
     using System.Data.Entity.ModelConfiguration;
     using Core.Entities.Flow;
 
-    public class ActionConfiguration : EntityTypeConfiguration<Action>
+    public class ActionConfiguration : EntityTypeConfiguration<FAction>
     {
         public ActionConfiguration()
         {

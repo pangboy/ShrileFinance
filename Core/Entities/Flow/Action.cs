@@ -2,7 +2,7 @@
 {
     using System;
 
-    public class Action : Entity
+    public class FAction : Entity
     {
         public string Name { get; set; }
 

@@ -23,7 +23,7 @@
 
         public virtual Node Node { get; set; }
 
-        public virtual Action Action { get; set; }
+        public virtual FAction Action { get; set; }
 
         public virtual AppUser ProcessUser { get; set; }
     }
