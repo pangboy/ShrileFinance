@@ -1,0 +1,68 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title></title>
+    <title>产品列表页</title>
+    <link href="../Content/easyui/themes/gray/easyui.css" rel="stylesheet" />
+    <link href="../Content/easyui/themes/icon.css" rel="stylesheet" />
+    <script src="../Scripts/jquery/jquery.js"></script>
+    <script src="../Scripts/easyui/jquery.easyui.js"></script>
+    <script src="../Scripts/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../Scripts/usedcars.js"></script>
+    <script type="text/javascript">
+       // uc.grid = new UCGrid("#dg");
+       // function onBeforeEdit(index, row) {
+       //     debugger
+       //     row.editing = true;
+       //     $('#dg').datagrid('refreshRow', index);
+       // }
+       // function onAfterEdit(index,row){
+       //     row.editing = false;
+       //     $('#dg').datagrid('refreshRow', index);
+       // }
+       //function onCancelEdit(index, row) {
+       //     row.editing = false;
+       //     $('#dg').datagrid('refreshRow', index);
+        // }
+        function onEditor(index, field, value) {
+            $(this).datagrid('beginEdit', index);
+            var ed = $(this).datagrid('getEditor', { index: index, field: field });
+            $(ed.target).focus();
+        }
+    </script>
+</head>
+<body>
+    <table id="dg" class="easyui-datagrid" data-options="height: 630,
+           toolbar: '#tb',
+            rownumbers: true,
+            pagination: true,
+            pageSize: 20,
+            pageList: [10, 20, 30, 40, 50],
+            method: 'GET',
+            url: '../api/Produce/GetAll',
+            loadMsg: '正在加载，请稍候...',
+           onDblClickCell:onEditor
+           ">
+        <thead>
+            <tr>
+                <th data-options="field:'ProduceId',hidden:true">ProduceId</th>
+                <th data-options="field:'Code',width:100,align:'center',editor:{type:'text',options:{required:true}},">产品代码</th>
+                <th data-options="field:'Name',width:200,align:'center',editor:{type:'text',options:{required:true}}">产品名称</th>
+                <th data-options="field:'paymothed',width:200,align:'center',editor:{type:'text',options:{required:true}}">还款方式</th>
+                <th data-options="field:'MinFinancingRatio',width:120,align:'center'">融资比例下限</th>
+                <th data-options="field:'MaxFinancingRatio',width:120,align:'center'">融资比例上限</th>
+                <th data-options="field:'FinancingPeriods',width:120,align:'center'">融资期限（月）</th>
+                <th data-options="field:'InterestRate',width:120,align:'center'">名义利率（年）</th>
+                <th data-options="field:'Rate',width:120,align:'center'">费率（年）</th>
+                <th data-options="field:'CustomerBailRatio',width:120,align:'center'">客户保证金比例</th>
+                <th data-options="field:'FinalRatio',width:120,align:'center'">尾款比例</th>
+                <th data-options="field:'Remarks',width:200,align:'center'">描述</th>
+            </tr>
+        </thead>
+    </table>
+    <div id="tb">
+
+    </div>
+</body>
+</html>

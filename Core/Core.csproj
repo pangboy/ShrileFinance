@@ -94,12 +94,16 @@
     <Compile Include="Entities\Finance\Credit.cs" />
     <Compile Include="Entities\Finance\Finance.cs" />
     <Compile Include="Entities\Finance\FinanceStateEnum.cs" />
+    <Compile Include="Entities\Produce\FinancingProject.cs" />
     <Compile Include="Entities\Produce\Produce.cs" />
+    <Compile Include="Entities\Produce\FinancingItem.cs" />
     <Compile Include="Entities\Produce\Scheme.cs" />
     <Compile Include="Interfaces\IAggregateRoot.cs" />
     <Compile Include="Interfaces\IEntity.cs" />
+    <Compile Include="Interfaces\Repositories\IFinancingProjectRepository.cs" />
     <Compile Include="Interfaces\Repositories\IOrganizationRepository.cs" />
     <Compile Include="Interfaces\ILogger.cs" />
+    <Compile Include="Interfaces\Repositories\IProduceRepository.cs" />
     <Compile Include="Interfaces\Repositories\IRepository.cs" />
     <Compile Include="Interfaces\Repositories\IUnitOfWork.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">

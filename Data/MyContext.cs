@@ -24,7 +24,6 @@
                 .Add(new StockholderConfiguration())
                 .Add(new AssociatedEnterpriseConfiguration())
                 .Add(new FamilyMemberConfiguration())
-
                 .Add(new BigEventConfiguration())
                 .Add(new CashFlowConfiguration())
                 .Add(new InstitutionIncomeExpenditureConfiguration())
@@ -33,7 +32,10 @@
                 .Add(new LitigationConfigruation())
                 .Add(new ProfitConfiguration())
                 .Add(new FinancialAffairsConfiguration())
-                .Add(new ParentConfigration());
+                .Add(new ParentConfigration())
+                .Add(new FinancingItemConfigration())
+                .Add(new FinancingProjectConfigration())
+                .Add(new ProduceConfigration());
 
             base.OnModelCreating(modelBuilder);
         }

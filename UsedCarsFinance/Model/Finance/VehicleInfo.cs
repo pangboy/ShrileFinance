@@ -23,5 +23,10 @@ namespace Models.Finance
 		public string FactoryDate { get; set; }
 		public string BuyCarYears { get; set; }
 		public string Color { get; set; }
-	}
+
+        public string NewCarPlateNo { get; set; }
+        public string NewCarFrameNo { get; set; }
+        public string NewCarEngineNo { get; set; }
+        public decimal? Mileage { get; set; }
+    }
 }
