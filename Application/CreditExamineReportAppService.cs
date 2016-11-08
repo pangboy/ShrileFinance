@@ -2,9 +2,9 @@
 {
     using System;
     using AutoMapper;
-    using Core.Entities.CreditExamineReport;
+    using Core.Entities.Finance;
     using Core.Interfaces.Repositories;
-    using ViewModels.CreditExamineReportViewModels;
+    using ViewModels.CreditExamineViewModels;
 
     /// <summary>
     /// 信审报告
@@ -27,13 +27,13 @@
         /// </summary>
         /// <param name="id">信审标识</param>
         /// <returns>信审ViewModel</returns>
-        public CreditExamineReportViewModel Get(Guid id)
+        public CreditExamineViewModel Get(Guid id)
         {
             // 获取信审报告实体
             var creditExamineReport = repository.Get(id);
 
             // 实体转ViewModel
-            var creditExamineReportViewModel = Mapper.Map<CreditExamineReportViewModel>(creditExamineReport);
+            var creditExamineReportViewModel = Mapper.Map<CreditExamineViewModel>(creditExamineReport);
 
             return creditExamineReportViewModel;
         }
@@ -43,21 +43,21 @@
         /// </summary>
         /// <param name="financeId">融资标识</param>
         /// <returns>信审ViewModel</returns>
-        public CreditExamineReportViewModel GetByFinanceId(Guid financeId)
+        public CreditExamineViewModel GetByFinanceId(Guid financeId)
         {
             // 获取信审报告实体
             var creditExamineReport = repository.GetByFinanceId(financeId);
 
             // 实体转ViewModel
-            var creditExamineReportViewModel = Mapper.Map<CreditExamineReportViewModel>(creditExamineReport);
+            var creditExamineReportViewModel = Mapper.Map<CreditExamineViewModel>(creditExamineReport);
 
             return creditExamineReportViewModel;
         }
 
-        public void Create(CreditExamineReportViewModel value)
+        public void Create(CreditExamineViewModel value)
         {
             // ViewModel转实体
-            var creditExamineReport = Mapper.Map<CreditExamineReport>(value);
+            var creditExamineReport = Mapper.Map<CreditExamine>(value);
 
             repository.Create(creditExamineReport);
 
@@ -65,9 +65,9 @@
             repository.Commit();
         }
 
-        public void Modify(CreditExamineReportViewModel value)
+        public void Modify(CreditExamineViewModel value)
         {
-            var creditExamineReport = Mapper.Map<CreditExamineReport>(value);
+            var creditExamineReport = Mapper.Map<CreditExamine>(value);
 
             repository.Modify(creditExamineReport);
 

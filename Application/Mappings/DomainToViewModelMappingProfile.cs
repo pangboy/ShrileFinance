@@ -4,9 +4,9 @@
     using ViewModels.OrganizationViewModels;
     using Core.Entities.Customers.Enterprise;
     using Core.Entities.Produce;
-    using Core.Entities.CreditExamineReport;
+    using Core.Entities.Finance;
     using ViewModels.ProduceViewModel;
-    using ViewModels.CreditExamineReportViewModels;
+    using ViewModels.CreditExamineViewModels;
 
     public class DomainToViewModelMappingProfile : Profile
     {
@@ -38,7 +38,7 @@
             CreateMap<FinancingProject, FinancingProjectViewModel>();
 
             // 信审报告
-            CreateMap<CreditExamineReport,CreditExamineReportViewModel>();
+            CreateMap<CreditExamine,CreditExamineViewModel>();
         }
     }
 }

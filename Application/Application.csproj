@@ -100,8 +100,8 @@
     <Compile Include="ViewModels\AccountViewModels\ChangePasswordViewModel.cs" />
     <Compile Include="ViewModels\AccountViewModels\LoginViewModel.cs" />
     <Compile Include="ViewModels\AccountViewModels\RegisterViewModel.cs" />
-    <Compile Include="ViewModels\CreditExamineReportViewModels\CreditExamineReportValid.cs" />
-    <Compile Include="ViewModels\CreditExamineReportViewModels\CreditExamineReportViewModel.cs" />
+    <Compile Include="ViewModels\CreditExamineViewModels\CreditExamineValid.cs" />
+    <Compile Include="ViewModels\CreditExamineViewModels\CreditExamineViewModel.cs" />
     <Compile Include="ViewModels\OrganizationViewModels\BigEventViewModel.cs" />
     <Compile Include="ViewModels\OrganizationViewModels\CashFlowViewModel.cs" />
     <Compile Include="ViewModels\OrganizationViewModels\FamilyMemberViewModel.cs" />

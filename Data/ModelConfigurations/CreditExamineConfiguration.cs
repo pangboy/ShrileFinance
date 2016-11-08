@@ -2,11 +2,11 @@
 {
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.ModelConfiguration;
-    using Core.Entities.CreditExamineReport;
+    using Core.Entities.Finance;
 
-    public class CreditExamineReportConfiguration : EntityTypeConfiguration<CreditExamineReport>
+    public class CreditExamineConfiguration : EntityTypeConfiguration<CreditExamine>
     {
-        public CreditExamineReportConfiguration()
+        public CreditExamineConfiguration()
         {
             // 信审标识
             HasKey(m => m.Id);

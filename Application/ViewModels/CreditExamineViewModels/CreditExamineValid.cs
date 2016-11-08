@@ -1,4 +1,4 @@
-﻿namespace Application.ViewModels.CreditExamineReportViewModels
+﻿namespace Application.ViewModels.CreditExamineViewModels
 {
     using System;
     using System.Collections.Generic;

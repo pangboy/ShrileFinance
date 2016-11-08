@@ -1,10 +1,10 @@
 ﻿namespace Data.Repositories
 {
     using Core.Interfaces.Repositories;
-    using Core.Entities.CreditExamineReport;
+    using Core.Entities.Finance;
     using System;
 
-    public class CreditExamineReportRepository:BaseRepository<CreditExamineReport>,ICreditExamineReportRepository
+    public class CreditExamineReportRepository:BaseRepository<CreditExamine>,ICreditExamineReportRepository
     {
         private readonly MyContext context;
 
@@ -18,7 +18,7 @@
         /// </summary>
         /// <param name="financeId">融资标识</param>
         /// <returns>信审实体</returns>
-        public CreditExamineReport GetByFinanceId(Guid financeId)
+        public CreditExamine GetByFinanceId(Guid financeId)
         {
             return null;
         }

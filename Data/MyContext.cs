@@ -36,7 +36,7 @@
                 .Add(new FinancingItemConfigration())
                 .Add(new FinancingProjectConfigration())
                 .Add(new ProduceConfigration())
-                .Add(new CreditExamineReportConfiguration());
+                .Add(new CreditExamineConfiguration());
 
             base.OnModelCreating(modelBuilder);
         }

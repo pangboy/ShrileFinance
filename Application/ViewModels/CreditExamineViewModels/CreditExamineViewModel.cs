@@ -1,4 +1,4 @@
-﻿namespace Application.ViewModels.CreditExamineReportViewModels
+﻿namespace Application.ViewModels.CreditExamineViewModels
 {
     using System;
     using System.ComponentModel.DataAnnotations;
@@ -6,7 +6,7 @@
     /// <summary>
     /// 信审报告
     /// </summary>
-    public class CreditExamineReportViewModel
+    public class CreditExamineViewModel
     {
         /// <summary>
         /// 融资标识

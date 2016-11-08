@@ -101,5 +101,10 @@
         /// 每个产品对应的融资项
         /// </summary>
         public virtual ICollection<FinancingItem> FinancingItems { get; set; }
+
+        /// <summary>
+        /// 每个产品对应的信审报告
+        /// </summary>
+        public virtual ICollection<Finance.CreditExamine> CreditExamines { get; set; }
     }
 }

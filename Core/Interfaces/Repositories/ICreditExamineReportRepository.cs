@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace Core.Interfaces.Repositories
 {
-    using Entities.CreditExamineReport;
+    using Entities.Finance;
 
     /// <summary>
     /// 信审报告仓储
     /// </summary>
-    public interface ICreditExamineReportRepository:IRepository<CreditExamineReport>
+    public interface ICreditExamineReportRepository:IRepository<CreditExamine>
     {
-        CreditExamineReport GetByFinanceId(Guid financeId);
+        CreditExamine GetByFinanceId(Guid financeId);
     }
 }

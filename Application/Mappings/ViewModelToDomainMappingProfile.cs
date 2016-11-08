@@ -4,11 +4,12 @@
     using Core.Entities;
     using Core.Entities.Customers.Enterprise;
     using Core.Entities.Produce;
-    using Core.Entities.CreditExamineReport;
+    using Core.Entities.Finance;
     using ViewModels.AccountViewModels;
+    using ViewModels.CreditExamineViewModels;
     using ViewModels.OrganizationViewModels;
     using ViewModels.ProduceViewModel;
-    using ViewModels.CreditExamineReportViewModels;
+
     public class ViewModelToDomainMappingProfile : Profile
     {
         public ViewModelToDomainMappingProfile()
@@ -34,13 +35,12 @@
             CreateMap<InstitutionIncomeExpenditureViewModel, InstitutionIncomeExpenditure>();
             CreateMap<InstitutionLiabilitiesViewModel, InstitutionLiabilities>();
 
-            CreateMap<ProduceViewModel,Produce>();
+            CreateMap<ProduceViewModel, Produce>();
             CreateMap<FinancingItemViewModel, FinancingItem>();
-            CreateMap<FinancingProjectViewModel,FinancingProject>();
+            CreateMap<FinancingProjectViewModel, FinancingProject>();
 
             // 信审报告
-            CreateMap<CreditExamineReportViewModel,CreditExamineReport>();
-
+            CreateMap<CreditExamineViewModel, CreditExamine>();
         }
     }
 }
