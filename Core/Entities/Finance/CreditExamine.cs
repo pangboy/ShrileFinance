@@ -25,26 +25,6 @@
         public string LicenseRegistration { get; set; }
 
         /// <summary>
-        /// 产品标识
-        /// </summary>
-        public Produce Produce { get; set; }
-
-        /// <summary>
-        /// 申请人标识
-        /// </summary>
-        public Guid ApplicationId { get; set; }
-
-        /// <summary>
-        /// 共同申请人标识
-        /// </summary>
-        public Guid CommoApplicationId { get; set; }
-
-        /// <summary>
-        /// 保证人标识
-        /// </summary>
-        public Guid GuarantorId { get; set; }
-
-        /// <summary>
         /// 客户类别
         /// </summary>
         public string CustomerCategory { get; set; }

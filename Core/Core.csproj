@@ -101,7 +101,7 @@
     <Compile Include="Entities\Produce\Scheme.cs" />
     <Compile Include="Interfaces\IAggregateRoot.cs" />
     <Compile Include="Interfaces\IEntity.cs" />
-    <Compile Include="Interfaces\Repositories\ICreditExamineReportRepository.cs" />
+    <Compile Include="Interfaces\Repositories\IFinanceRepository.cs" />
     <Compile Include="Interfaces\Repositories\IFinancingProjectRepository.cs" />
     <Compile Include="Interfaces\Repositories\IOrganizationRepository.cs" />
     <Compile Include="Interfaces\ILogger.cs" />

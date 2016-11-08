@@ -4,6 +4,7 @@
     using System.Data.Entity.ModelConfiguration.Conventions;
     using Microsoft.AspNet.Identity.EntityFramework;
     using ModelConfigurations;
+    using Core.Entities.Finance;
 
     public class MyContext : IdentityDbContext
     {

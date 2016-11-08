@@ -909,6 +909,7 @@
     <Compile Include="Controllers\Finance\CreditExamineReportController.cs" />
     <Compile Include="Controllers\Finance\FinanceController.cs" />
     <Compile Include="Controllers\Finance\ImageUploadController.cs" />
+    <Compile Include="Controllers\Finance\CreditExamineController.cs" />
     <Compile Include="Controllers\Flow\FlowController.cs" />
     <Compile Include="Controllers\Flow\FinanceScriptController.cs" />
     <Compile Include="Controllers\Flow\InstanceController.cs" />

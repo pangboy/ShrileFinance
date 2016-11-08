@@ -21,18 +21,6 @@
             // 牌照登记至
             Property(m => m.LicenseRegistration).HasMaxLength(20);
 
-            // 产品
-            //Property(m => m.Produce);
-
-            // 申请人标识
-            Property(m => m.ApplicationId);
-            
-            // 共同申请人标识
-            Property(m => m.CommoApplicationId);
-
-            // 保证人标识
-            Property(m => m.GuarantorId);
-
             // 客户类别
             Property(m => m.CustomerCategory).HasMaxLength(20);
 

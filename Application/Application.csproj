@@ -85,7 +85,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CreditExamineReportAppService.cs" />
+    <Compile Include="FinanceAppService.cs" />
     <Compile Include="FinancingProjectAppService.cs" />
     <Compile Include="OrganizationAppService.cs" />
     <Compile Include="Mappings\DomainToViewModelMappingProfile.cs" />

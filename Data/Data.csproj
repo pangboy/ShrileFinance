@@ -232,7 +232,7 @@
     <Compile Include="Repositories\FinancingProjectRepository.cs" />
     <Compile Include="Repositories\OrganizationRepository.cs" />
     <Compile Include="Repositories\ProduceRepository.cs" />
-    <Compile Include="Repositories\CreditExamineReportRepository.cs" />
+    <Compile Include="Repositories\FinanceRepository.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Core\Core.csproj">
