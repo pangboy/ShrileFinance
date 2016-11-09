@@ -128,7 +128,8 @@
     <Compile Include="ViewModels\PagedListViewModel.cs" />
     <Compile Include="ViewModels\ProduceViewModel\FinancingProjectViewModel.cs" />
     <Compile Include="ViewModels\ProduceViewModel\FinancingItemViewModel.cs" />
-    <Compile Include="ViewModels\ProduceViewModel\FinancingItemListViewModel.cs" />
+    <Compile Include="ViewModels\ProduceViewModel\FinancingProjectListViewModel.cs" />
+    <Compile Include="ViewModels\ProduceViewModel\PoundageViewModel.cs" />
     <Compile Include="ViewModels\ProduceViewModel\ProduceListViewModel.cs" />
     <Compile Include="ViewModels\ProduceViewModel\ProduceViewModel.cs" />
   </ItemGroup>

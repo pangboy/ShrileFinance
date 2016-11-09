@@ -187,13 +187,13 @@
     <Content Include="Finance\CreditExamine.html" />
     <Content Include="Finance\InfoAdditional.html" />
     <Content Include="Finance\Loan.html" />
+    <Content Include="Finance\NewFinanceEdit.html" />
     <Content Include="Finance\Operation.html" />
     <Content Include="Flow\FlowTest\Frame.html" />
     <Content Include="Flow\FlowTest\Test1.html" />
     <Content Include="Flow\FlowTest\Test2.html" />
     <Content Include="Flow\FlowTest\Test3.html" />
     <Content Include="Notice\NoticeList.html" />
-    <Content Include="Produce\test.html" />
     <Content Include="Scripts\dictionaryCode.js" />
     <Content Include="BankInfo\DictionaryCode\DictionaryCodeEdit.html" />
     <Content Include="BankInfo\DictionaryCode\DictionaryCodeList.html" />

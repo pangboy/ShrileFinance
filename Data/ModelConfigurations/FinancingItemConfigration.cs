@@ -1,5 +1,6 @@
 ﻿namespace Data.ModelConfigurations 
 {
+    using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.ModelConfiguration;
     using Core.Entities.Produce;
 
@@ -10,7 +11,9 @@
     {
         public FinancingItemConfigration()
         {
-            Property(m => m.Id);
+            HasKey(m => m.Id);
+            Property(m => m.Id).HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
+
             Property(m => m.Money);
             Property(m => m.IsEdit);
 

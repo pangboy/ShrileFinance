@@ -14,9 +14,14 @@ namespace Web.Controllers.Produce
             this.financingProjectAppService = financingProjectAppService;
         }
 
-        public List<FinancingItemListViewModel> GetAll()
+        public List<FinancingProjectListViewModel> GetAll()
         {
             return financingProjectAppService.GetAll();
+        }
+
+        public IEnumerable<FinancingProjectListViewModel> GetByIsFinancing(bool isFinancing)
+        {
+            return financingProjectAppService.GetByIsFinancing(isFinancing);
         }
     }
 }

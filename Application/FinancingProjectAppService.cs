@@ -31,16 +31,38 @@ namespace Application
             repository.Commit();
         }
 
-        public List<FinancingItemListViewModel> GetAll()
+        public List<FinancingProjectListViewModel> GetAll()
         {
             var financingProjectList = repository.GetAll();
-            List<FinancingItemListViewModel> List = new List<FinancingItemListViewModel>();
+            List<FinancingProjectListViewModel> List = new List<FinancingProjectListViewModel>();
             if (financingProjectList!=null)
             {
                 foreach (var financingProject in financingProjectList)
                 {
-                    FinancingItemListViewModel financinglist = new FinancingItemListViewModel()
+                    FinancingProjectListViewModel financinglist = new FinancingProjectListViewModel()
                     {
+                        Name = financingProject.Name,
+                        IsFinancing = financingProject.IsFinancing
+                    };
+
+                    List.Add(financinglist);
+                }
+            }
+
+            return List;
+        }
+
+        public IEnumerable<FinancingProjectListViewModel> GetByIsFinancing( bool isFinancing)
+        {
+           var financingProjectList = repository.GetByIsFinacing(isFinancing);
+            List<FinancingProjectListViewModel> List = new List<FinancingProjectListViewModel>();
+            if (financingProjectList != null)
+            {
+                foreach (var financingProject in financingProjectList)
+                {
+                    FinancingProjectListViewModel financinglist = new FinancingProjectListViewModel()
+                    {
+                        FinancingProjectId = financingProject.Id,
                         Name = financingProject.Name,
                         IsFinancing = financingProject.IsFinancing
                     };

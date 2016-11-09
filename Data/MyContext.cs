@@ -2,6 +2,7 @@
 {
     using System.Data.Entity;
     using System.Data.Entity.ModelConfiguration.Conventions;
+    using Core.Entities.Produce;
     using Microsoft.AspNet.Identity.EntityFramework;
     using ModelConfigurations;
 

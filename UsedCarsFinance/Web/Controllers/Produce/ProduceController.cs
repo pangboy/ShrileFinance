@@ -1,6 +1,7 @@
 ﻿namespace Web.Controllers.Produce
 {
     using System;
+    using System.Collections.Generic;
     using System.Web.Http;
     using Application;
     using Application.ViewModels.ProduceViewModel;
@@ -15,18 +16,38 @@
         }
 
        [HttpGet]
-        public ProduceViewModel Get(Guid id)
+        public IHttpActionResult Get(Guid id)
         {
-            return produceAppService.Get(id);
+             var produce = produceAppService.Get(id);
+
+            return Ok(produce);
+        }
+
+        public IHttpActionResult GetAll()
+        {
+            var produce = produceAppService.GetAll();
+
+            return Ok(produce);
+        }
+
+        public IHttpActionResult GetByCode(string code)
+        {
+            var proudce = produceAppService.GetByCode(code);
+
+            return Ok(proudce);
         }
 
         public IHttpActionResult Create(ProduceViewModel value)
         {
+            produceAppService.Create(value);
+
             return Ok();
         }
 
         public IHttpActionResult Modify(ProduceViewModel value)
         {
+            produceAppService.Modify(value);
+
             return Ok();
         }
 
@@ -37,6 +58,7 @@
 
             return Ok(list);
         }
+
         //private readonly static BLL.Produce.Produce _produce = new BLL.Produce.Produce();
 
         ///// <summary>

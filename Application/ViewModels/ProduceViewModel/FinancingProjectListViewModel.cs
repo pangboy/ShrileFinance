@@ -2,7 +2,7 @@
 {
     using System;
 
-    public class FinancingItemListViewModel
+    public class FinancingProjectListViewModel
     {
         /// <summary>
         /// 融资项目标识

@@ -26,7 +26,7 @@
                 var row = uc.grid.GetSelected();
 
                 if (row) {
-                    url += "&ProduceId=" + row.ProduceId;
+                    url += "&ProduceId=" + row.Id;
                 }
                 else {
                     return;
@@ -50,18 +50,17 @@
         ">
         <thead>
             <tr>
-                <th data-options="field:'ProduceId',hidden:true">ProduceId</th>
+                <th data-options="field:'Id',hidden:true">ProduceId</th>
                 <th data-options="field:'Code',width:100,align:'center'">产品代码</th>
                 <th data-options="field:'Name',width:200,align:'center'">产品名称</th>
-                <th data-options="field:'paymothed',width:200,align:'center'">还款方式</th>
+                <th data-options="field:'RepaymentMethod',width:200,align:'center'">还款方式</th>
                 <th data-options="field:'MinFinancingRatio',width:120,align:'center'">融资比例下限</th>
                 <th data-options="field:'MaxFinancingRatio',width:120,align:'center'">融资比例上限</th>
                 <th data-options="field:'FinancingPeriods',width:120,align:'center'">融资期限（月）</th>
                 <th data-options="field:'InterestRate',width:120,align:'center'">名义利率（年）</th>
-                <th data-options="field:'Rate',width:120,align:'center'">费率（年）</th>
+                <th data-options="field:'CostRate',width:120,align:'center'">费率（年）</th>
                 <th data-options="field:'CustomerBailRatio',width:120,align:'center'">客户保证金比例</th>
                 <th data-options="field:'FinalRatio',width:120,align:'center'">尾款比例</th>
-                <th data-options="field:'Remarks',width:200,align:'center'">描述</th>
             </tr>
         </thead>
     </table>

@@ -61,7 +61,8 @@
 
         public void Remove(TEntity entity)
         {
-            Entities.Remove(entity);
+            Context.Entry(entity).State = EntityState.Deleted;
+            ////Entities.Remove(entity);
         }
 
         public int Commit()
