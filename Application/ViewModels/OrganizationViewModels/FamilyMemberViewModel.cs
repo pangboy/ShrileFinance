@@ -10,6 +10,7 @@
     public class FamilyMemberViewModel
     {
         public Guid Id { get; set; }
+
         /// <summary>
         /// 家族成员关系
         /// </summary>

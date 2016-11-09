@@ -61,7 +61,6 @@
                     }
                 }
             });
-            debugger
 
             // 加载ReviewInfo
             $.ajax({
@@ -80,7 +79,6 @@
                             if (data.ApprovalPrincipal != 0) {
                                 $("input[textboxname = 'ApprovalPrincipal']").textbox("setValue", data.ApprovalPrincipal);
                             }
-                            debugger
                             $("input[textboxname = 'AdvicefinanceMoney']").textbox("setValue", data.AdvicefinanceMoney);
                             $("input[textboxname = 'FinanceCost']").textbox("setValue", data.FinanceCost);
                             $("select[comboname = 'RepaymentDate']").combobox("select", data.RepaymentDate);
@@ -246,7 +244,6 @@
         // 验证数据
         function ValidData() {
             if (!$("#review_info").form("validate")) {
-                debugger
                  $.messager.show({ msg: "请填写剩下的必填内容!" });
                 return false;
             }

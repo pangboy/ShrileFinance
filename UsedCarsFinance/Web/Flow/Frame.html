@@ -262,7 +262,6 @@
                         }
                         else {
                             if (formId == frames[j].name) {
-                                debugger
                                 valid = frames[j].ValidData();
                                 if (valid == false) {
                                     top.$.messager.show({ msg: frames[j].BuildData().formName + "中必填项未填写" })

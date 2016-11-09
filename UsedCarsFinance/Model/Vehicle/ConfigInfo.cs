@@ -15,5 +15,10 @@ namespace Models.Vehicle
         public string VehicleCode { get; set; }
 
         public decimal ManufacturerGuidePrice { get; set; }
+
+        /// <summary>
+        /// 排量
+        /// </summary>
+        public string Displacement { get; set; }
     }
 }

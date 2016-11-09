@@ -11,7 +11,7 @@ namespace Data.Migrations
                 "dbo.PROD_FinancingItem",
                 c => new
                     {
-                        Id = c.Guid(nullable: false),
+                        Id = c.Guid(nullable: false, identity: true),
                         FinancingProjectId = c.Guid(nullable: false),
                         Money = c.Decimal(nullable: false, precision: 18, scale: 2),
                         IsEdit = c.Boolean(nullable: false),

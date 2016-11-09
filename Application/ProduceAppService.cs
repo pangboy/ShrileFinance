@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Application.ViewModels;
 using Application.ViewModels.ProduceViewModel;
@@ -12,10 +13,12 @@ namespace Application
     public class ProduceAppService
     {
         private readonly IProduceRepository repository;
+        private readonly IFinancingProjectRepository projectRepository;
 
-        public ProduceAppService(IProduceRepository repository)
+        public ProduceAppService(IProduceRepository repository, IFinancingProjectRepository projectRepository)
         {
             this.repository = repository;
+            this.projectRepository = projectRepository;
         }
         public ProduceViewModel Get(Guid id)
         {
@@ -27,25 +30,86 @@ namespace Application
 
         public void Create(ProduceViewModel value)
         {
-            var proudce = Mapper.Map<Produce>(value);
+            var produce = Mapper.Map<Produce>(value);
+            if (value.Poundage != null)
+            {
+                foreach (var item in value.Poundage)
+                {
+                    var financingItem = Mapper.Map<FinancingItem>(item);
+                    produce.FinancingItems.Add(financingItem);
+                }
+            }
 
-            repository.Create(proudce);
+            repository.Create(produce);
             repository.Commit();
         }
 
         public void Modify(ProduceViewModel value)
         {
-            var proudce = Mapper.Map<Produce>(value);
+            var produce = Mapper.Map<Produce>(value);
+            if (value.Poundage != null)
+            {
+                foreach (var item in value.Poundage)
+                {
+                    var financingItem = Mapper.Map<FinancingItem>(item);
+                    produce.FinancingItems.Add(financingItem);
+                }
+            }
 
-            repository.Modify(proudce);
+            repository.Modify(produce);
             repository.Commit();
+        }
+
+        public List<ProduceViewModel> GetAll()
+        {
+            var list = repository.GetAll();
+            List<ProduceViewModel> producelist = new List<ProduceViewModel>();
+            ProduceViewModel produce = new ProduceViewModel();
+
+            // 判断是否查询到产品信息
+            if (list != null)
+            {
+                foreach (var item in list)
+                {
+                    // 产品映射成对应的ViewModel
+                    var produceViewModel = Mapper.Map<ProduceViewModel>(item);
+
+                    producelist.Add(produce);
+                }
+            }
+            return producelist;
+        }
+
+        public ProduceViewModel GetByCode(string code)
+        {
+            var produce = repository.GetByCode(code);
+            var produceViewModel = Mapper.Map<ProduceViewModel>(produce);
+
+            if (produceViewModel.FinancingItems.Count > 0)
+            {
+                foreach (var financing in produceViewModel.FinancingItems)
+                {
+                    // 融资项否则为手续费项目
+                    if (financing.FinancingProject.IsFinancing == false)
+                    {
+                        produceViewModel.Poundage.Add(financing);
+                        produceViewModel.FinancingItems.Remove(financing);
+                    }
+                }
+            }
+
+            return produceViewModel;
         }
 
         public PagedListViewModel<ProduceListViewModel> GetPageList(string Serach, int pageNumber, int pageSize)
         {
+            if (Serach == null)
+            {
+                Serach = "";
+            }
             var pagedlist =
                 repository
-                .PagedList(m => m.Name == Serach, pageNumber, pageSize);
+                .PagedList(m => m.Name.Contains(Serach) || m.Code.Contains(Serach), pageNumber, pageSize);
 
             var list = pagedlist.Select(m =>
                 new ProduceListViewModel
@@ -56,6 +120,12 @@ namespace Application
                     CreatedDate = m.CreatedDate,
                     Name = m.Name,
                     RepaymentMethod = m.RepaymentMethod,
+                    MaxFinancingRatio = m.MaxFinancingRatio,
+                    MinFinancingRatio = m.MinFinancingRatio,
+                    CostRate = m.CostRate,
+                    FinalRatio = m.FinalRatio,
+                    InterestRate = m.InterestRate,
+                    CustomerBailRatio = m.CustomerBailRatio
                 });
 
             return new PagedListViewModel<ProduceListViewModel>(new PagedList<ProduceListViewModel>(pagedlist.GetMetaData(), list));

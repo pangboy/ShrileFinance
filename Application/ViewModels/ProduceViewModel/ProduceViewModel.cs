@@ -1,9 +1,12 @@
 ﻿namespace Application.ViewModels.ProduceViewModel
 {
     using System;
+    using System.Collections.Generic;
 
     public class ProduceViewModel
     {
+        public Guid Id { get; set; }
+
         /// <summary>
         /// 产品代码
         /// </summary>
@@ -15,7 +18,7 @@
         public string Name { get; set; }
 
         /// <summary>
-        /// 月利率
+        /// 名义利率
         /// </summary>
         public decimal InterestRate { get; set; }
 
@@ -60,11 +63,6 @@
         public decimal CustomerBailRatio { get; set; }
 
         /// <summary>
-        /// 数据添加时间
-        /// </summary>
-        public DateTime CreatedDate { get; set; }
-
-        /// <summary>
         /// 备注
         /// </summary>
         public string Remarks { get; set; }
@@ -93,5 +91,11 @@
         /// <summary>
         /// 每个产品对应的融资项
         /// </summary>
+        public virtual ICollection<FinancingItemViewModel> FinancingItems { get; set; }
+
+        /// <summary>
+        /// 每个产品对应的手续费
+        /// </summary>
+        public virtual ICollection<FinancingItemViewModel> Poundage { get; set; }
     }
 }

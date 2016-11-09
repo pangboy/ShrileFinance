@@ -55,7 +55,7 @@ namespace BLL.BankCredit
             fileCount = new DAL.BankCredit.ReportFilesMapper().FindFileCount(partnerName);
 
             List<ReportFilesInfo> reportFileInfo = new DAL.BankCredit.ReportFilesMapper().FindFileByPartnerName(partnerName);
-            if (reportFileInfo == null)
+            if (reportFileInfo.Count == 0)
             {
                 partnerName +="1".PadLeft(4, '0');
             }
@@ -63,14 +63,6 @@ namespace BLL.BankCredit
             {
                 partnerName+=((Convert.ToInt32(reportFileInfo[0].ReportTextName.Substring(22,4)))+1).ToString().PadLeft(4, '0');
             }
-            //if (fileCount >= 0 && fileCount < 9999)
-            //{
-            //    partnerName += (fileCount + 1).ToString().PadLeft(4, '0');
-            //}
-            //else
-            //{
-            //    return string.Empty;
-            //}
 
             messageName = partnerName + "00";
 
