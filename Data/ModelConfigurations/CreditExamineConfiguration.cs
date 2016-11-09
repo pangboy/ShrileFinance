@@ -118,7 +118,7 @@
             Property(m => m.FinalPersonId);
 
             // 设置表名
-            ToTable("PROD_CreditExamineReport");
+            ToTable("FANC_CreditExamine");
         }
     }
 }

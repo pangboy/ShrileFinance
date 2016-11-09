@@ -44,6 +44,11 @@
         /// <param name="value">信审ViewModel</param>
         public void EditCreditExamine(CreditExamineViewModel value)
         {
+            if (value == null || value.FinanceId == null)
+            {
+                return;
+            }
+
             // 获取该信审对应的融资实体
             var finance = repository.Get(value.FinanceId);
 

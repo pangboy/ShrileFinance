@@ -4,7 +4,6 @@
     using System.Data.Entity.ModelConfiguration.Conventions;
     using Microsoft.AspNet.Identity.EntityFramework;
     using ModelConfigurations;
-    using Core.Entities.Finance;
 
     public class MyContext : IdentityDbContext
     {
@@ -37,6 +36,7 @@
                 .Add(new FinancingItemConfigration())
                 .Add(new FinancingProjectConfigration())
                 .Add(new ProduceConfigration())
+                .Add(new FinanceConfigration())
                 .Add(new CreditExamineConfiguration());
 
             base.OnModelCreating(modelBuilder);

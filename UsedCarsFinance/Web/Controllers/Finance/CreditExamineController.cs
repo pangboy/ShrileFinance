@@ -24,7 +24,7 @@
         /// <param name="financeId">融资标识</param>
         /// <returns>信审ViewModel</returns>
         [HttpGet]
-        public CreditExamineViewModel Get(Guid financeId)
+        public CreditExamineViewModel GetCreditExamine(Guid financeId)
         {
             var creditExamineViewModel = financeAppService.GetCreditExamineByFinanceId(financeId);
 
@@ -36,7 +36,7 @@
         /// </summary>
         /// <param name="value">信审ViewModel</param>
         [HttpPost]
-        public IHttpActionResult Edit(CreditExamineViewModel value)
+        public IHttpActionResult EditCreditExamine(CreditExamineViewModel value)
         {
             if (!ModelState.IsValid)
             {
@@ -45,7 +45,7 @@
 
             financeAppService.EditCreditExamine(value);
 
-            return Ok();
+            return Ok(value);
         }
     }
 }
