@@ -3,10 +3,10 @@
     using AutoMapper;
     using Core.Entities;
     using Core.Entities.Customers.Enterprise;
-    using Core.Entities.Produce;
     using Core.Entities.Finance;
+    using Core.Entities.Produce;
     using ViewModels.AccountViewModels;
-    using ViewModels.CreditExamineViewModels;
+    using ViewModels.FinanceViewModels;
     using ViewModels.OrganizationViewModels;
     using ViewModels.ProduceViewModel;
 

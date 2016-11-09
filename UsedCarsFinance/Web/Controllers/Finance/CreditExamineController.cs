@@ -3,7 +3,7 @@
     using System;
     using System.Web.Http;
     using Application;
-    using Application.ViewModels.CreditExamineViewModels;
+    using Application.ViewModels.FinanceViewModels;
 
     public class CreditExamineController : ApiController
     {

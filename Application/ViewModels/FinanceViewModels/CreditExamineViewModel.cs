@@ -1,4 +1,4 @@
-﻿namespace Application.ViewModels.CreditExamineViewModels
+﻿namespace Application.ViewModels.FinanceViewModels
 {
     using System;
     using System.ComponentModel.DataAnnotations;

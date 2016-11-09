@@ -6,7 +6,7 @@
     using Core.Entities.Produce;
     using Core.Entities.Finance;
     using ViewModels.ProduceViewModel;
-    using ViewModels.CreditExamineViewModels;
+    using ViewModels.FinanceViewModels;
 
     public class DomainToViewModelMappingProfile : Profile
     {

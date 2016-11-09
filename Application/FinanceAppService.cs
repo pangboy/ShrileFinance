@@ -4,7 +4,7 @@
     using AutoMapper;
     using Core.Entities.Finance;
     using Core.Interfaces.Repositories;
-    using ViewModels.CreditExamineViewModels;
+    using ViewModels.FinanceViewModels;
 
     /// <summary>
     /// 融资
@@ -29,6 +29,11 @@
         /// <returns>信审ViewModel</returns>
         public CreditExamineViewModel GetCreditExamineByFinanceId(Guid financeId)
         {
+            if (financeId == null)
+            {
+                return null;
+            }
+
             // 获取信审报告实体
             var finance = repository.Get(financeId);
 

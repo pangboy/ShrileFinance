@@ -7,7 +7,7 @@
     /// <summary>
     /// 信审报告
     /// </summary>
-    public class CreditExamine : Entity, IAggregateRoot
+    public class CreditExamine : Entity
     {
         /// <summary>
         /// 递交资料渠道
