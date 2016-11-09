@@ -92,6 +92,7 @@
     <Compile Include="Entities\AppUser.cs" />
     <Compile Include="Entities\Finance\Contact.cs" />
     <Compile Include="Entities\Finance\Credit.cs" />
+    <Compile Include="Entities\Finance\CreditExamine.cs" />
     <Compile Include="Entities\Finance\Finance.cs" />
     <Compile Include="Entities\Finance\FinanceStateEnum.cs" />
     <Compile Include="Entities\Produce\FinancingProject.cs" />
@@ -100,6 +101,7 @@
     <Compile Include="Entities\Produce\Scheme.cs" />
     <Compile Include="Interfaces\IAggregateRoot.cs" />
     <Compile Include="Interfaces\IEntity.cs" />
+    <Compile Include="Interfaces\Repositories\IFinanceRepository.cs" />
     <Compile Include="Interfaces\Repositories\IFinancingProjectRepository.cs" />
     <Compile Include="Interfaces\Repositories\IOrganizationRepository.cs" />
     <Compile Include="Interfaces\ILogger.cs" />

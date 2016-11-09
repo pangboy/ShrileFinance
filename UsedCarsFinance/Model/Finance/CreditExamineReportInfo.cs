@@ -258,26 +258,4 @@ namespace Models.Finance
         /// </summary>
         public int FinanceId { get; set; }
     }
-
-
-
-    /// <summary>
-    /// 新信审标识
-    /// </summary>
-    public class CreditExamineReportInfos {
-        /// <summary>
-        /// 融资标识
-        /// </summary>
-        public int FinanceId { get; set; }
-
-        /// <summary>
-        /// 信审标识
-        /// </summary>
-        public int CreditExamineReportID { get; set; }
-
-
-
-
-
-    }
 }

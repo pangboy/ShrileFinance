@@ -36,7 +36,9 @@
                 .Add(new ParentConfigration())
                 .Add(new FinancingItemConfigration())
                 .Add(new FinancingProjectConfigration())
-                .Add(new ProduceConfigration());
+                .Add(new ProduceConfigration())
+                .Add(new FinanceConfigration())
+                .Add(new CreditExamineConfiguration());
 
             base.OnModelCreating(modelBuilder);
         }

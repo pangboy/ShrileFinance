@@ -1,5 +1,5 @@
 ﻿<!DOCTYPE html>
-<!--<html xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>信审报告</title>
@@ -678,9 +678,9 @@
         </fieldset>
     </form>
 </body>
-</html>-->
+</html>
 
-<html>
+<!--<html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>信审报告</title>
@@ -690,9 +690,10 @@
     <script src="../Scripts/jquery/jquery.js"></script>
     <script src="../Scripts/easyui/jquery.easyui.js"></script>
     <script src="../Scripts/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../BankInfo/JS/validType.js"></script>
     <script src="../Scripts/usedcars.js"></script>
 
-    <script>
+    <script type="text/javascript">
         $(function () {
             // 获取参数
             // var query = $.extend(uc.GetParams(), parent.flow.InstanceData);
@@ -715,14 +716,14 @@
                 var data = parent.flow.InstanceTempData.D3;
 
                 if (data) {
-                    uc.form.Load(data.CreditExamineReportInfo, "#from");
+                    uc.form.Load(data.CreditExamineReportInfo, "#CreditExamineReportFrom");
                 }
             }
         }
 
         //验证数据
         function ValidData() {
-            if (!$("#ff").form("validate")) {
+            if (!$("#CreditExamineReportFrom").form("validate")) {
                 return false;
             }
             return true;
@@ -744,40 +745,31 @@
             result["formName"] = "信审报告";
             result["buildData"] = value;
 
+
+            var data = $("form[id=CreditExamineReportFrom]").serializeJson();
+
+            debugger
             return result;
         }
-
-        // f7 由户籍所在地级联加载居住情况
-        function F7check1() {
-
-        }
-
-        // f7 由居住情况级联加载工作情况
-        function F7check2() {
-
-        }
-
     </script>
 </head>
 <body>
-    <form id="from" class="container">
+    <form id="CreditExamineReportFrom" class="container">
         <h1 style="text-align:center">信审报告</h1>
-        <!--头-->
         <fieldset id="f0">
             <div class="row">
                 <div class="col-12">
                     <label>递交资料渠道:</label>
-                    <input name="" class="easyui-textbox" />
+                    <input name="SubmitDataChannel" class="easyui-textbox" data-options="validType:['AN','length[1,200]'],required:true" />
                 </div>
             </div>
-
             <div class="row">
                 <div class="col-12">
                     <span>牌照登记至：</span>
-                    <input name="" class="" type="checkbox" /><span onclick="$(this).prev().click()">承租人名下</span>&nbsp;&nbsp;&nbsp;&nbsp;
-                    <input name="" class="" type="checkbox" /><span onclick="$(this).prev().click()">渠道个人名下</span>&nbsp;&nbsp;&nbsp;&nbsp;
-                    <input name="" class="" type="checkbox" /><span onclick="$(this).prev().click()">渠道企业名下</span>&nbsp;&nbsp;&nbsp;&nbsp;
-                    <input name="" class="" type="checkbox" /><span onclick="$(this).prev().click()">晟融名下</span>
+                    <input name="LicenseRegistration" class="" type="radio" value="承租人名下" /><span onclick="$(this).prev().click()">承租人名下</span>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <input name="LicenseRegistration" class="" type="radio" value="渠道个人名下" /><span onclick="$(this).prev().click()">渠道个人名下</span>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <input name="LicenseRegistration" class="" type="radio" value="渠道企业名下" /><span onclick="$(this).prev().click()">渠道企业名下</span>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <input name="LicenseRegistration" class="" type="radio" checked value="晟融名下" /><span onclick="$(this).prev().click()">晟融名下</span>
                 </div>
             </div>
         </fieldset>
@@ -786,12 +778,12 @@
             <legend>一：产品种类：</legend>
             <div class="row">
                 <div class="col-12">
-                    <input name="" class="" type="checkbox" /><span onclick="$(this).prev().click()">新车交易贷</span>&nbsp;&nbsp;&nbsp;&nbsp;
-                    <input name="" class="" type="checkbox" /><span onclick="$(this).prev().click()">二手车交易贷</span>&nbsp;&nbsp;&nbsp;&nbsp;
-                    <input name="" class="" type="checkbox" /><span onclick="$(this).prev().click()">车抵贷</span>&nbsp;&nbsp;&nbsp;&nbsp;
-                    <input name="" class="" type="checkbox" /><span onclick="$(this).prev().click()">押车贷</span>&nbsp;&nbsp;&nbsp;&nbsp;
-                    <input name="" class="" type="checkbox" /><span onclick="$(this).prev().click()">快速贷</span>&nbsp;&nbsp;&nbsp;&nbsp;
-                    <input name="" class="" type="checkbox" /><span onclick="$(this).prev().click()">以租代购</span>
+                    <input name="ProductCategorie" class="" type="radio" value="新车交易贷" disabled /><span onclick="$(this).prev().click()">新车交易贷</span>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <input name="ProductCategorie" class="" type="radio" value="二手车交易贷" disabled /><span onclick="$(this).prev().click()">二手车交易贷</span>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <input name="ProductCategorie" class="" type="radio" value="车抵贷" disabled /><span onclick="$(this).prev().click()">车抵贷</span>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <input name="ProductCategorie" class="" type="radio" value="押车贷" disabled /><span onclick="$(this).prev().click()">押车贷</span>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <input name="ProductCategorie" class="" type="radio" value="快速贷" disabled /><span onclick="$(this).prev().click()">快速贷</span>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <input name="ProductCategorie" class="" type="radio" checked value="以租代购" disabled /><span onclick="$(this).prev().click()">以租代购</span>
                 </div>
             </div>
         </fieldset>
@@ -801,11 +793,11 @@
             <div class="row">
                 <div class="col-12">
                     <label>编号:</label>
-                    <input name="" class="easyui-textbox" data-options="validType:[]" />
+                    <input name="ProductNumber" class="easyui-textbox" data-options="validType:[],required:false,readonly:true" />
                 </div>
                 <div class="col-12">
                     <label>详解:</label>
-                    <input name="" class="easyui-textbox" data-options="validType:[],multiline:true,height:100" />
+                    <input name="ProductExplain" class="easyui-textbox" data-options="validType:[],required:false,multiline:true,height:100,readonly:true" />
                 </div>
             </div>
         </fieldset>
@@ -815,18 +807,18 @@
             <div class="row">
                 <div class="col-6">
                     <label>姓名:</label>
-                    <input name="" class="easyui-textbox" data-options="validType:[]" />
+                    <input name="LesseeName" class="easyui-textbox" data-options="validType:[],required:false,readonly:true" />
                 </div>
                 <div class="col-6">
                     <label>身份证:</label>
-                    <input name="" class="easyui-textbox" data-options="validType:['Identity']" />
+                    <input name="LesseeIdCard" class="easyui-textbox" data-options="validType:[],required:false,readonly:true" />
                 </div>
             </div>
 
             <div class="row">
                 <div class="col-6">
                     <label>手机号:</label>
-                    <input name="" class="easyui-textbox" data-options="validType:['Mobile']" />
+                    <input name="LesseeMobile" class="easyui-textbox" data-options="validType:[],required:false,readonly:true" />
                 </div>
             </div>
         </fieldset>
@@ -836,18 +828,18 @@
             <div class="row">
                 <div class="col-6">
                     <label>共借人① 姓名:</label>
-                    <input name="" class="easyui-textbox" data-options="validType:[]" />
+                    <input name="CommonBorrwerName1" class="easyui-textbox" data-options="validType:[],required:false,readonly:true" />
                 </div>
-                <div class="col-6">
+                <div class="col-6" style="display:none">
                     <label>共借人②姓名:</label>
-                    <input name="" class="easyui-textbox" data-options="validType:[]" />
+                    <input name="CommonBorrwerName2" class="easyui-textbox" data-options="validType:[],required:false,readonly:true" />
                 </div>
             </div>
 
-            <div class="row">
+            <div class="row" style="display:none">
                 <div class="col-6">
                     <label>共借人③姓名:</label>
-                    <input name="" class="easyui-textbox" data-options="validType:[]" />
+                    <input name="CommonBorrwerName3" class="easyui-textbox" data-options="validType:[],required:false,readonly:true" />
                 </div>
             </div>
         </fieldset>
@@ -857,18 +849,18 @@
             <div class="row">
                 <div class="col-6">
                     <label>保证人① 姓名:</label>
-                    <input name="" class="easyui-textbox" data-options="validType:[]" />
+                    <input name="Guarantor1" class="easyui-textbox" data-options="validType:[],required:false,readonly:true" />
                 </div>
-                <div class="col-6">
+                <div class="col-6" style="display:none">
                     <label>保证人②姓名:</label>
-                    <input name="" class="easyui-textbox" data-options="validType:[]" />
+                    <input name="Guarantor2" class="easyui-textbox" data-options="validType:['AN','length[1,20]'],required:false" />
                 </div>
             </div>
 
-            <div class="row">
+            <div class="row" style="display:none">
                 <div class="col-6">
                     <label>保证人③姓名:</label>
-                    <input name="" class="easyui-textbox" data-options="validType:[]" />
+                    <input name="Guarantor3" class="easyui-textbox" data-options="validType:['AN','length[1,20]'],required:false" />
                 </div>
             </div>
         </fieldset>
@@ -877,14 +869,14 @@
             <legend>六、客户类别：</legend>
             <div class="row">
                 <div class="col-12">
-                    <input name="" class="" type="checkbox" /><span onclick="$(this).prev().click()">优良职业</span>&nbsp;&nbsp;&nbsp;&nbsp;
-                    <input name="" class="" type="checkbox" /><span onclick="$(this).prev().click()">标准受薪</span>&nbsp;&nbsp;&nbsp;&nbsp;
-                    <input name="" class="" type="checkbox" /><span onclick="$(this).prev().click()">自雇人士</span>&nbsp;&nbsp;&nbsp;&nbsp;
-                    <input name="" class="" type="checkbox" /><span onclick="$(this).prev().click()">自由职业</span>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <input name="CustomerCategory" class="" type="radio" value="优良职业" /><span onclick="$(this).prev().click()">优良职业</span>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <input name="CustomerCategory" class="" type="radio" value="标准受薪" /><span onclick="$(this).prev().click()">标准受薪</span>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <input name="CustomerCategory" class="" type="radio" value="自雇人士" /><span onclick="$(this).prev().click()">自雇人士</span>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <input name="CustomerCategory" class="" type="radio" checked value="自由职业" /><span onclick="$(this).prev().click()">自由职业</span>
                 </div>
                 <div class="col-12">
                     <label>具体行业</label>
-                    <input name="" class="easyui-textbox" data-options="validType:[]" />
+                    <input name="DetailedIndustry" class="easyui-textbox" data-options="validType:['AN','length[1,20]'],required:true" />
                 </div>
             </div>
         </fieldset>
@@ -894,7 +886,7 @@
             <div class="row">
                 <div class="col-6">
                     <label>户籍所在地：</label>
-                    <select name="" class="easyui-combobox  combobox-f combo-f textbox-f" data-options="value:'',editable:false,onSelect:F7check1">
+                    <select name="CensusRegisterSeat" class="easyui-combobox  combobox-f combo-f textbox-f" data-options="value:'',required:true,editable:false,onSelect:F7check1">
                         <option value="">　</option>
                         <option value="本地户籍">本地户籍</option>
                         <option value="异地户籍">异地户籍</option>
@@ -902,15 +894,119 @@
                 </div>
                 <div class="col-6">
                     <label>居住情况：</label>
-                    <input name="" class="easyui-combobox  combobox-f combo-f textbox-f" data-options="value:'',editable:false,onSelect:F7check2" />
+                    <input name="LivingSituation" class="easyui-combobox  combobox-f combo-f textbox-f" data-options="validType:[],value:'',editable:false,onSelect:F7check2" />
                 </div>
             </div>
             <div class="row">
                 <div class="col-6">
                     <label>工作情况：</label>
-                    <input name="" class="easyui-combobox  combobox-f combo-f textbox-f" data-options="value:'',editable:false" />
+                    <input name="WorkingCondition" class="easyui-combobox  combobox-f combo-f textbox-f" data-options="value:'',editable:false" />
                 </div>
             </div>
+            <script type="text/javascript">
+                // 由户籍所在地级联加载居住情况
+                function F7check1() {
+                    // 获取户籍所在地
+                    var CensusText = $("fieldset[id=f7]").find("select[comboname = CensusRegisterSeat]").combobox('getText');
+
+                    // 加载居住情况
+                    if (CensusText == '本地户籍')
+                    {
+                        $("fieldset[id=f7]").find("input[comboname = LivingSituation]").combobox({
+                            value: '',
+                            editable: false,
+                            required: true,
+                            onSelect:F7check2,
+                            valueField: 'text',
+                            textField: 'value',
+                            data: [{
+                                text: '本地居住',
+                                value: '本地居住'
+                            }, {
+                                text: '本地房产',
+                                value: '本地房产'
+                            }]
+                        });
+                    }
+                    else if(CensusText=='异地户籍')
+                    {
+                        $("fieldset[id=f7]").find("input[comboname = LivingSituation]").combobox({
+                            value: '',
+                            editable: false,
+                            required: true,
+                            onSelect: F7check2,
+                            valueField: 'text',
+                            textField: 'value',
+                            data: [{
+                                text: '本地房产满一年',
+                                value: '本地房产满一年'
+                            },{
+                                text: '本地居住',
+                                value: '本地居住'
+                            }]
+                        });
+                    }
+                }
+
+                // 由居住情况级联加载工作情况
+                function F7check2() {
+                    // 获取户籍所在地
+                    var CensusText = $("fieldset[id=f7]").find("select[comboname = CensusRegisterSeat]").combobox('getText');
+
+                    // 获取居住情况
+                    var LiveText = $("fieldset[id=f7]").find("input[comboname = LivingSituation]").combobox('getText');
+
+                    // 加载工作情况
+                    if (CensusText == '本地户籍') {
+                        if (LiveText == '本地居住' || LiveText == '本地房产')
+                        {
+                            $("fieldset[id=f7]").find("input[comboname = WorkingCondition]").combobox({
+                                value: '',
+                                editable: false,
+                                required: true,
+                                valueField: 'text',
+                                textField: 'value',
+                                data: [{
+                                    text: '本地工作',
+                                    value: '本地工作'
+                                }]
+                            });
+                        }
+                    }
+                    else if (CensusText == '异地户籍') {
+                        if (LiveText == '本地房产满一年') {
+                            $("fieldset[id=f7]").find("input[comboname = WorkingCondition]").combobox({
+                                value: '',
+                                editable: false,
+                                required: true,
+                                valueField: 'text',
+                                textField: 'value',
+                                data: [{
+                                    text: '本地工作',
+                                    value: '本地工作'
+                                }]
+                            });
+                        }
+                        else if (LiveText == '本地居住')
+                        {
+                            $("fieldset[id=f7]").find("input[comboname = WorkingCondition]").combobox({
+                                value: '',
+                                editable: false,
+                                required: true,
+                                valueField: 'text',
+                                textField: 'value',
+                                data: [{
+                                    text: '本地社保或本地工资流水满一年',
+                                    value: '本地社保或本地工资流水满一年'
+                                },{
+                                    text: '本地注册公司满一年或持股满半年',
+                                    value: '本地注册公司满一年或持股满半年'
+                                }]
+                            });
+                        }
+                    }
+                }
+            </script>
         </fieldset>
 
         <fieldset id="f8">
@@ -918,21 +1014,45 @@
             <div class="row">
                 <div class="col-6">
                     <label>收入来源类型：</label>
-                    <input name="" type="checkbox" /><span onclick="$(this).prev().click()">经营</span>
+                    <input id="IncomeSourceBusiness" name="IncomeSourceBusiness" type="checkbox" onclick="f8input(this)" value="1" /><span onclick="$(this).prev().click()">经营</span>
                     <span style="margin-left:40px;"></span>
-                    <input name="" type="checkbox" /><span onclick="$(this).prev().click()">工资</span>
+                    <input id="IncomeSourceWage" name="IncomeSourceWage" type="checkbox" onclick="f8input(this)" checked value="1" /><span onclick="$(this).prev().click()">工资</span>
                 </div>
                 <div class="col-6">
                     <label>月收入：</label>
-                    <input name="" class="easyui-textbox" />
+                    <input name="MonthlyIncome" class="easyui-textbox" data-options="validType:['N','length[1,20]'],required:true" />
                 </div>
             </div>
             <div class="row">
                 <div class="col-12">
                     <label>核算依据：</label>
-                    <input class="easyui-textbox" data-options="validType:[],multiline:true,height:100" />
+                    <input name="AccountingBasis" class="easyui-textbox" data-options="validType:['AN','length[1,20]'],required:true,multiline:true,height:100" />
                 </div>
             </div>
+            <script type="text/javascript">
+                // 收入来源类型至少选择一种
+                function f8input(Obj)
+                {
+                    if (Obj.checked == false)
+                    {
+                        // 另一个复选框
+                        var OtherObj;
+
+                        // 经营
+                        if (Obj.id == 'IncomeSourceBusiness') {
+                            OtherObj = $("fieldset[id=f8]").find("input[id=IncomeSourceWage]");
+                        }
+                            // 工资
+                        else if (Obj.id == 'IncomeSourceWage') {
+                            OtherObj = $("fieldset[id=f8]").find("input[id=IncomeSourceBusiness]");
+                        }
+
+                        if (OtherObj[0]!=undefined && OtherObj[0].checked == false) {
+                            OtherObj.click();
+                        }
+                    }
+                }
+            </script>
         </fieldset>
 
         <fieldset id="f9">
@@ -940,17 +1060,17 @@
             <div class="row">
                 <div class="col-6">
                     <label>网核价格：</label>
-                    <input name="" class="easyui-textbox" data-options="value:'000.00'" />
+                    <input name="NetnuclearPrice" class="easyui-textbox" data-options="value:'000.00',validType:['Amount'],required:true" />
                 </div>
                 <div class="col-6">
                     <label>核批价格：</label>
-                    <input name="" class="easyui-textbox" data-options="value:'000.00'" />
+                    <input name="NuclearGroupPrice" class="easyui-textbox" data-options="value:'000.00',validType:['Amount'],required:true" />
                 </div>
             </div>
             <div class="row">
                 <div class="col-6">
                     <label>终审额度：</label>
-                    <input name="" class="easyui-textbox" data-options="value:'000.00'" />
+                    <input name="FinalLine" class="easyui-textbox" data-options="value:'000.00',validType:['Amount'],required:true" />
                 </div>
             </div>
         </fieldset>
@@ -959,19 +1079,19 @@
             <legend>十、信用状况：</legend>
             <div class="row">
                 <div class="col-12">
-                    <input name="CreditCondition" class="" type="radio" /><span onclick="$(this).prev().click()">良好</span>
+                    <input name="CreditCondition" class="" type="radio" value="良好" /><span onclick="$(this).prev().click()">良好</span>
                     <span style="margin-left:40px;"></span>
-                    <input name="CreditCondition" class="" type="radio" /><span onclick="$(this).prev().click()">90+</span>
+                    <input name="CreditCondition" class="" type="radio" value="90+" /><span onclick="$(this).prev().click()">90+</span>
                     <span style="margin-left:40px;"></span>
-                    <input name="CreditCondition" class="" type="radio" /><span onclick="$(this).prev().click()">60+</span>
+                    <input name="CreditCondition" class="" type="radio" value="60+" /><span onclick="$(this).prev().click()">60+</span>
                     <span style="margin-left:40px;"></span>
-                    <input name="CreditCondition" class="" type="radio" /><span onclick="$(this).prev().click()">累6</span>
+                    <input name="CreditCondition" class="" type="radio" value="累6" /><span onclick="$(this).prev().click()">累6</span>
                     <span style="margin-left:40px;"></span>
-                    <input name="CreditCondition" class="" type="radio" /><span onclick="$(this).prev().click()">呆账</span>
+                    <input name="CreditCondition" class="" type="radio" checked value="呆账" /><span onclick="$(this).prev().click()">呆账</span>
                 </div>
                 <div class="col-12">
                     <label>特别说明：</label>
-                    <input name="" class="easyui-textbox" data-options="validType:[]" />
+                    <input name="SpecialInstructions" class="easyui-textbox" data-options="validType:['AN','length[1,20]'],required:true" />
                 </div>
             </div>
         </fieldset>
@@ -980,54 +1100,72 @@
             <legend>十一、保证金：</legend>
             <div class="row">
                 <div class="col-12">
-                    <input name="CreditCondition" class="" type="radio" /><span onclick="$(this).prev().click()">5%保证金</span>
+                    <input name="Margin1" class="" type="checkbox" value="_5保证金" onclick="f11MarginClick(this)" /><span onclick="$(this).prev().click()">5%保证金</span>
                     <span style="margin-left:40px;"></span>
-                    <input name="CreditCondition" class="" type="radio" /><span onclick="$(this).prev().click()">10%保证金</span>
+                    <input name="Margin2" class="" type="checkbox" value="_10保证金" onclick="f11MarginClick(this)" /><span onclick="$(this).prev().click()">10%保证金</span>
                 </div>
                 <div class="col-12">
                     <label>增加保证金原因：</label>
-                    <input name="" class="easyui-textbox" data-options="validType:[],multiline:true,height:100" />
+                    <input name="IncreaseMarginReson" class="easyui-textbox" data-options="validType:['AN','length[0,400]'],required:false,multiline:true,height:100" />
                 </div>
             </div>
+            <script type="text/javascript">
+                function f11MarginClick(Obj)
+                {
+                    var inputs = $("fieldset[id=f11]").find("input[name*=Margin]");
+
+                    if (inputs[0].checked == false && inputs[1].checked == false) {
+                        $("fieldset[id=f11]").find("input[textboxname=IncreaseMarginReson]").textbox({
+                            validType: ['AN', 'length[0,400]'],
+                            required: false,
+                            multiline: true,
+                            height: 100
+                        });
+                    }
+                    else {
+                        $("fieldset[id=f11]").find("input[textboxname=IncreaseMarginReson]").textbox({
+                            validType: ['AN', 'length[0,400]'],
+                            required: true,
+                            multiline: true,
+                            height: 100
+                        });
+                    }
+                }
+            </script>
         </fieldset>
 
         <fieldset id="f12">
             <legend>十二、年龄：</legend>
             <div class="row">
-                <div class="col-12">
-                    <input name="AgeRangeRd" class="" type="radio" onclick="f12Rd(this)" /><span onclick="$(this).prev().click()">20-28岁</span>
+                <div class="col-12"> 
+                    <input name="AgeRange" class="" type="radio" onclick="f12Rd(this)" value="20-28岁" /><span onclick="$(this).prev().click()">20-28岁</span>
                     <span style="margin-left:40px;"></span>
-                    <input name="AgeRangeRd" class="" type="radio" onclick="f12Rd(this)" /><span onclick="$(this).prev().click()">28-55岁</span>
+                    <input name="AgeRange" class="" type="radio" onclick="f12Rd(this)" value="28-55岁" /><span onclick="$(this).prev().click()">28-55岁</span>
                     <span style="margin-left:40px;"></span>
-                    <input name="AgeRangeRd" class="" type="radio" onclick="f12Rd(this)" /><span onclick="$(this).prev().click()">55-65岁</span>
+                    <input name="AgeRange" class="" type="radio" onclick="f12Rd(this)" value="55-65岁" /><span onclick="$(this).prev().click()">55-65岁</span>
                     <span style="margin-left:40px;"></span>
+                    <input name="AgeRange" class="" type="radio" onclick="f12RdOther()" checked value="其他" /><span onclick="$(this).prev().click()">其他</span>
 
-                    <input name="AgeRangeRd" class="" type="radio" onclick="f12RdOther()" /><span onclick="$(this).prev().click()">其他</span>
-                    <input name="AgeRangeText" class="easyui-textbox col-2" style="width:100px" data-options="validType:[],onChange:f12RdOther" />
+                    <input name="AgeRangeOther" class="easyui-textbox col-2" style="width:100px" data-options="validType:['AN','length[1,20]'],required:true" />
                 </div>
-                <input type="hidden" name="AgeRange" />
             </div>
             <script>
                 function f12Rd(obj) {
                     // 禁用“其他”输入框
-                    $("fieldset[id=f12]").find("input[textboxname=AgeRangeText]").textbox('setValue','').textbox("readonly",true);
-
-                    // 获取“其他”值
-                    var txtValue = $(obj).next().html();
-
-                    // 赋值
-                    $("fieldset[id=f12]").find("input[name = AgeRange]:hidden").val(txtValue);
+                    $("fieldset[id=f12]").find("input[textboxname=AgeRangeOther]").textbox({
+                        readonly: true,
+                        required: false,
+                        value:''
+                    });
                 }
 
+                // 其他
                 function f12RdOther() {
                     // 取消“其他”输入框的禁用
-                    $("fieldset[id=f12]").find("input[textboxname=AgeRangeText]").textbox("readonly", false);
-
-                    // 获取“其他”值
-                    var txtValue = $("fieldset[id=f12]").find("input[textboxname=AgeRangeText]").textbox("getValue");
-
-                    // 赋值
-                    $("fieldset[id=f12]").find("input[name = AgeRange]:hidden").val(txtValue);
+                    $("fieldset[id=f12]").find("input[textboxname=AgeRangeOther]").textbox({
+                        readonly: false,
+                        required: true,
+                    });
                 }
             </script>
         </fieldset>
@@ -1036,11 +1174,11 @@
             <legend> 十三、婚姻：</legend>
             <div class="row">
                 <div class="col-12">
-                    <input name="Marriage" class="" type="radio" value="已婚" /><span onclick="$(this).prev().click()">已婚</span>
+                    <input name="MarriageState" class="" type="radio" value="已婚" /><span onclick="$(this).prev().click()">已婚</span>
                     <span style="margin-left:40px;"></span>
-                    <input name="Marriage" class="" type="radio" value="离异" /><span onclick="$(this).prev().click()">离异</span>
+                    <input name="MarriageState" class="" type="radio" value="离异" /><span onclick="$(this).prev().click()">离异</span>
                     <span style="margin-left:40px;"></span>
-                    <input name="Marriage" class="" type="radio" value="单身" /><span onclick="$(this).prev().click()">单身</span>
+                    <input name="MarriageState" class="" type="radio" value="单身" checked /><span onclick="$(this).prev().click()">单身</span>
                 </div>
             </div>
         </fieldset>
@@ -1055,7 +1193,7 @@
                     <span style="margin-left:40px;"></span>
                     <input name="Live" class="" type="radio" value="租房" /><span onclick="$(this).prev().click()">租房</span>
                     <span style="margin-left:40px;"></span>
-                    <input name="Live" class="" type="radio" value="其它" /><span onclick="$(this).prev().click()">其它</span>
+                    <input name="Live" class="" type="radio" value="其它" checked /><span onclick="$(this).prev().click()">其它</span>
                 </div>
             </div>
         </fieldset>
@@ -1070,7 +1208,7 @@
                     <span style="margin-left:40px;"></span>
                     <input name="RealEstate" class="" type="radio" value="两套以上（含）" /><span onclick="$(this).prev().click()">两套以上（含）</span>
                     <span style="margin-left:40px;"></span>
-                    <input name="RealEstate" class="" type="radio" value="其它" /><span onclick="$(this).prev().click()">其它</span>
+                    <input name="RealEstate" class="" type="radio" value="其它" checked /><span onclick="$(this).prev().click()">其它</span>
                 </div>
             </div>
         </fieldset>
@@ -1083,7 +1221,7 @@
                     <span style="margin-left:40px;"></span>
                     <input name="Work" class="" type="radio" value="营业执照满3年" /><span onclick="$(this).prev().click()">营业执照满3年</span>
                     <span style="margin-left:40px;"></span>
-                    <input name="Work" class="" type="radio" value="其它" /><span onclick="$(this).prev().click()">其它</span>
+                    <input name="Work" class="" type="radio" value="其它" checked /><span onclick="$(this).prev().click()">其它</span>
                 </div>
             </div>
         </fieldset>
@@ -1097,7 +1235,7 @@
                     <span>需要家访：</span>
                     <input name="FamilyVisit" class="" type="radio" value="家访信息符合" /><span onclick="$(this).prev().click()">信息符合</span>
                     <span style="margin-left:20px;"></span>
-                    <input name="FamilyVisit" class="" type="radio" value="家访信息不符合" /><span onclick="$(this).prev().click()">信息不符合</span>
+                    <input name="FamilyVisit" class="" type="radio" value="家访信息不符合" checked /><span onclick="$(this).prev().click()">信息不符合</span>
                 </div>
             </div>
         </fieldset>
@@ -1107,7 +1245,7 @@
             <div class="row">
                 <div class="col-12">
                     <label>用途</label>
-                    <input name="" class="easyui-textbox" data-options="validType:[],multiline:true,height:100" />
+                    <input name="CapitalUse" class="easyui-textbox" data-options="validType:['AN','length[1,20]'],required:true,multiline:true,height:100" />
                 </div>
             </div>
         </fieldset>
@@ -1117,7 +1255,7 @@
             <div class="row">
                 <div class="col-12">
                     <label>电询</label>
-                    <input name="" class="easyui-textbox" data-options="validType:[],multiline:true,height:100" />
+                    <input name="CableInquiry" class="easyui-textbox" data-options="validType:['AN','length[1,20]'],required:true,multiline:true,height:100" />
                 </div>
             </div>
         </fieldset>
@@ -1127,7 +1265,7 @@
             <div class="row">
                 <div class="col-12">
                     <label>结论</label>
-                    <input name="" class="easyui-textbox" data-options="validType:[],multiline:true,height:100" />
+                    <input name="Conclusion" class="easyui-textbox" data-options="validType:['AN','length[1,20]'],required:true,multiline:true,height:100" />
                 </div>
             </div>
         </fieldset>
@@ -1136,39 +1274,34 @@
             <legend>调查意见</legend>
             <div class="row">
                 <div class="col-12">
-                    <input name="SurveyOpinionRd" class="" type="radio" onclick="f21Rd(this)" /><span onclick="$(this).prev().click()">通过</span>
-                    <span style="margin-left:40px;"></span>
-                    <input name="SurveyOpinionRd" class="" type="radio" onclick="f21Rd(this)" /><span onclick="$(this).prev().click()">建议通过</span>
-                    <span style="margin-left:40px;"></span>
-                    <input name="SurveyOpinionRd" class="" type="radio" onclick="f21Rd(this)" /><span onclick="$(this).prev().click()">例外通过</span>
-                    <span style="margin-left:40px;"></span>
+                    <input name="SurveyOpinion" class="" type="radio" onclick="f21Rd(this)" value="通过" /><span onclick="$(this).prev().click()">通过</span>
+                    <span style="margin-left:30px;"></span>
+                    <input name="SurveyOpinion" class="" type="radio" onclick="f21Rd(this)" value="建议通过" /><span onclick="$(this).prev().click()">建议通过</span>
+                    <span style="margin-left:30px;"></span>
+                    <input name="SurveyOpinion" class="" type="radio" onclick="f21Rd(this)" value="例外通过" /><span onclick="$(this).prev().click()">例外通过</span>
+                    <span style="margin-left:30px;"></span>
 
-                    <input name="SurveyOpinionRd" class="" type="radio" onclick="f21RdOther()" /><span onclick="$(this).prev().click()">拒单 原因</span>
-                    <input name="SurveyOpinionText" class="easyui-textbox col-2" style="width:500px" data-options="validType:[],onChange:f21RdOther" />
+                    <input name="SurveyOpinion" class="" type="radio" onclick="f21RdOther()" checked /><span onclick="$(this).prev().click()">拒单</span>&nbsp;&nbsp;&nbsp;
+                    <span>原因</span><input name="SurveyOpinionReson" class="easyui-textbox col-2" style="width:530px" data-options="validType:['AN','length[1,20]'],required:true" />
                 </div>
-                <input type="hidden" name="SurveyOpinion" />
             </div>
             <script>
                 function f21Rd(obj) {
                     // 禁用“拒单”输入框
-                    $("fieldset[id=f21]").find("input[textboxname=SurveyOpinionText]").textbox('setValue', '').textbox("readonly", true);
-
-                    // 获取“拒单”值
-                    var txtValue = $(obj).next().html();
-
-                    // 赋值
-                    $("fieldset[id=f21]").find("input[name = SurveyOpinion]:hidden").val(txtValue);
+                    $("fieldset[id=f21]").find("input[textboxname=SurveyOpinionReson]").textbox({
+                        readonly: true,
+                        required: false,
+                        value: ''
+                    });
                 }
 
                 function f21RdOther() {
                     // 取消“拒单”输入框的禁用
-                    $("fieldset[id=f21]").find("input[textboxname=SurveyOpinionText]").textbox("readonly", false);
-
-                    // 获取“拒单”值
-                    var txtValue = $("fieldset[id=f21]").find("input[textboxname=SurveyOpinionText]").textbox("getValue");
-
-                    // 赋值
-                    $("fieldset[id=f21]").find("input[name = SurveyOpinion]:hidden").val(txtValue);
+                    $("fieldset[id=f21]").find("input[textboxname=SurveyOpinionReson]").textbox({
+                        readonly: false,
+                        required: true,
+                        value: ''
+                    });
                 }
             </script>
         </fieldset>
@@ -1178,24 +1311,36 @@
             <div class="row">
                 <div class="col-6">
                     <label>初审人</label>
-                    <input name="" class="easyui-textbox" data-options="validType:[]" />
+                    <input name="TrialPerson" class="easyui-textbox" data-options="validType:['AN','length[1,20]'],required:false,readonly:true" />
+                    <input name="TrialPersonId" type="hidden" />
                 </div>
                 <div class="col-6">
                     <label>复审人</label>
-                    <input name="" class="easyui-textbox" data-options="validType:[]" />
+                    <input name="ReviewPerson" class="easyui-textbox" data-options="validType:['AN','length[1,20]'],required:false,readonly:true" />
+                    <input name="ReviewPersonId" type="hidden" />
                 </div>
-                </div>
+            </div>
             <div class="row">
                 <div class="col-6">
                     <label>审批人</label>
-                    <input name="" class="easyui-textbox" data-options="validType:[]" />
+                    <input name="ApprovePerson" class="easyui-textbox" data-options="validType:['AN','length[1,20]'],required:false,readonly:true" />
+                    <input name="ApprovePersonId" type="hidden" />
                 </div>
                 <div class="col-6">
                     <label>终审人</label>
-                    <input name="" class="easyui-textbox" data-options="validType:[]" />
+                    <input name="FinalPerson" class="easyui-textbox" data-options="validType:['AN','length[1,20]'],required:false,readonly:true" />
+                    <input name="FinalPersonId" type="hidden" />
                 </div>
-                </div>
+            </div>
         </fieldset>
+
+        <input type="hidden" name="FinanceId" placeholder="融资标识" />
+        <input type="hidden" name="CreditExamineReportID" placeholder="信审标识" />
+
+        <div style="text-align:center">
+            <button type="button" onclick="BuildData()">提交</button>
+            <button type="reset">重置</button>
+        </div>
     </form>
 </body>
-</html>
+</html>-->

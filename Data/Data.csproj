@@ -99,12 +99,18 @@
     <Compile Include="Migrations\201611060907042_AddProduceModule.Designer.cs">
       <DependentUpon>201611060907042_AddProduceModule.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201611090429237_AddFinanceAndCredit.cs" />
+    <Compile Include="Migrations\201611090429237_AddFinanceAndCredit.Designer.cs">
+      <DependentUpon>201611090429237_AddFinanceAndCredit.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs">
       <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
     </Compile>
     <Compile Include="ModelConfigurations\AssociatedEnterpriseConfiguration.cs" />
     <Compile Include="ModelConfigurations\BigEventConfiguration.cs" />
     <Compile Include="ModelConfigurations\CashFlowConfiguration.cs" />
+    <Compile Include="ModelConfigurations\CreditExamineConfiguration.cs" />
+    <Compile Include="ModelConfigurations\FinanceConfigration.cs" />
     <Compile Include="ModelConfigurations\FinancingProjectConfigration.cs" />
     <Compile Include="ModelConfigurations\FinancialAffairsConfiguration.cs" />
     <Compile Include="ModelConfigurations\LiabilitiesConfiguration.cs" />
@@ -231,6 +237,7 @@
     <Compile Include="Repositories\FinancingProjectRepository.cs" />
     <Compile Include="Repositories\OrganizationRepository.cs" />
     <Compile Include="Repositories\ProduceRepository.cs" />
+    <Compile Include="Repositories\FinanceRepository.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Core\Core.csproj">
@@ -272,6 +279,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201611060907042_AddProduceModule.resx">
       <DependentUpon>201611060907042_AddProduceModule.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611090429237_AddFinanceAndCredit.resx">
+      <DependentUpon>201611090429237_AddFinanceAndCredit.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
