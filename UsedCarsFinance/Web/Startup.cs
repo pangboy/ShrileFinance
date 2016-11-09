@@ -1,6 +1,8 @@
 ﻿namespace Web
 {
+    using System;
     using System.Reflection;
+    using System.Security.Principal;
     using System.Web.Http;
     using Autofac;
     using Autofac.Integration.WebApi;
@@ -17,6 +19,11 @@
             var container = builder.Build();
 
             config.DependencyResolver = new AutofacWebApiDependencyResolver(container);
+        }
+
+        protected override IPrincipal CurrentPrincipal()
+        {
+            return System.Web.HttpContext.Current.User;
         }
     }
 }

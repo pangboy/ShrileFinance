@@ -4,8 +4,10 @@ namespace Data.Migrations
     using System.Collections.Generic;
     using System.Data.Entity;
     using System.Data.Entity.Migrations;
+    using Core.Entities;
     using Core.Entities.Flow;
     using Core.Entities.Identity;
+    using Microsoft.AspNet.Identity.EntityFramework;
     using Flow_ = Core.Entities.Flow.Flow;
 
     internal sealed class Configuration : DbMigrationsConfiguration<MyContext>
@@ -41,6 +43,40 @@ namespace Data.Migrations
                 new AppRole { Id = "C242BEE1-05A4-E611-80C5-507B9DE4A488", Name = "总经理", Power = 2 },
                 new AppRole { Id = "C342BEE1-05A4-E611-80C5-507B9DE4A488", Name = "客户经理", Power = 4 },
                 new AppRole { Id = "C442BEE1-05A4-E611-80C5-507B9DE4A488", Name = "渠道经理", Power = 4 });
+
+            context.Set<AppUser>().AddOrUpdate(
+                m => m.Id,
+                new AppUser {
+                    Id = "0075D0E3-53A6-E611-80C5-507B9DE4A488",
+                    UserName = "sysadmin",
+                    Name = "系统管理员",
+                    Email = "sysadmin@shrile.com",
+                    PasswordHash = "ACIJtS4jqQUARKbBSMOwza0fOQmx9WTAi1C3Y4K9cP7/nXzu5sfLCvNgppBKGHvgcQ==",
+                    SecurityStamp = "9312a299-ca53-43ee-9d03-b01dcd9cd2fe"
+                },
+                new AppUser {
+                    Id = "0175D0E3-53A6-E611-80C5-507B9DE4A488",
+                    UserName = "foolishqi",
+                    Name = "七月",
+                    Email = "qiy@ywsoftware.com",
+                    PhoneNumber = "18858261668",
+                    PasswordHash = "ACIJtS4jqQUARKbBSMOwza0fOQmx9WTAi1C3Y4K9cP7/nXzu5sfLCvNgppBKGHvgcQ==",
+                    SecurityStamp = "9312a299-ca53-43ee-9d03-b01dcd9cd2fe",
+                },
+                new AppUser {
+                    Id = "0275D0E3-53A6-E611-80C5-507B9DE4A488",
+                    UserName = "admin",
+                    Name = "管理员",
+                    Email = "admin@shrile.com",
+                    PasswordHash = "ACIJtS4jqQUARKbBSMOwza0fOQmx9WTAi1C3Y4K9cP7/nXzu5sfLCvNgppBKGHvgcQ==",
+                    SecurityStamp = "9312a299-ca53-43ee-9d03-b01dcd9cd2fe"
+                });
+
+            context.Set<IdentityUserRole>().AddOrUpdate(
+                m => new { m.UserId, m.RoleId },
+                new IdentityUserRole { UserId = "0075D0E3-53A6-E611-80C5-507B9DE4A488", RoleId = "BB42BEE1-05A4-E611-80C5-507B9DE4A488" },
+                new IdentityUserRole { UserId = "0175D0E3-53A6-E611-80C5-507B9DE4A488", RoleId = "BB42BEE1-05A4-E611-80C5-507B9DE4A488" },
+                new IdentityUserRole { UserId = "0275D0E3-53A6-E611-80C5-507B9DE4A488", RoleId = "BB42BEE1-05A4-E611-80C5-507B9DE4A488" });
 
             context.SaveChanges();
         }

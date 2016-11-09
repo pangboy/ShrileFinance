@@ -4,7 +4,7 @@
 
     public class AppRoleManager : RoleManager<AppRole>
     {
-        public AppRoleManager(IRoleStore<AppRole> store) : base(store)
+        public AppRoleManager(IRoleStore<AppRole, string> store) : base(store)
         {
         }
     }

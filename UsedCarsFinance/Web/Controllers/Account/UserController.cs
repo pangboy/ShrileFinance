@@ -22,6 +22,7 @@ namespace Web.Controllers.Account
 
         public UserController(AccountAppService userService)
         {
+            service.User = User;
             this.service = userService;
         }
 
@@ -36,7 +37,7 @@ namespace Web.Controllers.Account
         {
             var list = service.List(searchString, page, rows);
 
-            return Ok( new {
+            return Ok(new {
                 rows = list,
                 total = list.TotalItemCount
             });

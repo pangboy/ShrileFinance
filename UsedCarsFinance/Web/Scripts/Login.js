@@ -46,7 +46,7 @@ function Login() {
 
 		$.ajax({
 			async: false,
-			data: { Username: username, password: Password },
+			data: { Username: username, Password: password },
 			url: "api/User/SignIn",
 			method: "POST",
 			statusCode: {
