@@ -12,9 +12,6 @@
             HasKey(m => m.Id);
             Property(m => m.Id).HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
 
-            // 融资
-            //Property(m => m.Finance);
-
             // 递交资料渠道
             Property(m => m.SubmitDataChannel).HasMaxLength(200);
 

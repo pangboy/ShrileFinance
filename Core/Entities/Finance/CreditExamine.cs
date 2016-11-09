@@ -10,11 +10,6 @@
     public class CreditExamine : Entity, IAggregateRoot
     {
         /// <summary>
-        /// 融资
-        /// </summary>
-        public Finance Finance { get; set; }
-
-        /// <summary>
         /// 递交资料渠道
         /// </summary>
         public string SubmitDataChannel { get; set; }

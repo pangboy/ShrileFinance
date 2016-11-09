@@ -9,6 +9,27 @@ namespace Data.Migrations
         {
             DropPrimaryKey("dbo.PROD_FinancingItem");
             CreateTable(
+                "dbo.FANC_Finance",
+                c => new
+                    {
+                        Id = c.Guid(nullable: false, identity: true),
+                        Principal = c.Decimal(nullable: false, precision: 18, scale: 2),
+                        InterestRate = c.Double(nullable: false),
+                        Periods = c.Int(nullable: false),
+                        RepaymentInterval = c.Int(nullable: false),
+                        RepaymentDate = c.Int(nullable: false),
+                        Bail = c.Decimal(nullable: false, precision: 18, scale: 2),
+                        Cost = c.Decimal(nullable: false, precision: 18, scale: 2),
+                        State = c.Byte(nullable: false),
+                        DateEffective = c.DateTime(nullable: false),
+                        DateCreated = c.DateTime(nullable: false),
+                        Produce_Id = c.Guid(),
+                    })
+                .PrimaryKey(t => t.Id)
+                .ForeignKey("dbo.PROD_Produce", t => t.Produce_Id)
+                .Index(t => t.Produce_Id);
+            
+            CreateTable(
                 "dbo.FANC_CreditExamine",
                 c => new
                     {
@@ -48,37 +69,10 @@ namespace Data.Migrations
                         ApprovePersonId = c.Guid(nullable: false),
                         FinalPersonId = c.Guid(nullable: false),
                         FinanceId = c.Guid(),
-                        Finance_Id1 = c.Guid(),
-                        Produce_Id = c.Guid(),
                     })
                 .PrimaryKey(t => t.Id)
                 .ForeignKey("dbo.FANC_Finance", t => t.FinanceId, cascadeDelete: true)
-                .ForeignKey("dbo.FANC_Finance", t => t.Finance_Id1)
-                .ForeignKey("dbo.PROD_Produce", t => t.Produce_Id)
-                .Index(t => t.FinanceId)
-                .Index(t => t.Finance_Id1)
-                .Index(t => t.Produce_Id);
-            
-            CreateTable(
-                "dbo.FANC_Finance",
-                c => new
-                    {
-                        Id = c.Guid(nullable: false, identity: true),
-                        Principal = c.Decimal(nullable: false, precision: 18, scale: 2),
-                        InterestRate = c.Double(nullable: false),
-                        Periods = c.Int(nullable: false),
-                        RepaymentInterval = c.Int(nullable: false),
-                        RepaymentDate = c.Int(nullable: false),
-                        Bail = c.Decimal(nullable: false, precision: 18, scale: 2),
-                        Cost = c.Decimal(nullable: false, precision: 18, scale: 2),
-                        State = c.Byte(nullable: false),
-                        DateEffective = c.DateTime(nullable: false),
-                        DateCreated = c.DateTime(nullable: false),
-                        Produce_Id = c.Guid(),
-                    })
-                .PrimaryKey(t => t.Id)
-                .ForeignKey("dbo.PROD_Produce", t => t.Produce_Id)
-                .Index(t => t.Produce_Id);
+                .Index(t => t.FinanceId);
             
             AlterColumn("dbo.PROD_FinancingItem", "Id", c => c.Guid(nullable: false));
             AddPrimaryKey("dbo.PROD_FinancingItem", "Id");
@@ -86,18 +80,14 @@ namespace Data.Migrations
         
         public override void Down()
         {
-            DropForeignKey("dbo.FANC_CreditExamine", "Produce_Id", "dbo.PROD_Produce");
-            DropForeignKey("dbo.FANC_CreditExamine", "Finance_Id1", "dbo.FANC_Finance");
             DropForeignKey("dbo.FANC_Finance", "Produce_Id", "dbo.PROD_Produce");
             DropForeignKey("dbo.FANC_CreditExamine", "FinanceId", "dbo.FANC_Finance");
-            DropIndex("dbo.FANC_Finance", new[] { "Produce_Id" });
-            DropIndex("dbo.FANC_CreditExamine", new[] { "Produce_Id" });
-            DropIndex("dbo.FANC_CreditExamine", new[] { "Finance_Id1" });
             DropIndex("dbo.FANC_CreditExamine", new[] { "FinanceId" });
+            DropIndex("dbo.FANC_Finance", new[] { "Produce_Id" });
             DropPrimaryKey("dbo.PROD_FinancingItem");
             AlterColumn("dbo.PROD_FinancingItem", "Id", c => c.Guid(nullable: false, identity: true));
-            DropTable("dbo.FANC_Finance");
             DropTable("dbo.FANC_CreditExamine");
+            DropTable("dbo.FANC_Finance");
             AddPrimaryKey("dbo.PROD_FinancingItem", "Id");
         }
     }

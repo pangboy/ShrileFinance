@@ -99,9 +99,9 @@
     <Compile Include="Migrations\201611060907042_AddProduceModule.Designer.cs">
       <DependentUpon>201611060907042_AddProduceModule.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201611090347108_AddFinanceAndCredit.cs" />
-    <Compile Include="Migrations\201611090347108_AddFinanceAndCredit.Designer.cs">
-      <DependentUpon>201611090347108_AddFinanceAndCredit.cs</DependentUpon>
+    <Compile Include="Migrations\201611090429237_AddFinanceAndCredit.cs" />
+    <Compile Include="Migrations\201611090429237_AddFinanceAndCredit.Designer.cs">
+      <DependentUpon>201611090429237_AddFinanceAndCredit.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs">
       <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
@@ -280,8 +280,8 @@
     <EmbeddedResource Include="Migrations\201611060907042_AddProduceModule.resx">
       <DependentUpon>201611060907042_AddProduceModule.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201611090347108_AddFinanceAndCredit.resx">
-      <DependentUpon>201611090347108_AddFinanceAndCredit.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201611090429237_AddFinanceAndCredit.resx">
+      <DependentUpon>201611090429237_AddFinanceAndCredit.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
