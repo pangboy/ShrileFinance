@@ -94,6 +94,7 @@
     <Compile Include="Entities\Finance\Credit.cs" />
     <Compile Include="Entities\Finance\CreditExamine.cs" />
     <Compile Include="Entities\Finance\Finance.cs" />
+    <Compile Include="Entities\Finance\FinanceAudit.cs" />
     <Compile Include="Entities\Finance\FinanceStateEnum.cs" />
     <Compile Include="Entities\Produce\FinancingProject.cs" />
     <Compile Include="Entities\Produce\Produce.cs" />

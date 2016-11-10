@@ -1,4 +1,4 @@
-namespace Data.Migrations
+Ôªønamespace Data.Migrations
 {
     using System;
     using System.Data.Entity;
@@ -30,15 +30,15 @@ namespace Data.Migrations
 
             context.Set<FinancingProject>().AddOrUpdate(
                m=> m.Id,
-               new FinancingProject { Id = new Guid("{093C0A6D-ABA4-E611-80C5-507B9DE4A488}"), Name = "¬„≥µº€", IsFinancing = true },
-               new FinancingProject { Id = new Guid("{0A3C0A6D-ABA4-E611-80C5-507B9DE4A488}"), Name = "π∫÷√À∞", IsFinancing = true },
-               new FinancingProject { Id = new Guid("{0B3C0A6D-ABA4-E611-80C5-507B9DE4A488}"), Name = "…Ã“µœ’", IsFinancing = true },
-               new FinancingProject { Id = new Guid("{0C3C0A6D-ABA4-E611-80C5-507B9DE4A488}"), Name = "Ωª«øœ’", IsFinancing = true },
-               new FinancingProject { Id = new Guid("{0D3C0A6D-ABA4-E611-80C5-507B9DE4A488}"), Name = "≥µ¥¨À∞", IsFinancing = true },
-               new FinancingProject { Id = new Guid("{0E3C0A6D-ABA4-E611-80C5-507B9DE4A488}"), Name = "—”±£œ’", IsFinancing = true },
-               new FinancingProject { Id = new Guid("{0F3C0A6D-ABA4-E611-80C5-507B9DE4A488}"), Name = "∆‰À˚", IsFinancing = true },
-               new FinancingProject { Id = new Guid("{103C0A6D-ABA4-E611-80C5-507B9DE4A488}"), Name = "GPS∑—”√", IsFinancing = false },
-               new FinancingProject { Id = new Guid("{113C0A6D-ABA4-E611-80C5-507B9DE4A488}"), Name = " ÷–¯∑—", IsFinancing = false }
+               new FinancingProject { Id = new Guid("{093C0A6D-ABA4-E611-80C5-507B9DE4A488}"), Name = "Ë£∏ËΩ¶‰ª∑", IsFinancing = true },
+               new FinancingProject { Id = new Guid("{0A3C0A6D-ABA4-E611-80C5-507B9DE4A488}"), Name = "Ë¥≠ÁΩÆÁ®é", IsFinancing = true },
+               new FinancingProject { Id = new Guid("{0B3C0A6D-ABA4-E611-80C5-507B9DE4A488}"), Name = "ÂïÜ‰∏öÈô©", IsFinancing = true },
+               new FinancingProject { Id = new Guid("{0C3C0A6D-ABA4-E611-80C5-507B9DE4A488}"), Name = "‰∫§Âº∫Èô©", IsFinancing = true },
+               new FinancingProject { Id = new Guid("{0D3C0A6D-ABA4-E611-80C5-507B9DE4A488}"), Name = "ËΩ¶ËàπÁ®é", IsFinancing = true },
+               new FinancingProject { Id = new Guid("{0E3C0A6D-ABA4-E611-80C5-507B9DE4A488}"), Name = "Âª∂‰øùÈô©", IsFinancing = true },
+               new FinancingProject { Id = new Guid("{0F3C0A6D-ABA4-E611-80C5-507B9DE4A488}"), Name = "ÂÖ∂‰ªñ", IsFinancing = true },
+               new FinancingProject { Id = new Guid("{103C0A6D-ABA4-E611-80C5-507B9DE4A488}"), Name = "GPSË¥πÁî®", IsFinancing = false },
+               new FinancingProject { Id = new Guid("{113C0A6D-ABA4-E611-80C5-507B9DE4A488}"), Name = "ÊâãÁª≠Ë¥π", IsFinancing = false }
                );
         }
      

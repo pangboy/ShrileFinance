@@ -15,18 +15,40 @@
     <script type="text/javascript">
         $(function () {
             // 获取参数
-            // var query = $.extend(uc.GetParams(), parent.flow.InstanceData);
+            var query = {}; // $.extend(uc.GetParams(), parent.flow.InstanceData);
+            query.FinanceId = "683B6AB9-1CA7-E611-80C5-507B9DE4A488";
 
             // 初始化
-            //Init(query);
+            Init(query);
         });
 
         // 初始化
         function Init(query) {
+            LoadData(query);
+
         }
 
         // 加载数据
         function LoadData(query) {
+            if (query == undefined || query.FinanceId == undefined) {
+                return;
+            }
+
+            // 加载信审报告
+            $.ajax({
+                async: false,
+                method: "GET",
+                data: { financeId: query.FinanceId },
+                url: '../api/CreditExamine/GetCreditExamine',
+                statusCode: {
+                    200: function (data) {
+                        if (data) {
+                            $("form[id=CreditExamineReportFrom]").form('load', data);
+                        }
+                    }
+                }
+            });
+
         }
 
         // 加载临时数据
@@ -50,22 +72,11 @@
 
         //构建数据
         function BuildData() {
-            // 序列化联系人信息
-            var obj = $("#ContactInformation").serializeJson();
-            if (obj != undefined) {
-                $('input[name="ContactInformation"]').val(JSON.stringify(obj));
-            }
-
-            var value = $.extend({
-                CreditExamineReportInfo: $("#form").serializeJson()
-            }, []);
+            var value = $("form[id=CreditExamineReportFrom]").serializeJson();
 
             var result = {};
             result["formName"] = "信审报告";
             result["buildData"] = value;
-
-
-            result.data = $("form[id=CreditExamineReportFrom]").serializeJson();
 
             return result;
         }
@@ -97,6 +108,10 @@
 <body>
     <form id="CreditExamineReportFrom" class="container">
         <h1 style="text-align:center">信审报告</h1>
+
+        <input type="hidden" name="FinanceId" placeholder="融资标识" />
+        <input type="hidden" name="Id" placeholder="信审标识" />
+
         <fieldset id="f0">
             <div class="row">
                 <div class="col-12">
@@ -668,8 +683,7 @@
             </div>
         </fieldset>
 
-        <input type="hidden" name="FinanceId" placeholder="融资标识" />
-        <input type="hidden" name="Id" placeholder="信审标识" />
+        
 
         <div style="text-align:center">
             <button type="button" onclick="Submit()">提交</button>

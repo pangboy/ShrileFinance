@@ -1,6 +1,6 @@
 ﻿namespace Core.Entities.Finance
 {
-    public class Contact
+    public class Contact:Entity
     {
     }
 }

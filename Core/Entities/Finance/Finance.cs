@@ -1,6 +1,7 @@
 ﻿namespace Core.Entities.Finance
 {
     using System;
+    using System.Collections.Generic;
     using Interfaces;
     using Produce;
 
@@ -34,7 +35,7 @@
         /// <summary>
         /// 还款方案
         /// </summary>
-        public Scheme RepaymentScheme { get; set; }
+        //public Scheme RepaymentScheme { get; set; }
 
         /// <summary>
         /// 借款人
@@ -69,16 +70,21 @@
         /// <summary>
         /// 合同
         /// </summary>
-        public Contact Contact { get; set; }
+        public virtual ICollection<Contact> Contact { get; set; }
 
         /// <summary>
         /// 产品
         /// </summary>
-        public Produce Produce { get; set; }
+        public virtual Produce Produce { get; set; }
 
         /// <summary>
         /// 信审报告
         /// </summary>
-        public CreditExamine CreditExamine { get; set; }
+        public virtual CreditExamine CreditExamine { get; set; }
+
+        /// <summary>
+        /// 融资审核
+        /// </summary>
+        public virtual FinanceAudit FinanceAudit { get; set; }
     }
 }
