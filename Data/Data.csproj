@@ -107,14 +107,6 @@
     <Compile Include="Migrations\201611090429237_AddFinanceAndCredit.Designer.cs">
       <DependentUpon>201611090429237_AddFinanceAndCredit.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201611091032007_MyContext-Error.cs" />
-    <Compile Include="Migrations\201611091032007_MyContext-Error.Designer.cs">
-      <DependentUpon>201611091032007_MyContext-Error.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201611100800530_addFinanceAudit.cs" />
-    <Compile Include="Migrations\201611100800530_addFinanceAudit.Designer.cs">
-      <DependentUpon>201611100800530_addFinanceAudit.cs</DependentUpon>
-    </Compile>
     <Compile Include="Migrations\Configuration.cs">
       <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
     </Compile>
@@ -124,8 +116,8 @@
     <Compile Include="ModelConfigurations\CashFlowConfiguration.cs" />
     <Compile Include="ModelConfigurations\ContactConfiguration.cs" />
     <Compile Include="ModelConfigurations\CreditExamineConfiguration.cs" />
-    <Compile Include="ModelConfigurations\FinanceAuidtConfiguration.cs" />
     <Compile Include="ModelConfigurations\FinanceConfigration.cs" />
+    <Compile Include="ModelConfigurations\FinanceExtensionConfiguration.cs" />
     <Compile Include="ModelConfigurations\FinancingProjectConfigration.cs" />
     <Compile Include="ModelConfigurations\FinancialAffairsConfiguration.cs" />
     <Compile Include="ModelConfigurations\FlowConfiguration.cs" />
@@ -312,12 +304,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201611090429237_AddFinanceAndCredit.resx">
       <DependentUpon>201611090429237_AddFinanceAndCredit.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201611091032007_MyContext-Error.resx">
-      <DependentUpon>201611091032007_MyContext-Error.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201611100800530_addFinanceAudit.resx">
-      <DependentUpon>201611100800530_addFinanceAudit.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
