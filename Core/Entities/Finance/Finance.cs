@@ -1,8 +1,8 @@
 ﻿namespace Core.Entities.Finance
 {
     using System;
-    using Produce;
     using Interfaces;
+    using Produce;
 
     public class Finance : Entity, IAggregateRoot
     {
@@ -66,8 +66,19 @@
         /// </summary>
         public DateTime DateCreated { get; set; }
 
+        /// <summary>
+        /// 合同
+        /// </summary>
         public Contact Contact { get; set; }
 
+        /// <summary>
+        /// 产品
+        /// </summary>
         public Produce Produce { get; set; }
+
+        /// <summary>
+        /// 信审报告
+        /// </summary>
+        public CreditExamine CreditExamine { get; set; }
     }
 }

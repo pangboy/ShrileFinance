@@ -99,8 +99,8 @@
                         url: "../api/User/CurrentUser",
                         statusCode: {
                             200: function (data) {
-                                // 用户存在
-                                if (data != undefined) {
+                                // 用户存在，且存在保存草稿按钮
+                                if (data != undefined && $("a[id=saveTempData]:visible")[0] != undefined) {
                                     if (data.Message == undefined) {
                                         $("a[id=saveTempData]:visible").click();
                                     }
@@ -262,7 +262,6 @@
                         }
                         else {
                             if (formId == frames[j].name) {
-                                debugger
                                 valid = frames[j].ValidData();
                                 if (valid == false) {
                                     top.$.messager.show({ msg: frames[j].BuildData().formName + "中必填项未填写" })

@@ -95,6 +95,14 @@
     <Compile Include="Migrations\201611011134263_CreateParent.Designer.cs">
       <DependentUpon>201611011134263_CreateParent.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201611060907042_AddProduceModule.cs" />
+    <Compile Include="Migrations\201611060907042_AddProduceModule.Designer.cs">
+      <DependentUpon>201611060907042_AddProduceModule.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201611090429237_AddFinanceAndCredit.cs" />
+    <Compile Include="Migrations\201611090429237_AddFinanceAndCredit.Designer.cs">
+      <DependentUpon>201611090429237_AddFinanceAndCredit.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\201611060359527_UseIdentity.cs" />
     <Compile Include="Migrations\201611060359527_UseIdentity.Designer.cs">
       <DependentUpon>201611060359527_UseIdentity.cs</DependentUpon>
@@ -114,6 +122,9 @@
     <Compile Include="ModelConfigurations\AssociatedEnterpriseConfiguration.cs" />
     <Compile Include="ModelConfigurations\BigEventConfiguration.cs" />
     <Compile Include="ModelConfigurations\CashFlowConfiguration.cs" />
+    <Compile Include="ModelConfigurations\CreditExamineConfiguration.cs" />
+    <Compile Include="ModelConfigurations\FinanceConfigration.cs" />
+    <Compile Include="ModelConfigurations\FinancingProjectConfigration.cs" />
     <Compile Include="ModelConfigurations\FinancialAffairsConfiguration.cs" />
     <Compile Include="ModelConfigurations\FlowConfiguration.cs" />
     <Compile Include="ModelConfigurations\FormConfiguration.cs" />
@@ -131,7 +142,9 @@
     </Compile>
     <Compile Include="ModelConfigurations\ParentConfigration.cs" />
     <Compile Include="ModelConfigurations\PartnerConfiguration.cs" />
+    <Compile Include="ModelConfigurations\FinancingItemConfigration.cs" />
     <Compile Include="ModelConfigurations\ProfitConfiguration.cs" />
+    <Compile Include="ModelConfigurations\ProduceConfigration.cs" />
     <Compile Include="ModelConfigurations\StockholderConfiguration.cs" />
     <Compile Include="ModelConfigurations\TypeConfigurationExtensions.cs" />
     <Compile Include="ModelConfigurations\AppUserConfiguration.cs" />
@@ -245,7 +258,10 @@
     <Compile Include="Repositories\FlowRepository.cs" />
     <Compile Include="Repositories\FormRepository.cs" />
     <Compile Include="Repositories\InstanceRepository.cs" />
+    <Compile Include="Repositories\FinancingProjectRepository.cs" />
     <Compile Include="Repositories\OrganizationRepository.cs" />
+    <Compile Include="Repositories\ProduceRepository.cs" />
+    <Compile Include="Repositories\FinanceRepository.cs" />
     <Compile Include="Repositories\PartnerRepository.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -285,6 +301,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201611011134263_CreateParent.resx">
       <DependentUpon>201611011134263_CreateParent.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611060907042_AddProduceModule.resx">
+      <DependentUpon>201611060907042_AddProduceModule.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611090429237_AddFinanceAndCredit.resx">
+      <DependentUpon>201611090429237_AddFinanceAndCredit.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201611060359527_UseIdentity.resx">
       <DependentUpon>201611060359527_UseIdentity.cs</DependentUpon>

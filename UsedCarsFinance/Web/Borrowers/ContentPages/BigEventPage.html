@@ -27,7 +27,6 @@
             if (query.method == "BigEvent_mod" || query.method == "BigEvent_view") {
                 //获取选中行
                 var row = self.parent.$("#BigEvent_dg").datagrid('getSelected');
-                debugger
                 if (query.method == "BigEvent_mod") {
                     if (row) {
                         //加载数据

@@ -168,32 +168,34 @@
                 </div>
             </div>
             <div class="row">
+
                 <div class="col-6">
-                    <label>车牌号:</label>
-                    <input name="PlateNo" class="easyui-textbox" data-options="required:true,validType:'PlateNo'" />
-                </div>
-                <div class="col-6">
-                    <label>车架号:</label>
-                    <input name="FrameNo" class="easyui-textbox" data-options="required:true,validType:'length[17,17]'" />
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-6">
-                    <label>发动机号:</label>
-                    <input name="EngineNo" class="easyui-textbox" data-options="required:true" />
+                    <label>厂商指导价:</label>
+                    <input name="NewCarPlateNo" class="easyui-textbox" data-options="required:true,validType:'PlateNo'" />
                 </div>
 
                 <div class="col-6">
-                    <label>行驶里程:</label>
-                    <input name="RunningMiles" class="easyui-textbox" data-options="required:true" />
-                    <span class="unit">公里</span>
+                    <label>车牌号:</label>
+                    <input name="NewCarPlateNo" class="easyui-textbox" data-options="validType:'PlateNo'" />
+                </div>
+               
+            </div>
+            <div class="row">
+                <div class="col-6">
+                    <label>车架号:</label>
+                    <input name="NewCarFrameNo" class="easyui-textbox" data-options="required:true,validType:'length[17,17]'" />
+                </div>
+
+                <div class="col-6">
+                    <label>发动机号:</label>
+                    <input name="NewCarEngineNo" class="easyui-textbox" data-options="required:true" />
                 </div>
             </div>
             <div class="row">
                 <div class="col-6">
-                    <label>购买价格:</label>
-                    <input name="BuyCarPrice" class="easyui-textbox" data-options="validType:'Price',required:true" />
-                    <span class="unit">万元</span>
+                    <label>里程读表数:</label>
+                    <input name="Mileage" class="easyui-textbox" data-options="required:true" />
+                    <span class="unit">公里</span>
                 </div>
 
                 <div class="col-6">

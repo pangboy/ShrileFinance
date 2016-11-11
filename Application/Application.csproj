@@ -85,12 +85,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FinanceAppService.cs" />
+    <Compile Include="FinancingProjectAppService.cs" />
     <Compile Include="Mappings\PagedListTypeConverter.cs" />
     <Compile Include="ProcessAppService.cs" />
     <Compile Include="OrganizationAppService.cs" />
-    <Compile Include="LawsuitAppService.cs" />
     <Compile Include="Mappings\DomainToViewModelMappingProfile.cs" />
     <Compile Include="Mappings\ViewModelToDomainMappingProfile.cs" />
+    <Compile Include="ProduceAppService.cs" />
     <Compile Include="Startup\Startup.Autofac.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
@@ -99,6 +101,9 @@
     <Compile Include="AccountAppService.cs" />
     <Compile Include="ViewModels\AccountViewModels\ChangePasswordViewModel.cs" />
     <Compile Include="ViewModels\AccountViewModels\LoginViewModel.cs" />
+    <Compile Include="ViewModels\FinanceViewModels\CreditExamineValid.cs" />
+    <Compile Include="ViewModels\FinanceViewModels\CreditExamineViewModel.cs" />
+    <Compile Include="ViewModels\FinanceViewModels\FinanceAuditViewModel.cs" />
     <Compile Include="ViewModels\AccountViewModels\UserViewModel.cs" />
     <Compile Include="ViewModels\OrganizationViewModels\BigEventViewModel.cs" />
     <Compile Include="ViewModels\OrganizationViewModels\CashFlowViewModel.cs" />
@@ -118,12 +123,17 @@
     <Compile Include="ViewModels\OrganizationViewModels\StockholderViewModel.cs" />
     <Compile Include="ViewModels\OrganizationViewModels\ParentViewModel.cs" />
     <Compile Include="ViewModels\OrganizationViewModels\ValidAttribute.cs" />
-    <Compile Include="ViewModels\LitigationViewModels\LitigationViewModel.cs" />
     <Compile Include="ViewModels\OrganizationViewModels\InstitutionIncomeExpenditureViewModel.cs">
       <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
     </Compile>
     <Compile Include="ViewModels\OrganizationViewModels\InstitutionLiabilitiesViewModel.cs" />
     <Compile Include="ViewModels\PagedListViewModel.cs" />
+    <Compile Include="ViewModels\ProduceViewModel\FinancingProjectViewModel.cs" />
+    <Compile Include="ViewModels\ProduceViewModel\FinancingItemViewModel.cs" />
+    <Compile Include="ViewModels\ProduceViewModel\FinancingProjectListViewModel.cs" />
+    <Compile Include="ViewModels\ProduceViewModel\PoundageViewModel.cs" />
+    <Compile Include="ViewModels\ProduceViewModel\ProduceListViewModel.cs" />
+    <Compile Include="ViewModels\ProduceViewModel\ProduceViewModel.cs" />
     <Compile Include="ViewModels\ProcessViewModels\ActionViewModel.cs" />
     <Compile Include="ViewModels\ProcessViewModels\FormViewModel.cs" />
     <Compile Include="ViewModels\ProcessViewModels\FrameViewModel.cs" />

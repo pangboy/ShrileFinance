@@ -235,7 +235,6 @@ namespace BLL.BankCredit
                             throw new ApplicationException("当为“2007版资产负债表信息记录”或“2007版利润及利润分配表信息记录”或“2007版现金流量表信息记录”时，借款人概况信息中的借款人性质不能为“事业单位”");
                         }
                     }
-
                 }
             }
 
@@ -247,10 +246,8 @@ namespace BLL.BankCredit
                 //根据合同信息记录编号
                 int infoid = 10;
 
-                ReportInfo reportInfo = new DAL.BankCredit.ReportMapper().FindByReportID(reportID);
-
-                string s = InfoValueValidate(infoid, reportInfo.ReportFileID, info, info.Value, segmentRuleID);
-                if (string.IsNullOrEmpty(s)|| info.Value != s)
+                string s = InfoValidate(infoid, info, info.Value, segmentRuleID);
+                if (string.IsNullOrEmpty(s) || info.Value != s)
                 {
                     throw new ApplicationException("未能找到该贷款合同号码对应的贷款合同信息");
                 }
@@ -292,8 +289,7 @@ namespace BLL.BankCredit
                 //根据还款记录对应的借据信息记录
                 int infoid = 11;
 
-                ReportInfo reportInfo = new DAL.BankCredit.ReportMapper().FindByReportID(reportID);
-                string s = InfoValueValidate(infoid, reportInfo.ReportFileID, info, jjbh, segmentRuleID);
+                string s = InfoValidate(infoid, info, jjbh, segmentRuleID);
                 if (string.IsNullOrEmpty(s))
                 {
                     throw new ApplicationException("未能找到该借据编号对应的借据信息");
@@ -343,9 +339,7 @@ namespace BLL.BankCredit
                         //根据还款记录对应的借据信息记录
                         int infoid = 11;
 
-                        ReportInfo reportInfo = new DAL.BankCredit.ReportMapper().FindByReportID(reportID);
-
-                        string s = InfoValueValidate(infoid, reportInfo.ReportFileID, info, jjbh, segmentRuleID);
+                        string s = InfoValidate(infoid, info, jjbh, segmentRuleID);
                         if (string.IsNullOrEmpty(s))
                         {
                             throw new ApplicationException("未能找到该借据编号对应的借据信息");
@@ -369,9 +363,7 @@ namespace BLL.BankCredit
                 //根据还款记录对应的借据信息记录
                 int infoid = 11;
 
-                ReportInfo reportInfo = new DAL.BankCredit.ReportMapper().FindByReportID(reportID);
-
-                string s = InfoValueValidate(infoid, reportInfo.ReportFileID, info, jjbh, segmentRuleID);
+                string s = InfoValidate(infoid, info, jjbh, segmentRuleID);
                 if (string.IsNullOrEmpty(s))
                 {
                     throw new ApplicationException("未能找到该借据编号对应的借据信息");
@@ -393,9 +385,7 @@ namespace BLL.BankCredit
                 //根据还款记录对应的借据信息记录
                 int infoid = 11;
 
-                ReportInfo reportInfo = new DAL.BankCredit.ReportMapper().FindByReportID(reportID);
-
-                string s = InfoValueValidate(infoid, reportInfo.ReportFileID, info, jjbh, segmentRuleID);
+                string s = InfoValidate(infoid, info, jjbh, segmentRuleID);
                 if (string.IsNullOrEmpty(s))
                 {
                     throw new ApplicationException("未能找到该借据编号对应的借据信息");
@@ -407,9 +397,32 @@ namespace BLL.BankCredit
                         throw new ApplicationException("还款日期不应该小于贷款业务借款中借据放款日期");
                     }
                 }
-
             }
-            //TODO 增加 163中的还款信息记录中的业务发生时间和借据信息中的业务发生日期的校验
+
+            ////用于比较贷款业务还款中业务发生日期和借据中的业务发生日期
+            //if (infoType.InfoTypeId == 12)
+            //{
+            //    if (info.Key == "B542" || info.Key == "B560")
+            //    {
+            //        //需要获取的业务发生时间对应的段标识
+            //        string segmentRuleID = "B515";
+            //        //根据还款记录对应的借据信息记录
+            //        int infoid = 11;
+
+            //        string s = InfoValidate(infoid, info, jjbh, segmentRuleID);
+            //        if (string.IsNullOrEmpty(s))
+            //        {
+            //            throw new ApplicationException("未能找到该借据编号对应的借据信息");
+            //        }
+            //        else
+            //        {
+            //            if (s != info.Value)
+            //            {
+            //                throw new ApplicationException("业务发生日期和借据中业务发生日期要一致");
+            //            }
+            //        }
+            //    }
+            //}
             return true;
         }
 
@@ -492,6 +505,43 @@ namespace BLL.BankCredit
                     }
                 }
             }
+            return result;
+        }
+
+        /// <summary>
+        /// 到库中查询记录
+        /// </summary>
+        /// yand    16.10.19
+        /// <param name="infoTypeID"></param>
+        /// <param name="value"></param>
+        /// <param name="value2"></param>
+        /// <param name="segmentRuleID"></param>
+        /// <returns></returns>
+        public string InfoValidate(int infoTypeID, KeyValuePair<string, string> value, string value2, string segmentRuleID)
+        {
+            string result = string.Empty;
+            List<InformationRecordInfo> infoRecordList = new BankCredit.InformationRecord().GetByInfoTypeId(infoTypeID);
+            var list = new List<string>();
+            List<Dictionary<string, string>> ListDic = new List<Dictionary<string, string>>();
+
+            if (infoRecordList != null)
+            {
+                foreach (var informationRecord in infoRecordList)
+                {
+                    Dictionary<string, string> dic = new Dictionary<string, string>();
+                    // JSON 字符串
+                    var content = informationRecord.Context;
+                    var infoTypeId = informationRecord.InfoTypeID;
+                    // 根据查询条件查询是否存在该条件对应的记录
+                    bool findResult = new CommonUtil().FindInfo(content, value2);
+                    if (findResult)
+                    {
+                        //借据放款日期
+                        result = new CommonUtil().GetValue(content, segmentRuleID);
+                    }
+                }
+            }
+
             return result;
         }
 
@@ -692,7 +742,7 @@ namespace BLL.BankCredit
                 }
 
                 //经营场地所有权、借款人成立年份、四级分类
-                if ((metaInfo.MetaCode == 2503 || metaInfo.MetaCode == 8503|| metaInfo.MetaCode== 7539) && string.IsNullOrEmpty(value))
+                if ((metaInfo.MetaCode == 2503 || metaInfo.MetaCode == 8503 || metaInfo.MetaCode == 7539) && string.IsNullOrEmpty(value))
                 {
                     value = value.PadLeft(metaInfo.DatasLength, ' ');
                 }

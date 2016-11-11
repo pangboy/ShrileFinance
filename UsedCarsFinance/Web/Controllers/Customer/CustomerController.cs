@@ -1,11 +1,9 @@
-﻿
-namespace Web.Controllers.Customer
+﻿namespace Web.Controllers.Customer
 {
-    using Application;
-    using Application.ViewModels.OrganizationViewModels;
     using System;
     using System.Web.Http;
-    using X.PagedList;
+    using Application;
+    using Application.ViewModels.OrganizationViewModels;
 
     public class CustomerController : ApiController
     {

@@ -645,15 +645,16 @@
                     <label>车辆车型:</label>
                     <select name="VehicleKey" class="easyui-combobox" data-options="
                             required:true,
-                            editable:false
+                            editable:false,
+                            onSelect:LoadVehiclePrice,
                             "></select>
                 </div>
             </div>
 
             <div class="row">
                 <div class="col-6">
-                    <label>购买价格:</label>
-                    <input name="BuyCarPrice" class="easyui-textbox" data-options="validType:'Price'" />
+                    <label>厂商指导价:</label>
+                    <input name="ManufacturerGuidePrice" class="easyui-textbox" data-options="validType:'Price'" />
                     <span class="unit">万元</span>
                 </div>
 
@@ -678,7 +679,8 @@
                 }
                 function SelectModel(record) {
                     $("select[comboname='FamilyCode']").combobox("clear");
-                    $("select[comboname='VehicleKey']").combobox("clear");
+                    $("select[comboname='VehicleKey']").combobox("clear"); 
+                    $("input[textboxname='ManufacturerGuidePrice']").textbox("clear");
 
                     $.ajax({
                         async: false,
@@ -690,12 +692,28 @@
                 }
                 function SelectCarConfigure(record) {
                     $("select[comboname='VehicleKey']").combobox("clear");
+                    $("input[textboxname='ManufacturerGuidePrice']").textbox("clear");
+
                     $.ajax({
                         async: false,
                         data: { brandCode: $("select[comboname='MakeCode']").combobox("getValue"), seriesCode: record.value },
                         method: 'GET',
                         url: '../api/CarHome/GetVehicle',
                         statusCode: { 200: function (data) { $("select[comboname='VehicleKey']").combobox("loadData", data); } }
+                    });
+                }
+
+                function LoadVehiclePrice(vehicleKey) {
+                    $.ajax({
+                        async: false,
+                        type: "GET",
+                        url: "../api/CarHome/GetPriceByVehicleID",
+                        data: { vehicleKey: vehicleKey.value },
+                        statusCode: {
+                            200: function (data) {
+                                $("input[textboxname=ManufacturerGuidePrice]").textbox("setValue", data.ManufacturerGuidePrice);
+                            }
+                        }
                     });
                 }
             </script>

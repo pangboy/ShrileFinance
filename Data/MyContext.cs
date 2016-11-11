@@ -2,6 +2,7 @@
 {
     using System.Data.Entity;
     using System.Data.Entity.ModelConfiguration.Conventions;
+    using Core.Entities.Produce;
     using Microsoft.AspNet.Identity.EntityFramework;
     using ModelConfigurations;
 
@@ -40,6 +41,12 @@
                 .Add(new LitigationConfigruation())
                 .Add(new ProfitConfiguration())
                 .Add(new FinancialAffairsConfiguration())
+                .Add(new ParentConfigration())
+                .Add(new FinancingItemConfigration())
+                .Add(new FinancingProjectConfigration())
+                .Add(new ProduceConfigration())
+                .Add(new FinanceConfigration())
+                .Add(new CreditExamineConfiguration());
                 .Add(new ParentConfigration())
                 .Add(new PartnerConfiguration());
 
