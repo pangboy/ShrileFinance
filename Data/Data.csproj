@@ -111,6 +111,10 @@
     <Compile Include="Migrations\201611110947526_Workflow.Designer.cs">
       <DependentUpon>201611110947526_Workflow.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201611111108530_AddFinanceAndApplicationAndVehicelModels.cs" />
+    <Compile Include="Migrations\201611111108530_AddFinanceAndApplicationAndVehicelModels.Designer.cs">
+      <DependentUpon>201611111108530_AddFinanceAndApplicationAndVehicelModels.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs">
       <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
     </Compile>
@@ -313,6 +317,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201611110947526_Workflow.resx">
       <DependentUpon>201611110947526_Workflow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611111108530_AddFinanceAndApplicationAndVehicelModels.resx">
+      <DependentUpon>201611111108530_AddFinanceAndApplicationAndVehicelModels.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

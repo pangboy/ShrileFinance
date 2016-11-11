@@ -7,7 +7,7 @@
     /// <summary>
     /// 合同
     /// </summary>
-    public class ContactConfiguration:EntityTypeConfiguration<Contact>
+    public class ContactConfiguration : EntityTypeConfiguration<Contact>
     {
         public ContactConfiguration()
         {
@@ -18,8 +18,8 @@
             Property(m => m.Number).HasMaxLength(100);
 
             Property(m => m.Date);
-
-            Property(m=>m.Path).HasMaxLength(200);
+            Property(m => m.Name).HasMaxLength(100);
+            Property(m => m.Path).HasMaxLength(200);
 
             ToTable("FANC_Contact");
         }
