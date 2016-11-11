@@ -51,7 +51,8 @@
                     200: function (data) {
                         if (data) {
                             $("fieldset[name=FinanceAudit]").form('load', data);
-                            $("fieldset[name=FinanceAudit]>input[name=isReview]").val('true');
+
+                            //$("fieldset[name=FinanceAudit]>input[name=isReview]").val('');
 
                             // 加载融资项
                             LoadFinancingItem(data.FinancingItems);
@@ -124,27 +125,6 @@
 
                     // 金额赋值
                     div.find("input[textboxname=Money]").textbox('setValue',e.Value.Value);
-                }
-            });
-        }
-
-        // 加载厂商指导价、评估现市值
-        function LoadVehiclePrice(vehicleKey) {
-            $.ajax({
-                async: false,
-                type: "GET",
-                url: "../api/CarHome/GetPriceByVehicleID",
-                data: { vehicleKey: vehicleKey },
-                statusCode: {
-                    200: function (data) {
-                        $("input[textboxname=ManufacturerGuidePrice]").textbox("setValue", data.ManufacturerGuidePrice);
-
-                        if (data.ApprovalValue) {
-                            $("input[textboxname=ApprovalValue]").textbox("setValue", data.ApprovalValue);
-                        } else {
-                            $("input[textboxname=ApprovalValue]").textbox("setValue", 0);
-                        }
-                    }
                 }
             });
         }

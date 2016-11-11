@@ -266,42 +266,42 @@
         /// <summary>
         /// 初审人
         /// </summary>
-        public string TrialPerson { get; set; }
+        public string TrialPersonName { get; set; }
 
         /// <summary>
         /// 初审人标识
         /// </summary>
-        public Guid TrialPersonId { get; set; }
+        public string TrialPersonId { get; set; }
 
         /// <summary>
         /// 复审人
         /// </summary>
-        public string ReviewPerson { get; set; }
+        public string ReviewPersonName { get; set; }
 
         /// <summary>
         /// 复审人标识
         /// </summary>
-        public Guid ReviewPersonId { get; set; }
+        public string ReviewPersonId { get; set; }
 
         /// <summary>
         /// 审批人
         /// </summary>
-        public string ApprovePerson { get; set; }
+        public string ApprovePersonName { get; set; }
 
         /// <summary>
         /// 审批人标识
         /// </summary>
-        public Guid ApprovePersonId { get; set; }
+        public string ApprovePersonId { get; set; }
 
         /// <summary>
         /// 终审人
         /// </summary>
-        public string FinalPerson { get; set; }
+        public string FinalPersonName { get; set; }
 
         /// <summary>
         /// 终审人标识
         /// </summary>
-        public Guid FinalPersonId { get; set; }
+        public string FinalPersonId { get; set; }
 
     }
 

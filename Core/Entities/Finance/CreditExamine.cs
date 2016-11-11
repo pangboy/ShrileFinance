@@ -158,23 +158,23 @@
         public string SurveyOpinionReson { get; set; }
 
         /// <summary>
-        /// 初审人标识
+        /// 初审人
         /// </summary>
-        public Guid TrialPersonId { get; set; }
+        public virtual AppUser TrialPerson { get; set; }
 
         /// <summary>
-        /// 复审人标识
+        /// 复审人
         /// </summary>
-        public Guid ReviewPersonId { get; set; }
+        public virtual AppUser ReviewPerson { get; set; }
 
         /// <summary>
-        /// 审批人标识
+        /// 审批人
         /// </summary>
-        public Guid ApprovePersonId { get; set; }
+        public virtual AppUser ApprovePerson { get; set; }
 
         /// <summary>
-        /// 终审人标识
+        /// 终审人
         /// </summary>
-        public Guid FinalPersonId { get; set; }
+        public virtual AppUser FinalPerson { get; set; }
     }
 }

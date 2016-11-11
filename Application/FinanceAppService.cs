@@ -43,6 +43,22 @@
             // 实体转ViewModel
             var creditExamineReportViewModel = Mapper.Map<CreditExamineViewModel>(finance.CreditExamine);
 
+            // 初审
+            creditExamineReportViewModel.TrialPersonId = finance.CreditExamine.TrialPerson.Id;
+            creditExamineReportViewModel.TrialPersonName = finance.CreditExamine.TrialPerson.Name;
+
+            // 复审
+            creditExamineReportViewModel.ReviewPersonId = finance.CreditExamine.ReviewPerson.Id;
+            creditExamineReportViewModel.ReviewPersonName = finance.CreditExamine.ReviewPerson.Name;
+
+            // 审批
+            creditExamineReportViewModel.ApprovePersonId = finance.CreditExamine.ApprovePerson.Id;
+            creditExamineReportViewModel.ApprovePersonName = finance.CreditExamine.ApprovePerson.Name;
+
+            // 终审
+            creditExamineReportViewModel.FinalPersonId = finance.CreditExamine.FinalPerson.Id;
+            creditExamineReportViewModel.FinalPersonId = finance.CreditExamine.FinalPerson.Name;
+
             return creditExamineReportViewModel;
         }
 
@@ -60,11 +76,24 @@
             // 获取该信审对应的融资实体
             var finance = repository.Get(value.FinanceId);
 
-            // 信审ViewModel转信审实体
-            var creditExamine = Mapper.Map<CreditExamine>(value);
+            // 信审ViewModel转信审实体，更新信审
+            finance.CreditExamine = Mapper.Map<CreditExamine>(value);
 
-            // 更新信审
-            finance.CreditExamine = creditExamine;
+            // 初审
+            finance.CreditExamine.TrialPerson.Id = value.TrialPersonId;
+            finance.CreditExamine.TrialPerson.Name = value.TrialPersonName;
+
+            // 复审
+            finance.CreditExamine.ReviewPerson.Id = value.ReviewPersonId;
+            finance.CreditExamine.ReviewPerson.Name = value.ReviewPersonName;
+
+            // 审批
+            finance.CreditExamine.ApprovePerson.Id = value.ApprovePersonId;
+            finance.CreditExamine.ApprovePerson.Name = value.ApprovePersonName;
+
+            // 终审
+            finance.CreditExamine.FinalPerson.Id = value.FinalPersonId;
+            finance.CreditExamine.FinalPerson.Name = value.FinalPersonId;
 
             repository.Modify(finance);
 
