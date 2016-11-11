@@ -23,7 +23,7 @@ namespace Web.Controllers.Account
         /// <returns></returns>
         public IEnumerable<ComboInfo> GetAll()
         {
-            return service.GetRoles().Select(m => new ComboInfo(m.Id, m.Name));
+            return service.GetRoles().Select(m => new ComboInfo(m.Name, m.Name));
         }
     }
 }

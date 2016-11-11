@@ -9,7 +9,6 @@
     using Core.Entities;
     using Core.Entities.Identity;
     using Microsoft.AspNet.Identity;
-    using Microsoft.AspNet.Identity.EntityFramework;
     using ViewModels.AccountViewModels;
     using X.PagedList;
 
@@ -30,7 +29,7 @@
         /// 获取当前用户 [已弃用]
         /// </summary>
         /// <returns></returns>
-        public AppUser CurrentUser()
+        public UserViewModel CurrentUser()
         {
             return GetUser(User.Identity.GetUserId());
         }
@@ -41,9 +40,7 @@
         /// <returns></returns>
         public AppRole CurrentRole()
         {
-            var roleId = CurrentUser().Roles.First().RoleId;
-
-            return GetRole(roleId);
+            return roleManager.FindByName(CurrentUser().Role);
         }
 
         /// <summary>
@@ -51,14 +48,22 @@
         /// </summary>
         /// <param name="userId">用户标识</param>
         /// <returns></returns>
-        public AppUser GetUser(string userId)
+        public UserViewModel GetUser(string userId)
         {
             if (string.IsNullOrEmpty(userId))
             {
                 throw new ArgumentNullException(nameof(userId));
             }
 
-            return userManager.FindById(userId);
+            var user = userManager.FindById(userId);
+
+            var viewModel = Mapper.Map<UserViewModel>(user);
+
+            var role = roleManager.FindById(user.RoleId);
+
+            viewModel.Role = role.Name;
+
+            return viewModel;
         }
 
         /// <summary>
@@ -83,17 +88,21 @@
         /// <param name="pageNumber">分页页码</param>
         /// <param name="pageSize">分页尺寸</param>
         /// <returns></returns>
-        public IPagedList<AppUser> List(string searchString, int pageNumber, int pageSize)
+        public IPagedList<UserViewModel> List(string searchString, int pageNumber, int pageSize)
         {
-            var user = userManager.Users;
+            var users = userManager.Users;
 
             if (!string.IsNullOrEmpty(searchString))
             {
-                user = user.Where(m => m.Name.Contains(searchString)
+                users = users.Where(m => m.Name.Contains(searchString)
                     || m.UserName.Contains(searchString));
             }
 
-            return user.ToPagedList(pageNumber, pageSize);
+            users = users.OrderByDescending(m => m.Id);
+
+            var userList = Mapper.Map<IPagedList<UserViewModel>>(users.ToPagedList(pageNumber, pageSize));
+
+            return userList;
         }
 
         /// <summary>
@@ -101,11 +110,18 @@
         /// </summary>
         /// <param name="model">用户</param>
         /// <returns></returns>
-        public Task<IdentityResult> CreateUserAsync(UserViewModel model)
+        public async Task<IdentityResult> CreateUserAsync(UserViewModel model)
         {
             var user = Mapper.Map<AppUser>(model);
 
-            return userManager.CreateAsync(user, AppUser.DEFAULTPASSWORD);
+            var createResult = await userManager.CreateAsync(user, AppUser.DEFAULTPASSWORD);
+
+            if (!createResult.Succeeded)
+            {
+                return createResult;
+            }
+
+            return await userManager.AddToRoleAsync(user.Id, model.Role);
         }
 
         /// <summary>
@@ -113,12 +129,23 @@
         /// </summary>
         /// <param name="model">用户</param>
         /// <returns></returns>
-        public Task<IdentityResult> ModifyUserAsync(UserViewModel model)
+        public async Task<IdentityResult> ModifyUserAsync(UserViewModel model)
         {
-            var user = GetUser(model.Id);
+            var user = userManager.FindById(model.Id);
             Mapper.Map(model, user);
 
-            return userManager.UpdateAsync(user);
+            var modify = await userManager.UpdateAsync(user);
+
+            if (!modify.Succeeded)
+            {
+                return modify;
+            }
+
+            var roles = await userManager.GetRolesAsync(user.Id);
+            await userManager.RemoveFromRolesAsync(user.Id, roles.ToArray());
+            var addRole = await userManager.AddToRoleAsync(user.Id, model.Role);
+
+            return addRole;
         }
 
         /// <summary>
@@ -136,13 +163,11 @@
         /// </summary>
         /// <param name="userId">用户标识</param>
         /// <returns></returns>
-        public async Task<IdentityResult> ResetPasswordAsync(string userId)
+        public Task<IdentityResult> ResetPasswordAsync(string userId)
         {
-            var token = await userManager.GeneratePasswordResetTokenAsync(userId);
+            var token = userManager.GeneratePasswordResetToken(userId);
 
-            var result = await userManager.ResetPasswordAsync(userId, token, AppUser.DEFAULTPASSWORD);
-
-            return result;
+            return userManager.ResetPasswordAsync(userId, token, AppUser.DEFAULTPASSWORD);
         }
 
         /// <summary>

@@ -1,7 +1,7 @@
 ﻿$(function () {
     GetUserInfo();
-    Timeer();
-    MessageCount();
+    //Timeer();
+    //MessageCount();
     RanderMenus();
 });
 function GetUserInfo() {

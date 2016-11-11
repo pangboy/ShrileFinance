@@ -1,5 +1,6 @@
 ﻿namespace Core.Entities
 {
+    using System;
     using System.Linq;
     using Microsoft.AspNet.Identity.EntityFramework;
 

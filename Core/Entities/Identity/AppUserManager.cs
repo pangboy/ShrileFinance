@@ -23,6 +23,8 @@
                 RequireLowercase = false,
                 RequireUppercase = false
             };
+
+            UserTokenProvider = new EmailTokenProvider<AppUser>();
         }
 
         public bool CheckUsername(string username)

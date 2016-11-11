@@ -53,7 +53,8 @@
 
 			if (query.method == "mod" || query.method == "view") {
 				if (query.method == "mod") {
-					$("input[textboxname='Username']").textbox("disable");
+				    $("input[textboxname='Username']").textbox("disableValidation");
+				    $("input[textboxname='Username']").textbox("readonly");
 				}
 				if (query.method == "view") {
 					$("#save").linkbutton("disable");
@@ -62,7 +63,7 @@
 				}
 
 				uc.form.LoadForm({
-					params: { userId: query.userId },
+					params: { Id: query.Id },
 					url: "../api/User/Get"
 				});
 			}
@@ -74,7 +75,15 @@
 			uc.form.Submit({
 				url: "../api/User",
 				method: "auto",
-				data: user
+				data: user,
+				statusCode: {
+				    200: function (data) {
+				        top.$.messager.show({ msg: "保存成功！" });
+
+				        uc.form.Cancel();
+				    },
+                    400: uc.E400
+				},
 			});
 		}
 	</script>
@@ -86,7 +95,7 @@
 			<legend>用户信息</legend>
 
 			<div id="data">
-				<input name="UserId" type="hidden" />
+				<input name="Id" type="hidden" />
 			</div>
 
 			<div class="row">
@@ -113,7 +122,7 @@
 
 				<div>
 					<label>角色:</label>
-					<select name="RoleId" class="easyui-combobox" data-options="
+					<select name="Role" class="easyui-combobox" data-options="
 						method: 'GET',
 						url:'../api/Role/GetAll',
 						required:true,
@@ -125,19 +134,12 @@
 			<div class="row">
 				<div>
 					<label>手机:</label>
-					<input name="Mobile" class="easyui-textbox" data-options="validType:'Mobile'" />
+					<input name="Phone" class="easyui-textbox" data-options="validType:'Mobile'" />
 				</div>
 
 				<div>
 					<label>邮箱:</label>
 					<input name="Email" class="easyui-textbox" data-options="validType:'Email'" />
-				</div>
-			</div>
-
-			<div class="row">
-				<div>
-					<label>备注:</label>
-					<input name="Remarks" class="easyui-textbox" data-options="multiline:true,height:66,width:555" />
 				</div>
 			</div>
 		</fieldset>

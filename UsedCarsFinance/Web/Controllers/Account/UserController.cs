@@ -22,8 +22,8 @@ namespace Web.Controllers.Account
 
         public UserController(AccountAppService userService)
         {
-            service.User = User;
             this.service = userService;
+            this.service.User = User;
         }
 
         /// <summary>
@@ -47,11 +47,11 @@ namespace Web.Controllers.Account
         /// 获取用户
         /// </summary>
         /// qiy		15.11.12
-        /// <param name="userId">用户标识</param>
+        /// <param name="Id">用户标识</param>
         /// <returns></returns>
-        public IHttpActionResult Get(string userId)
+        public IHttpActionResult Get(string Id)
         {
-            var user = service.GetUser(userId);
+            var user = service.GetUser(Id);
 
             return user != null ? (IHttpActionResult)Ok(user) : NotFound();
         }
@@ -82,14 +82,21 @@ namespace Web.Controllers.Account
                 return BadRequest(ModelState);
             }
 
-            var result = await service.CreateUserAsync(value);
-
-            if (!result.Succeeded)
+            try
             {
-                return GetErrorResult(result);
-            }
+                var result = await service.CreateUserAsync(value);
 
-            return Ok();
+                if (!result.Succeeded)
+                {
+                    return GetErrorResult(result);
+                }
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         /// <summary>
@@ -192,16 +199,16 @@ namespace Web.Controllers.Account
         /// 启用帐号
         /// </summary>
         /// qiy		15.11.25
-        /// <param name="userId">用户标识</param>
+        /// <param name="Id">用户标识</param>
         [HttpGet]
-        public async Task<IHttpActionResult> Enable(string userId)
+        public async Task<IHttpActionResult> Enable(string Id)
         {
-            if (string.IsNullOrEmpty(userId))
+            if (string.IsNullOrEmpty(Id))
             {
-                return BadRequest($"{nameof(userId)} 不可为空.");
+                return BadRequest($"{nameof(Id)} 不可为空.");
             }
 
-            var result = await service.EnableAsync(userId);
+            var result = await service.EnableAsync(Id);
 
             if (!result.Succeeded)
             {
@@ -215,16 +222,16 @@ namespace Web.Controllers.Account
         /// 禁用帐号
         /// </summary>
         /// qiy		15.11.12
-        /// <param name="userId">用户标识</param>
+        /// <param name="Id">用户标识</param>
         [HttpGet]
-        public async Task<IHttpActionResult> Disable(string userId)
+        public async Task<IHttpActionResult> Disable(string Id)
         {
-            if (string.IsNullOrEmpty(userId))
+            if (string.IsNullOrEmpty(Id))
             {
-                return BadRequest($"{nameof(userId)} 不可为空.");
+                return BadRequest($"{nameof(Id)} 不可为空.");
             }
 
-            var result = await service.DisableAsync(userId);
+            var result = await service.DisableAsync(Id);
 
             if (!result.Succeeded)
             {
@@ -238,16 +245,16 @@ namespace Web.Controllers.Account
         /// 重置密码
         /// </summary>
         /// qiy		15.11.25
-        /// <param name="userId">用户标识</param>
+        /// <param name="Id">用户标识</param>
         [HttpGet]
-        public async Task<IHttpActionResult> ResetPassword(string userId)
+        public async Task<IHttpActionResult> ResetPassword(string Id)
         {
-            if (string.IsNullOrEmpty(userId))
+            if (string.IsNullOrEmpty(Id))
             {
-                return BadRequest($"{nameof(userId)} 不可为空.");
+                return BadRequest($"{nameof(Id)} 不可为空.");
             }
 
-            var result = await service.ResetPasswordAsync(userId);
+            var result = await service.ResetPasswordAsync(Id);
 
             if (!result.Succeeded)
             {

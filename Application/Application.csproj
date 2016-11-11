@@ -85,6 +85,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Mappings\PagedListTypeConverter.cs" />
+    <Compile Include="ProcessAppService.cs" />
     <Compile Include="OrganizationAppService.cs" />
     <Compile Include="LawsuitAppService.cs" />
     <Compile Include="Mappings\DomainToViewModelMappingProfile.cs" />
@@ -97,7 +99,7 @@
     <Compile Include="AccountAppService.cs" />
     <Compile Include="ViewModels\AccountViewModels\ChangePasswordViewModel.cs" />
     <Compile Include="ViewModels\AccountViewModels\LoginViewModel.cs" />
-    <Compile Include="ViewModels\AccountViewModels\RegisterViewModel.cs" />
+    <Compile Include="ViewModels\AccountViewModels\UserViewModel.cs" />
     <Compile Include="ViewModels\OrganizationViewModels\BigEventViewModel.cs" />
     <Compile Include="ViewModels\OrganizationViewModels\CashFlowViewModel.cs" />
     <Compile Include="ViewModels\OrganizationViewModels\FamilyMemberViewModel.cs" />
@@ -122,6 +124,10 @@
     </Compile>
     <Compile Include="ViewModels\OrganizationViewModels\InstitutionLiabilitiesViewModel.cs" />
     <Compile Include="ViewModels\PagedListViewModel.cs" />
+    <Compile Include="ViewModels\ProcessViewModels\ActionViewModel.cs" />
+    <Compile Include="ViewModels\ProcessViewModels\FormViewModel.cs" />
+    <Compile Include="ViewModels\ProcessViewModels\FrameViewModel.cs" />
+    <Compile Include="ViewModels\ProcessViewModels\InstanceViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Core\Core.csproj">
