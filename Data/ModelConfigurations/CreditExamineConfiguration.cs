@@ -106,16 +106,20 @@
             Property(m => m.SurveyOpinionReson).HasMaxLength(400);
 
             // 初审人标识
-            Property(m => m.TrialPersonId);
+            HasOptional(m => m.TrialPerson).WithMany()
+                .Map(m => m.MapKey("TrialPersonId"));
 
             // 复审人标识
-            Property(m => m.ReviewPersonId);
-            
+            HasOptional(m => m.ReviewPerson).WithMany()
+                .Map(m => m.MapKey("TrialPersonId"));
+
             // 审批人标识
-            Property(m => m.ApprovePersonId);
-            
+            HasOptional(m => m.ApprovePerson).WithMany()
+                .Map(m => m.MapKey("TrialPersonId"));
+
             // 终审人标识
-            Property(m => m.FinalPersonId);
+            HasOptional(m => m.FinalPerson).WithMany()
+                .Map(m => m.MapKey("TrialPersonId"));
 
             // 设置表名
             ToTable("FANC_CreditExamine");
