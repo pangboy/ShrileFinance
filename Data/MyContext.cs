@@ -47,10 +47,10 @@
                 .Add(new ProduceConfigration())
                 .Add(new FinanceConfigration())
                 .Add(new CreditExamineConfiguration())
-                .Add(new ContactConfiguration())
-                .Add(new FinanceExtensionConfiguration())
-                .Add(new ParentConfigration())
-                .Add(new PartnerConfiguration());
+                //.Add(new ContactConfiguration())
+                //.Add(new FinanceExtensionConfiguration())
+                //.Add(new PartnerConfiguration())
+                ;
 
             base.OnModelCreating(modelBuilder);
         }
