@@ -288,16 +288,6 @@ namespace Data.Models
                 .Property(e => e.ExtName)
                 .IsUnicode(false);
 
-            modelBuilder.Entity<SYS_Menu>()
-                .HasMany(e => e.SYS_Menu1)
-                .WithOptional(e => e.SYS_Menu2)
-                .HasForeignKey(e => e.ParentId);
-
-            modelBuilder.Entity<SYS_Menu>()
-                .HasMany(e => e.USER_Role)
-                .WithMany(e => e.SYS_Menu)
-                .Map(m => m.ToTable("USER_Permissions").MapLeftKey("MenuId").MapRightKey("RoleId"));
-
             modelBuilder.Entity<SYS_Reference>()
                 .HasMany(e => e.SYS_OperationLog)
                 .WithRequired(e => e.SYS_Reference)

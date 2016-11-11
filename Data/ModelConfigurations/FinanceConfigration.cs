@@ -40,6 +40,12 @@
             //联系人信息
             HasOptional(m => m.Applicant).WithOptionalPrincipal().Map(m => m.MapKey("FinanceId")).WillCascadeOnDelete();
 
+            // 合同
+            HasOptional(m => m.Contact).WithOptionalPrincipal().Map(m => m.MapKey("FinanceId")).WillCascadeOnDelete();
+
+            // 融资扩展
+            HasOptional(m => m.FinanceExtension).WithOptionalPrincipal().Map(m => m.MapKey("FinanceId")).WillCascadeOnDelete();
+
             ToTable("FANC_Finance");
         }
     }

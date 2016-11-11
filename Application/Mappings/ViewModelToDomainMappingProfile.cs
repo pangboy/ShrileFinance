@@ -14,7 +14,10 @@
     {
         public ViewModelToDomainMappingProfile()
         {
-            CreateMap<UserViewModel, AppUser>();
+            CreateMap<UserViewModel, AppUser>()
+                .ForMember(d => d.Id, opt => opt.Condition(s => !string.IsNullOrEmpty(s.Id)))
+                .ForMember(d => d.UserName, opt => opt.Ignore())
+                .ForMember(d => d.PhoneNumber, opt => opt.MapFrom(s => s.Phone));
 
             CreateMap<AssociatedEnterpriseViewModel, AssociatedEnterprise>();
             CreateMap<ParentViewModel, OrganizationParent>();

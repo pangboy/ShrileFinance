@@ -15,15 +15,18 @@ namespace DAL.User
 		/// qiy		16.03.08
 		/// <param name="roleId"></param>
 		/// <returns></returns>
-		public List<int> FindByRole(int roleId)
+		public List<int> FindByRole(string roleId)
 		{
 			List<int> result = new List<int>();
 
 			SqlCommand comm = DHelper.GetSqlCommand(
-				"SELECT MenuId FROM USER_Permissions WHERE RoleId = @RoleId"
+                @"SELECT MenuId FROM USER_Permissions AS up
+                    LEFT JOIN USER_Role AS ur ON up.RoleId = ur.UR_ID
+                    LEFT JOIN AspNetRoles AS ar ON ur.Name = ar.Name
+                WHERE ar.Id = @RoleId"
 			);
 
-			DHelper.AddParameter(comm, "@RoleId", SqlDbType.Int, roleId);
+			DHelper.AddParameter(comm, "@RoleId", SqlDbType.NVarChar, roleId);
 
 			DataTable dt = DHelper.ExecuteDataTable(comm);
 
@@ -69,8 +72,11 @@ namespace DAL.User
 		public void DeleteByRole(int roleId)
         {
             SqlCommand comm = DHelper.GetSqlCommand(
-				"DELETE USER_Permissions WHERE RoleId = @RoleId"
-				);
+                @"DELETE USER_Permissions AS up
+                    LEFT JOIN USER_Role AS ur ON up.RoleId = ur.UR_ID
+                    LEFT JOIN AspNetRoles AS ar ON ur.Name = ar.Name
+                WHERE ar.Id = @RoleId"
+                );
             DHelper.AddParameter(comm, "@RoleId", SqlDbType.Int, roleId);
 
             DHelper.ExecuteNonQuery(comm);

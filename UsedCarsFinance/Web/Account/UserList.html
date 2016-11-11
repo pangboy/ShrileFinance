@@ -13,8 +13,7 @@
 		uc.grid = new UCGrid("#dg");
 
 		function SetFilters(params) {
-			params.UR_ID = $("#RoleId").textbox("getValue");
-			params.RealName = $("#RealName").textbox("getValue");
+			params.SearchString = $("#SearchString").textbox("getValue");
 		}
 
 		function UserEdit() {
@@ -24,7 +23,7 @@
 				var row = uc.grid.GetSelected();
 
 				if (row) {
-					url += "&userId=" + row.UI_ID;
+					url += "&Id=" + row.Id;
 				}
 				else {
 					return;
@@ -37,10 +36,10 @@
 			var row = uc.grid.GetSelected();
 
 			if (row) {
-				if (row.Status == 0) {
+			    if (row.LockoutEnabled == 1) {
 					$.ajax({
 						async: true,
-						data: { userId: row.UI_ID },
+						data: { Id: row.Id },
 						type: "GET",
 						url: "../api/User/Enable",
 						statusCode: {
@@ -60,10 +59,10 @@
 			var row = uc.grid.GetSelected();
 
 			if (row) {
-				if (row.Status == 1) {
+			    if (row.LockoutEnabled == 0) {
 					$.ajax({
 						async: true,
-						data: { userId: row.UI_ID },
+						data: { Id: row.Id },
 						type: "GET",
 						url: "../api/User/Disable",
 						statusCode: {
@@ -87,7 +86,7 @@
 					if (row) {
 						$.ajax({
 							async: true,
-							data: { userId: row.UI_ID },
+							data: { Id: row.Id },
 							type: "GET",
 							url: "../api/User/ResetPassword",
 							statusCode: {
@@ -119,29 +118,20 @@
         ">
 		<thead>
 			<tr>
-				<th data-options="field:'UI_ID',hidden:true">UI_ID</th>
+				<th data-options="field:'Id',hidden:true">Id</th>
 				<th data-options="field:'Username',width:100,align:'center'">帐号</th>
-				<th data-options="field:'RoleName',width:100,align:'center'">角色</th>
-				<th data-options="field:'RealName',width:200,align:'center'">姓名</th>
+                <th data-options="field:'Role',width:100,align:'center'">角色</th>
+				<th data-options="field:'Name',width:200,align:'center'">姓名</th>
 				<th data-options="field:'Email',width:200,align:'center'">邮箱</th>
-				<th data-options="field:'Mobile',width:100,align:'center'">手机</th>
-				<th data-options="field:'StatusDesc',width:100,align:'center'">状态</th>
-				<th data-options="field:'RegisterDate',width:150,align:'center'">注册日期</th>
-				<th data-options="field:'Remarks',align:'left'">备注</th>
+				<th data-options="field:'Phone',width:100,align:'center'">手机</th>
+				<th data-options="field:'LockoutEnabledDesc',width:100,align:'center'">状态</th>
 			</tr>
 		</thead>
 	</table>
 
 	<div id="tb">
 		<div>
-			<label for="RoleId">角色类型:</label>
-			<select id="RoleId" class="easyui-combobox" style="width: 100px" data-options="
-				method: 'GET',
-				url:'../api/Role/GetAll',
-				editable:false
-			"></select>
-			<label for="RealName">用户姓名:</label>
-			<input id="RealName" class="easyui-textbox" style="width: 100px" />
+			<input id="SearchString" class="easyui-textbox" data-options="prompt:'用户名或姓名'" style="width: 200px" />
 			<a id="search" class="easyui-linkbutton" href="javascript:void(0)" data-options="onClick:uc.grid.Reload,iconCls:'icon-search',plain:true">搜索</a>
 			<a id="reset" class="easyui-linkbutton" href="javascript:void(0)" data-options="onClick:uc.grid.Reset,iconCls:'icon-reload',plain:true">重置</a>
 		</div>

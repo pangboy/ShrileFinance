@@ -188,8 +188,10 @@
     <Content Include="Finance\images\arrow_up.png" />
     <Content Include="Finance\images\choose.png" />
     <Content Include="Finance\images\down.png" />
+    <Content Include="Finance\Content\FinanceJs.js" />
     <Content Include="Finance\FinanceAudit.html" />
     <Content Include="Finance\CreditExamine.html" />
+    <Content Include="Finance\FinanceOperation.html" />
     <Content Include="Finance\InfoAdditional.html" />
     <Content Include="Finance\Loan.html" />
     <Content Include="Finance\NewFinanceEdit.html" />
@@ -916,6 +918,7 @@
     <Compile Include="Controllers\Finance\ApplicantController.cs" />
     <Compile Include="Controllers\Finance\BorrowController.cs" />
     <Compile Include="Controllers\Finance\CreditExamineReportController.cs" />
+    <Compile Include="Controllers\Finance\FinanceAuidtController.cs" />
     <Compile Include="Controllers\Finance\FinanceController.cs" />
     <Compile Include="Controllers\Finance\ImageUploadController.cs" />
     <Compile Include="Controllers\Finance\CreditExamineController.cs" />
@@ -1003,7 +1006,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>17784</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost/Web</IISUrl>
+          <IISUrl>http://localhost/ucf</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

@@ -1,20 +1,29 @@
-﻿using System.Collections.Generic;
-using System.Collections.Specialized;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Http;
 using Application;
+using Application.ViewModels.AccountViewModels;
+using Microsoft.AspNet.Identity;
+using Microsoft.Owin.Security;
 using Models;
-using Models.User;
 
 namespace Web.Controllers.Account
 {
     public class UserController : ApiController
     {
-        private readonly static BLL.User.User _user = new BLL.User.User();
-        private readonly AccountAppService userService;
+        private readonly AccountAppService service;
+        private IAuthenticationManager AuthManager
+        {
+            get { return Request.GetOwinContext().Authentication; }
+        }
 
         public UserController(AccountAppService userService)
         {
-            this.userService = userService;
+            this.service = userService;
+            this.service.User = User;
         }
 
         /// <summary>
@@ -24,26 +33,25 @@ namespace Web.Controllers.Account
         /// <param name="page">页码</param>
         /// <param name="rows">尺寸</param>
         /// <returns></returns>
-        public Datagrid GetAll(int page, int rows)
+        public IHttpActionResult GetAll(string searchString, int page, int rows)
         {
-            Pagination pagination = new Pagination(page, rows);
-            NameValueCollection filter = ApiHelper.GetParameters();
+            var list = service.List(searchString, page, rows);
 
-            return new Datagrid {
-                rows = _user.List(pagination, filter),
-                total = pagination.Total
-            };
+            return Ok(new {
+                rows = list,
+                total = list.TotalItemCount
+            });
         }
 
         /// <summary>
         /// 获取用户
         /// </summary>
         /// qiy		15.11.12
-        /// <param name="userId">用户标识</param>
+        /// <param name="Id">用户标识</param>
         /// <returns></returns>
-        public IHttpActionResult Get(int userId)
+        public IHttpActionResult Get(string Id)
         {
-            UserInfo user = _user.GetUser(userId);
+            var user = service.GetUser(Id);
 
             return user != null ? (IHttpActionResult)Ok(user) : NotFound();
         }
@@ -55,9 +63,9 @@ namespace Web.Controllers.Account
         /// <param name="roleId">角色标识</param>
         /// <returns></returns>
         [HttpGet]
-        public List<ComboInfo> Option(int? roleId)
+        public IEnumerable<ComboInfo> Option(int? roleId)
         {
-            return _user.Option(roleId);
+            return service.GetRoles().Select(m => new ComboInfo(m.Id, m.Name));
         }
 
         /// <summary>
@@ -67,9 +75,28 @@ namespace Web.Controllers.Account
         /// <param name="value"></param>
         /// <returns></returns>
         [HttpPost]
-        public IHttpActionResult Post(UserInfo value)
+        public async Task<IHttpActionResult> Post(UserViewModel value)
         {
-            return _user.Add(value) ? (IHttpActionResult)Ok() : BadRequest("保存失败");
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            try
+            {
+                var result = await service.CreateUserAsync(value);
+
+                if (!result.Succeeded)
+                {
+                    return GetErrorResult(result);
+                }
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         /// <summary>
@@ -80,9 +107,21 @@ namespace Web.Controllers.Account
         /// <param name="value"></param>
         /// <returns></returns>
         [HttpPut]
-        public IHttpActionResult Put(UserInfo value)
+        public async Task<IHttpActionResult> Put(UserViewModel value)
         {
-            return _user.Modify(value) ? (IHttpActionResult)Ok() : BadRequest("保存失败");
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var result = await service.ModifyUserAsync(value);
+
+            if (!result.Succeeded)
+            {
+                return GetErrorResult(result);
+            }
+
+            return Ok();
         }
 
 
@@ -93,13 +132,30 @@ namespace Web.Controllers.Account
         /// <param name="username">用户名</param>
         /// <param name="password">密码</param>
         /// <returns></returns>
-        [HttpGet]
+        [HttpPost]
         [AllowAnonymous]
-        public IHttpActionResult SignIn(string username, string password)
+        public async Task<IHttpActionResult> SignIn(LoginViewModel model)
         {
-            string message;
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
 
-            return _user.SignIn(username, password, out message) ? (IHttpActionResult)Ok() : BadRequest(message);
+            try
+            {
+                var ident = await service.Login(model);
+
+                AuthManager.SignOut();
+                AuthManager.SignIn(new AuthenticationProperties {
+                    IsPersistent = false
+                }, ident);
+
+                return Ok();
+            }
+            catch (ApplicationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         /// <summary>
@@ -110,7 +166,7 @@ namespace Web.Controllers.Account
         [HttpGet]
         public IHttpActionResult SignOut()
         {
-            _user.SignOut();
+            AuthManager.SignOut();
 
             return Ok();
         }
@@ -121,14 +177,11 @@ namespace Web.Controllers.Account
         /// yand     15.11.24
         /// <returns></returns>
         [HttpGet]
-        public object CurrentUser()
+        public IHttpActionResult CurrentUser()
         {
-            UserInfo user = _user.CurrentUser();
+            var user = service.CurrentUser();
 
-            return new {
-                user = user,
-                role = new BLL.User.Role().Get(user.RoleId)
-            };
+            return Ok(user);
         }
 
         [HttpGet]
@@ -139,42 +192,76 @@ namespace Web.Controllers.Account
         /// <returns></returns>
         public IHttpActionResult CheckUsername(string username)
         {
-            return _user.CheckUsername(username) ? (IHttpActionResult)Ok() : BadRequest();
+            return !service.CheckUsername(username) ? (IHttpActionResult)Ok() : BadRequest();
         }
 
         /// <summary>
         /// 启用帐号
         /// </summary>
         /// qiy		15.11.25
-        /// <param name="userId">用户标识</param>
+        /// <param name="Id">用户标识</param>
         [HttpGet]
-        public IHttpActionResult Enable(int userId)
+        public async Task<IHttpActionResult> Enable(string Id)
         {
-            return _user.Enable(userId) ? (IHttpActionResult)Ok() : BadRequest("启用失败");
+            if (string.IsNullOrEmpty(Id))
+            {
+                return BadRequest($"{nameof(Id)} 不可为空.");
+            }
+
+            var result = await service.EnableAsync(Id);
+
+            if (!result.Succeeded)
+            {
+                return GetErrorResult(result);
+            }
+
+            return Ok();
         }
 
         /// <summary>
         /// 禁用帐号
         /// </summary>
         /// qiy		15.11.12
-        /// <param name="userId">用户标识</param>
+        /// <param name="Id">用户标识</param>
         [HttpGet]
-        public IHttpActionResult Disable(int userId)
+        public async Task<IHttpActionResult> Disable(string Id)
         {
-            return _user.Disable(userId) ? (IHttpActionResult)Ok() : BadRequest("禁用失败");
+            if (string.IsNullOrEmpty(Id))
+            {
+                return BadRequest($"{nameof(Id)} 不可为空.");
+            }
+
+            var result = await service.DisableAsync(Id);
+
+            if (!result.Succeeded)
+            {
+                return GetErrorResult(result);
+            }
+
+            return Ok();
         }
 
         /// <summary>
         /// 重置密码
         /// </summary>
         /// qiy		15.11.25
-        /// <param name="userId">用户标识</param>
+        /// <param name="Id">用户标识</param>
         [HttpGet]
-        public IHttpActionResult ResetPassword(int userId)
+        public async Task<IHttpActionResult> ResetPassword(string Id)
         {
-            string message;
+            if (string.IsNullOrEmpty(Id))
+            {
+                return BadRequest($"{nameof(Id)} 不可为空.");
+            }
 
-            return _user.ResetPassword(userId, out message) ? (IHttpActionResult)Ok() : BadRequest(message);
+            var result = await service.ResetPasswordAsync(Id);
+
+            if (!result.Succeeded)
+            {
+                return GetErrorResult(result);
+            }
+
+            return Ok();
         }
 
         /// <summary>
@@ -186,11 +273,23 @@ namespace Web.Controllers.Account
         /// <param name="New_Password"></param>
         /// <returns></returns>
         [HttpGet]
-        public IHttpActionResult PasswordEdit(int UserId, string Old_Password, string New_Password)
+        public async Task<IHttpActionResult> PasswordEdit(ChangePasswordViewModel model)
         {
-            string message;
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
 
-            return _user.ModifyPassword(UserId, Old_Password, New_Password, out message) ? (IHttpActionResult)Ok() : BadRequest(message);
+            model.Id = User.Identity.GetUserId();
+
+            var result = await service.ChangePasswordAsync(model);
+
+            if (!result.Succeeded)
+            {
+                return GetErrorResult(result);
+            }
+
+            return Ok();
         }
 
         /// <summary>
@@ -206,6 +305,35 @@ namespace Web.Controllers.Account
             BLL.User.Permissions menuPermissions = new BLL.User.Permissions();
 
             return menuPermissions.MenuPermissionEdit(value) ? (IHttpActionResult)Ok() : BadRequest("保存失败");
+        }
+
+        private IHttpActionResult GetErrorResult(IdentityResult result)
+        {
+            if (result == null)
+            {
+                return InternalServerError();
+            }
+
+            if (!result.Succeeded)
+            {
+                if (result.Errors != null)
+                {
+                    foreach (string error in result.Errors)
+                    {
+                        ModelState.AddModelError("", error);
+                    }
+                }
+
+                if (ModelState.IsValid)
+                {
+                    // 没有可发送的 ModelState 错误，因此仅返回空 BadRequest。
+                    return BadRequest();
+                }
+
+                return BadRequest(ModelState);
+            }
+
+            return null;
         }
     }
 }

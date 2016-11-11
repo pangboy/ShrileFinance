@@ -95,6 +95,10 @@
     <Compile Include="Migrations\201611011134263_CreateParent.Designer.cs">
       <DependentUpon>201611011134263_CreateParent.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201611110645384_AspNetRole.cs" />
+    <Compile Include="Migrations\201611110645384_AspNetRole.Designer.cs">
+      <DependentUpon>201611110645384_AspNetRole.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\201611060907042_AddProduceModule.cs" />
     <Compile Include="Migrations\201611060907042_AddProduceModule.Designer.cs">
       <DependentUpon>201611060907042_AddProduceModule.cs</DependentUpon>
@@ -103,25 +107,40 @@
     <Compile Include="Migrations\201611090429237_AddFinanceAndCredit.Designer.cs">
       <DependentUpon>201611090429237_AddFinanceAndCredit.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201611110947526_Workflow.cs" />
+    <Compile Include="Migrations\201611110947526_Workflow.Designer.cs">
+      <DependentUpon>201611110947526_Workflow.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs">
       <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
     </Compile>
+    <Compile Include="ModelConfigurations\ActionConfiguration.cs" />
     <Compile Include="ModelConfigurations\ApplicantConfiguration.cs" />
     <Compile Include="ModelConfigurations\AssociatedEnterpriseConfiguration.cs" />
     <Compile Include="ModelConfigurations\BigEventConfiguration.cs" />
     <Compile Include="ModelConfigurations\CashFlowConfiguration.cs" />
+    <Compile Include="ModelConfigurations\ContactConfiguration.cs" />
     <Compile Include="ModelConfigurations\CreditExamineConfiguration.cs" />
     <Compile Include="ModelConfigurations\FinanceConfigration.cs" />
+    <Compile Include="ModelConfigurations\FinanceExtensionConfiguration.cs" />
     <Compile Include="ModelConfigurations\FinancingProjectConfigration.cs" />
     <Compile Include="ModelConfigurations\FinancialAffairsConfiguration.cs" />
+    <Compile Include="ModelConfigurations\FlowConfiguration.cs" />
+    <Compile Include="ModelConfigurations\FormConfiguration.cs" />
+    <Compile Include="ModelConfigurations\FormNodeConfiguration.cs" />
+    <Compile Include="ModelConfigurations\FormRoleConfiguration.cs" />
+    <Compile Include="ModelConfigurations\InstanceConfiguration.cs" />
     <Compile Include="ModelConfigurations\LiabilitiesConfiguration.cs" />
     <Compile Include="ModelConfigurations\LitigationConfigruation.cs" />
+    <Compile Include="ModelConfigurations\LogConfiguration.cs" />
     <Compile Include="ModelConfigurations\ManagerConfiguration.cs" />
     <Compile Include="ModelConfigurations\FamilyMemberConfiguration.cs" />
+    <Compile Include="ModelConfigurations\NodeConfiguration.cs" />
     <Compile Include="ModelConfigurations\OrganizationConfiguration.cs">
       <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
     </Compile>
     <Compile Include="ModelConfigurations\ParentConfigration.cs" />
+    <Compile Include="ModelConfigurations\PartnerConfiguration.cs" />
     <Compile Include="ModelConfigurations\FinancingItemConfigration.cs" />
     <Compile Include="ModelConfigurations\ProfitConfiguration.cs" />
     <Compile Include="ModelConfigurations\ProduceConfigration.cs" />
@@ -236,10 +255,14 @@
     </Compile>
     <Compile Include="Repositories\AppUserStore.cs" />
     <Compile Include="Repositories\BaseRepository.cs" />
+    <Compile Include="Repositories\FlowRepository.cs" />
+    <Compile Include="Repositories\FormRepository.cs" />
+    <Compile Include="Repositories\InstanceRepository.cs" />
     <Compile Include="Repositories\FinancingProjectRepository.cs" />
     <Compile Include="Repositories\OrganizationRepository.cs" />
     <Compile Include="Repositories\ProduceRepository.cs" />
     <Compile Include="Repositories\FinanceRepository.cs" />
+    <Compile Include="Repositories\PartnerRepository.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Core\Core.csproj">
@@ -279,11 +302,17 @@
     <EmbeddedResource Include="Migrations\201611011134263_CreateParent.resx">
       <DependentUpon>201611011134263_CreateParent.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611110645384_AspNetRole.resx">
+      <DependentUpon>201611110645384_AspNetRole.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201611060907042_AddProduceModule.resx">
       <DependentUpon>201611060907042_AddProduceModule.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201611090429237_AddFinanceAndCredit.resx">
       <DependentUpon>201611090429237_AddFinanceAndCredit.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611110947526_Workflow.resx">
+      <DependentUpon>201611110947526_Workflow.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

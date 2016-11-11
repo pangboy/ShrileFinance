@@ -6,6 +6,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Web;
 using System.Web.Security;
+using Application;
 using Models.User;
 
 namespace BLL.User
@@ -47,17 +48,6 @@ namespace BLL.User
             }
 
             return user;
-        }
-
-        /// <summary>
-        /// 用户选项
-        /// </summary>
-        /// qiy     16.05.31
-        /// <param name="roleId">角色标识</param>
-        /// <returns></returns>
-        public List<Models.ComboInfo> Option(int? roleId)
-        {
-            return userMapper.Option(roleId);
         }
 
         /// <summary>
@@ -124,48 +114,6 @@ namespace BLL.User
         }
 
         /// <summary>
-        /// 用户登录
-        /// </summary>
-        /// qiy		15.11.19
-        /// <param name="username">用户名</param>
-        /// <param name="password">密码(明文)</param>
-        /// <returns></returns>
-        public bool SignIn(string username, string password, out string message)
-        {
-            //返回加密后的密码
-            string password_md5 = MD5Crypto(password);
-
-            //根据用户名和密码查找用户
-            UserInfo user = userMapper.FindByAccount(username, password_md5);
-
-            message = "用户名或密码错误!";
-            if (user == null) return false;
-
-            message = "用户已停用!";
-            if (user.Status == UserInfo.StatusEnum.停用) return false;
-
-            if (FormsAuthentication.IsEnabled)
-            {
-                FormsAuthentication.SetAuthCookie(user.UserId.ToString(), true);
-
-                return true;
-            }
-            else
-            {
-                throw new Exception("不支持Forms认证方式");
-            }
-        }
-        /// <summary>
-        /// 用户注销
-        /// </summary>
-        /// qiy		15.11.19
-        /// <returns></returns>
-        public void SignOut()
-        {
-            FormsAuthentication.SignOut();
-        }
-
-        /// <summary>
         /// 获取当前用户实例
         /// </summary>
         /// qiy		15.11.19
@@ -173,115 +121,6 @@ namespace BLL.User
         public UserInfo CurrentUser()
         {
             return GetUser(CurrentUserId);
-        }
-
-        /// <summary>
-        /// 重置密码为123456
-        /// </summary>
-        /// qiy		15.11.17
-        /// <param name="userId">用户标识</param>
-        /// <returns></returns>
-        public bool ResetPassword(int userId, out string message)
-        {
-            message = "重置失败!";
-            return ModifyPassword(userId, DEFAULT_PASSWORD);
-        }
-        /// <summary>
-        /// 修改密码
-        /// </summary>
-        /// qiy		15.11.17
-        /// qiy		16.03.07
-        /// <param name="userId">用户标识</param>
-        /// <param name="password">密码(明文)</param>
-        /// <returns></returns>
-        private bool ModifyPassword(int userId, string password)
-        {
-            UserInfo user = GetUser(userId);
-
-            if (user == null) return false;
-
-            //返回加密后的密码
-            user.Password = MD5Crypto(password);
-
-            return userMapper.Update(user);
-        }
-
-        /// <summary>
-        /// 修改密码
-        /// </summary>
-        /// yaoy    15.11.26
-        /// <param name="userId"></param>
-        /// <param name="password"></param>
-        /// <param name="password"></param>
-        /// <returns></returns>
-        public bool ModifyPassword(int userId, string old_password, string new_password, out string message)
-        {
-            UserInfo user = userMapper.Find(userId);
-
-            //验证密码是否正确
-            message = "旧密码错误，请重新输入!";
-            if (user.Password != MD5Crypto(old_password)) return false;
-
-            message = "修改失败!";
-            return ModifyPassword(userId, new_password);
-        }
-
-        /// <summary>
-        /// 启用帐号
-        /// </summary>
-        /// qiy		15.11.17
-        /// <param name="userId">用户标识</param>
-        /// <returns></returns>
-        public bool Enable(int userId)
-        {
-            UserInfo user = GetUser(userId);
-
-            if (user == null) return false;
-
-            //返回加密后的密码
-            user.Status = UserInfo.StatusEnum.正常;
-
-            return userMapper.Update(user);
-        }
-        /// <summary>
-        /// 停用帐号
-        /// </summary>
-        /// qiy		15.11.17
-        /// <param name="userId">用户标识</param>
-        /// <returns></returns>
-        public bool Disable(int userId)
-        {
-            UserInfo user = GetUser(userId);
-
-            if (user == null) return false;
-
-            //返回加密后的密码
-            user.Status = UserInfo.StatusEnum.停用;
-
-            return userMapper.Update(user);
-        }
-
-        /// <summary>
-        /// 检查用户名是否重复
-        /// </summary>
-        /// qiy		15.11.25
-        /// <param name="username">用户名</param>
-        /// <returns></returns>
-        public bool CheckUsername(string username)
-        {
-            return userMapper.FindByUsername(username) == 0;
-        }
-
-        /// <summary>
-        /// 用户列表
-        /// </summary>
-        /// qiy		15.11.17
-        /// <param name="page">分页信息</param>
-        /// <param name="filter">筛选条件</param>
-        /// <returns></returns>
-        public DataTable List(Models.Pagination page, NameValueCollection filter)
-        {
-            return userMapper.List(page, filter);
         }
 
 

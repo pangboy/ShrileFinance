@@ -1,28 +1,29 @@
-﻿using Models;
-using Models.User;
-using System;
-using System.Collections.Generic;
-using System.Collections.Specialized;
+﻿using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Web.Http;
+using Application;
+using Models;
 
 namespace Web.Controllers.Account
 {
     public class RoleController : ApiController
     {
-        private readonly static BLL.User.Role _role = new BLL.User.Role();
+        private AccountAppService service;
+
+        public RoleController(AccountAppService service)
+        {
+            this.service = service;
+        }
 
         /// <summary>
         /// 获取角色列表
         /// </summary>
         /// yaoy    15.11.25
         /// <returns></returns>
-        public List<ComboInfo> GetAll()
+        public IEnumerable<ComboInfo> GetAll()
         {
-            return _role.Option();
+            return service.GetRoles().Select(m => new ComboInfo(m.Name, m.Name));
         }
     }
 }

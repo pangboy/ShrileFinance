@@ -4,8 +4,6 @@
 
     public class ChangePasswordViewModel
     {
-        [Required]
-        [StringLength(64)]
         public string Id { get; set; }
 
         [Required]

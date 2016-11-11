@@ -47,9 +47,17 @@
                 .InstancePerRequest();
             builder.RegisterType<Core.Entities.AppUserManager>()
                 .AsSelf()
+                .OnActivated(m => m.Instance.User = CurrentPrincipal())
+                .InstancePerRequest();
+            builder.Register(
+                m => new Core.Entities.Identity.AppRoleManager(
+                    new Microsoft.AspNet.Identity.EntityFramework.RoleStore<Core.Entities.Identity.AppRole>(m.Resolve<Data.MyContext>())))
+                .AsSelf()
                 .InstancePerRequest();
 
             ConfigureAutofac(builder);
         }
+
+        protected abstract System.Security.Principal.IPrincipal CurrentPrincipal();
     }
 }

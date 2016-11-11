@@ -85,9 +85,11 @@ namespace Web.Controllers.Notice
         /// <returns></returns>
         public IHttpActionResult GetByUserId()
         {
-            int userid = BLL.User.User.CurrentUserId;
-           var dt = Notice.GetByUserId(userid);
-            return Ok(dt);
+            // int userid = BLL.User.User.CurrentUserId;
+            //var dt = Notice.GetByUserId(userid);
+            // return Ok(dt);
+
+            return BadRequest();
         }
 
         /// <summary>

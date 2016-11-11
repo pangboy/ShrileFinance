@@ -1,5 +1,7 @@
 ﻿namespace Core.Entities
 {
+    using System;
+    using System.Linq;
     using Microsoft.AspNet.Identity.EntityFramework;
 
     /// <summary>
@@ -14,5 +16,10 @@
         }
 
         public string Name { get; set; }
+
+        public string RoleId
+        {
+            get { return Roles.First().RoleId; }
+        }
     }
 }

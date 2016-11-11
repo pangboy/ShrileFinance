@@ -65,12 +65,12 @@
         /// <summary>
         /// 合同
         /// </summary>
-        public virtual  ICollection<Contact> Contact { get; set; }
+        public virtual ICollection<Contact> Contact { get; set; }
 
         /// <summary>
         /// 产品
         /// </summary>
-        public Produce Produce { get; set; }
+        public virtual Produce Produce { get; set; }
 
         /// <summary>
         /// 信审报告
@@ -132,6 +132,11 @@
         /// 车辆信息
         /// </summary>
         public virtual Vehicle.Vehicle VehicleInfo { get; set; }
+
+        /// <summary>
+        /// 融资扩展
+        /// </summary>
+        public virtual FinanceExtension FinanceExtension { get; set; }
 
         public enum RepaymentSchemeEnum : byte
         {

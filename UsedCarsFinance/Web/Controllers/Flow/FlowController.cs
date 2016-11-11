@@ -31,7 +31,7 @@ namespace Web.Controllers.Flow
         /// <param name="flowId">流程标识</param>
         /// <returns></returns>
         [HttpGet]
-        public List<ComboInfo> NodeOption(int? flowId = null)
+        public List<ComboInfo> NodeOption(Guid? flowId = null)
         {
             var _node = new BLL.Flow.Node();
 

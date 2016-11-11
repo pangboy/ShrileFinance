@@ -1,5 +1,6 @@
 ﻿namespace Core.Entities
 {
+    using System.Security.Principal;
     using Microsoft.AspNet.Identity;
 
     public class AppUserManager : UserManager<AppUser>
@@ -20,13 +21,24 @@
                 RequireLowercase = false,
                 RequireUppercase = false
             };
+
+            UserTokenProvider = new EmailTokenProvider<AppUser>();
         }
+
+        public IPrincipal User { get; set; }
 
         public bool CheckUsername(string username)
         {
             var user = this.FindByName(username);
 
             return user != null;
+        }
+
+        public AppUser CurrentUser()
+        {
+            var userId = User.Identity.GetUserId();
+
+            return FindByIdAsync(userId).Result;
         }
     }
 }

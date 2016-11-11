@@ -1,7 +1,7 @@
 ﻿$(function () {
     GetUserInfo();
-    Timeer();
-    MessageCount();
+    //Timeer();
+    //MessageCount();
     RanderMenus();
 });
 function GetUserInfo() {
@@ -10,11 +10,9 @@ function GetUserInfo() {
         type: "GET",
         url: "api/User/CurrentUser",
         statusCode: {
-            200: function (data) {
-                $("#user_id").val(data.user.UserId);
-                $("#role_id").val(data.user.RoleId);
-                $("#user_name").text(data.user.Name);
-                $("#role_name").text(data.role.Name);
+        	200: function (data) {
+        		$("#user_id").val(data.Id);
+                $("#user_name").text(data.Name);
             }
         }
     });

@@ -1,8 +1,6 @@
 ﻿namespace Core.Entities.Finance
 {
     using System;
-    using Interfaces;
-    using Produce;
 
     /// <summary>
     /// 信审报告

@@ -5,7 +5,7 @@
     /// <summary>
     /// 融资仓储
     /// </summary>
-    public interface IFinanceRepository:IRepository<Finance>
+    public interface IFinanceRepository : IRepository<Finance>
     {
     }
 }
