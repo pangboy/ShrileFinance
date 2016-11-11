@@ -7,7 +7,6 @@ namespace Data.Migrations
     {
         public override void Up()
         {
-            DropPrimaryKey("dbo.PROD_FinancingItem");
             CreateTable(
                 "dbo.FANC_Finance",
                 c => new
@@ -74,8 +73,6 @@ namespace Data.Migrations
                 .ForeignKey("dbo.FANC_Finance", t => t.FinanceId, cascadeDelete: true)
                 .Index(t => t.FinanceId);
             
-            AlterColumn("dbo.PROD_FinancingItem", "Id", c => c.Guid(nullable: false));
-            AddPrimaryKey("dbo.PROD_FinancingItem", "Id");
         }
         
         public override void Down()
@@ -84,11 +81,8 @@ namespace Data.Migrations
             DropForeignKey("dbo.FANC_CreditExamine", "FinanceId", "dbo.FANC_Finance");
             DropIndex("dbo.FANC_CreditExamine", new[] { "FinanceId" });
             DropIndex("dbo.FANC_Finance", new[] { "Produce_Id" });
-            DropPrimaryKey("dbo.PROD_FinancingItem");
-            AlterColumn("dbo.PROD_FinancingItem", "Id", c => c.Guid(nullable: false, identity: true));
             DropTable("dbo.FANC_CreditExamine");
             DropTable("dbo.FANC_Finance");
-            AddPrimaryKey("dbo.PROD_FinancingItem", "Id");
         }
     }
 }
