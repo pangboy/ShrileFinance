@@ -29,7 +29,7 @@
             Property(m => m.AdviceRatio);
             Property(m => m.ApprovalMoney);
             Property(m => m.ApprovalRatio);
-            Property(m => m.MonthMoney);
+            Property(m => m.Payment);
             Property(m => m.RepayDate);
             Property(m => m.RepayRentDate);
 

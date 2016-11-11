@@ -125,9 +125,6 @@
                 // 厂商指导价
                 ManufacturerGuidePrice = decimal.Parse(string.Empty),
 
-                // 评估现市值
-                ApprovalValue = decimal.Parse(string.Empty),
-
                 // 建议融资金额
                 AdviceMoney = finance.AdviceMoney,
 
@@ -144,7 +141,7 @@
                 Payment = finance.Payment,
 
                 /// 手续费
-                Poundage = finance.Poundage,
+                Poundage = finance.Cost,
 
                 /// 是否为复审
                 isReview = false,
@@ -187,7 +184,7 @@
             finance.Payment = value.Payment;
 
             /// 手续费
-            finance.Poundage = value.Poundage;
+            finance.Cost = value.Poundage;
 
             // 初审 修改融资项各金额
             if (!value.isReview)

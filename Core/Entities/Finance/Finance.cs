@@ -110,7 +110,7 @@
         /// <summary>
         /// 月供金额
         /// </summary>
-        public decimal  MonthMoney { get; set; }
+        public decimal Payment { get; set; }
 
         /// <summary>
         /// 还款日
