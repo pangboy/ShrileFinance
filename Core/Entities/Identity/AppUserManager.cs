@@ -5,8 +5,6 @@
 
     public class AppUserManager : UserManager<AppUser>
     {
-        public IPrincipal User { get; set; }
-
         public AppUserManager(IUserStore<AppUser> store) : base(store)
         {
             // 配置用户名的验证逻辑
@@ -26,6 +24,8 @@
 
             UserTokenProvider = new EmailTokenProvider<AppUser>();
         }
+
+        public IPrincipal User { get; set; }
 
         public bool CheckUsername(string username)
         {

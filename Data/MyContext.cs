@@ -46,7 +46,7 @@
                 .Add(new FinancingProjectConfigration())
                 .Add(new ProduceConfigration())
                 .Add(new FinanceConfigration())
-                .Add(new CreditExamineConfiguration());
+                .Add(new CreditExamineConfiguration())
                 .Add(new ParentConfigration())
                 .Add(new PartnerConfiguration());
 

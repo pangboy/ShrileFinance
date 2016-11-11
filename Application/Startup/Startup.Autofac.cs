@@ -9,8 +9,6 @@
     {
         public abstract void ConfigureAutofac(ContainerBuilder builder);
 
-        protected abstract System.Security.Principal.IPrincipal CurrentPrincipal();
-
         public virtual void ConfigureAutofac()
         {
             var builder = new ContainerBuilder();
@@ -59,5 +57,7 @@
 
             ConfigureAutofac(builder);
         }
+
+        protected abstract System.Security.Principal.IPrincipal CurrentPrincipal();
     }
 }
