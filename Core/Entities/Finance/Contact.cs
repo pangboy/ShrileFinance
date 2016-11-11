@@ -16,5 +16,10 @@
         /// 合同日期
         /// </summary>
         public DateTime Date { get; set; }
+
+        /// <summary>
+        /// 路径
+        /// </summary>
+        public string Path { get; set; }
     }
 }

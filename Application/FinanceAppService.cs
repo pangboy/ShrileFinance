@@ -88,12 +88,41 @@
             var finance = repository.Get(financeId);
 
             // 实体转ViewModel
-            var financeAuditViewModel = Mapper.Map<FinanceAuidtViewModel>(finance.FinanceAudit);
+            var financeAuditViewModel = new FinanceAuidtViewModel()
+            {
+                // 融资标识
+                FinanceId = finance.Id,
 
-            financeAuditViewModel.FinanceId = financeId;
+                // 厂商指导价
+                ManufacturerGuidePrice = decimal.Parse(string.Empty),
 
-            // 获取融资项
-            financeAuditViewModel.FinancingItems = GetFinancingItems(finance);
+                // 评估现市值
+                ApprovalValue = decimal.Parse(string.Empty),
+
+                // 建议融资金额
+                AdviceMoney = finance.AdviceMoney,
+
+                // 建议融资比例
+                AdviceRatio = finance.AdviceRatio,
+
+                // 审批融资金额
+                ApprovalMoney = finance.ApprovalMoney,
+
+                // 审批融资比例
+                ApprovalRatio = finance.ApprovalRatio,
+
+                // 月供额度
+                Payment = finance.Payment,
+
+                /// 手续费
+                Poundage = finance.Poundage,
+
+                /// 是否为复审
+                isReview = false,
+
+                // 融资项（Id、<Name_Maney>）
+                FinancingItems = GetFinancingItems(finance)
+            };
 
             return financeAuditViewModel;
         }
@@ -103,7 +132,7 @@
         /// </summary>
         /// <param name="value">融资审核ViewModel</param>
         /// <param name="isReview">是否为复审</param>
-        public void EditFinanceAuidt(FinanceAuidtViewModel value, bool isReview = false)
+        public void EditFinanceAuidt(FinanceAuidtViewModel value)
         {
             if (value == null || value.FinanceId == null)
             {
@@ -113,13 +142,26 @@
             // 获取该融资审核对应的融资实体
             var finance = repository.Get(value.FinanceId);
 
-            // 融资审核ViewModel转实体
-            var financeAudit = Mapper.Map<FinanceAudit>(value);
+            // 建议融资金额
+            finance.AdviceMoney = value.AdviceMoney;
 
-            finance.FinanceAudit = financeAudit;
+            // 建议融资比例
+            finance.AdviceRatio = value.AdviceRatio;
+
+            // 审批融资金额
+            finance.ApprovalMoney = value.ApprovalMoney;
+
+            // 审批融资比例
+            finance.ApprovalRatio = value.ApprovalRatio;
+
+            // 月供额度
+            finance.Payment = value.Payment;
+
+            /// 手续费
+            finance.Poundage = value.Poundage;
 
             // 初审 修改融资项各金额
-            if (!isReview)
+            if (!value.isReview)
             {
                 // 修改融资项各金额
                 finance.Produce.FinancingItems = EditFinanceAuidts(financingItems: finance.Produce.FinancingItems, financingItemCollection: value.FinancingItems);
@@ -141,7 +183,7 @@
             var financingItems = new List<KeyValuePair<Guid, KeyValuePair<string, decimal>>>();
 
             // 提取融资项
-            finance.Produce.FinancingItems.ToList().ForEach(delegate(FinancingItem item)
+            finance.Produce.FinancingItems.ToList().ForEach(delegate (FinancingItem item)
             {
                 financingItems.Add(new KeyValuePair<Guid, KeyValuePair<string, decimal>>(item.FinancingProject.Id, new KeyValuePair<string, decimal>(item.FinancingProject.Name, item.Money)));
             });
@@ -160,7 +202,7 @@
             var financingItemList = financingItems.ToList();
 
             // 更新融资项各金额
-            financingItemList.ForEach(delegate(FinancingItem financingItem)
+            financingItemList.ForEach(delegate (FinancingItem financingItem)
             {
                 // 获取融资项标识
                 var key = financingItem.FinancingProject.Id;

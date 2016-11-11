@@ -4,6 +4,9 @@
     using System.Data.Entity.ModelConfiguration;
     using Core.Entities.Finance;
 
+    /// <summary>
+    /// 信审报告
+    /// </summary>
     public class CreditExamineConfiguration : EntityTypeConfiguration<CreditExamine>
     {
         public CreditExamineConfiguration()
