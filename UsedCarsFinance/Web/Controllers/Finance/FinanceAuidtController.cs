@@ -1,10 +1,6 @@
 ﻿namespace Web.Controllers.Finance
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Net;
-    using System.Net.Http;
     using System.Web.Http;
     using Application;
     using Application.ViewModels.FinanceViewModels;
@@ -30,15 +26,16 @@
         [HttpGet]
         public FinanceAuidtViewModel GetFinanceAuidt(Guid financeId)
         {
-            var FinanceAuidtViewModel = financeAppService.GetFinanceAuidtByFinanceId(financeId);
+            var financeAuidtViewModel = financeAppService.GetFinanceAuidtByFinanceId(financeId);
 
-            return FinanceAuidtViewModel;
+            return financeAuidtViewModel;
         }
 
         /// <summary>
         /// 编辑融资审核
         /// </summary>
         /// <param name="value">融资审核ViewModel</param>
+        /// <returns>处理结果</returns>
         [HttpPost]
         public IHttpActionResult EditFinanceAuidt(FinanceAuidtViewModel value)
         {
@@ -47,10 +44,9 @@
                 return BadRequest(ValidModel.ShowErrorFirst(ModelState));
             }
 
-            financeAppService.EditFinanceAuidt(value);
+            financeAppService.EditFinanceAuidt(value: value, isReview: value.isReview);
 
             return Ok(value);
         }
-
     }
 }

@@ -97,12 +97,13 @@
 
             return financeAuditViewModel;
         }
-        
+
         /// <summary>
         /// 编辑融资审核
         /// </summary>
         /// <param name="value">融资审核ViewModel</param>
-        public void EditFinanceAuidt(FinanceAuidtViewModel value)
+        /// <param name="isReview">是否为复审</param>
+        public void EditFinanceAuidt(FinanceAuidtViewModel value, bool isReview = false)
         {
             if (value == null || value.FinanceId == null)
             {
@@ -117,8 +118,12 @@
 
             finance.FinanceAudit = financeAudit;
 
-            // 修改融资项各金额
-            finance.Produce.FinancingItems = EditFinanceAuidts(finance.Produce.FinancingItems, value.FinancingItems);
+            // 初审 修改融资项各金额
+            if (!isReview)
+            {
+                // 修改融资项各金额
+                finance.Produce.FinancingItems = EditFinanceAuidts(financingItems: finance.Produce.FinancingItems, financingItemCollection: value.FinancingItems);
+            }
 
             repository.Modify(finance);
 
@@ -148,9 +153,9 @@
         /// 修改融资项各金额
         /// </summary>
         /// <param name="financingItems">产品对应的融资项</param>
-        /// <param name="financingItemICo">前端传回融资项</param>
+        /// <param name="financingItemCollection">前端传回融资项</param>
         /// <returns></returns>
-        private ICollection<FinancingItem> EditFinanceAuidts(ICollection<FinancingItem> financingItems, ICollection<KeyValuePair<Guid, KeyValuePair<string, decimal>>> financingItemICo)
+        private ICollection<FinancingItem> EditFinanceAuidts(ICollection<FinancingItem> financingItems, ICollection<KeyValuePair<Guid, KeyValuePair<string, decimal>>> financingItemCollection)
         {
             var financingItemList = financingItems.ToList();
 
@@ -161,7 +166,7 @@
                 var key = financingItem.FinancingProject.Id;
 
                 // 更新指定融资项对应的金额
-                financingItem.Money = financingItemICo.Single(m => m.Key.Equals(key)).Value.Value;
+                financingItem.Money = financingItemCollection.Single(m => m.Key.Equals(key)).Value.Value;
             });
 
             return financingItemList;

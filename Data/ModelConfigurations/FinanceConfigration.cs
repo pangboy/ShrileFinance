@@ -19,6 +19,9 @@
             // 融资审核
             HasOptional(m => m.FinanceAudit).WithOptionalPrincipal().Map(m => m.MapKey("FinanceId")).WillCascadeOnDelete();
 
+            // 合同
+            HasOptional(m => m.Contact).WithOptionalPrincipal().Map(m => m.MapKey("FinanceId")).WillCascadeOnDelete();
+
             ToTable("FANC_Finance");
         }
     }

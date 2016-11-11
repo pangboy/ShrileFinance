@@ -117,6 +117,7 @@
     <Compile Include="ModelConfigurations\AssociatedEnterpriseConfiguration.cs" />
     <Compile Include="ModelConfigurations\BigEventConfiguration.cs" />
     <Compile Include="ModelConfigurations\CashFlowConfiguration.cs" />
+    <Compile Include="ModelConfigurations\ContactConfiguration.cs" />
     <Compile Include="ModelConfigurations\CreditExamineConfiguration.cs" />
     <Compile Include="ModelConfigurations\FinanceAuidtConfiguration.cs" />
     <Compile Include="ModelConfigurations\FinanceConfigration.cs" />

@@ -12,12 +12,16 @@
     <script src="../Scripts/easyui/locale/easyui-lang-zh_CN.js"></script>
     <script src="../Scripts/usedcars.js"></script>
     <script src="../BankInfo/JS/validType.js"></script>
+    <script src="Content/FinanceJs.js"></script>
 
     <script type="text/javascript">
         $(function () {
             // 获取参数
             var query = {} //$.extend(uc.GetParams(), parent.flow.InstanceData);
-            query.FinanceId = "683B6AB9-1CA7-E611-80C5-507B9DE4A488";
+
+            if (query.FinanceId == undefined || query.FinanceId.length == 0) {
+                query.FinanceId = '683B6AB9-1CA7-E611-80C5-507B9DE4A488';
+            }
 
             // 初始化
             Init(query);
@@ -47,6 +51,7 @@
                     200: function (data) {
                         if (data) {
                             $("fieldset[name=FinanceAudit]").form('load', data);
+                            $("fieldset[name=FinanceAudit]>input[name=isReview]").val('true');
 
                             // 加载融资项
                             LoadFinancingItem(data.FinancingItems);
@@ -123,66 +128,6 @@
             });
         }
 
-        //验证数据
-        function ValidData() {
-            if (!$("form[name=FinanceAudit]").form("validate")) {
-                return false;
-            }
-
-            return true;
-        }
-
-        //构建数据
-        function BuildData() {
-            var value = $("fieldset[name=FinanceAudit]").serializeJson();
-
-            value.FinanceId = '683B6AB9-1CA7-E611-80C5-507B9DE4A488';
-
-            value.FinancingItems = [];
-            $('fieldset[name=FinancingItems]>div.row>div').each(function (i, e) {
-                var FinancingItem = {};
-                FinancingItem.Key = $(e).find("input[name=Id]").val();
-                FinancingItem.Value = {};
-                FinancingItem.Value.Key = $(e).find("label").text();
-                FinancingItem.Value.Value = $(e).find("input[textboxname=Money]").textbox('getValue');
-
-                value.FinancingItems.push(FinancingItem);
-
-                debugger
-            });
-
-            var result = {};
-            result["formName"] = "审批信息";
-            result["buildData"] = value;
-
-            return result;
-        }
-
-        // 提交测试
-        function Submit() {
-            var data = BuildData().buildData;
-            debugger
-
-            $.ajax({
-                async: false,
-                method: "POST",
-                data: data,
-                url: '../api/FinanceAuidt/EditFinanceAuidt',
-                statusCode: {
-                    200: function (data) {
-                        debugger
-                    }
-                }
-            });
-        }
-
-        // 返回测试
-        function Cancel() {
-            if (!ValidData()) {
-                $.messager.show({ msg: "Error!" });
-            }
-        }
-
         // 加载厂商指导价、评估现市值
         function LoadVehiclePrice(vehicleKey) {
             $.ajax({
@@ -237,6 +182,78 @@
                 $("fieldset[name=FinanceAudit] input[textboxname=ApprovalRatio]").textbox("setValue", parseInt(100 * parseFloat(ApprovalMoney) / NakedCarPrice));
             }
         }
+
+        // 复审 
+        function Review()
+        {
+            // 禁用融资项
+            Disabled($("fieldset[name=FinancingItems]"));
+
+            // 设置复审标签
+            $("fieldset[name=FinanceAudit]>input[name=isReview]").val('false');
+        }
+
+        //验证数据
+        function ValidData() {
+            if (!$("form[name=FinanceAudit]").form("validate")) {
+                return false;
+            }
+
+            return true;
+        }
+
+        //构建数据
+        function BuildData() {
+            // 序列化融资审核
+            var value = $("fieldset[name=FinanceAudit]").serializeJson();
+
+            if (value.FinanceId.length == 0) {
+                value.FinanceId = '683B6AB9-1CA7-E611-80C5-507B9DE4A488';
+            }
+
+            // 序列化融资项
+            value.FinancingItems = [];
+            $('fieldset[name=FinancingItems]>div.row>div').each(function (i, e) {
+                var FinancingItem = {};
+                FinancingItem.Key = $(e).find("input[name=Id]").val();
+                FinancingItem.Value = {};
+                FinancingItem.Value.Key = $(e).find("label").text();
+                FinancingItem.Value.Value = $(e).find("input[textboxname=Money]").textbox('getValue');
+
+                value.FinancingItems.push(FinancingItem);
+            });
+
+            var result = {};
+            result["formName"] = "审批信息";
+            result["buildData"] = value;
+
+            return result;
+        }
+
+        // 提交测试
+        function Submit() {
+            var data = BuildData().buildData;
+            debugger
+
+            $.ajax({
+                async: false,
+                method: "POST",
+                data: data,
+                url: '../api/FinanceAuidt/EditFinanceAuidt',
+                statusCode: {
+                    200: function (data) {
+                        debugger
+                    }
+                }
+            });
+        }
+
+        // 返回测试
+        function Cancel() {
+            if (!ValidData()) {
+                $.messager.show({ msg: "Error!" });
+            }
+        }
     </script>
 </head>
 <body>
@@ -261,6 +278,7 @@
 
             <input type="hidden" name="FinanceId" value="00000000-0000-0000-0000-000000000000" placeholder="融资标识" />
             <input type="hidden" name="Id" value="00000000-0000-0000-0000-000000000000" placeholder="融资审核标识" />
+            <input type="hidden" name="isReview" value="false" placeholder="是否为复审" />
 
             <div class="row">
                 <div class="col-6">
