@@ -51,7 +51,7 @@
             CreateMap<CreditExamine, CreditExamineViewModel>();
 
             // 融资审核
-            CreateMap<FinanceAudit, FinanceAuidtViewModel>();
+            CreateMap<FinanceAuidtViewModel, FinanceAuidtViewModel>();
         }
     }
 }

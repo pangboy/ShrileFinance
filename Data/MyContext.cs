@@ -48,7 +48,7 @@
                 .Add(new FinanceConfigration())
                 .Add(new CreditExamineConfiguration())
                 .Add(new ContactConfiguration())
-                .Add(new FinanceExtensionConfiguration());
+                .Add(new FinanceExtensionConfiguration())
                 .Add(new ParentConfigration())
                 .Add(new PartnerConfiguration());
 
