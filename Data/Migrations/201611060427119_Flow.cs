@@ -73,8 +73,6 @@ namespace Data.Migrations
                         FlowId = c.Guid(nullable: false),
                         CurrentNodeId = c.Guid(),
                         CurrentUserId = c.String(maxLength: 128),
-                        ProcessUserId = c.String(maxLength: 128),
-                        ProcessTime = c.DateTime(),
                         StartUserId = c.String(nullable: false, maxLength: 128),
                         StartTime = c.DateTime(nullable: false),
                         EndTime = c.DateTime(),
@@ -85,12 +83,10 @@ namespace Data.Migrations
                 .ForeignKey("dbo.FLOW_Node", t => t.CurrentNodeId)
                 .ForeignKey("dbo.AspNetUsers", t => t.CurrentUserId)
                 .ForeignKey("dbo.FLOW_WorkFlow", t => t.FlowId)
-                .ForeignKey("dbo.AspNetUsers", t => t.ProcessUserId)
                 .ForeignKey("dbo.AspNetUsers", t => t.StartUserId)
                 .Index(t => t.FlowId)
                 .Index(t => t.CurrentNodeId)
                 .Index(t => t.CurrentUserId)
-                .Index(t => t.ProcessUserId)
                 .Index(t => t.StartUserId);
             
             CreateTable(
@@ -104,8 +100,8 @@ namespace Data.Migrations
                         ProcessUserId = c.String(nullable: false, maxLength: 128),
                         ProcessTime = c.DateTime(nullable: false),
                         Content = c.String(maxLength: 500),
-                        AuditOpinion_InternalOpinion = c.String(maxLength: 500),
-                        AuditOpinion_ExnernalOpinion = c.String(maxLength: 500),
+                        Opinion_InternalOpinion = c.String(maxLength: 500),
+                        Opinion_ExnernalOpinion = c.String(maxLength: 500),
                     })
                 .PrimaryKey(t => t.Id)
                 .ForeignKey("dbo.FLOW_Action", t => t.ActionId)
@@ -169,7 +165,6 @@ namespace Data.Migrations
             DropForeignKey("dbo.FLOW_FormNode", "FormId", "dbo.FLOW_Form");
             DropForeignKey("dbo.FLOW_Form", "FlowId", "dbo.FLOW_WorkFlow");
             DropForeignKey("dbo.FLOW_Instance", "StartUserId", "dbo.AspNetUsers");
-            DropForeignKey("dbo.FLOW_Instance", "ProcessUserId", "dbo.AspNetUsers");
             DropForeignKey("dbo.FLOW_Log", "ProcessUserId", "dbo.AspNetUsers");
             DropForeignKey("dbo.FLOW_Log", "NodeId", "dbo.FLOW_Node");
             DropForeignKey("dbo.FLOW_Log", "InstanceId", "dbo.FLOW_Instance");
@@ -191,7 +186,6 @@ namespace Data.Migrations
             DropIndex("dbo.FLOW_Log", new[] { "NodeId" });
             DropIndex("dbo.FLOW_Log", new[] { "InstanceId" });
             DropIndex("dbo.FLOW_Instance", new[] { "StartUserId" });
-            DropIndex("dbo.FLOW_Instance", new[] { "ProcessUserId" });
             DropIndex("dbo.FLOW_Instance", new[] { "CurrentUserId" });
             DropIndex("dbo.FLOW_Instance", new[] { "CurrentNodeId" });
             DropIndex("dbo.FLOW_Instance", new[] { "FlowId" });

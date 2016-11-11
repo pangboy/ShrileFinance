@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Models;
 using Models.Flow;
 
@@ -36,7 +37,7 @@ namespace BLL.Flow
         /// qiy     16.05.09
         /// <param name="flowId">流程标识</param>
         /// <returns></returns>
-        public List<ComboInfo> Option(int? flowId)
+        public List<ComboInfo> Option(Guid? flowId)
         {
             return nodeMapper.Option(flowId);
         }

@@ -17,7 +17,7 @@
 
         public string Content { get; set; }
 
-        public AuditOpinion AuditOpinion { get; set; }
+        public AuditOpinion Opinion { get; set; }
 
         public virtual Instance Instance { get; set; }
 

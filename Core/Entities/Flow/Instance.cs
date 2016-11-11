@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using Interfaces;
 
     public class Instance : Entity, IAggregateRoot
@@ -19,9 +20,10 @@
 
         public string CurrentUserId { get; set; }
 
-        public string ProcessUserId { get; set; }
-
-        public DateTime? ProcessTime { get; set; }
+        public DateTime? ProcessTime
+        {
+            get { return Logs.LastOrDefault()?.ProcessTime; }
+        }
 
         public string StartUserId { get; set; }
 
@@ -39,7 +41,10 @@
 
         public virtual AppUser CurrentUser { get; set; }
 
-        public virtual AppUser ProcessUser { get; set; }
+        public virtual AppUser ProcessUser
+        {
+            get { return Logs.LastOrDefault()?.ProcessUser; }
+        }
 
         public virtual AppUser StartUser { get; set; }
 

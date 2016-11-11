@@ -17,8 +17,8 @@
             Property(m => m.ProcessUserId);
             Property(m => m.ProcessTime);
             Property(m => m.Content).HasMaxLength(500);
-            Property(m => m.AuditOpinion.InternalOpinion).HasMaxLength(500);
-            Property(m => m.AuditOpinion.ExnernalOpinion).HasMaxLength(500);
+            Property(m => m.Opinion.InternalOpinion).HasMaxLength(500);
+            Property(m => m.Opinion.ExnernalOpinion).HasMaxLength(500);
 
             HasRequired(m => m.Instance).WithMany(m => m.Logs)
                 .WillCascadeOnDelete();

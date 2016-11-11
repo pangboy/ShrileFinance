@@ -15,8 +15,6 @@
             Property(m => m.FlowId);
             Property(m => m.CurrentNodeId).IsOptional();
             Property(m => m.CurrentUserId);
-            Property(m => m.ProcessUserId);
-            Property(m => m.ProcessTime);
             Property(m => m.StartUserId);
             Property(m => m.StartTime);
             Property(m => m.EndTime);
@@ -26,7 +24,6 @@
             HasRequired(m => m.Flow).WithMany();
             HasOptional(m => m.CurrentNode).WithMany();
             HasOptional(m => m.CurrentUser).WithMany();
-            HasOptional(m => m.ProcessUser).WithMany();
             HasRequired(m => m.StartUser).WithMany();
 
             ToTable("FLOW_Instance");

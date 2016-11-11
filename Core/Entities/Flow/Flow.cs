@@ -1,8 +1,9 @@
 ﻿namespace Core.Entities.Flow
 {
     using System.Collections.Generic;
+    using Interfaces;
 
-    public class Flow : Entity
+    public class Flow : Entity, IAggregateRoot
     {
         public Flow()
         {

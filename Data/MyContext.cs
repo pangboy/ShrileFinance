@@ -40,7 +40,8 @@
                 .Add(new LitigationConfigruation())
                 .Add(new ProfitConfiguration())
                 .Add(new FinancialAffairsConfiguration())
-                .Add(new ParentConfigration());
+                .Add(new ParentConfigration())
+                .Add(new PartnerConfiguration());
 
             base.OnModelCreating(modelBuilder);
         }

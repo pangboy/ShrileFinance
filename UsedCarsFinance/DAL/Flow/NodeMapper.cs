@@ -29,14 +29,14 @@ namespace DAL.Flow
         /// qiy     16.05.09
         /// <param name="flowId">流程标识</param>
         /// <returns></returns>
-        public List<ComboInfo> Option(int? flowId)
+        public List<ComboInfo> Option(Guid? flowId)
         {
             List<ComboInfo> list = new List<ComboInfo>();
 
             SqlCommand comm = DHelper.GetSqlCommand(@"
-                SELECT NodeId, Name FROM FLOW_Node WHERE (@FlowId IS NULL OR FlowId = @FlowId)
+                SELECT Id, Name FROM FLOW_Node WHERE (@FlowId IS NULL OR FlowId = @FlowId)
             ");
-            DHelper.AddParameter(comm, "@FlowId", SqlDbType.Int, flowId);
+            DHelper.AddParameter(comm, "@FlowId", SqlDbType.UniqueIdentifier, flowId);
 
             DataTable dt = DHelper.ExecuteDataTable(comm);
 

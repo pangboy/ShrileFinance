@@ -5,12 +5,21 @@ using Models;
 using Models.Flow;
 using Models.Finance;
 using System.Collections.Generic;
+using Application;
+using Application.ViewModels;
+using Application.ViewModels.ProcessViewModels;
 
 namespace Web.Controllers.Flow
 {
     public class InstanceController : ApiController
     {
         private readonly static BLL.Flow.Instance _instance = new BLL.Flow.Instance();
+        private readonly ProcessAppService service;
+
+        public InstanceController(Application.ProcessAppService service)
+        {
+            this.service = service;
+        }
 
         /// <summary>
         /// 待办列表
@@ -20,16 +29,20 @@ namespace Web.Controllers.Flow
         /// <param name="rows">行数</param>
         /// <returns></returns>
         [HttpGet]
-        public Datagrid DoingList(int page, int rows)
+        public IHttpActionResult DoingList(int page, int rows)
         {
-            Pagination pagination = new Pagination(page, rows);
-            NameValueCollection filter = ApiHelper.GetParameters();
+            var list = service.DoingPagedList(null, page, rows);
 
-            return new Datagrid
-            {
-                rows = _instance.DoingList(pagination, filter),
-                total = pagination.Total
-            };
+            return Ok(new PagedListViewModel<InstanceViewModel>(list));
+
+            //Pagination pagination = new Pagination(page, rows);
+            //NameValueCollection filter = ApiHelper.GetParameters();
+
+            //return new Datagrid
+            //{
+            //    rows = _instance.DoingList(pagination, filter),
+            //    total = pagination.Total
+            //};
         }
 
         /// <summary>
@@ -40,16 +53,19 @@ namespace Web.Controllers.Flow
         /// <param name="rows">行数</param>
         /// <returns></returns>
         [HttpGet]
-        public Datagrid DoneList(int page, int rows)
+        public IHttpActionResult DoneList(int page, int rows)
         {
-            Pagination pagination = new Pagination(page, rows);
-            NameValueCollection filter = ApiHelper.GetParameters();
+            var list = service.DonePagedList(null, page, rows);
 
-            return new Datagrid
-            {
-                rows = _instance.DoneList(pagination, filter),
-                total = pagination.Total
-            };
+            return Ok(new PagedListViewModel<InstanceViewModel>(list));
+            //Pagination pagination = new Pagination(page, rows);
+            //NameValueCollection filter = ApiHelper.GetParameters();
+
+            //return new Datagrid
+            //{
+            //    rows = _instance.DoneList(pagination, filter),
+            //    total = pagination.Total
+            //};
         }
 
         /// <summary>
@@ -58,9 +74,14 @@ namespace Web.Controllers.Flow
         /// yaoy    16.07.26
         /// <returns></returns>
         [HttpPost]
-        public int StartProcess()
+        public IHttpActionResult StartProcess()
         {
-            return _instance.StartProcess();
+            var finacneFlow = new Guid("{228C8C80-06A4-E611-80C5-507B9DE4A488}");
+
+            var instanceId = service.StartNew(finacneFlow);
+
+            return Ok(instanceId);
+            //return _instance.StartProcess();
         }
 
         /// <summary>
@@ -70,21 +91,31 @@ namespace Web.Controllers.Flow
         /// <param name="instanceId"></param>
         /// <returns></returns>
         [HttpGet]
-        public IHttpActionResult Revoke(int instanceId)
+        public IHttpActionResult Revoke(Guid instanceId)
         {
-            var result = false;
-            string message = string.Empty;
-
-            result = new BLL.Flow.RevokeUtil().RevokeFlow(instanceId, ref message);
-
-            if (result)
+            try
             {
-                return Ok(result);
+                service.Withdraw(instanceId);
+
+                return Ok();
             }
-            else
+            catch (InvalidOperationException ex)
             {
-                return BadRequest(message);
+                return BadRequest(ex.Message);
             }
+            //var result = false;
+            //string message = string.Empty;
+
+            //result = new BLL.Flow.RevokeUtil().RevokeFlow(instanceId, ref message);
+
+            //if (result)
+            //{
+            //    return Ok(result);
+            //}
+            //else
+            //{
+            //    return BadRequest(message);
+            //}
         }
 
         /// <summary>

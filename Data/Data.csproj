@@ -103,6 +103,10 @@
     <Compile Include="Migrations\201611060427119_Flow.Designer.cs">
       <DependentUpon>201611060427119_Flow.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201611101307548_Partner.cs" />
+    <Compile Include="Migrations\201611101307548_Partner.Designer.cs">
+      <DependentUpon>201611101307548_Partner.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs">
       <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
     </Compile>
@@ -126,6 +130,7 @@
       <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
     </Compile>
     <Compile Include="ModelConfigurations\ParentConfigration.cs" />
+    <Compile Include="ModelConfigurations\PartnerConfiguration.cs" />
     <Compile Include="ModelConfigurations\ProfitConfiguration.cs" />
     <Compile Include="ModelConfigurations\StockholderConfiguration.cs" />
     <Compile Include="ModelConfigurations\TypeConfigurationExtensions.cs" />
@@ -237,7 +242,11 @@
     </Compile>
     <Compile Include="Repositories\AppUserStore.cs" />
     <Compile Include="Repositories\BaseRepository.cs" />
+    <Compile Include="Repositories\FlowRepository.cs" />
+    <Compile Include="Repositories\FormRepository.cs" />
+    <Compile Include="Repositories\InstanceRepository.cs" />
     <Compile Include="Repositories\OrganizationRepository.cs" />
+    <Compile Include="Repositories\PartnerRepository.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Core\Core.csproj">
@@ -282,6 +291,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201611060427119_Flow.resx">
       <DependentUpon>201611060427119_Flow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611101307548_Partner.resx">
+      <DependentUpon>201611101307548_Partner.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

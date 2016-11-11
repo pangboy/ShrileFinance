@@ -109,12 +109,17 @@
     <Compile Include="Entities\Finance\Credit.cs" />
     <Compile Include="Entities\Finance\Finance.cs" />
     <Compile Include="Entities\Finance\FinanceStateEnum.cs" />
+    <Compile Include="Entities\Partner\Partner.cs" />
     <Compile Include="Entities\Produce\Produce.cs" />
     <Compile Include="Entities\Produce\Scheme.cs" />
     <Compile Include="Interfaces\IAggregateRoot.cs" />
     <Compile Include="Interfaces\IEntity.cs" />
+    <Compile Include="Interfaces\Repositories\IFlowRepository.cs" />
+    <Compile Include="Interfaces\Repositories\IFormRepository.cs" />
+    <Compile Include="Interfaces\Repositories\IInstanceRepository.cs" />
     <Compile Include="Interfaces\Repositories\IOrganizationRepository.cs" />
     <Compile Include="Interfaces\ILogger.cs" />
+    <Compile Include="Interfaces\Repositories\IPartnerRepository.cs" />
     <Compile Include="Interfaces\Repositories\IRepository.cs" />
     <Compile Include="Interfaces\Repositories\IUnitOfWork.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">

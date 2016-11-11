@@ -2,8 +2,9 @@
 {
     using System;
     using System.Collections.Generic;
+    using Interfaces;
 
-    public class Form : Entity
+    public class Form : Entity, IAggregateRoot
     {
         public Form()
         {
