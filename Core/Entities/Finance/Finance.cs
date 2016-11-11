@@ -35,7 +35,7 @@
         /// <summary>
         /// 还款方案
         /// </summary>
-        //public Scheme RepaymentScheme { get; set; }
+        ////public Scheme RepaymentScheme { get; set; }
 
         /// <summary>
         /// 借款人
@@ -68,6 +68,41 @@
         public DateTime DateCreated { get; set; }
 
         /// <summary>
+        /// 建议融资金额
+        /// </summary>
+        public decimal AdviceMoney { get; set; }
+
+        /// <summary>
+        /// 建议融资比例
+        /// </summary>
+        public decimal AdviceRatio { get; set; }
+
+        /// <summary>
+        /// 审批融资金额
+        /// </summary>
+        public decimal ApprovalMoney { get; set; }
+
+        /// <summary>
+        /// 审批融资比例
+        /// </summary>
+        public decimal ApprovalRatio { get; set; }
+
+        /// <summary>
+        /// 金融手续费
+        /// </summary>
+        public decimal Poundage { get; set; }
+
+        /// <summary>
+        /// 月供额度
+        /// </summary>
+        public decimal Payment { get; set; }
+
+        /// <summary>
+        /// 融资扩展
+        /// </summary>
+        public virtual FinanceExtension FinanceExtension { get; set; }
+
+        /// <summary>
         /// 合同
         /// </summary>
         public virtual ICollection<Contact> Contact { get; set; }
@@ -81,10 +116,5 @@
         /// 信审报告
         /// </summary>
         public virtual CreditExamine CreditExamine { get; set; }
-
-        /// <summary>
-        /// 融资审核
-        /// </summary>
-        public virtual FinanceAudit FinanceAudit { get; set; }
     }
 }

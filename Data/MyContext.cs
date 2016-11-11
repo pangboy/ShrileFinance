@@ -37,8 +37,14 @@
                 .Add(new FinancingItemConfigration())
                 .Add(new FinancingProjectConfigration())
                 .Add(new ProduceConfigration())
+                // 融资
                 .Add(new FinanceConfigration())
-                .Add(new CreditExamineConfiguration());
+                // 信审报告
+                .Add(new CreditExamineConfiguration())
+                // 合同
+                .Add(new ContactConfiguration())
+                // 融资扩展
+                .Add(new FinanceExtensionConfiguration());
 
             base.OnModelCreating(modelBuilder);
         }

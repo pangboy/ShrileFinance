@@ -44,7 +44,7 @@
                 return BadRequest(ValidModel.ShowErrorFirst(ModelState));
             }
 
-            financeAppService.EditFinanceAuidt(value: value, isReview: value.isReview);
+            financeAppService.EditFinanceAuidt(value: value);
 
             return Ok(value);
         }

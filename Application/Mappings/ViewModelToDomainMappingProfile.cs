@@ -41,9 +41,6 @@
 
             // 信审报告
             CreateMap<CreditExamineViewModel, CreditExamine>();
-
-            // 融资审核
-            CreateMap<FinanceAuidtViewModel,FinanceAudit>();
         }
     }
 }

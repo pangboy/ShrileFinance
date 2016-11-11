@@ -18,6 +18,10 @@
             Property(m => m.Number).HasMaxLength(100);
 
             Property(m => m.Date);
+
+            Property(m=>m.Path).HasMaxLength(200);
+
+            ToTable("FANC_Contact");
         }
     }
 }
