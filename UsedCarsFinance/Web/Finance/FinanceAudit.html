@@ -11,27 +11,54 @@
     <script src="../Scripts/easyui/jquery.easyui.js"></script>
     <script src="../Scripts/easyui/locale/easyui-lang-zh_CN.js"></script>
     <script src="../Scripts/usedcars.js"></script>
+    <script src="../BankInfo/JS/validType.js"></script>
+    <script src="Content/FinanceJs.js"></script>
 
     <script type="text/javascript">
         $(function () {
             // 获取参数
-            // var query = $.extend(uc.GetParams(), parent.flow.InstanceData);
+            var query = {} //$.extend(uc.GetParams(), parent.flow.InstanceData);
+
+            if (query.FinanceId == undefined || query.FinanceId.length == 0) {
+                query.FinanceId = '683B6AB9-1CA7-E611-80C5-507B9DE4A488';
+            }
 
             // 初始化
-            //Init(query);
-            var array = ["093C0A6D-ABA4-E611-80C5-507B9DE4A488"
-                , "0A3C0A6D-ABA4-E611-80C5-507B9DE4A488"
-                , "0B3C0A6D-ABA4-E611-80C5-507B9DE4A488"
-                , "0C3C0A6D-ABA4-E611-80C5-507B9DE4A488"];
-            LoadFinancingItems(array);
+            Init(query);
         });
 
         // 初始化
         function Init(query) {
+            // 重置表单
+            $("form input[type=reset]").click();
+
+            LoadData(query);
         }
 
         // 加载数据
         function LoadData(query) {
+            if (query == undefined || query.FinanceId == undefined) {
+                return;
+            }
+
+            // 加载融资审核
+            $.ajax({
+                async: false,
+                method: "GET",
+                data: { financeId: query.FinanceId },
+                url: '../api/FinanceAuidt/GetFinanceAuidt',
+                statusCode: {
+                    200: function (data) {
+                        if (data) {
+                            $("fieldset[name=FinanceAudit]").form('load', data);
+                            $("fieldset[name=FinanceAudit]>input[name=isReview]").val('true');
+
+                            // 加载融资项
+                            LoadFinancingItem(data.FinancingItems);
+                        }
+                    }
+                }
+            });
         }
 
         // 加载临时数据
@@ -55,67 +82,48 @@
             }
         }
 
-        // 加载融资项目
-        function LoadFinancingItems(array) {
-            if (array == null) {
+        // 加载融资项
+        function LoadFinancingItem(dataKV){
+            if (dataKV == null) {
                 return;
             }
 
-            $(array).each(function (i, e) {
-                var context = $("template[name=" + e + "]").html();
+            // 从模版中获取控件及拼装
+            $(dataKV).each(function (i, e) {
+                var context = $("fieldset[name=FinancingItems]>template[name=templateUnit]").html();
+                if (context) {
+                    $("fieldset[name=FinancingItems]>div.row").append(context);
 
-                if (context)
-                {
-                    $("fieldset[name=FinancingProjects]").append(context);
-                }
-                
+                    var div = $("fieldset[name=FinancingItems]>div.row>div:last");
+                    div.addClass('col-6');
 
+                    // 解析控件
+                    $.parser.parse(div);
 
-            });
+                    // 设置属性
+                    div.find("label").text(e.Value.Key);
+                    div.find("input[name=Id]").val(e.Key);
+                    div.find("input[textboxname=Money]").textbox({
+                        readonly: false,
+                        required: true,
+                        validType: ['Amount']
+                    });
 
-            $.parser.parse($("fieldset[name=FinancingProjects]"));
-        }
-
-        //验证数据
-        function ValidData() {
-            if (!$("#FinanceAudit").form("validate")) {
-                return false;
-            }
-
-            return true;
-        }
-
-        //构建数据
-        function BuildData() {
-            var result = {};
-
-            var value = $.extend({
-                ReviewInfo: $("#FinanceAudit").serializeJson()
-            }, []);
-
-            result["formName"] = "审批信息";
-            result["buildData"] = value;
-            return result;
-        }
-
-        // 提交测试
-        function Submit() {
-            var value = $("form[id=FinanceAudit]").serializeJson();
-
-            value.FinanceId = 1;
-
-            var data = value;
-
-            debugger
-            $.ajax({
-                async: false,
-                method: "POST",
-                data: data,
-                url: '../api/CreditExamine/EditCreditExamine',
-                statusCode: {
-                    200: function (data) {
-                        debugger
+                    // 裸车价
+                    if ($.inArray(e.Value.Key, ["裸车价"])!=-1)
+                    {
+                        div.attr("name","NakedCar")
+                        div.find("span[name=unit]").text("万元");
+                        div.find("input[textboxname=Money]").textbox({
+                            readonly: false,
+                            required: true,
+                            validType: ['Amount'],
+                            onChange: SetRatio
+                        });
                     }
+
+                    // 金额赋值
+                    div.find("input[textboxname=Money]").textbox('setValue',e.Value.Value);
                 }
             });
         }
@@ -140,30 +148,147 @@
                 }
             });
         }
+
+        // 设置融资比例
+        function SetRatio() {
+            if ($("fieldset[name=FinancingItems] div[name=NakedCar]>input")[1] == undefined) {
+                return
+            }
+
+            // 获取裸车价
+            var NakedCarPrice = $("fieldset[name=FinancingItems] div[name=NakedCar]>input[textboxname=Money]").textbox('getValue');
+
+            if (NakedCarPrice == undefined || NakedCarPrice.length == 0 || isNaN(NakedCarPrice) || NakedCarPrice <= 0) {
+                // 融资比例赋值
+                $("fieldset[name=FinanceAudit] input[textboxname*=Ratio]").textbox("setValue", '');
+
+                return;
+            }
+
+            // 获取建议融资金额
+            var AdviceMoney = $("fieldset[name=FinanceAudit] input[textboxname=AdviceMoney]").textbox("getValue");
+
+            if (AdviceMoney != undefined && AdviceMoney.length > 0) {
+
+                // 建议融资比例赋值
+                $("fieldset[name=FinanceAudit] input[textboxname=AdviceRatio]").textbox("setValue", parseInt(100 * parseFloat(AdviceMoney) / parseFloat(NakedCarPrice)));
+            }
+
+            // 获取审批融资金额
+            var ApprovalMoney = $("fieldset[name=FinanceAudit] input[textboxname=ApprovalMoney]").textbox("getValue");
+
+            if (ApprovalMoney != undefined && ApprovalMoney.length > 0) {
+                // 审批融资比例赋值
+                $("fieldset[name=FinanceAudit] input[textboxname=ApprovalRatio]").textbox("setValue", parseInt(100 * parseFloat(ApprovalMoney) / NakedCarPrice));
+            }
+        }
+
+        // 复审 
+        function Review()
+        {
+            // 禁用融资项
+            Disabled($("fieldset[name=FinancingItems]"));
+
+            // 设置复审标签
+            $("fieldset[name=FinanceAudit]>input[name=isReview]").val('false');
+        }
+
+        //验证数据
+        function ValidData() {
+            if (!$("form[name=FinanceAudit]").form("validate")) {
+                return false;
+            }
+
+            return true;
+        }
+
+        //构建数据
+        function BuildData() {
+            // 序列化融资审核
+            var value = $("fieldset[name=FinanceAudit]").serializeJson();
+
+            if (value.FinanceId.length == 0) {
+                value.FinanceId = '683B6AB9-1CA7-E611-80C5-507B9DE4A488';
+            }
+
+            // 序列化融资项
+            value.FinancingItems = [];
+            $('fieldset[name=FinancingItems]>div.row>div').each(function (i, e) {
+                var FinancingItem = {};
+                FinancingItem.Key = $(e).find("input[name=Id]").val();
+                FinancingItem.Value = {};
+                FinancingItem.Value.Key = $(e).find("label").text();
+                FinancingItem.Value.Value = $(e).find("input[textboxname=Money]").textbox('getValue');
+
+                value.FinancingItems.push(FinancingItem);
+            });
+
+            var result = {};
+            result["formName"] = "审批信息";
+            result["buildData"] = value;
+
+            return result;
+        }
+
+        // 提交测试
+        function Submit() {
+            var data = BuildData().buildData;
+            debugger
+
+            $.ajax({
+                async: false,
+                method: "POST",
+                data: data,
+                url: '../api/FinanceAuidt/EditFinanceAuidt',
+                statusCode: {
+                    200: function (data) {
+                        debugger
+                    }
+                }
+            });
+        }
+
+        // 返回测试
+        function Cancel() {
+            if (!ValidData()) {
+                $.messager.show({ msg: "Error!" });
+            }
+        }
     </script>
 </head>
 <body>
-    <form class="container" id="FinanceAudit">
-        <input type="hidden" name="FinanceId" placeholder="融资标识" />
+    <form class="container" name="FinanceAudit">
+        <fieldset name="FinancingItems">
+            <legend>融资项：</legend>
+            <div class="row">
+            </div>
 
-        <fieldset name="FinancingProjects">
-            <legend>融资项目：</legend>
-            <div class="row"></div>
-
-
+            <template name="templateUnit">
+                <div class="">
+                    <label></label>
+                    <input name="Id" type="hidden" value="" />
+                    <input name="Money" class="easyui-textbox" />
+                    <span name="unit">元</span>
+                </div>
+            </template>
         </fieldset>
 
         <fieldset name="FinanceAudit">
             <legend>融资审核</legend>
+
+            <input type="hidden" name="FinanceId" value="00000000-0000-0000-0000-000000000000" placeholder="融资标识" />
+            <input type="hidden" name="Id" value="00000000-0000-0000-0000-000000000000" placeholder="融资审核标识" />
+            <input type="hidden" name="isReview" value="false" placeholder="是否为复审" />
+
             <div class="row">
                 <div class="col-6">
                     <label>厂商指导价：</label>
-                    <input name="ManufacturerGuidePrice" class="easyui-textbox" data-options="readonly:true" />
+                    <input name="ManufacturerGuidePrice" class="easyui-textbox" data-options="readonly:true,value:'0'" />
                     <span>万元</span>
                 </div>
                 <div class="col-6">
                     <label>评估现市值：</label>
-                    <input name="ApprovalValue" class="easyui-textbox" data-options="readonly:true" />
+                    <input name="ApprovalValue" class="easyui-textbox" data-options="readonly:true,value:'0'" />
                     <span>万元</span>
                 </div>
             </div>
@@ -171,11 +296,11 @@
             <div class="row">
                 <div class="col-6">
                     <label>建议融资金额：</label>
-                    <input name="AdviceMoney" class="easyui-textbox" data-options="" />
+                    <input name="AdviceMoney" class="easyui-textbox" data-options="required:true,validType:'Amount',onChange:SetRatio" />
                     <span>万元</span>
                 </div>
                 <div class="col-6">
-                    <label>建议融资比例</label>
+                    <label>建议融资比例：</label>
                     <input name="AdviceRatio" class="easyui-textbox" data-options="readonly:true" />
                     <span>%</span>
                 </div>
@@ -184,12 +309,12 @@
             <div class="row">
                 <div class="col-6">
                     <label>审批融资金额：</label>
-                    <input name="AuditMoney" class="easyui-textbox" data-options="" />
+                    <input name="ApprovalMoney" class="easyui-textbox" data-options="required:true,validType:'Amount',onChange:SetRatio" />
                     <span>万元</span>
                 </div>
                 <div class="col-6">
                     <label>审批融资比例：</label>
-                    <input name="AuditRatio" class="easyui-textbox" data-options="readonly:true" />
+                    <input name="ApprovalRatio" class="easyui-textbox" data-options="readonly:true" />
                     <span>%</span>
                 </div>
             </div>
@@ -197,169 +322,22 @@
             <div class="row">
                 <div class="col-6">
                     <label>月供额度：</label>
-                    <input name="Payment" class="easyui-textbox" data-options="" />
+                    <input name="Payment" class="easyui-textbox" data-options="readonly:false,required:true,validType:'Amount'" />
                     <span>元</span>
                 </div>
                 <div class="col-6">
                     <label>手续费：</label>
-                    <input name="Poundage" class="easyui-textbox" data-options="" />
+                    <input name="Poundage" class="easyui-textbox" data-options="readonly:false,required:true,validType:'Amount'" />
                     <span>元</span>
                 </div>
             </div>
         </fieldset>
 
-        <template name="093C0A6D-ABA4-E611-80C5-507B9DE4A488">
-                <input name="Id" type="hidden" value="093C0A6D-ABA4-E611-80C5-507B9DE4A488" />
-                <div class="">
-                    <label>裸车价：</label>
-                    <input name="Name1" class="easyui-textbox" data-options="readonly:false" />
-                    <span>万元</span>
-                </div>
-        </template>
-
-        <template name="0A3C0A6D-ABA4-E611-80C5-507B9DE4A488">
-            <div class="row">
-                <input name="Id" type="hidden" value="0A3C0A6D-ABA4-E611-80C5-507B9DE4A488" />
-                <div class="col-6">
-                    <label>购置税：</label>
-                    <input name="Name" class="easyui-textbox" data-options="readonly:false" />
-                    <span>元</span>
-                </div>
-                <div class="col-6">
-                    <label>是否为可融项目：</label>
-                    <select name="IsFinancing" class="easyui-combobox" data-options="value:'1',readonly:true">
-                        <option value="1">是</option>
-                        <option value="0">否</option>
-                    </select>
-                </div>
-            </div>
-        </template>
-
-        <template name="0B3C0A6D-ABA4-E611-80C5-507B9DE4A488">
-            <div class="row">
-                <input name="Id" type="hidden" value="0B3C0A6D-ABA4-E611-80C5-507B9DE4A488" />
-                <div class="col-6">
-                    <label>商业险：</label>
-                    <input name="Name" class="easyui-textbox" data-options="readonly:false" />
-                    <span>元</span>
-                </div>
-                <div class="col-6">
-                    <label>是否为可融项目</label>
-                    <select name="IsFinancing" class="easyui-combobox" data-options="value:'1',readonly:true">
-                        <option value="1">是</option>
-                        <option value="0">否</option>
-                    </select>
-                </div>
-            </div>
-        </template>
-
-        <template name="0C3C0A6D-ABA4-E611-80C5-507B9DE4A488">
-            <div class="row">
-                <input name="Id" type="hidden" value="0C3C0A6D-ABA4-E611-80C5-507B9DE4A488" />
-                <div class="col-6">
-                    <label>交强险：</label>
-                    <input name="Name" class="easyui-textbox" data-options="readonly:false" />
-                    <span>元</span>
-                </div>
-                <div class="col-6">
-                    <label>是否为可融项目</label>
-                    <select name="IsFinancing" class="easyui-combobox" data-options="value:'1',readonly:true">
-                        <option value="1">是</option>
-                        <option value="0">否</option>
-                    </select>
-                </div>
-            </div>
-        </template>
-
-        <template name="0D3C0A6D-ABA4-E611-80C5-507B9DE4A488">
-            <div class="row">
-                <input name="Id" type="hidden" value="0D3C0A6D-ABA4-E611-80C5-507B9DE4A488" />
-                <div class="col-6">
-                    <label>车船税：</label>
-                    <input name="Name" class="easyui-textbox" data-options="readonly:false" />
-                    <span>元</span>
-                </div>
-                <div class="col-6">
-                    <label>是否为可融项目</label>
-                    <select name="IsFinancing" class="easyui-combobox" data-options="value:'1',readonly:true">
-                        <option value="1">是</option>
-                        <option value="0">否</option>
-                    </select>
-                </div>
-            </div>
-        </template>
-
-        <template name="0E3C0A6D-ABA4-E611-80C5-507B9DE4A488">
-            <div class="row">
-                <input name="Id" type="hidden" value="0E3C0A6D-ABA4-E611-80C5-507B9DE4A488" />
-                <div class="col-6">
-                    <label>延保险：</label>
-                    <input name="Name" class="easyui-textbox" data-options="readonly:false" />
-                    <span>元</span>
-                </div>
-                <div class="col-6">
-                    <label>是否为可融项目</label>
-                    <select name="IsFinancing" class="easyui-combobox" data-options="value:'1',readonly:true">
-                        <option value="1">是</option>
-                        <option value="0">否</option>
-                    </select>
-                </div>
-            </div>
-        </template>
-
-        <template name="0F3C0A6D-ABA4-E611-80C5-507B9DE4A488">
-            <div class="row">
-                <input name="Id" type="hidden" value="0F3C0A6D-ABA4-E611-80C5-507B9DE4A488" />
-                <div class="col-6">
-                    <label>其他：</label>
-                    <input name="Name" class="easyui-textbox" data-options="readonly:false" />
-                    <span>元</span>
-                </div>
-                <div class="col-6">
-                    <label>是否为可融项目</label>
-                    <select name="IsFinancing" class="easyui-combobox" data-options="value:'1',readonly:true">
-                        <option value="1">是</option>
-                        <option value="0">否</option>
-                    </select>
-                </div>
-            </div>
-        </template>
-
-        <template name="103C0A6D-ABA4-E611-80C5-507B9DE4A488">
-            <div class="row">
-                <input name="Id" type="hidden" value="103C0A6D-ABA4-E611-80C5-507B9DE4A488" />
-                <div class="col-6">
-                    <label>GPS费用：</label>
-                    <input name="Name" class="easyui-textbox" data-options="readonly:false" />
-                    <span>元</span>
-                </div>
-                <div class="col-6">
-                    <label>是否为可融项目</label>
-                    <select name="IsFinancing" class="easyui-combobox" data-options="value:'0',readonly:true">
-                        <option value="1">是</option>
-                        <option value="0">否</option>
-                    </select>
-                </div>
-            </div>
-        </template>
-
-        <template name="113C0A6D-ABA4-E611-80C5-507B9DE4A488">
-            <div class="row">
-                <input name="Id" type="hidden" value="113C0A6D-ABA4-E611-80C5-507B9DE4A488" />
-                <div class="col-6">
-                    <label>手续费：</label>
-                    <input name="Name" class="easyui-textbox" data-options="readonly:false" />
-                    <span>元</span>
-                </div>
-                <div class="col-6">
-                    <label>是否为可融项目</label>
-                    <select name="IsFinancing" class="easyui-combobox" data-options="value:'0',readonly:true">
-                        <option value="1">是</option>
-                        <option value="0">否</option>
-                    </select>
-                </div>
-            </div>
-        </template>
+        <div id="btn">
+            <a id="save" class="easyui-linkbutton" href="javascript:void(0)" data-options="iconCls:'icon-save',onClick:Submit">保存</a>
+            <a id="back" class="easyui-linkbutton" href="javascript:void(0)" data-options="iconCls:'icon-redo',onClick:Cancel">返回</a>
+            <input type="reset" style="display:none" />
+        </div>
     </form>
 </body>
 </html>
