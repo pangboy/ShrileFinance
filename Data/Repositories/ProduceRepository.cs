@@ -9,10 +9,5 @@
         public ProduceRepository(MyContext context) : base(context)
         {
         }
-
-        public IEnumerable<Produce> GetByCode(string code)
-        {
-            return GetAll(m => m.Code == code);
-        }
     }
 }

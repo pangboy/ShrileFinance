@@ -106,6 +106,7 @@
     <Compile Include="Migrations\Configuration.cs">
       <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
     </Compile>
+    <Compile Include="ModelConfigurations\ApplicantConfiguration.cs" />
     <Compile Include="ModelConfigurations\AssociatedEnterpriseConfiguration.cs" />
     <Compile Include="ModelConfigurations\BigEventConfiguration.cs" />
     <Compile Include="ModelConfigurations\CashFlowConfiguration.cs" />
@@ -129,6 +130,7 @@
     <Compile Include="ModelConfigurations\AppUserConfiguration.cs" />
     <Compile Include="ModelConfigurations\InstitutionIncomeExpenditureConfiguration.cs" />
     <Compile Include="ModelConfigurations\InstitutionLiabilitiesConfiguration.cs" />
+    <Compile Include="ModelConfigurations\VehicleConfigration.cs" />
     <Compile Include="Models\CRET_Cities.cs">
       <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
     </Compile>

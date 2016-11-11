@@ -8,6 +8,5 @@
     /// </summary>
     public interface IProduceRepository : IRepository<Produce>
     {
-        IEnumerable<Produce> GetByCode(string code);
     }
 }

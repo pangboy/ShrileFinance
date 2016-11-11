@@ -90,6 +90,7 @@
     <Compile Include="Entities\Customers\INaturalPerson.cs" />
     <Compile Include="Entities\Entity.cs" />
     <Compile Include="Entities\AppUser.cs" />
+    <Compile Include="Entities\Finance\Applicant.cs" />
     <Compile Include="Entities\Finance\Contact.cs" />
     <Compile Include="Entities\Finance\Credit.cs" />
     <Compile Include="Entities\Finance\CreditExamine.cs" />
@@ -99,6 +100,7 @@
     <Compile Include="Entities\Produce\Produce.cs" />
     <Compile Include="Entities\Produce\FinancingItem.cs" />
     <Compile Include="Entities\Produce\Scheme.cs" />
+    <Compile Include="Entities\Vehicle\Vehicle.cs" />
     <Compile Include="Interfaces\IAggregateRoot.cs" />
     <Compile Include="Interfaces\IEntity.cs" />
     <Compile Include="Interfaces\Repositories\IFinanceRepository.cs" />

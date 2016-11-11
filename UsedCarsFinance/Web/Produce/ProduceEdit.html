@@ -19,34 +19,6 @@
 
         $(function () {
             Init();
-
-            //if ($("#AdditionalGPSCost").val() > 0) {
-            //    $("#GPScbox").attr('checked', 'checked');
-            //    $("#AdditionalGPSCost").textbox({ required: true });
-            //} else {
-            //    $('#AdditionalGPSCost').textbox({ required: false });
-            //    $('#AdditionalGPSCost').textbox("readonly", true);
-            //}
-
-            //if ($("#AdditionalOtherCost").val() > 0) {
-            //    $("#Othercbox").attr('checked', 'checked');
-            //    $("#AdditionalOtherCost").textbox({ required: true });
-            //} else {
-            //    $('#AdditionalOtherCost').textbox({ required: false });
-            //    $('#AdditionalOtherCost').textbox("readonly", true);
-            //}
-
-            //var InterestRate = $("#InterestRate").textbox('getValue');
-            //if (InterestRate != "") {
-            //    var IRate = parseFloat(InterestRate);
-            //    $("#InterestRate").textbox('setValue', IRate.toFixed(2));
-            //}
-
-            //var Rate = $("#Rate").textbox('getValue');
-            //if (Rate != "") {
-            //    var IRate = parseFloat(Rate);
-            //    $("#Rate").textbox('setValue', IRate.toFixed(2));
-            //}
         });
 
         function Cbox1Checked() {
@@ -151,25 +123,16 @@
             disction = true;
             var CodeUpper = $("input[name='Code']").val().toUpperCase();
             var ProduceId = $("input[name='ProduceId']").val();
-            var method = uc.GetParams().method;
             $("input[name='Code']").val(CodeUpper);
             $.ajax({
                 async: false,
                 type: "Get",
-                url: "../api/Produce/Option",
+                url: "../api/Produce/GetAll",
                 success: function (data) {
                     for (var i = 0; i < data.length; i++) {
-                        if (method == "add") {
-                            if (CodeUpper == data[i].text && ProduceId == "") {
-                                top.$.messager.show({ msg: "产品代码重复！" });
-                                return disction = false;
-                            }
-                        }
-                        if (method == "mod") {
-                            if (CodeUpper == data[i].text && ProduceId != data[i].value) {
-                                top.$.messager.show({ msg: "产品代码重复！" });
-                                return disction = false;
-                            }
+                        if (CodeUpper == data[i].text && (ProduceId == "" || ProduceId != data[i].value)) {
+                            top.$.messager.show({ msg: "产品代码重复！" });
+                            return disction = false;
                         }
                     }
                 }
@@ -198,25 +161,23 @@
                 top.$.messager.show({ msg: "融资比例下限必须小于融资比例上限！" });
                 return;
             }
-            //toUppers();
+            toUppers();
 
-            //if (disction) {
+            if (disction) {
+                var produceInfo = $(".container").serializeJson();
+                produceInfo["Poundage"] = $('#Poundage').datagrid('getChecked');
+                produceInfo["FinancingItems"] = ($('#Financing').datagrid('getChecked'));
 
-            //}
+                //保存前将datagrid中的编辑状态的行结束编辑，数据保存在datagrid中
+                $('#Poundage').datagrid('getEditingRowIndexs');
+                $('#Financing').datagrid('getEditingRowIndexs');
 
-            var produceInfo = $(".container").serializeJson();
-            produceInfo["Poundage"] = $('#Poundage').datagrid('getChecked');
-            produceInfo["FinancingItems"] = ($('#Financing').datagrid('getChecked'));
-
-            //保存前将datagrid中的编辑状态的行结束编辑，数据保存在datagrid中
-            $('#Poundage').datagrid('getEditingRowIndexs');
-            $('#Financing').datagrid('getEditingRowIndexs');
-
-            uc.form.Submit({
-                method: "POST",
-                url: "../api/Produce/Modify",
-                data: produceInfo
-            });
+                uc.form.Submit({
+                    method: "POST",
+                    url: "../api/Produce/Modify",
+                    data: produceInfo
+                });
+            }
         }
 
         $.extend($.fn.datagrid.methods, {
@@ -240,7 +201,6 @@
 
         //双击编辑行
         function onEditor(index, field, value) {
-
             if (editIndex != index) {
                 if (endEditing(this.id)) {
                     $('#' + this.id).datagrid('selectRow', index)
@@ -260,7 +220,6 @@
         document.onkeydown = function (event) {
             var e = event || window.event || arguments.callee.caller.arguments[0];
             if (e && e.keyCode == 13) { // enter 键
-
                 var id = $(e.target).parents(".panel.datagrid").find(".easyui-datagrid").attr("id")
                 accept(id);
             }
@@ -371,9 +330,9 @@
 
                 <div class="col-6">
                     <label>融资比例区间:</label>
-                    <input name="MinFinancingRatio" class="easyui-textbox" style="width:190px;" data-options="onChange:onChange" />
+                    <input name="MinFinancingRatio" class="easyui-textbox" style="width:190px;" data-options="required:true,onChange:onChange" />
                     <span style="display:inline-block;width:22px; text-align:center;">-</span>
-                    <input name="MaxFinancingRatio" class="easyui-textbox" style="width:190px;" data-options="onChange:onChange" />
+                    <input name="MaxFinancingRatio" class="easyui-textbox" style="width:190px;" data-options="required:true,onChange:onChange" />
                     <span class="unit">%</span>
                 </div>
             </div>

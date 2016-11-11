@@ -64,7 +64,6 @@ namespace Application
         {
             var list = repository.GetAll();
             List<ProduceViewModel> producelist = new List<ProduceViewModel>();
-            ProduceViewModel produce = new ProduceViewModel();
 
             // 判断是否查询到产品信息
             if (list != null)
@@ -74,7 +73,7 @@ namespace Application
                     // 产品映射成对应的ViewModel
                     var produceViewModel = Mapper.Map<ProduceViewModel>(item);
 
-                    producelist.Add(produce);
+                    producelist.Add(produceViewModel);
                 }
             }
             return producelist;
@@ -82,8 +81,11 @@ namespace Application
 
         public ProduceViewModel GetByCode(string code)
         {
-            var produce = repository.GetByCode(code);
-            var produceViewModel = Mapper.Map<ProduceViewModel>(produce);
+            var produce = repository.GetAll().FirstOrDefault(m => m.Code == code);
+            var produceViewModel = new ProduceViewModel();
+            List<FinancingProjectListViewModel> List = new List<FinancingProjectListViewModel>();
+
+            produceViewModel = Mapper.Map<ProduceViewModel>(produce);
 
             if (produceViewModel.FinancingItems.Count > 0)
             {
@@ -92,8 +94,26 @@ namespace Application
                     // 融资项否则为手续费项目
                     if (financing.FinancingProject.IsFinancing == false)
                     {
-                        produceViewModel.Poundage.Add(financing);
-                        produceViewModel.FinancingItems.Remove(financing);
+                        produceViewModel.PoundageList.Add(new FinancingProjectListViewModel()
+                        {
+                            FinancingProjectId = financing.FinancingProjectId,
+                            IsEdit = financing.IsEdit,
+                            IsFinancing = financing.FinancingProject.IsFinancing,
+                            Money = financing.Money,
+                            Name = financing.FinancingProject.Name
+                        });
+                    }
+                    else
+                    {
+                        var aaa = new FinancingProjectListViewModel()
+                        {
+                            FinancingProjectId = financing.FinancingProjectId,
+                            IsEdit = financing.IsEdit,
+                            IsFinancing = financing.FinancingProject.IsFinancing,
+                            Money = financing.Money,
+                            Name = financing.FinancingProject.Name
+                        };
+                        produceViewModel.FinancingItemsList.Add(aaa);
                     }
                 }
             }

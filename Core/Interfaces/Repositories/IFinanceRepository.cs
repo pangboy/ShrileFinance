@@ -1,6 +1,5 @@
 ﻿namespace Core.Interfaces.Repositories
 {
-    using System;
     using Entities.Finance;
 
     /// <summary>

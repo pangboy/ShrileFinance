@@ -5,6 +5,12 @@
 
     public class ProduceViewModel
     {
+        public ProduceViewModel()
+        {
+            FinancingItemsList = new HashSet<FinancingProjectListViewModel>();
+
+            PoundageList = new HashSet<FinancingProjectListViewModel>();
+        }
         public Guid Id { get; set; }
 
         /// <summary>
@@ -97,5 +103,9 @@
         /// 每个产品对应的手续费
         /// </summary>
         public virtual ICollection<FinancingItemViewModel> Poundage { get; set; }
+
+        public virtual ICollection<FinancingProjectListViewModel> FinancingItemsList { get; set; }
+        public virtual ICollection<FinancingProjectListViewModel> PoundageList { get; set; }
+
     }
 }

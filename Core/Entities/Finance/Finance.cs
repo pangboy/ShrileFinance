@@ -1,6 +1,7 @@
 ﻿namespace Core.Entities.Finance
 {
     using System;
+    using System.Collections.Generic;
     using Interfaces;
     using Produce;
 
@@ -29,17 +30,12 @@
         /// <summary>
         /// 还款日
         /// </summary>
-        public int RepaymentDate { get; set; }
+        public DateTime RepaymentDate { get; set; }
 
         /// <summary>
         /// 还款方案
         /// </summary>
-        public Scheme RepaymentScheme { get; set; }
-
-        /// <summary>
-        /// 借款人
-        /// </summary>
-        public object Borrower { get; set; }
+        public  RepaymentSchemeEnum RepaymentScheme { get; set; }
 
         /// <summary>
         /// 保证金
@@ -69,7 +65,7 @@
         /// <summary>
         /// 合同
         /// </summary>
-        public Contact Contact { get; set; }
+        public virtual  ICollection<Contact> Contact { get; set; }
 
         /// <summary>
         /// 产品
@@ -80,5 +76,79 @@
         /// 信审报告
         /// </summary>
         public CreditExamine CreditExamine { get; set; }
+
+        /// <summary>
+        /// 意向融资金额
+        /// </summary>
+        public decimal IntentionPrincipal { get; set; }
+
+        /// <summary>
+        /// 月供先付期数
+        /// </summary>
+        public int OncePayMonths { get; set; }
+
+        /// <summary>
+        /// 建议融资金额
+        /// </summary>
+        public decimal AdviceMoney { get; set; }
+
+        /// <summary>
+        /// 建议融资比例
+        /// </summary>
+        public decimal AdviceRatio { get; set; }
+
+        /// <summary>
+        /// 审批金额
+        /// </summary>
+        public decimal ApprovalMoney { get; set; }
+
+        /// <summary>
+        /// 审批融资比例
+        /// </summary>
+        public decimal ApprovalRatio { get; set; }
+
+        /// <summary>
+        /// 月供金额
+        /// </summary>
+        public decimal  MonthMoney { get; set; }
+
+        /// <summary>
+        /// 还款日
+        /// </summary>
+        public DateTime  RepayDate { get; set; }
+
+        /// <summary>
+        /// 首次租金支付日期
+        /// </summary>
+        public DateTime RepayRentDate { get; set; }
+
+
+        /// <summary>
+        /// 联系人
+        /// </summary>
+        public virtual ICollection<Applicant> Applicant { get; set; }
+
+        /// <summary>
+        /// 车辆信息
+        /// </summary>
+        public virtual Vehicle.Vehicle VehicleInfo { get; set; }
+
+        public enum RepaymentSchemeEnum : byte
+        {
+            /// <summary>
+            /// 等额本息
+            /// </summary>
+            等额本息 =1,
+
+            /// <summary>
+            /// 月供提前付
+            /// </summary>
+            月供提前付 = 2,
+
+            /// <summary>
+            /// 一次性付息
+            /// </summary>
+            一次性付息 = 3
+        }
     }
 }

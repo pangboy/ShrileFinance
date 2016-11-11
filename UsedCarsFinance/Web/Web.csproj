@@ -153,6 +153,7 @@
     <Content Include="Account\PasswordEdit.html" />
     <Content Include="Account\UserEdit.html" />
     <Content Include="Account\UserInfo.html" />
+    <Content Include="Finance\images\add.png" />
     <Content Include="BankInfo\BorrowerProfile.html" />
     <Content Include="BankInfo\InfoImg.png" />
     <Content Include="BankInfo\JS\ValidEnterprise.js" />
@@ -183,6 +184,10 @@
     <Content Include="Borrowers\OrganizateList.html" />
     <Content Include="Borrowers\OrganizatePage.html" />
     <Content Include="Borrowers\ProfitInfo.html" />
+    <Content Include="Finance\images\arrow_down.png" />
+    <Content Include="Finance\images\arrow_up.png" />
+    <Content Include="Finance\images\choose.png" />
+    <Content Include="Finance\images\down.png" />
     <Content Include="Finance\FinanceAudit.html" />
     <Content Include="Finance\CreditExamine.html" />
     <Content Include="Finance\InfoAdditional.html" />
@@ -193,6 +198,7 @@
     <Content Include="Flow\FlowTest\Test1.html" />
     <Content Include="Flow\FlowTest\Test2.html" />
     <Content Include="Flow\FlowTest\Test3.html" />
+    <Content Include="Finance\images\minus.png" />
     <Content Include="Notice\NoticeList.html" />
     <Content Include="Scripts\dictionaryCode.js" />
     <Content Include="BankInfo\DictionaryCode\DictionaryCodeEdit.html" />
@@ -805,6 +811,7 @@
     <Content Include="Tests\HtmlPage1.html" />
     <Content Include="Tests\HtmlPage2.html" />
     <Content Include="Tests\ValidTestPage.html" />
+    <Content Include="Finance\images\up.png" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
