@@ -95,6 +95,10 @@
     <Compile Include="Migrations\201611011134263_CreateParent.Designer.cs">
       <DependentUpon>201611011134263_CreateParent.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201611110645384_AspNetRole.cs" />
+    <Compile Include="Migrations\201611110645384_AspNetRole.Designer.cs">
+      <DependentUpon>201611110645384_AspNetRole.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\201611060907042_AddProduceModule.cs" />
     <Compile Include="Migrations\201611060907042_AddProduceModule.Designer.cs">
       <DependentUpon>201611060907042_AddProduceModule.cs</DependentUpon>
@@ -102,18 +106,6 @@
     <Compile Include="Migrations\201611090429237_AddFinanceAndCredit.cs" />
     <Compile Include="Migrations\201611090429237_AddFinanceAndCredit.Designer.cs">
       <DependentUpon>201611090429237_AddFinanceAndCredit.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201611060359527_UseIdentity.cs" />
-    <Compile Include="Migrations\201611060359527_UseIdentity.Designer.cs">
-      <DependentUpon>201611060359527_UseIdentity.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201611060427119_Flow.cs" />
-    <Compile Include="Migrations\201611060427119_Flow.Designer.cs">
-      <DependentUpon>201611060427119_Flow.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201611101307548_Partner.cs" />
-    <Compile Include="Migrations\201611101307548_Partner.Designer.cs">
-      <DependentUpon>201611101307548_Partner.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs">
       <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
@@ -302,20 +294,14 @@
     <EmbeddedResource Include="Migrations\201611011134263_CreateParent.resx">
       <DependentUpon>201611011134263_CreateParent.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611110645384_AspNetRole.resx">
+      <DependentUpon>201611110645384_AspNetRole.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201611060907042_AddProduceModule.resx">
       <DependentUpon>201611060907042_AddProduceModule.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201611090429237_AddFinanceAndCredit.resx">
       <DependentUpon>201611090429237_AddFinanceAndCredit.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201611060359527_UseIdentity.resx">
-      <DependentUpon>201611060359527_UseIdentity.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201611060427119_Flow.resx">
-      <DependentUpon>201611060427119_Flow.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201611101307548_Partner.resx">
-      <DependentUpon>201611101307548_Partner.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
