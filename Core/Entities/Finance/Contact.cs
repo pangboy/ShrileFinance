@@ -8,18 +8,23 @@
     public class Contact : Entity
     {
         /// <summary>
-        /// 合同名称
+        /// 合同编号
         /// </summary>
         public string Number { get; set; }
 
         /// <summary>
-        /// 合同日期
+        /// 名称
         /// </summary>
-        public DateTime Date { get; set; }
+        public string Name { get; set; }
 
         /// <summary>
         /// 路径
         /// </summary>
         public string Path { get; set; }
+
+        /// <summary>
+        /// 合同日期
+        /// </summary>
+        public DateTime Date { get; set; }
     }
 }

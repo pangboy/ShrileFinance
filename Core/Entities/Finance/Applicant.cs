@@ -5,11 +5,6 @@
     public class Applicant : Entity
     {
         /// <summary>
-        /// 融资ID
-        /// </summary>
-        public Guid FinanceId { get; set; }
-
-        /// <summary>
         /// 申请人姓名
         /// </summary>
         public string Name { get; set; }

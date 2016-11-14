@@ -7,6 +7,14 @@
 
     public class Partner : Entity, IAggregateRoot
     {
+        public Partner()
+        {
+            Produces = new HashSet<Produce>();
+            Approvers = new HashSet<AppUser>();
+            Accounts = new HashSet<AppUser>();
+            DateCreated = DateTime.Now;
+        }
+
         public string Name { get; set; }
 
         public decimal LineOfCredit { get; set; }

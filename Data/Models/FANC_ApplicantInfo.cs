@@ -17,8 +17,6 @@ namespace Data.Models
         [Key]
         public int ApplicantId { get; set; }
 
-        public int FinanceId { get; set; }
-
         [Required]
         [StringLength(50)]
         public string Name { get; set; }

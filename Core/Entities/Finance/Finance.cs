@@ -35,7 +35,7 @@
         /// <summary>
         /// 还款方案
         /// </summary>
-        public  RepaymentSchemeEnum RepaymentScheme { get; set; }
+        public RepaymentSchemeEnum RepaymentScheme { get; set; }
 
         /// <summary>
         /// 保证金
@@ -115,13 +115,12 @@
         /// <summary>
         /// 还款日
         /// </summary>
-        public DateTime  RepayDate { get; set; }
+        public DateTime RepayDate { get; set; }
 
         /// <summary>
         /// 首次租金支付日期
         /// </summary>
         public DateTime RepayRentDate { get; set; }
-
 
         /// <summary>
         /// 联系人
@@ -143,7 +142,7 @@
             /// <summary>
             /// 等额本息
             /// </summary>
-            等额本息 =1,
+            等额本息 = 1,
 
             /// <summary>
             /// 月供提前付

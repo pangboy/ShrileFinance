@@ -111,6 +111,14 @@
     <Compile Include="Migrations\201611110947526_Workflow.Designer.cs">
       <DependentUpon>201611110947526_Workflow.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201611140312301_AddVehicleAndApplicantAddContactsUpdateFinance.cs" />
+    <Compile Include="Migrations\201611140312301_AddVehicleAndApplicantAddContactsUpdateFinance.Designer.cs">
+      <DependentUpon>201611140312301_AddVehicleAndApplicantAddContactsUpdateFinance.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201611140553518_Partner.cs" />
+    <Compile Include="Migrations\201611140553518_Partner.Designer.cs">
+      <DependentUpon>201611140553518_Partner.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs">
       <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
     </Compile>
@@ -313,6 +321,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201611110947526_Workflow.resx">
       <DependentUpon>201611110947526_Workflow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611140312301_AddVehicleAndApplicantAddContactsUpdateFinance.resx">
+      <DependentUpon>201611140312301_AddVehicleAndApplicantAddContactsUpdateFinance.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611140553518_Partner.resx">
+      <DependentUpon>201611140553518_Partner.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

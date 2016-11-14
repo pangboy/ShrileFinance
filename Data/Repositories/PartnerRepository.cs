@@ -15,7 +15,7 @@
         public Partner GetByUser(AppUser user)
         {
             // TODO: 模拟数据
-            var approvers = Context.Set<AppUser>().GroupBy(m => m.RoleId).Select(m => m.First()).ToList();
+            var approvers = Context.Set<AppUser>().GroupBy(m => m.Roles.FirstOrDefault()).Select(m => m.FirstOrDefault()).ToList();
 
             return new Partner {
                 Approvers = approvers

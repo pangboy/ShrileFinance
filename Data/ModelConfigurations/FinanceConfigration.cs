@@ -12,7 +12,7 @@
             HasKey(m => m.Id);
             Property(m => m.Id).HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
 
-            Property(m=>m.Principal);
+            Property(m => m.Principal);
             Property(m => m.InterestRate);
             Property(m => m.Periods);
             Property(m => m.RepaymentInterval);
@@ -35,13 +35,15 @@
 
             // 信审报告
             HasOptional(m => m.CreditExamine).WithOptionalPrincipal().Map(m => m.MapKey("FinanceId")).WillCascadeOnDelete();
-            //车辆信息
+
+            // 车辆信息
             HasOptional(m => m.VehicleInfo).WithOptionalPrincipal().Map(m => m.MapKey("FinanceId")).WillCascadeOnDelete();
-            //联系人信息
-            HasOptional(m => m.Applicant).WithOptionalPrincipal().Map(m => m.MapKey("FinanceId")).WillCascadeOnDelete();
+
+            // 联系人信息
+            HasMany(m => m.Applicant).WithOptional().Map(m => m.MapKey("FinanceId")).WillCascadeOnDelete();
 
             // 合同
-            HasOptional(m => m.Contact).WithOptionalPrincipal().Map(m => m.MapKey("FinanceId")).WillCascadeOnDelete();
+            HasMany(m => m.Contact).WithOptional().Map(m => m.MapKey("FinanceId")).WillCascadeOnDelete();
 
             // 融资扩展
             HasOptional(m => m.FinanceExtension).WithOptionalPrincipal().Map(m => m.MapKey("FinanceId")).WillCascadeOnDelete();

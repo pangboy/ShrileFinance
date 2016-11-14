@@ -118,6 +118,9 @@
     <Compile Include="Entities\Produce\FinancingItem.cs" />
     <Compile Include="Entities\Produce\Scheme.cs" />
     <Compile Include="Entities\Vehicle\Vehicle.cs" />
+    <Compile Include="Exceptions\AppException.cs" />
+    <Compile Include="Exceptions\ArgumentNullAppException.cs" />
+    <Compile Include="Exceptions\InvalidOperationAppException.cs" />
     <Compile Include="Interfaces\IAggregateRoot.cs" />
     <Compile Include="Interfaces\IEntity.cs" />
     <Compile Include="Interfaces\Repositories\IFlowRepository.cs" />

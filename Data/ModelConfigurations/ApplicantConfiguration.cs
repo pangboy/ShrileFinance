@@ -7,14 +7,13 @@
     /// <summary>
     /// 联系人
     /// </summary>
-    class ApplicantConfiguration : EntityTypeConfiguration<Applicant>
+    public class ApplicantConfiguration : EntityTypeConfiguration<Applicant>
     {
         public ApplicantConfiguration()
         {
             HasKey(m => m.Id);
             Property(m => m.Id).HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
 
-            Property(m => m.FinanceId);
             Property(m => m.Name).IsRequired().HasMaxLength(50);
             Property(m => m.Sex).IsRequired().HasMaxLength(5);
             Property(m => m.IdentityType).HasMaxLength(50);
@@ -46,6 +45,7 @@
             Property(m => m.FamilyNumber);
             Property(m => m.OwneHouse).HasMaxLength(1000);
 
+            ToTable("FANC_Applicant");
         }
     }
 }

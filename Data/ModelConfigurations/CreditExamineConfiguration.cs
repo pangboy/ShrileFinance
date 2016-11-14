@@ -111,15 +111,15 @@
 
             // 复审人标识
             HasOptional(m => m.ReviewPerson).WithMany()
-                .Map(m => m.MapKey("TrialPersonId"));
+                .Map(m => m.MapKey("ReviewPersonId"));
 
             // 审批人标识
             HasOptional(m => m.ApprovePerson).WithMany()
-                .Map(m => m.MapKey("TrialPersonId"));
+                .Map(m => m.MapKey("ApprovePersonId"));
 
             // 终审人标识
             HasOptional(m => m.FinalPerson).WithMany()
-                .Map(m => m.MapKey("TrialPersonId"));
+                .Map(m => m.MapKey("FinalPersonId"));
 
             // 设置表名
             ToTable("FANC_CreditExamine");
