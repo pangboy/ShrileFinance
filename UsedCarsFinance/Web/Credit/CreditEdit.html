@@ -20,7 +20,6 @@
         function Init() {
             var query = uc.GetParams();
 
-            LoadAllProvince();
             LoadProcessUser();
 
             if (query.method == "mod" || query.method == "view") {
@@ -38,29 +37,28 @@
                     url: "../api/Credit/Get",
                     onLoadSuccess: function (data) {
                         $(data.Produces).each(function () {
-                            ProduceAdd(this.Code, this.ProduceId);
+                            ProduceAdd(this.Code, this.Id);
                         });
-                        uc.form.Load(data.ProcessUser, "#process_user");
+
+                        approvers = data.Approvers;
+                        accounts = data.Accounts;
                     }
                 });
-
-                var record = { value: $("select[comboname=Province").combobox('getValue') };
-                var CityCode = $("select[comboname=City").combobox('getValue');
-                LoadCityByProvinceId(record);
-                loadCityByCityCode(CityCode);
             }
         }
+
+        var approvers, accounts;
 
         function Submit() {
             var value = $.extend({},
                 $("#credit_info").serializeJson(),
                 $("#partner_info").serializeJson(),
-                { ProcessUser: $("#process_user").serializeJson() }
+                { Approvers: approvers, Accounts: accounts }
                 );
 
             value.Produces = [];
             $("select[name=Produces] option").each(function () {
-                value.Produces.push({ ProduceId: this.value });
+                value.Produces.push({ Id: this.value });
             });
 
             uc.form.Submit({
@@ -89,44 +87,6 @@
             //移除已选中的项
             $("select[name=Produces] option:selected").remove();
         }
-
-        function LoadAllProvince() {
-            $.ajax({
-                async: false,
-                method: "GET",
-                url: '../api/Credit/OptionProvince',
-                statusCode: {
-                    200: function (data) { $("select[comboname=Province").combobox("loadData", data); }
-                }
-            });
-        }
-        function LoadCityByProvinceId(record) {
-            $("select[comboname=City").combobox('setValue', "");
-
-            $.ajax({
-                async: true,
-                method: "GET",
-                data: { ProvinceCode: record.value },
-                url: '../api/Credit/OptionCitys',
-                success: function (data) {
-                    $("select[comboname=City").combobox("loadData", data);
-                }
-            });
-        }
-
-        function loadCityByCityCode(CityCode) {
-            $.ajax({
-                async: true,
-                method: "GET",
-                data: { CityCode: CityCode },
-                url: '../api/Credit/OptionCity',
-                success: function (data) {
-                    $("select[comboname=City").combobox('setValue', data[0].value);
-                    $("select[comboname=City").combobox('setText', data[0].text);
-                }
-            });
-        }
-
     </script>
 </head>
 <body>
@@ -135,7 +95,7 @@
             <legend>授信信息</legend>
 
             <div class="hidden">
-                <input type="text" name="CreditId" hidden />
+                <input type="text" name="Id" hidden />
             </div>
 
             <div class="row">
@@ -145,23 +105,8 @@
                 </div>
 
                 <div class="col-6">
-                    <label>主体类型:</label>
-                    <select name="Type" class="easyui-combobox" data-options="editable:false,readonly:true">
-                        <option value="1">渠道授信</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-6">
                     <label>授信额度:</label>
                     <input name="LineOfCredit" class="easyui-textbox" required data-options="validType:'Price'" />
-                    <span class="unit">元</span>
-                </div>
-
-                <div class="col-6 hidden">
-                    <label>授信余额:</label>
-                    <input name="CreditBalance" class="easyui-textbox" readonly />
                     <span class="unit">元</span>
                 </div>
             </div>
@@ -170,11 +115,11 @@
                 <div class="col-6">
                     <label>选择产品:</label>
                     <select name="Produce" class="easyui-combobox" data-options="
-						method:'GET',
-						url:'../api/Produce/Option',
-						editable:false,
-						width:315
-					"></select>
+                            method:'GET',
+                            url:'../api/Produce/Option',
+                    editable:false,
+                    width:315
+                    "></select>
                     <button type="button" onclick="ProduceAppend()">添加</button>
                     <button type="button" onclick="ProduceRemove()">移除</button>
                 </div>
@@ -213,12 +158,11 @@
                     <label>实际控制人姓名:</label>
                     <input name="ControllerName" class="easyui-textbox" />
                 </div>
-                <div class="row">
-                    <div class="col-6">
-                        <label>认缴保证金额度:</label>
-                        <input name="Bail" class="easyui-textbox" required data-options="validType:'Price'" />
-                        <span class="unit">元</span>
-                    </div>
+
+                <div class="col-6">
+                    <label>认缴保证金额度:</label>
+                    <input name="AmountOfBail" class="easyui-textbox" required data-options="validType:'Price'" />
+                    <span class="unit">元</span>
                 </div>
             </div>
 
@@ -230,24 +174,13 @@
 
                 <div class="col-6">
                     <label>实际控制人电话号码:</label>
-                    <input name="ControllerTelephone" class="easyui-textbox" data-options="validType:'Mobile'" />
+                    <input name="ControllerPhone" class="easyui-textbox" data-options="validType:'Mobile'" />
                 </div>
             </div>
+
             <div class="row">
                 <div class="col-12">
                     <label>渠道公司地址:</label>
-
-                    <select name="Province" class="easyui-combobox" data-options="
-                                width:203,
-						        onSelect:LoadCityByProvinceId,
-                                required:true,
-						        editable:false
-					        "></select>
-                    <select name="City" class="easyui-combobox" data-options="
-                                width:203,
-                                required:true,
-						        editable:false
-					        "></select>
                     <input name="Address" style="width:480px;" class="easyui-textbox" />
                 </div>
             </div>
@@ -259,41 +192,41 @@
             <div class="row">
                 <div class="col-6">
                     <label>初审人员:</label>
-                    <select name="User1" class="easyui-combobox" data-options="editable:false" required></select>
+                    <select name="User1" class="easyui-combobox" data-options="editable:false" ></select>
                 </div>
 
                 <div class="col-6">
                     <label>复审人员:</label>
-                    <select name="User2" class="easyui-combobox" data-options="editable:false" required></select>
+                    <select name="User2" class="easyui-combobox" data-options="editable:false" ></select>
                 </div>
             </div>
 
             <div class="row">
                 <div class="col-6">
                     <label>运营初审人员:</label>
-                    <select name="User3" class="easyui-combobox" data-options="editable:false" required></select>
+                    <select name="User3" class="easyui-combobox" data-options="editable:false" ></select>
                 </div>
 
                 <div class="col-6">
                     <label>运营复审人员:</label>
-                    <select name="User4" class="easyui-combobox" data-options="editable:false" required></select>
+                    <select name="User4" class="easyui-combobox" data-options="editable:false" ></select>
                 </div>
             </div>
 
             <div class="row">
                 <div class="col-6">
                     <label>财务审核人员:</label>
-                    <select name="User5" class="easyui-combobox" data-options="editable:false" required></select>
+                    <select name="User5" class="easyui-combobox" data-options="editable:false" ></select>
                 </div>
             </div>
 
             <script>
                 function LoadProcessUser() {
-                    LoadCombobox("select[comboname='User1']", { RoleId: 3 });
-                    LoadCombobox("select[comboname='User2']", { RoleId: 4 });
-                    LoadCombobox("select[comboname='User3']", { RoleId: 5 });
-                    LoadCombobox("select[comboname='User4']", { RoleId: 10 });
-                    LoadCombobox("select[comboname='User5']", { RoleId: 6 });
+                    LoadCombobox("select[comboname='User1']", { RoleId: 'BD42BEE1-05A4-E611-80C5-507B9DE4A488' });
+                    LoadCombobox("select[comboname='User2']", { RoleId: 'BE42BEE1-05A4-E611-80C5-507B9DE4A488' });
+                    LoadCombobox("select[comboname='User3']", { RoleId: 'BF42BEE1-05A4-E611-80C5-507B9DE4A488' });
+                    LoadCombobox("select[comboname='User4']", { RoleId: 'C042BEE1-05A4-E611-80C5-507B9DE4A488' });
+                    LoadCombobox("select[comboname='User5']", { RoleId: 'C142BEE1-05A4-E611-80C5-507B9DE4A488' });
 
                     function LoadCombobox(selector, params) {
                         $.ajax({

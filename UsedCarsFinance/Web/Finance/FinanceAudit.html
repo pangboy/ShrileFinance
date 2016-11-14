@@ -214,7 +214,6 @@
             return result;
         }
 
-        // 提交测试
         function Submit() {
             var data = BuildData().buildData;
 
@@ -225,6 +224,7 @@
                 url: '../api/FinanceAuidt/EditFinanceAuidt',
                 statusCode: {
                     200: function (data) {
+                        
                     }
                 }
             });
