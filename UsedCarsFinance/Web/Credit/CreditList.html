@@ -21,7 +21,7 @@
 				var row = uc.grid.GetSelected();
 
 				if (row) {
-					url += "&creditId=" + row.CreditId;
+					url += "&creditId=" + row.Id;
 				}
 				else {
 					return;
@@ -49,14 +49,12 @@
         ">
 		<thead>
 			<tr>
-				<th data-options="field:'CreditId',hidden:true">CreditId</th>
 				<th data-options="field:'Name',width:150,align:'center'">授信主体名称</th>
-				<th data-options="field:'TypeDesc',width:100,align:'center'">授信主体类型</th>
 				<th data-options="field:'LineOfCredit',width:100,align:'center'">授信额度(元)</th>
 				<th data-options="field:'ControllerName',width:100,align:'center'">实际控制人姓名</th>
-				<th data-options="field:'ControllerTelephone',width:100,align:'center'">实际控制人电话</th>
-				<th data-options="field:'Bail',width:150,align:'center'">认缴保证金额度(元)</th>
-				<th data-options="field:'AddDate',width:150,align:'center'">添加日期</th>
+				<th data-options="field:'ControllerPhone',width:100,align:'center'">实际控制人电话</th>
+				<th data-options="field:'AmountOfBail',width:150,align:'center'">认缴保证金额度(元)</th>
+				<th data-options="field:'DateCreated',width:150,align:'center'">添加日期</th>
 				<th data-options="field:'Remarks',align:'left'">备注</th>
 			</tr>
 		</thead>

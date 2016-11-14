@@ -63,9 +63,9 @@ namespace Web.Controllers.Account
         /// <param name="roleId">角色标识</param>
         /// <returns></returns>
         [HttpGet]
-        public IEnumerable<ComboInfo> Option(int? roleId)
+        public IEnumerable<ComboInfo> Option(string roleId)
         {
-            return service.GetRoles().Select(m => new ComboInfo(m.Id, m.Name));
+            return service.GetByRole(roleId).Select(m => new ComboInfo(m.Id, m.Name));
         }
 
         /// <summary>

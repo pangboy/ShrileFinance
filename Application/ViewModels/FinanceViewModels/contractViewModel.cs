@@ -1,12 +1,10 @@
-﻿namespace Core.Entities.Finance
+﻿namespace Application.ViewModels.FinanceViewModels
 {
     using System;
 
-    /// <summary>
-    /// 合同
-    /// </summary>
-    public class Contact : Entity
+   public class ContractViewModel
     {
+        public Guid Id { get; set; }
         /// <summary>
         /// 合同编号
         /// </summary>
