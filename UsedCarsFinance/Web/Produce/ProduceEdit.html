@@ -176,6 +176,7 @@
             var max = parseInt($("input[textboxname = MaxFinancingRatio]").textbox("getValue"));
             if (min != "" && max != "" && max < min) {
                 top.$.messager.show({ msg: "融资比例下限必须小于融资比例上限！" });
+                return false
             }
         }
 

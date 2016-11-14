@@ -7,6 +7,12 @@
 
     public class Finance : Entity, IAggregateRoot
     {
+        public Finance()
+        {
+            DateCreated = DateTime.Now;
+            Applicant = new List<Applicant>();
+            Contact = new List<Contract>();
+        }
         /// <summary>
         /// 融资本金
         /// </summary>
@@ -62,20 +68,6 @@
         /// </summary>
         public DateTime DateCreated { get; set; }
 
-        /// <summary>
-        /// 合同
-        /// </summary>
-        public virtual ICollection<Contract> Contact { get; set; }
-
-        /// <summary>
-        /// 产品
-        /// </summary>
-        public virtual Produce Produce { get; set; }
-
-        /// <summary>
-        /// 信审报告
-        /// </summary>
-        public CreditExamine CreditExamine { get; set; }
 
         /// <summary>
         /// 意向融资金额
@@ -136,6 +128,21 @@
         /// 融资扩展
         /// </summary>
         public virtual FinanceExtension FinanceExtension { get; set; }
+
+        /// <summary>
+        /// 合同
+        /// </summary>
+        public virtual ICollection<Contract> Contact { get; set; }
+
+        /// <summary>
+        /// 产品
+        /// </summary>
+        public virtual Produce Produce { get; set; }
+
+        /// <summary>
+        /// 信审报告
+        /// </summary>
+        public CreditExamine CreditExamine { get; set; }
 
         public enum RepaymentSchemeEnum : byte
         {

@@ -143,6 +143,7 @@ namespace Application
                     CreatedDate = m.CreatedDate,
                     Name = m.Name,
                     RepaymentMethod = m.RepaymentMethod,
+                    RepaymentMethodDesc = m.RepaymentMethod.ToString(),
                     MaxFinancingRatio = m.MaxFinancingRatio,
                     MinFinancingRatio = m.MinFinancingRatio,
                     CostRate = m.CostRate,

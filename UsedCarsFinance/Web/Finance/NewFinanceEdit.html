@@ -108,43 +108,10 @@
         // 判断datagrid中行是否可编辑
         var editIndex = undefined;
 
+        uc.form = new UCForm(".container");
+
         $(function () {
             LoadBrand();
-            //$.extend($.fn.validatebox.defaults.rules, {
-            //    //检验产品是否存在
-            //    CheckProduce: {
-            //        validator: function (value, param) {
-            //            var result = false;
-
-                       
-            //        },
-            //        message: '该编号对应的产品不存在!'
-            //    }
-            //});
-      
-            //$("#Code").bind("blur", function () {
-            //    debugger
-            //    var code = $(this).textbox("getText");
-            //    $.ajax({
-            //        async: false,
-            //        type: "GET",
-            //        url: "../api/Produce/GetByCode",
-            //        data: { code: code },
-            //        statusCode: {
-            //            200: function (data) {
-            //                if (data.length > 0) {
-            //                    $("#produce_info").form("load", data);
-            //                    $("#Poundage").datagrid("loadData", data.PoundageList);
-            //                    $("#Financing").datagrid("loadData", data.FinancingItemsList);
-            //                }
-            //                else {
-            //                    top.$.messager.show({ msg: "该编号对应的产品不存在" });
-            //                }
-
-            //            }
-            //        }
-            //    });
-            //})
         });
         function CheckProduce() {
             var code = $(this).textbox("getText");
@@ -160,9 +127,14 @@
                             $("#produce_info").form("load", data);
                             $("#Poundage").datagrid("loadData", data.PoundageList);
                             $("#Financing").datagrid("loadData", data.FinancingItemsList);
+                            CostCount("Poundage");
+                            CostCount("Financing");//这两句代码是计算金额求和
                         }
                         else {
-                            result = true;
+                            $("#ProduceId").val("");
+                            $("#produce_info").form("clear");
+                            $("#Poundage").datagrid("loadData", []);
+                            $("#Financing").datagrid("loadData", []);
                             top.$.messager.show({ msg: "该编号对应的产品不存在" });
                         }
                     }
@@ -185,8 +157,8 @@
         function SelectModel(record) {
             $("select[comboname='FamilyCode']").combobox("clear");
             $("select[comboname='VehicleKey']").combobox("clear");
-            $("input[textboxname='ManufacturerGuidePrice']").textbox("clear");
-
+            $("input[textboxname='ManufacturerGuidePrice']").textbox("clear"); 
+            $("input[textboxname='Displacement']").textbox("clear");
             $.ajax({
                 async: false,
                 data: { brandCode: record.value },
@@ -198,6 +170,7 @@
         function SelectCarConfigure(record) {
             $("select[comboname='VehicleKey']").combobox("clear");
             $("input[textboxname='ManufacturerGuidePrice']").textbox("clear");
+            $("input[textboxname='Displacement']").textbox("clear");
 
             $.ajax({
                 async: false,
@@ -271,8 +244,8 @@
         }
         //手续费融资项求和
         function CostCount(id) {
-            var count = 0;
-            var rows = $("#" + id).datagrid("getRows");
+           var count = 0;
+           var rows = $("#" + id).datagrid("getRows");
            for (var i = 0; i < rows.length; i++) {
                count +=parseInt($('#' + id).datagrid('getRows')[i]['Money']);
            }
@@ -314,30 +287,30 @@
         //当有自有住房时候追加
         function AddOwnHouse() {
             ownhouse++;
-            var template = document.querySelector("#owneHouseTemplate");
+            var template = document.querySelector("#ownHouseTemplate");
             var clone = document.importNode(template.content, true);
             $(clone.querySelectorAll("input[type=radio]")).each(function () {
                 this.name += "_" + ownhouse;
             });
-            $(clone.querySelector("input[name=OwneHouseAddress]")).each(function () {
+            $(clone.querySelector("input[name=ownHouseAddress]")).each(function () {
                 this.name += "_" + ownhouse;
             });
-            $(clone.querySelector("input[name=OwneHouseSize]")).each(function () {
+            $(clone.querySelector("input[name=ownHouseSize]")).each(function () {
                 this.name += "_" + ownhouse;
             });
-            $(clone.querySelector("input[name=OwneHouseRegisterDate]")).each(function () {
+            $(clone.querySelector("input[name=ownHouseRegisterDate]")).each(function () {
                 this.name += "_" + ownhouse;
             });
 
-            $("#OwneHousCount").textbox("setValue", ownhouse);
-            $('<fieldset>').attr({ "id": "OwnHouse" + ownhouse, "style": "margin:20px 0" }).append(clone).appendTo("#owneHouse")
-            $.parser.parse('#owneHouse');
+            $("#OwnHouseCount").textbox("setValue", ownhouse);
+            $('<fieldset>').attr({ "id": "OwnHouse" + ownhouse, "class":"house", "style": "margin:20px 0" }).append(clone).appendTo("#ownHouse")
+            $.parser.parse('#ownHouse');
         }
         //移除自有住房
         function MinusOwnHouse(value) {
             $(value).parent().parent().remove();
             ownhouse--;
-            $("#OwneHousCount").textbox("setValue", ownhouse);
+            $("#OwnHouseCount").textbox("setValue", ownhouse);
         }
 
         var contents = 0;//联系人个数
@@ -345,7 +318,7 @@
             contents++;
             var template = document.querySelector("#contactTemplate");
             var clone = document.importNode(template.content, true);
-            $('<fieldset>').attr({ "id": "contact" + contents, "style": "margin:20px 0" }).append(clone).appendTo("#ContactContent")
+            $('<fieldset>').attr({ "id": "contact" + contents, "class": "applicant", "style": "margin:20px 0" }).append(clone).appendTo("#ContactContent")
             $.parser.parse('#contact' + contents);
         }
         function MinusContacts(value) {
@@ -372,21 +345,52 @@
         }
 
         function Submit() {
+            var data = {};
+            var ff = $(".container").find("article")
+            for (var i = 0; i < ff.length - 1; i++) {
+                temp = $(ff[i]).attr("class");
+                var fs = new Array();
+                var fieldset = $(ff[i]).children("fieldset");
+                for (var j = 0; j < fieldset.length ; j++) {
+                    fs.push($(fieldset[j]).serializeJson())
+                }
+                data[temp] = fs;
+            }
+            //申请人中由于包括自有住房和联系人部分嵌套的fieldset所以单独处理
+            var app = [];//用于存放联系人信息
+            var house = [];//用于存放自有住房信息
+            for (var i = 0; i < $(ff[ff.length - 1]).find("fieldset").length; i++) {
+                var findclass = $($(ff[ff.length - 1]).find("fieldset")[i]).attr("class");
+                if (findclass == "applicant") {
+                    app.push($($(ff[ff.length - 1]).find("fieldset")[i]).serializeJson());
+                }
+                else if (findclass == "house") {
+                    house.push($($(ff[ff.length - 1]).find("fieldset")[i]).serializeJson());
+                }
+            }
+            //将自有住房添加到主要申请人中
+            app[0]["OwnHouse"] = JSON.stringify(house);
+            //将主要申请人信息存放到数组中
+            data["Applicant"] = app;
 
+            uc.form.Submit({
+                method: "POST",
+                url: "../api/FinanceAuidt/Create",
+                data: data
+            });
         }
     </script>
 </head>
 <body>
     <form id="finance_ff" class="container">
         <div class="hidden">
-            <input name="ApplicantId" type="hidden" />
             <input name="FinanceId" type="hidden" />
         </div>
         <div>
             <input id="ac-1" class="ac-1" name="accordion-1" type="checkbox" />
             <label for="ac-1" class="ac">基本信息</label>
             <article class="base">
-                <fieldset id="base_info" style="margin-bottom:0px">
+                <fieldset id="Vehicle" style="margin-bottom:0px">
                     <legend>联系人信息</legend>
                     <div class="row">
                         <div class="col-6">
@@ -396,7 +400,7 @@
 
                         <div class="col-6">
                             <label>联系人:</label>
-                            <input name="Displacement" class="easyui-textbox" />
+                            <input name="Name" class="easyui-textbox" />
                         </div>
                     </div>
                     <div class="row">
@@ -491,7 +495,7 @@
             <input id="ac-2" class="ac-1" name="accordion-1" type="checkbox" />
             <label for="ac-2" class="ac">租赁信息</label>
             <article class="produce">
-                <fieldset id="produce_info">
+                <fieldset id="produce">
                     <div class="hidden">
                         <input name="ProudceId" id="ProudceId" type="hidden"/>
                     </div>
@@ -499,7 +503,7 @@
                     <div class="row">
                         <div class="col-6">
                             <label>产品代码:</label>
-                            <input id="Code" name="Code" class="easyui-textbox" required data-options="width:360,onchange:CheckProduce" />
+                            <input id="Code" name="Code" class="easyui-textbox" required data-options="width:360,onChange:CheckProduce" />
                             <a onclick="CheckProduct()" style="float: right;padding-right:50px">
                                 <img src="images/choose.png" />
                             </a>
@@ -514,7 +518,7 @@
                     <div class="row">
                         <div class="col-6">
                             <label>费率(年):</label>
-                            <input name="Rate" class="easyui-textbox" disabled data-options="validType:'Numerical'" />
+                            <input name="CostRate" class="easyui-textbox" disabled data-options="validType:'Numerical'" />
                             <span class="unit">%</span>
                         </div>
 
@@ -578,8 +582,8 @@
                                     </tr>
                                 </thead>
                             </table>
-                            <div style="margin-left: 220px;float:left">
-                                <label>手续费总计:<span name="PoundageCount" id="PoundageCount" /></label>
+                            <div style="margin-left: 250px;float:left">
+                                <label>手续费总计:<span name="PoundageCount" id="PoundageCount" style="font-weight:bold" /></label>
                             </div>
                         </div>
 
@@ -598,8 +602,8 @@
                                 </thead>
                             </table>
 
-                            <div style="float:left;margin-left: 220px">
-                                <label>融资项总计:<span name="FinancingCount" id="FinancingCount" /></label>
+                            <div style="float:left;margin-left: 250px">
+                                <label>融资项总计:<span name="FinancingCount" id="FinancingCount"style="font-weight:bold" /></label>
                                 
                             </div>
                         </div>
@@ -625,7 +629,7 @@
             <input id="ac-3" class="ac-1" name="accordion-1" type="checkbox" />
             <label for="ac-3" class="ac">申请人信息</label>
             <article class="people">
-                <fieldset id="mainapplicant">
+                <fieldset id="mainapplicant" class="applicant">
                     <div class="hidden">
                         <input name="Type" type="hidden" value="1" />
                     </div>
@@ -664,7 +668,6 @@
                             <input id="Identity" name="Identity" class="easyui-textbox" />
                         </div>
                     </div>
-
 
                     <div class="row">
                         <div class="col-6">
@@ -863,13 +866,13 @@
                     <div class="row">
                         <div class="col-6">
                             <label>自有住房套数:</label>
-                            <input id="OwneHousCount" name="OwneHousCount" class="easyui-textbox" readonly value="0">
+                            <input id="OwnHouseCount" name="OwnHouseCount" class="easyui-textbox" readonly value="0">
                         </div>
                     </div>
 
-                    <div id="owneHouse"></div>
+                    <div id="ownHouse"></div>
 
-                    <template id="owneHouseTemplate">
+                    <template id="ownHouseTemplate">
                         <div class="minusdiv">
                             <a class="add" onclick="MinusOwnHouse(this)">
                                 <img src="images/minus.png" />
@@ -879,9 +882,9 @@
                         <div class="row">
                             <div class="col-6">
                                 <label>自有住房类型:</label>
-                                <input id="ownehouse1" name="OwneHouseType" type="radio" checked="checked" value="1">自置（无按揭）
-                                <input id="ownehouse2" name="OwneHouseType" type="radio" value="2">自置（有按揭）
-                                <input id="ownehouse3" name="OwneHouseType" type="radio" value="3">其他
+                                <input id="ownHouse1" name="ownHouseType" type="radio" checked="checked" value="1">自置（无按揭）
+                                <input id="ownHouse2" name="ownHouseType" type="radio" value="2">自置（有按揭）
+                                <input id="ownHouse3" name="ownHouseType" type="radio" value="3">其他
                             </div>
 
                             <div class="col-6">
@@ -896,19 +899,19 @@
                         <div class="row">
                             <div class="col-12">
                                 <label>自有住房地址:</label>
-                                <input id="OwneHouseAddress" name="OwneHouseAddress" class="easyui-textbox" />
+                                <input id="ownHouseAddress" name="ownHouseAddress" class="easyui-textbox" />
                             </div>
                         </div>
 
                         <div class="row">
                             <div class="col-6">
                                 <label>自有住房面积:</label>
-                                <input id="OwneHouseSize" name="OwneHouseSize" class="easyui-textbox" />
+                                <input id="ownHouseSize" name="ownHouseSize" class="easyui-textbox" />
                             </div>
 
                             <div class="col-6">
                                 <label>自有住房登记日期:</label>
-                                <input id="OwneHouseRegisterDate" name="OwneHouseRegisterDate" class="easyui-textbox" />
+                                <input id="ownHouseRegisterDate" name="ownHouseRegisterDate" class="easyui-textbox" />
                             </div>
                         </div>
 
@@ -917,7 +920,7 @@
                     </template>
                 </fieldset>
 
-                <fieldset id="joint">
+                <fieldset id="joint" class="applicant">
                     <div class="hidden">
                         <input name="Type" type="hidden" value="2" />
                     </div>
@@ -940,7 +943,7 @@
 
                     <div class="row">
                         <div class="col-6">
-                            <label>申请人学历:</label>
+                            <label>学历:</label>
                             <select id="Degree" name="Degree" class="easyui-combobox" data-options="editable:false">
                                 <option value="硕士及以上">硕士及以上</option>
                                 <option value="本科">本科</option>
@@ -1031,7 +1034,7 @@
                     </div>
                 </fieldset>
 
-                <fieldset id="Guarantee">
+                <fieldset id="Guarantee" class="applicant">
                     <legend>担保人</legend>
                     <div class="hidden">
                         <input name="Type" type="hidden" value="3" />
@@ -1054,7 +1057,7 @@
 
                     <div class="row">
                         <div class="col-6">
-                            <label>申请人学历:</label>
+                            <label>学历:</label>
                             <select id="Degree" name="Degree" class="easyui-combobox" data-options="editable:false">
                                 <option value="硕士及以上">硕士及以上</option>
                                 <option value="本科">本科</option>
@@ -1146,10 +1149,6 @@
                 </fieldset>
 
                 <fieldset id="contacts">
-                    <div class="hidden">
-                        <input name="Type" type="hidden" value="4" />
-                    </div>
-
                     <legend>
                         联系人
                         <a class="add" onclick="AddContact()">
@@ -1157,11 +1156,12 @@
                         </a>
                     </legend>
 
-                    <fieldset style="margin-top:0;margin-bottom:0">
-                        <div id="ContactContent"></div>
-                    </fieldset>
+                   <div id="ContactContent"></div>
 
                     <template id="contactTemplate">
+                        <div class="hidden">
+                            <input name="Type" type="hidden" value="4" />
+                        </div>
                         <div class="minusdiv">
                             <a class="add" onclick="MinusContacts(this)">
                                 <img src="images/minus.png" />
@@ -1231,7 +1231,7 @@
                         <th data-options="field:'Id',hidden:true">ProduceId</th>
                         <th data-options="field:'Code',width:100,align:'center'">产品代码</th>
                         <th data-options="field:'Name',width:200,align:'center'">产品名称</th>
-                        <th data-options="field:'RepaymentMethod',width:120,align:'center'">还款方式</th>
+                        <th data-options="field:'RepaymentMethodDesc',width:120,align:'center'">还款方式</th>
                         <th data-options="field:'MinFinancingRatio',width:100,align:'center'">融资比例下限</th>
                         <th data-options="field:'MaxFinancingRatio',width:100,align:'center'">融资比例上限</th>
                         <th data-options="field:'FinancingPeriods',width:120,align:'center'">融资期限（月）</th>

@@ -3,7 +3,6 @@
     using Core.Entities.Finance;
     using System;
     using System.Collections.Generic;
-    using Core.Entities.Finance;
 
     /// <summary>
     /// 融资审核
@@ -83,17 +82,12 @@
         /// <summary>
         /// 还款日
         /// </summary>
-        public DateTime RepaymentDate { get; set; }
+        public DateTime? RepaymentDate { get; set; }
 
         /// <summary>
         /// 保证金
         /// </summary>
         public decimal Bail { get; set; }
-
-        /// <summary>
-        /// 手续费
-        /// </summary>
-        public decimal Cost { get; set; }
 
         /// <summary>
         /// 状态
@@ -103,13 +97,32 @@
         /// <summary>
         /// 放款日期
         /// </summary>
-        public DateTime DateEffective { get; set; }
+        public DateTime? DateEffective { get; set; }
 
         /// <summary>
-        /// 创建日期
+        /// 意向融资金额
         /// </summary>
-        public DateTime DateCreated { get; set; }
+        public decimal IntentionPrincipal { get; set; }
 
+        /// <summary>
+        /// 月供先付期数
+        /// </summary>
+        public int OncePayMonths { get; set; }
+
+        /// <summary>
+        /// 首次租金支付日期
+        /// </summary>
+        public DateTime? RepayRentDate { get; set; }
+
+        /// <summary>
+        /// 联系人
+        /// </summary>
+        public virtual ICollection<ApplicationViewModel> Applicant { get; set; }
+
+        /// <summary>
+        /// 车辆信息
+        /// </summary>
+        public virtual VehicleViewModel.VehicleViewModel VehicleInfo { get; set; }
         /// <summary>
         /// 合同
         /// </summary>
@@ -124,35 +137,5 @@
         /// 信审报告
         /// </summary>
         public virtual CreditExamineViewModel CreditExamine { get; set; }
-
-        /// <summary>
-        /// 意向融资金额
-        /// </summary>
-        public decimal IntentionPrincipal { get; set; }
-
-        /// <summary>
-        /// 月供先付期数
-        /// </summary>
-        public int OncePayMonths { get; set; }
-
-        /// <summary>
-        /// 还款日
-        /// </summary>
-        public DateTime RepayDate { get; set; }
-
-        /// <summary>
-        /// 首次租金支付日期
-        /// </summary>
-        public DateTime RepayRentDate { get; set; }
-
-        /// <summary>
-        /// 联系人
-        /// </summary>
-        public virtual ICollection<ApplicationViewModel> Applicant { get; set; }
-
-        /// <summary>
-        /// 车辆信息
-        /// </summary>
-        public virtual VehicleViewModel.VehicleViewModel VehicleInfo { get; set; }
     }
 }

@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using static Core.Entities.Produce.Produce;
 
 namespace Application.ViewModels.ProduceViewModel
@@ -24,6 +20,8 @@ namespace Application.ViewModels.ProduceViewModel
         /// 还款方式
         /// </summary>
         public RepaymentMethodEnum RepaymentMethod { get; set; }
+
+        public string RepaymentMethodDesc { get; set; }
 
         /// <summary>
         /// 融资期限

@@ -154,12 +154,12 @@
         /// <summary>
         /// 自有住房数
         /// </summary>
-        public int OwneHouseCount { get; set; }
+        public int OwnHouseCount { get; set; }
 
         /// <summary>
         /// 自有住房信息
         /// </summary>
-        public string OwneHouse { get; set; }
+        public string OwnHouse { get; set; }
 
         /// <summary>
         /// 申请人类型枚举
