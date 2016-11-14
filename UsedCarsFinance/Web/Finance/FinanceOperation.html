@@ -22,7 +22,41 @@
 
         // 初始化
         function Init(query) {
+            // 重置表单
+            $("form[name=FinanceOperation] div>input[type=reset]").click();
+
+            // 隐藏放款账号信息
             ShowChannel(false);
+        }
+
+        // 加载数据
+        function LoadData(query) {
+            if (query == undefined || query.FinanceId == undefined) {
+                return;
+            }
+
+            // 加载运营
+            $.ajax({
+                async: false,
+                method: "GET",
+                data: { financeId: query.FinanceId },
+                url: '../api/Operation/GetOperation',
+                statusCode: {
+                    200: function (data) {
+                        if (data) {
+                            // 加载运营
+                            if (data.LoanPrincipal == "Channel")
+                            {
+                                ShowChannel(true);
+                            }
+                            FieldsetLoadDateFactory('Operation', 'text',data);
+
+                            // 加载合同
+                            FieldsetLoadDateFactory('Contact', 'table',JSON.parse(data.ContactJson));
+                        }
+                    }
+                }
+            });
         }
 
         //验证数据
@@ -30,8 +64,6 @@
             if (!$("form[name=FinanceOperation]").form("validate")) {
                 return false;
             }
-
-            ContactSave();
 
             return true;
         }
@@ -41,7 +73,8 @@
             // 序列化运营信息
             var value = FieldsetSerializeFactory('Operation', 'text');
 
-            value.Contact = FieldsetSerializeFactory('Contact', 'table');
+            // 序列化合同信息
+            value.ContactJson = JSON.stringify(FieldsetSerializeFactory('Contact', 'table'));
 
             var result = {};
             result["formName"] = "审批信息";
@@ -133,6 +166,9 @@
     <form name="FinanceOperation" class="container">
         <fieldset name="Operation">
             <legend>运营</legend>
+
+            <input type="hidden" name="FinanceId" value="00000000-0000-0000-0000-000000000000" placeholder="融资标识" />
+
             <div class="row">
                 <div class="col-6">
                     <label>选择还款日：</label>
@@ -256,7 +292,6 @@
                    ">
                 <thead>
                     <tr>
-                        <th data-options="field:'Id',hidden:true">Id</th>
                         <th data-options="field:'Check',width:20,align:'center',checkbox:true"></th>
                         <th data-options="field:'Name',width:800,align:'center',editor: {type: 'validatebox',options: {required:true}}">合同名称</th>
                     </tr>
@@ -299,8 +334,6 @@
 
                 // table 删除按钮
                 function ContactDelete() {
-                    ContactSave();
-
                     var rows = $('#Contact_dg').datagrid('getSelections');
 
                     if (rows.length > 0) {
@@ -313,8 +346,10 @@
                                 $(rows).each(function (i, e) {
                                     var rowIndex = $('#Contact_dg').datagrid('getRowIndex', e);
 
-                                    if ($('#Contact_dg').datagrid('validateRow', rowIndex)) {
+                                    // 保存指定行
+                                    ContactSave(rowIndex,true);
 
+                                    if ($('#Contact_dg').datagrid('validateRow', rowIndex)) {
                                         $('#Contact_dg').datagrid('deleteRow', rowIndex);
                                     }
                                 });
@@ -329,11 +364,12 @@
                 function ContactAdd() {
                     if ($("fieldset[name=Contact]").form("validate")) {
 
-                        $('#Contact_dg').datagrid('appendRow', { Id: '', Name: '' });
+                        $('#Contact_dg').datagrid('appendRow', { Name: '' });
 
                         // 双击新增行Name单元格
                         var newRow = $('#Contact_dg').datagrid('getRows')
 
+                        // 双击新增行
                         ContactDblClickCell(newRow.length - 1, 'Name', newRow.Name);
                     }
                 }
@@ -362,7 +398,7 @@
                 }
 
                 // table 保存单元格的修改
-                function ContactSave(index) {
+                function ContactSave(index, flag) {
                     if (index == null)
                     {
                         index = editRowIndex;
@@ -373,24 +409,31 @@
                     }
 
                     var ed = $('#Contact_dg').datagrid('getEditors', index);
-
+                    
                     if (ed.length > 0) {
                         if (!$('#Contact_dg').datagrid('validateRow', index)) {
-                            $(ed[0].target).val('FillData');
+                            if (flag == true) {
+                                $(ed[0].target).val('FillData');
+                            }
+                            else {
+                                $('#Contact_dg').datagrid('deleteRow', index);
+                            }
                         }
+                        else {
+                            $('#Contact_dg').datagrid('getRows')[index]['Name'] = $(ed[0].target).val();
 
-                        $('#Contact_dg').datagrid('getRows')[index]['Name'] = $(ed[0].target).val();
+                            $('#Contact_dg').datagrid('endEdit', index);
 
-                        $('#Contact_dg').datagrid('endEdit', index);
+                            $('#Contact_dg').datagrid('acceptChanges');
 
-                        $('#Contact_dg').datagrid('acceptChanges');
+                            var row = $('#Contact_dg').datagrid('getRows')[index];
 
-                        var row = $('#Contact_dg').datagrid('getRows')[index];
+                            $('#Contact_dg').datagrid('refreshRow', index);
 
-                        $('#Contact_dg').datagrid('refreshRow', index);
-
-                        row.editing = false;
-                        editRowIndex = -1;
+                            //row.editing = false;
+                            editRowIndex = -1;
+                            
+                        }
 
                         // 禁用保存按钮
                         $("#Contact_Save").linkbutton("disable");
@@ -410,8 +453,6 @@
                     }
                     else {
                         $("#Contact_del").linkbutton("disable");
-                        
-                        //$('#Contact_dg').datagrid('uncheckAll');
                     }
                 }
             </script>
@@ -427,12 +468,25 @@
                 if (ValidData()) {
                     var result = BuildData().buildData;
                     debugger
+
+                    var data = BuildData().buildData;
+
+                    $.ajax({
+                        async: false,
+                        method: "POST",
+                        data: data,
+                        url: '../api/Operation/EditOperation',
+                        statusCode: {
+                            200: function (data) {
+                            }
+                        }
+                    });
+                    return false;
                 }
-                return false;
             }
 
             function Cancel() {
-
+                
             }
         </script>
     </form>

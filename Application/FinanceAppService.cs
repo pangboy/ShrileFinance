@@ -26,12 +26,14 @@
         public FinanceAppService(IFinanceRepository repository, AppUserManager userManager)
         {
             this.repository = repository;
+
+            this.userManager = userManager;
         }
 
         /// <summary>
         /// 通过融资标识获取信审ViewModel
         /// </summary>
-        /// <param name="financeId">信审标识</param>
+        /// <param name="financeId">融资标识</param>
         /// <returns>信审ViewModel</returns>
         public CreditExamineViewModel GetCreditExamineByFinanceId(Guid financeId)
         {
@@ -63,8 +65,8 @@
             creditExamineReportViewModel.FinalPersonId = finance.CreditExamine.FinalPerson.Name;
 
             // 当前用户
-            var user= userManager.CurrentUser();
-            creditExamineReportViewModel.CurentUser = new KeyValuePair<string, string>(user.Id,user.Name);
+            var user = userManager.CurrentUser();
+            creditExamineReportViewModel.CurentUser = new KeyValuePair<string, string>(user.Id, user.Name);
 
             return creditExamineReportViewModel;
         }
@@ -177,6 +179,80 @@
                 // 修改融资项各金额
                 finance.Produce.FinancingItems = EditFinanceAuidts(financingItems: finance.Produce.FinancingItems, financingItemCollection: value.FinancingItems);
             }
+
+            repository.Modify(finance);
+
+            // 执行修改
+            repository.Commit();
+        }
+
+        /// <summary>
+        /// 通过融资标识获取运营ViewModel
+        /// </summary>
+        /// <param name="financeId">融资标识</param>
+        /// <returns>运营ViewModel</returns>
+        public OperationViewModel GetOperationByFinanceId(Guid financeId)
+        {
+            if (financeId == null)
+            {
+                return null;
+            }
+
+            // 获取信审报告实体
+            var finance = repository.Get(financeId);
+
+            // 实体转ViewModel
+            var operationReportViewModel = Mapper.Map<OperationViewModel>(finance.FinanceExtension);
+
+            return operationReportViewModel;
+        }
+
+        /// <summary>
+        /// 编辑运营
+        /// </summary>
+        /// <param name="value">运营ViewModel</param>
+        public void EditOperation(OperationViewModel value)
+        {
+            if (value == null || value.FinanceId == null)
+            {
+                return;
+            }
+
+            // 获取该信审对应的融资实体
+            var finance = repository.Get(value.FinanceId);
+
+            // 选择还款日
+            finance.FinanceExtension.RepaymentDate = value.RepaymentDate;
+
+            // 首次租金支付日期
+            finance.FinanceExtension.FirstPaymentDate = value.FirstPaymentDate;
+
+            // 保证金
+            finance.FinanceExtension.Margin = value.Margin;
+
+            // 先付月供
+            finance.FinanceExtension.PayMonthly = value.PayMonthly;
+
+            // 一次性付息
+            finance.FinanceExtension.OnePayInterest = value.OnePayInterest;
+
+            // 实际用款额
+            finance.FinanceExtension.ActualAmount = value.ActualAmount;
+
+            // 放款主体
+            finance.FinanceExtension.LoanPrincipal = value.LoanPrincipal;
+
+            // 放款账户
+            finance.FinanceExtension.CreditAccountId = value.CreditAccountId;
+
+            // 放款账户开户行
+            finance.FinanceExtension.CreditBankName = value.CreditBankName;
+
+            // 放款账户卡号
+            finance.FinanceExtension.CreditBankCard = value.CreditBankCard;
+
+            // 合同Json
+            finance.FinanceExtension.ContactJson = value.ContactJson;
 
             repository.Modify(finance);
 

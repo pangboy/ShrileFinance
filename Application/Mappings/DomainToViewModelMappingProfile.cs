@@ -50,8 +50,8 @@
             // 信审报告
             CreateMap<CreditExamine, CreditExamineViewModel>();
 
-            // 融资审核
-            CreateMap<FinanceAuidtViewModel, FinanceAuidtViewModel>();
+            // 运营
+            CreateMap<FinanceExtension,OperationViewModel>();
         }
     }
 }
