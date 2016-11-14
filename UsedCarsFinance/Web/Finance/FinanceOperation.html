@@ -14,7 +14,7 @@
 
     <script type="text/javascript">
         $(function () {
-            var query = {};
+            var query = {};//$.extend(uc.GetParams(), parent.flow.InstanceData);
 
             // 初始化
             Init(query);
@@ -24,6 +24,109 @@
         function Init(query) {
             ShowChannel(false);
         }
+
+        //验证数据
+        function ValidData() {
+            if (!$("form[name=FinanceOperation]").form("validate")) {
+                return false;
+            }
+
+            ContactSave();
+
+            return true;
+        }
+
+        //构建数据
+        function BuildData() {
+            // 序列化运营信息
+            var value = FieldsetSerializeFactory('Operation', 'text');
+
+            value.Contact = FieldsetSerializeFactory('Contact', 'table');
+
+            var result = {};
+            result["formName"] = "审批信息";
+            result["buildData"] = value;
+
+            return result;
+        }
+    </script>
+
+    <!-- 辅助方法 -->
+    <script type="text/javascript">
+        // fieldset 数据序列化工厂（type: text or table）
+        function FieldsetSerializeFactory(name, type) {
+            if (name == null || type == null || $.inArray(type, ["text", "table"]) == -1) {
+                return null;
+            }
+
+            var json = new Object();
+
+            if ($("fieldset[name=" + name + "]").length > 0) {
+                if (type == "text") {
+                    // 序列化 text
+                    json = $("fieldset[name=" + name + "]").serializeJson();
+                }
+                else {
+                    // 序列化 table
+                    var json = $("fieldset[name=" + name + "]").find("[id=" + name + "_dg" + "]").datagrid("getRows");
+                }
+            }
+
+            return json;
+        }
+
+        // fieldset 数据加载工厂（type: text or table）
+        function FieldsetLoadDateFactory(name, type, data) {
+            if (name == null || type == null || $.inArray(type, ["text", "table"]) == -1 || !data) {
+                return null;
+            }
+
+            if ($("fieldset[name=" + name + "]").length > 0) {
+                if (type == "text") {
+                    // 加载数据 text
+                    $("fieldset[name=" + name + "]").form('load', data);
+                }
+                else {
+                    // 加载数据 table
+                    $(data).each(function (index, item) {
+                        // 加载数据 table
+                        $("fieldset[name=" + name + "]").find("[id=" + name + "_dg" + "]").datagrid('appendRow', item);;
+                    });
+                }
+            }
+
+            return data;
+        }
+
+        // Json序列化
+        $.fn.serializeJson = function () {
+            var obj = {};
+            var array = this.serializeArray();
+
+            var selector = this.selector;
+
+            if (!!window.ActiveXObject || "ActiveXObject" in window) {
+                array = $(this).parents("form").serializeArray();
+
+                array = $.map(array, function (val) {
+                    if ($("[name=" + val.name + "]").parents(selector).length)
+                        return val;
+                });
+            }
+
+            $.each(array, function (i, e) {
+                if (obj[e.name] !== undefined) {
+                    if (!obj[e.name].push) {
+                        obj[e.name] = [obj[e.name]];
+                    }
+                    obj[e.name].push(e.value || '');
+                } else {
+                    obj[e.name] = e.value || '';
+                }
+            });
+
+            return obj;
+        };
     </script>
 </head>
 <body>
@@ -40,26 +143,26 @@
                 </div>
                 <div class="col-6">
                     <label>首次租金支付日期：</label>
-                    <input name="" class="easyui-datebox" data-options="required:true,validType:'',readonly:false,editable:false,width:410" />
+                    <input name="FirstPaymentDate" class="easyui-datebox" data-options="required:true,validType:'',readonly:false,editable:false,width:410" />
                 </div>
                 <div class="col-6">
                     <label>保证金：</label>
-                    <input name="" class="easyui-textbox" data-options="required:true,validType:'',readonly:false" />
+                    <input name="Margin" class="easyui-textbox" data-options="required:true,validType:'',readonly:false" />
                     <span name="uint">元</span>
                 </div>
                 <div class="col-6">
                     <label>先付月供：</label>
-                    <input name="" class="easyui-textbox" data-options="required:true,validType:'',readonly:false" />
+                    <input name="PayMonthly" class="easyui-textbox" data-options="required:true,validType:'',readonly:false" />
                     <span name="uint">元</span>
                 </div>
                 <div class="col-6">
                     <label>一次性付息：</label>
-                    <input name="" class="easyui-textbox" data-options="required:true,validType:'',readonly:false" />
+                    <input name="OnePayInterest" class="easyui-textbox" data-options="required:true,validType:'',readonly:false" />
                     <span name="uint">元</span>
                 </div>
                 <div class="col-6">
                     <label>实际用款额：</label>
-                    <input name="" class="easyui-textbox" data-options="required:true,validType:'',readonly:false" />
+                    <input name="ActualAmount" class="easyui-textbox" data-options="required:true,validType:'',readonly:false" />
                     <span name="uint">万元</span>
                 </div>
             </div>
@@ -108,30 +211,230 @@
                         // 隐藏渠道放款
                         ShowChannel(false);
                     }
+
+                    $(this).combobox('setValue',record.value);
                 }
 
                 // 渠道放款信息
                 function ShowChannel(bool) {
-                    if (!bool) {
-                        
+                    // 渠道
+                    var Obj = $("fieldset[name=Operation] Select[textboxname=LoanPrincipal]").parent().parent();
+
+                    if (bool) {
+                        // 模版内容
+                        var content = $('fieldset[name=Operation] template[name=LoanPrincipalBankInfo]').html();
+
+                        // 新增
+                        if (Obj.find("div.col-6").length == 1)
+                        {
+                            Obj.append(content);
+                        }
                     }
                     else {
-                        
+                        // 移除
+                        $(['CreditAccountId', 'CreditBankName', 'CreditBankCard']).each(function (i, e) {
+                            $(Obj).find('input[textboxname=' + e + ']').parent().remove();
+                        });
                     }
 
-
+                    // 解析控件
+                    $.parser.parse(Obj);
                 }
             </script>
         </fieldset>
 
-        <fieldset name="Channel" style="display:none">
-            <legend>渠道放款信息</legend>
-            <div class="row">
+        <fieldset name="Contact">
+            <legend>合同</legend>
+            <table id="Contact_dg" class="easyui-datagrid" style="width:890px;" data-options="toolbar: '#Contact_tb',
+                   rownumbers:true,
+                   onSelect:ContactSelect,
+                   onUnselect:ContactUnselect,
+                   onDblClickCell:ContactDblClickCell,
+                   onSelectAll:SelectAll,
+                   onUnselectAll:SelectAll,
+                   title:'合同'
+                   ">
+                <thead>
+                    <tr>
+                        <th data-options="field:'Id',hidden:true">Id</th>
+                        <th data-options="field:'Check',width:20,align:'center',checkbox:true"></th>
+                        <th data-options="field:'Name',width:800,align:'center',editor: {type: 'validatebox',options: {required:true}}">合同名称</th>
+                    </tr>
+                </thead>
+            </table>
 
+            <div id="Contact_tb" style="height:30px;">
+                <a id="Contact_add" class="easyui-linkbutton" href="javascript:void(0)" data-options="onClick:ContactAdd,iconCls:'icon-add',plain:true">添加</a>
+                <a id="Contact_del" class="easyui-linkbutton" href="javascript:void(0)" data-options="onClick:ContactDelete,iconCls:'icon-remove',plain:true,disabled:true">删除</a>
+                <a id="Contact_Save" class="easyui-linkbutton" href="javascript:void(0)" data-options="onClick:ContactSave,iconCls:'icon-save',plain:true,disabled:true">保存</a>
             </div>
+            <script type="text/javascript">
+                // table onSelect事件
+                function ContactSelect(index, row) {
+                    if (row) {
+                        if (editRowIndex != index) {
+                            ContactSave();
+                        }
+
+                        $("#Contact_del").linkbutton("enable");
+                    }
+                }
+
+                // table 取消选择
+                function ContactUnselect(index, row) {
+                    if (row) {
+                        if (editRowIndex != index) {
+                            ContactSave();
+                        }
+
+                        var selectRow = $('#Contact_dg').datagrid('getSelected');
+                        if (selectRow != null) {
+                            $("#Contact_del").linkbutton("enable");
+                        }
+                        else {
+                            $("#Contact_del").linkbutton("disable");
+                        }
+                    }
+                }
+
+                // table 删除按钮
+                function ContactDelete() {
+                    ContactSave();
+
+                    var rows = $('#Contact_dg').datagrid('getSelections');
+
+                    if (rows.length > 0) {
+                        $.messager.confirm('确认', '确认删除选中的合同？', function (r) {
+                            if (r) {
+                                // 清除所有选择的行
+                                $('#Contact_dg').datagrid('clearSelections', rows);
+
+                                // 删除选择的行
+                                $(rows).each(function (i, e) {
+                                    var rowIndex = $('#Contact_dg').datagrid('getRowIndex', e);
+
+                                    if ($('#Contact_dg').datagrid('validateRow', rowIndex)) {
+
+                                        $('#Contact_dg').datagrid('deleteRow', rowIndex);
+                                    }
+                                });
+
+                                $("#Contact_del").linkbutton("disable");
+                            }
+                        });
+                    }
+                }
+
+                // table 添加按钮
+                function ContactAdd() {
+                    if ($("fieldset[name=Contact]").form("validate")) {
+
+                        $('#Contact_dg').datagrid('appendRow', { Id: '', Name: '' });
+
+                        // 双击新增行Name单元格
+                        var newRow = $('#Contact_dg').datagrid('getRows')
+
+                        ContactDblClickCell(newRow.length - 1, 'Name', newRow.Name);
+                    }
+                }
+
+                // 被编辑行索引
+                var editRowIndex = -1;
+
+                // table 单元格双击
+                function ContactDblClickCell(index, field, value) {
+                    if (editRowIndex > -1) {
+                        ContactSave();
+                    }
+
+                    editRowIndex = index;
+
+                    // 在双击一个单元格的时候开始编辑并生成编辑器，然后定位到编辑器的输入框上
+                    $('#Contact_dg').datagrid('beginEdit', index);
+                    var ed = $('#Contact_dg').datagrid('getEditor', { index: index, field: field });
+
+                    $(ed.target).val(ed.oldHtml);
+
+                    $(ed.target).focus();
+
+                    // 启用保存
+                    $("#Contact_Save").linkbutton("enable");
+                }
+
+                // table 保存单元格的修改
+                function ContactSave(index) {
+                    if (index == null)
+                    {
+                        index = editRowIndex;
+                    }
+
+                    if (index == -1) {
+                        return false;
+                    }
+
+                    var ed = $('#Contact_dg').datagrid('getEditors', index);
+
+                    if (ed.length > 0) {
+                        if (!$('#Contact_dg').datagrid('validateRow', index)) {
+                            $(ed[0].target).val('FillData');
+                        }
+
+                        $('#Contact_dg').datagrid('getRows')[index]['Name'] = $(ed[0].target).val();
+
+                        $('#Contact_dg').datagrid('endEdit', index);
+
+                        $('#Contact_dg').datagrid('acceptChanges');
+
+                        var row = $('#Contact_dg').datagrid('getRows')[index];
+
+                        $('#Contact_dg').datagrid('refreshRow', index);
+
+                        row.editing = false;
+                        editRowIndex = -1;
+
+                        // 禁用保存按钮
+                        $("#Contact_Save").linkbutton("disable");
+
+                        return true;
+                    }
+
+                    return false;
+                }
+
+                // table 选择所有
+                function SelectAll() {
+                    var rows = $('#Contact_dg').datagrid('getSelections');
+
+                    if (rows.length > 0) {
+                        $("#Contact_del").linkbutton("enable");
+                    }
+                    else {
+                        $("#Contact_del").linkbutton("disable");
+                        
+                        //$('#Contact_dg').datagrid('uncheckAll');
+                    }
+                }
+            </script>
         </fieldset>
 
+        <div id="btn">
+            <a id="save" class="easyui-linkbutton" href="javascript:void(0)" data-options="iconCls:'icon-ok',onClick:Submit">提交</a>
+            <a id="back" class="easyui-linkbutton" href="javascript:void(0)" data-options="iconCls:'icon-redo',onClick:Cancel">返回</a>
+            <input type="reset" style="display:none" />
+        </div>
+        <script type="text/javascript">
+            function Submit() {
+                if (ValidData()) {
+                    var result = BuildData().buildData;
+                    debugger
+                }
+                return false;
+            }
 
+            function Cancel() {
+
+            }
+        </script>
     </form>
 </body>
 </html>

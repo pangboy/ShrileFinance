@@ -11,6 +11,9 @@
     /// </summary>
     public class FinanceExtension : Entity
     {
-
+        /// <summary>
+        /// 合同文件Json
+        /// </summary>
+        public string ContactJson { get; set; }
     }
 }
