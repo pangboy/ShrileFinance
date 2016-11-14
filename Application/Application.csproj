@@ -101,6 +101,8 @@
     <Compile Include="AccountAppService.cs" />
     <Compile Include="ViewModels\AccountViewModels\ChangePasswordViewModel.cs" />
     <Compile Include="ViewModels\AccountViewModels\LoginViewModel.cs" />
+    <Compile Include="ViewModels\FinanceViewModels\ApplicationViewModel.cs" />
+    <Compile Include="ViewModels\FinanceViewModels\ContractViewModel.cs" />
     <Compile Include="ViewModels\FinanceViewModels\CreditExamineValid.cs" />
     <Compile Include="ViewModels\FinanceViewModels\CreditExamineViewModel.cs" />
     <Compile Include="ViewModels\AccountViewModels\UserViewModel.cs" />
@@ -138,6 +140,7 @@
     <Compile Include="ViewModels\ProcessViewModels\FormViewModel.cs" />
     <Compile Include="ViewModels\ProcessViewModels\FrameViewModel.cs" />
     <Compile Include="ViewModels\ProcessViewModels\InstanceViewModel.cs" />
+    <Compile Include="ViewModels\VehicleViewModel\VehicleViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Core\Core.csproj">

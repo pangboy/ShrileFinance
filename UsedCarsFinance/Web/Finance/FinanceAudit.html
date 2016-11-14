@@ -213,7 +213,6 @@
         // 提交测试
         function Submit() {
             var data = BuildData().buildData;
-            debugger
 
             $.ajax({
                 async: false,
@@ -222,7 +221,6 @@
                 url: '../api/FinanceAuidt/EditFinanceAuidt',
                 statusCode: {
                     200: function (data) {
-                        debugger
                     }
                 }
             });

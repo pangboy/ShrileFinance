@@ -38,6 +38,8 @@
         /// </summary>
         public RepaymentMethodEnum RepaymentMethod { get; set; }
 
+        public string RepaymentMethodDesc { get { return RepaymentMethod.ToString(); } }
+
         /// <summary>
         /// 最小融资比例
         /// </summary>

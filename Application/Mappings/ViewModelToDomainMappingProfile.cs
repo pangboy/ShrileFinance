@@ -5,10 +5,12 @@
     using Core.Entities.Customers.Enterprise;
     using Core.Entities.Finance;
     using Core.Entities.Produce;
+    using Core.Entities.Vehicle;
     using ViewModels.AccountViewModels;
     using ViewModels.FinanceViewModels;
     using ViewModels.OrganizationViewModels;
     using ViewModels.ProduceViewModel;
+    using ViewModels.VehicleViewModel;
 
     public class ViewModelToDomainMappingProfile : Profile
     {
@@ -44,6 +46,10 @@
 
             // 信审报告
             CreateMap<CreditExamineViewModel, CreditExamine>();
+            CreateMap<FinanceAuidtViewModel, Finance>();
+            CreateMap<ContractViewModel, Contract>();
+            CreateMap<ApplicationViewModel, Applicant>();
+            CreateMap<VehicleViewModel, Vehicle>();
         }
     }
 }

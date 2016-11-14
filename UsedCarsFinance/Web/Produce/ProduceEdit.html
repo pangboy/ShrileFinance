@@ -21,30 +21,6 @@
             Init();
         });
 
-        function Cbox1Checked() {
-            if ($("#GPScbox").is(":checked")) {
-                $("#AdditionalGPSCost").textbox({ required: true });
-                $("#AdditionalGPSCost").textbox("readonly", false);
-            }
-            else {
-                $("#AdditionalGPSCost").textbox('setValue', '0');
-                $("#AdditionalGPSCost").textbox({ required: false });
-                $("#AdditionalGPSCost").textbox("readonly", true);
-            }
-        }
-
-        function Cbox2Checked() {
-            if ($("#Othercbox").is(":checked")) {
-                $('#AdditionalOtherCost').textbox("readonly", false);
-                $("#AdditionalOtherCost").textbox({ required: true });
-            }
-            else {
-                $("#AdditionalOtherCost").textbox('setValue', '0');
-                $("#AdditionalOtherCost").textbox({ required: false });
-                $("#AdditionalOtherCost").textbox("readonly", true);
-            }
-        }
-
         function Init() {
             var query = uc.GetParams();
 
@@ -71,6 +47,9 @@
                         var financing = $("#Financing").datagrid("getRows");
                         var poundage = $("#Poundage").datagrid("getRows");
                         $(".container").form("load", data);
+
+                        //该部分代码还需要优化调整，等功能点做完之后在优化
+                        //加载时候给融资项金额赋值
                         for (var i = 0 ; i < data.FinancingItems.length; i++) {
                             if (data.FinancingItems[i].FinancingProject.IsFinancing == true) {
                                 for (var j = 0; j < financing.length; j++) {
@@ -82,6 +61,7 @@
                             }
                         }
                         $("#Financing").datagrid("loadData", financing);
+                        //将该产品对应的融资项进行选中操作
                         for (var i = 0 ; i < data.FinancingItems.length; i++) {
                             if (data.FinancingItems[i].FinancingProject.IsFinancing == true) {
                                 for (var j = 0; j < financing.length; j++) {
@@ -91,7 +71,7 @@
                                 }
                             }
                         }
-
+                        //加载时候给手续费金额赋值
                         for (var i = 0 ; i < data.FinancingItems.length; i++) {
                             if (data.FinancingItems[i].FinancingProject.IsFinancing == false) {
                                 for (var j = 0; j < poundage.length; j++) {
@@ -102,6 +82,7 @@
                             }
                         }
                         $("#Poundage").datagrid("loadData", poundage);
+                        //将该产品对应的手续费项进行选中操作
                         for (var i = 0 ; i < data.FinancingItems.length; i++) {
                             if (data.FinancingItems[i].FinancingProject.IsFinancing == false) {
                                 for (var j = 0; j < poundage.length; j++) {
@@ -122,7 +103,7 @@
         function toUppers() {
             disction = true;
             var CodeUpper = $("input[name='Code']").val().toUpperCase();
-            var ProduceId = $("input[name='ProduceId']").val();
+            var ProduceId = $("input[name='Id']").val();
             $("input[name='Code']").val(CodeUpper);
             $.ajax({
                 async: false,
@@ -130,7 +111,7 @@
                 url: "../api/Produce/GetAll",
                 success: function (data) {
                     for (var i = 0; i < data.length; i++) {
-                        if (CodeUpper == data[i].text && (ProduceId == "" || ProduceId != data[i].value)) {
+                        if (CodeUpper == data[i].Code && (ProduceId == "" || ProduceId != data[i].Id)) {
                             top.$.messager.show({ msg: "产品代码重复！" });
                             return disction = false;
                         }
@@ -171,10 +152,9 @@
                 //保存前将datagrid中的编辑状态的行结束编辑，数据保存在datagrid中
                 $('#Poundage').datagrid('getEditingRowIndexs');
                 $('#Financing').datagrid('getEditingRowIndexs');
-
                 uc.form.Submit({
                     method: "POST",
-                    url: "../api/Produce/Modify",
+                    url: "../api/Produce/Create",
                     data: produceInfo
                 });
             }
@@ -201,6 +181,9 @@
 
         //双击编辑行
         function onEditor(index, field, value) {
+            $('#Poundage').datagrid('getEditingRowIndexs');
+            $('#Financing').datagrid('getEditingRowIndexs');
+
             if (editIndex != index) {
                 if (endEditing(this.id)) {
                     $('#' + this.id).datagrid('selectRow', index)
@@ -259,15 +242,10 @@
             };
             if (data.length > 0) {
                 for (var i = 0 ; i < data.length; i++) {
-                    if (data[i].IsFinancing == false)
-                        data[i].IsFinancing = "否"
-                    else
-                        data[i].IsFinancing = "是"
-
-                    if (data[i].IsEdit == false)
-                        data[i].IsEdit = "否"
-                    else
-                        data[i].IsEdit = "是"
+                    //if (data[i].IsEdit == false)
+                    //    data[i].IsEdit = "否"
+                    //else
+                    //    data[i].IsEdit = "是"
                     value.rows[i] = data[i];
                 }
                 return value;
@@ -397,8 +375,8 @@
                             <th data-options="field:'FinancingProjectId',hidden:true">Id</th>
                             <th data-options="field:'Name',width:200,align:'center'">名称</th>
                             <th data-options="field:'Money',width:200,align:'center',editor:{type:'text',options:{required:true}}">价格</th>
-                            <th data-options="field:'IsFinancing',width:120,align:'center',editor:{type:'checkbox',options:{required:true,on:'是',off:'否'}}">是否是融资项</th>
-                            <th data-options="field:'IsEdit',width:120,align:'center',editor:{type:'checkbox',options:{required:true,on:'是',off:'否'}}">是否可编辑</th>
+                            <th data-options="field:'IsFinancing',width:120,align:'center',editor:{type:'checkbox',options:{required:true,on:'true',off:'false'}}">是否是融资项</th>
+                            <th data-options="field:'IsEdit',width:120,align:'center',editor:{type:'checkbox',options:{required:true,on:'true',off:'false'}}">是否可编辑</th>
                         </tr>
                     </thead>
                 </table>

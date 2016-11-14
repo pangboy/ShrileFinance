@@ -239,5 +239,29 @@
 
             return financingItemList;
         }
+
+        public void Create(FinanceAuidtViewModel value)
+        {
+            var finance = Mapper.Map<Finance>(value);
+
+            repository.Create(finance);
+            repository.Commit();
+        }
+
+        public void Modify(FinanceAuidtViewModel value)
+        {
+            var finance = Mapper.Map<Finance>(value);
+
+            repository.Modify(finance);
+            repository.Commit();
+        }
+
+        public FinanceAuidtViewModel Get(Guid id)
+        {
+            var finance = repository.Get(id);
+
+            FinanceAuidtViewModel financeViewModel = Mapper.Map<FinanceAuidtViewModel>(finance);
+            return financeViewModel;
+        }
     }
 }

@@ -48,5 +48,17 @@
 
             return Ok(value);
         }
+
+        public IHttpActionResult Create(FinanceAuidtViewModel value)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ValidModel.ShowErrorFirst(ModelState));
+            }
+
+            financeAppService.Create(value);
+
+            return Ok();
+        }
     }
 }

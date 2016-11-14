@@ -7,7 +7,7 @@
     /// <summary>
     /// 合同
     /// </summary>
-    public class ContactConfiguration : EntityTypeConfiguration<Contact>
+    public class ContactConfiguration : EntityTypeConfiguration<Contract>
     {
         public ContactConfiguration()
         {

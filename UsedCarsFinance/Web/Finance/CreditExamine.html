@@ -90,7 +90,6 @@
 
             var data = value;
 
-            debugger
             $.ajax({
                 async: false,
                 method: "POST",
@@ -98,7 +97,6 @@
                 url: '../api/CreditExamine/EditCreditExamine',
                 statusCode: {
                     200: function (data) {
-                        debugger
                     }
                 }
             });
