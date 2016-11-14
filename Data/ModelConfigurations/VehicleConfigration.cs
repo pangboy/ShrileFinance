@@ -25,7 +25,7 @@
             Property(m => m.BuyCarYears);
             Property(m => m.Color).HasMaxLength(50);
 
-            ToTable("Finance_Vehicle");
+            ToTable("FINC_Vehicle");
         }
     }
 }

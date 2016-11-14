@@ -3,7 +3,7 @@ namespace Data.Migrations
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class AddFinanceAndApplicationAndVehicelModels : DbMigration
+    public partial class AddVehicleAndApplicantAddContactsUpdateFinance : DbMigration
     {
         public override void Up()
         {
@@ -76,7 +76,7 @@ namespace Data.Migrations
                 .Index(t => t.FinanceId);
             
             CreateTable(
-                "dbo.Finance_Vehicle",
+                "dbo.FINC_Vehicle",
                 c => new
                     {
                         Id = c.Guid(nullable: false, identity: true),
@@ -109,18 +109,42 @@ namespace Data.Migrations
             AddColumn("dbo.FANC_Finance", "RepayDate", c => c.DateTime(nullable: false));
             AddColumn("dbo.FANC_Finance", "RepayRentDate", c => c.DateTime(nullable: false));
             AlterColumn("dbo.FANC_Finance", "RepaymentDate", c => c.DateTime(nullable: false));
+            AlterColumn("dbo.FANC_CreditExamine", "TrialPersonId", c => c.String(maxLength: 128));
+            AlterColumn("dbo.FANC_CreditExamine", "ReviewPersonId", c => c.String(maxLength: 128));
+            AlterColumn("dbo.FANC_CreditExamine", "ApprovePersonId", c => c.String(maxLength: 128));
+            AlterColumn("dbo.FANC_CreditExamine", "FinalPersonId", c => c.String(maxLength: 128));
+            CreateIndex("dbo.FANC_CreditExamine", "ApprovePersonId");
+            CreateIndex("dbo.FANC_CreditExamine", "FinalPersonId");
+            CreateIndex("dbo.FANC_CreditExamine", "ReviewPersonId");
+            CreateIndex("dbo.FANC_CreditExamine", "TrialPersonId");
+            AddForeignKey("dbo.FANC_CreditExamine", "ApprovePersonId", "dbo.AspNetUsers", "Id");
+            AddForeignKey("dbo.FANC_CreditExamine", "FinalPersonId", "dbo.AspNetUsers", "Id");
+            AddForeignKey("dbo.FANC_CreditExamine", "ReviewPersonId", "dbo.AspNetUsers", "Id");
+            AddForeignKey("dbo.FANC_CreditExamine", "TrialPersonId", "dbo.AspNetUsers", "Id");
         }
         
         public override void Down()
         {
-            DropForeignKey("dbo.Finance_Vehicle", "FinanceId", "dbo.FANC_Finance");
+            DropForeignKey("dbo.FINC_Vehicle", "FinanceId", "dbo.FANC_Finance");
             DropForeignKey("dbo.FinanceExtension", "FinanceId", "dbo.FANC_Finance");
+            DropForeignKey("dbo.FANC_CreditExamine", "TrialPersonId", "dbo.AspNetUsers");
+            DropForeignKey("dbo.FANC_CreditExamine", "ReviewPersonId", "dbo.AspNetUsers");
+            DropForeignKey("dbo.FANC_CreditExamine", "FinalPersonId", "dbo.AspNetUsers");
+            DropForeignKey("dbo.FANC_CreditExamine", "ApprovePersonId", "dbo.AspNetUsers");
             DropForeignKey("dbo.FANC_Contact", "FinanceId", "dbo.FANC_Finance");
             DropForeignKey("dbo.FANC_Applicant", "FinanceId", "dbo.FANC_Finance");
-            DropIndex("dbo.Finance_Vehicle", new[] { "FinanceId" });
+            DropIndex("dbo.FINC_Vehicle", new[] { "FinanceId" });
             DropIndex("dbo.FinanceExtension", new[] { "FinanceId" });
+            DropIndex("dbo.FANC_CreditExamine", new[] { "TrialPersonId" });
+            DropIndex("dbo.FANC_CreditExamine", new[] { "ReviewPersonId" });
+            DropIndex("dbo.FANC_CreditExamine", new[] { "FinalPersonId" });
+            DropIndex("dbo.FANC_CreditExamine", new[] { "ApprovePersonId" });
             DropIndex("dbo.FANC_Contact", new[] { "FinanceId" });
             DropIndex("dbo.FANC_Applicant", new[] { "FinanceId" });
+            AlterColumn("dbo.FANC_CreditExamine", "FinalPersonId", c => c.Guid(nullable: false));
+            AlterColumn("dbo.FANC_CreditExamine", "ApprovePersonId", c => c.Guid(nullable: false));
+            AlterColumn("dbo.FANC_CreditExamine", "ReviewPersonId", c => c.Guid(nullable: false));
+            AlterColumn("dbo.FANC_CreditExamine", "TrialPersonId", c => c.Guid(nullable: false));
             AlterColumn("dbo.FANC_Finance", "RepaymentDate", c => c.Int(nullable: false));
             DropColumn("dbo.FANC_Finance", "RepayRentDate");
             DropColumn("dbo.FANC_Finance", "RepayDate");
@@ -132,7 +156,7 @@ namespace Data.Migrations
             DropColumn("dbo.FANC_Finance", "OncePayMonths");
             DropColumn("dbo.FANC_Finance", "IntentionPrincipal");
             DropColumn("dbo.FANC_Finance", "RepaymentScheme");
-            DropTable("dbo.Finance_Vehicle");
+            DropTable("dbo.FINC_Vehicle");
             DropTable("dbo.FinanceExtension");
             DropTable("dbo.FANC_Contact");
             DropTable("dbo.FANC_Applicant");
