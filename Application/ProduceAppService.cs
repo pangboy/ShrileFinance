@@ -87,33 +87,36 @@ namespace Application
 
             produceViewModel = Mapper.Map<ProduceViewModel>(produce);
 
-            if (produceViewModel.FinancingItems.Count > 0)
+            if (produceViewModel != null)
             {
-                foreach (var financing in produceViewModel.FinancingItems)
+                if (produceViewModel.FinancingItems.Count > 0)
                 {
-                    // 融资项否则为手续费项目
-                    if (financing.FinancingProject.IsFinancing == false)
+                    foreach (var financing in produceViewModel.FinancingItems)
                     {
-                        produceViewModel.PoundageList.Add(new FinancingProjectListViewModel()
+                        // 融资项否则为手续费项目
+                        if (financing.FinancingProject.IsFinancing == false)
                         {
-                            FinancingProjectId = financing.FinancingProjectId,
-                            IsEdit = financing.IsEdit,
-                            IsFinancing = financing.FinancingProject.IsFinancing,
-                            Money = financing.Money,
-                            Name = financing.FinancingProject.Name
-                        });
-                    }
-                    else
-                    {
-                        var aaa = new FinancingProjectListViewModel()
+                            produceViewModel.PoundageList.Add(new FinancingProjectListViewModel()
+                            {
+                                FinancingProjectId = financing.FinancingProjectId,
+                                IsEdit = financing.IsEdit,
+                                IsFinancing = financing.FinancingProject.IsFinancing,
+                                Money = financing.Money,
+                                Name = financing.FinancingProject.Name
+                            });
+                        }
+                        else
                         {
-                            FinancingProjectId = financing.FinancingProjectId,
-                            IsEdit = financing.IsEdit,
-                            IsFinancing = financing.FinancingProject.IsFinancing,
-                            Money = financing.Money,
-                            Name = financing.FinancingProject.Name
-                        };
-                        produceViewModel.FinancingItemsList.Add(aaa);
+                            var aaa = new FinancingProjectListViewModel()
+                            {
+                                FinancingProjectId = financing.FinancingProjectId,
+                                IsEdit = financing.IsEdit,
+                                IsFinancing = financing.FinancingProject.IsFinancing,
+                                Money = financing.Money,
+                                Name = financing.FinancingProject.Name
+                            };
+                            produceViewModel.FinancingItemsList.Add(aaa);
+                        }
                     }
                 }
             }

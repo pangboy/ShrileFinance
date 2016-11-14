@@ -81,7 +81,6 @@
             return result;
         }
 
-
         // 提交测试
         function Submit() {
             var value = $("form[id=CreditExamineReportFrom]").serializeJson();
@@ -90,7 +89,6 @@
 
             var data = value;
 
-            debugger
             $.ajax({
                 async: false,
                 method: "POST",
@@ -98,7 +96,6 @@
                 url: '../api/CreditExamine/EditCreditExamine',
                 statusCode: {
                     200: function (data) {
-                        debugger
                     }
                 }
             });

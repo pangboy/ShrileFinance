@@ -110,13 +110,66 @@
 
         $(function () {
             LoadBrand();
-            $('#code').combobox({
-                method: "GET",
-                url: "../api/Produce/GetAll",
-                valueField: 'Id',
-                textField: 'Code'
+            //$.extend($.fn.validatebox.defaults.rules, {
+            //    //检验产品是否存在
+            //    CheckProduce: {
+            //        validator: function (value, param) {
+            //            var result = false;
+
+                       
+            //        },
+            //        message: '该编号对应的产品不存在!'
+            //    }
+            //});
+      
+            //$("#Code").bind("blur", function () {
+            //    debugger
+            //    var code = $(this).textbox("getText");
+            //    $.ajax({
+            //        async: false,
+            //        type: "GET",
+            //        url: "../api/Produce/GetByCode",
+            //        data: { code: code },
+            //        statusCode: {
+            //            200: function (data) {
+            //                if (data.length > 0) {
+            //                    $("#produce_info").form("load", data);
+            //                    $("#Poundage").datagrid("loadData", data.PoundageList);
+            //                    $("#Financing").datagrid("loadData", data.FinancingItemsList);
+            //                }
+            //                else {
+            //                    top.$.messager.show({ msg: "该编号对应的产品不存在" });
+            //                }
+
+            //            }
+            //        }
+            //    });
+            //})
+        });
+        function CheckProduce() {
+            var code = $(this).textbox("getText");
+            $.ajax({
+                async: false,
+                data: { code: code },
+                type: "GET",
+                url: "../api/Produce/GetByCode",
+                statusCode: {
+                    200: function (data) {
+                        if (data != null) {
+                            $("#ProduceId").val(data.Id);
+                            $("#produce_info").form("load", data);
+                            $("#Poundage").datagrid("loadData", data.PoundageList);
+                            $("#Financing").datagrid("loadData", data.FinancingItemsList);
+                        }
+                        else {
+                            result = true;
+                            top.$.messager.show({ msg: "该编号对应的产品不存在" });
+                        }
+                    }
+                }
             });
-        })
+        }
+
         function LoadBrand() {
             $.ajax({
                 async: false,
@@ -169,52 +222,6 @@
                 }
             });
         }
-
-        function SelectByCode() {
-            var code = $(this).textbox("getText");
-            $.ajax({
-                async: false,
-                type: "GET",
-                url: "../api/Produce/GetByCode",
-                data: { code: code },
-                statusCode: {
-                    200: function (data) {
-                        $("#produce_info").form("load", data);
-                        $("#Poundage").datagrid("loadData", data.PoundageList);
-                        $("#Financing").datagrid("loadData", data.FinancingItemsList);
-                    }
-                }
-            });
-        }
-
-
-        function LoadFilter(data) {
-            var value = {
-                total: data.total,
-                rows: []
-            };
-            if (data.length > 0) {
-                for (var i = 0 ; i < data.length; i++) {
-                    if (data[i].IsFinancing == false)
-                        data[i].IsFinancing = "否"
-                    else
-                        data[i].IsFinancing = "是"
-
-                    if (data[i].IsEdit == false)
-                        data[i].IsEdit = "否"
-                    else
-                        data[i].IsEdit = "是"
-                    value.rows[i] = data[i];
-                }
-                return value;
-            }
-            else {
-                value.total = 0;
-                value.rows = [];
-                return value;
-            }
-        }
-
         //双击编辑行
         function onEditor(index, field, value) {
             if (editIndex != index) {
@@ -262,32 +269,33 @@
                 CostCount(id);
             }
         }
-
+        //手续费融资项求和
         function CostCount(id) {
             var count = 0;
-           var rows= $("#" + id).datagrid("getRows");
+            var rows = $("#" + id).datagrid("getRows");
            for (var i = 0; i < rows.length; i++) {
-               $('#' + id).datagrid('getRows')[i]['Money'] = money;
-               count += money;
+               count +=parseInt($('#' + id).datagrid('getRows')[i]['Money']);
            }
            if (id == "Financing")
            {
-               $("FinancingCount").val(count);
+               $("#FinancingCount").text(count);
            }
            else
            {
-               $("PoundageCount").val(count);
+               $("#PoundageCount").text(count);
            }
-
         }
 
         //键盘enter键
         document.onkeydown = function (event) {
             var e = event || window.event || arguments.callee.caller.arguments[0];
             if (e && e.keyCode == 13) { // enter 键
-
+                //只是在datagrid中回车时候回去datagrid的ID
                 var id = $(e.target).parents(".panel.datagrid").find(".easyui-datagrid").attr("id")
-                accept(id);
+                //防止在其他文本框按enter建时候报错
+                if (id != undefined) {
+                    accept(id);
+                }
             }
         };
 
@@ -354,6 +362,17 @@
         function CheckProduct() {
             $("#dd").dialog('open');
             $("#dd").panel( { top: $(document).scrollTop() + ($(window).height() - 600) * 0.5 });
+        }
+
+        function ChooseProduce() {
+            var row = $("#dg").datagrid("getSelected");
+            $("#ProudceId").val(row["Id"]);
+            $("#Code").textbox("setValue", row["Code"]);
+            $("#dd").dialog('close');
+        }
+
+        function Submit() {
+
         }
     </script>
 </head>
@@ -473,11 +492,14 @@
             <label for="ac-2" class="ac">租赁信息</label>
             <article class="produce">
                 <fieldset id="produce_info">
+                    <div class="hidden">
+                        <input name="ProudceId" id="ProudceId" type="hidden"/>
+                    </div>
                     <legend>租赁信息</legend>
                     <div class="row">
                         <div class="col-6">
                             <label>产品代码:</label>
-                            <select name="Code" id="code" class="easyui-combobox" required data-options="width:360,editable:false,onSelect:SelectByCode"></select>
+                            <input id="Code" name="Code" class="easyui-textbox" required data-options="width:360,onchange:CheckProduce" />
                             <a onclick="CheckProduct()" style="float: right;padding-right:50px">
                                 <img src="images/choose.png" />
                             </a>
@@ -547,7 +569,6 @@
                                 loadMsg: '正在加载，请稍候...',
                                 onDblClickCell:onEditor,
                                 singleSelect:true,
-                                loadFilter :LoadFilter,
                                 ">
                                 <thead>
                                     <tr>
@@ -558,8 +579,7 @@
                                 </thead>
                             </table>
                             <div style="margin-left: 220px;float:left">
-                                <label>手续费总计:</label>
-                                <span name="PoundageCount" id="PoundageCount" />
+                                <label>手续费总计:<span name="PoundageCount" id="PoundageCount" /></label>
                             </div>
                         </div>
 
@@ -567,7 +587,6 @@
                             <label>融资项:</label>
                             <table id="Financing" class="easyui-datagrid" data-options="height: 230,width:400,rownumbers: true,  loadMsg: '正在加载，请稍候...',
                                onDblClickCell:onEditor,
-                               loadFilter :LoadFilter,
                                singleSelect:true,
                                ">
                                 <thead>
@@ -580,8 +599,8 @@
                             </table>
 
                             <div style="float:left;margin-left: 220px">
-                                <label>融资项总计:</label>
-                                <span name="FinancingCount" id="FinancingCount" />
+                                <label>融资项总计:<span name="FinancingCount" id="FinancingCount" /></label>
+                                
                             </div>
                         </div>
                     </div>
@@ -1204,7 +1223,8 @@
                 method: 'GET',
                 url: '../api/Produce/GetPageList',
                 loadMsg: '正在加载，请稍候...',
-                onBeforeLoad: BeforeLoad
+                onBeforeLoad: BeforeLoad,
+                onDblClickCell:ChooseProduce,
                 ">
                 <thead>
                     <tr>
@@ -1230,6 +1250,10 @@
                     </div>
                 </div>
             </div>
+        </div>
+
+        <div id="btn">
+            <a id="save" class="easyui-linkbutton" href="javascript:void(0)" data-options="iconCls:'icon-save',onClick:Submit">保存</a>
         </div>
     </form>
 </body>

@@ -1,6 +1,7 @@
 ﻿namespace Application.ViewModels.FinanceViewModels
 {
     using System;
+    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
 
     /// <summary>
@@ -303,6 +304,10 @@
         /// </summary>
         public string FinalPersonId { get; set; }
 
+       /// <summary>
+       /// 当前用户
+       /// </summary>
+       public KeyValuePair<string, string> CurentUser { get; set; }
     }
 
     /// <summary>

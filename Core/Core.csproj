@@ -106,7 +106,7 @@
     <Compile Include="Entities\Entity.cs" />
     <Compile Include="Entities\Identity\AppUser.cs" />
     <Compile Include="Entities\Finance\Applicant.cs" />
-    <Compile Include="Entities\Finance\Contact.cs" />
+    <Compile Include="Entities\Finance\Contract.cs" />
     <Compile Include="Entities\Finance\Credit.cs" />
     <Compile Include="Entities\Finance\CreditExamine.cs" />
     <Compile Include="Entities\Finance\Finance.cs" />

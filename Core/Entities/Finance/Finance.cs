@@ -65,7 +65,7 @@
         /// <summary>
         /// 合同
         /// </summary>
-        public virtual ICollection<Contact> Contact { get; set; }
+        public virtual ICollection<Contract> Contact { get; set; }
 
         /// <summary>
         /// 产品
