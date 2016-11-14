@@ -3,7 +3,6 @@
     using Core.Entities.Finance;
     using System;
     using System.Collections.Generic;
-    using Core.Entities.Finance;
 
     /// <summary>
     /// 融资审核
@@ -93,7 +92,7 @@
         /// <summary>
         /// 手续费
         /// </summary>
-        public decimal Cost { get; set; }
+        //public decimal Cost { get; set; }
 
         /// <summary>
         /// 状态

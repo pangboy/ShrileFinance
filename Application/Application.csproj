@@ -104,9 +104,9 @@
     <Compile Include="ViewModels\AccountViewModels\LoginViewModel.cs" />
     <Compile Include="ViewModels\FinanceViewModels\ApplicationViewModel.cs" />
     <Compile Include="ViewModels\FinanceViewModels\ContractViewModel.cs" />
-    <Compile Include="ViewModels\FinanceViewModels\CreditExamineValid.cs" />
     <Compile Include="ViewModels\FinanceViewModels\CreditExamineViewModel.cs" />
     <Compile Include="ViewModels\AccountViewModels\UserViewModel.cs" />
+    <Compile Include="ViewModels\FinanceViewModels\CreditExamineViewModel_Valid.cs" />
     <Compile Include="ViewModels\FinanceViewModels\FinanceAuidtViewModel.cs" />
     <Compile Include="ViewModels\FinanceViewModels\OperationViewModel.cs" />
     <Compile Include="ViewModels\OrganizationViewModels\BigEventViewModel.cs" />
