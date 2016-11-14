@@ -114,6 +114,7 @@
         public async Task<IdentityResult> CreateUserAsync(UserViewModel model)
         {
             var user = Mapper.Map<AppUser>(model);
+            user.UserName = model.Username;
 
             var createResult = await userManager.CreateAsync(user, AppUser.DEFAULTPASSWORD);
 

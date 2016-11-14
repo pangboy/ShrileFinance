@@ -88,6 +88,7 @@
     <Compile Include="FinanceAppService.cs" />
     <Compile Include="FinancingProjectAppService.cs" />
     <Compile Include="Mappings\PagedListTypeConverter.cs" />
+    <Compile Include="PartnerAppService.cs" />
     <Compile Include="ProcessAppService.cs" />
     <Compile Include="OrganizationAppService.cs" />
     <Compile Include="Mappings\DomainToViewModelMappingProfile.cs" />
@@ -128,6 +129,7 @@
     </Compile>
     <Compile Include="ViewModels\OrganizationViewModels\InstitutionLiabilitiesViewModel.cs" />
     <Compile Include="ViewModels\PagedListViewModel.cs" />
+    <Compile Include="ViewModels\PartnerViewModels\PartnerViewModel.cs" />
     <Compile Include="ViewModels\ProduceViewModel\FinancingProjectViewModel.cs" />
     <Compile Include="ViewModels\ProduceViewModel\FinancingItemViewModel.cs" />
     <Compile Include="ViewModels\ProduceViewModel\FinancingProjectListViewModel.cs" />
@@ -167,6 +169,7 @@
     <Compile Include="Startup\Startup.Auth.cs" />
     <Compile Include="Startup\Startup.AutoMapper.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

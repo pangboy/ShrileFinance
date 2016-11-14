@@ -1,25 +1,34 @@
-﻿using Models;
-using Models.Credit;
-using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Web.Http;
-
-namespace Web.Controllers.Credit
+﻿namespace Web.Controllers.Credit
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Web.Http;
+    using Application;
+    using Application.ViewModels;
+    using Application.ViewModels.PartnerViewModels;
+    using Models;
+
     public class CreditController : ApiController
     {
-        private readonly static BLL.Credit.Partner _partner = new BLL.Credit.Partner();
+        private static readonly BLL.Credit.Partner _partner = new BLL.Credit.Partner();
+        private static readonly BLL.Credit.Credit credit = new BLL.Credit.Credit();
+        private readonly PartnerAppService service;
+
+        public CreditController(PartnerAppService service)
+        {
+            this.service = service;
+        }
 
         /// <summary>
         /// 获取渠道主体信息
         /// </summary>
         /// <param name="creditId">授信标识</param>
-        /// qiy		16.03.29
+        /// qiy     16.03.29
         /// <returns></returns>
         [HttpGet]
-        public IHttpActionResult Get(int creditId)
+        public IHttpActionResult Get(Guid creditId)
         {
-            PartnerInfo partner = _partner.Get(creditId);
+            var partner = service.Get(creditId);
 
             return partner != null ? (IHttpActionResult)Ok(partner) : NotFound();
         }
@@ -27,7 +36,7 @@ namespace Web.Controllers.Credit
         /// <summary>
         /// 获取授信主体选项
         /// </summary>
-        /// qiy		16.03.29
+        /// qiy     16.03.29
         /// <returns></returns>
         [HttpGet]
         public List<ComboInfo> Option()
@@ -38,80 +47,54 @@ namespace Web.Controllers.Credit
         /// <summary>
         /// 渠道列表
         /// </summary>
-        /// qiy		16.03.29
+        /// qiy     16.03.29
         /// <param name="page">页码</param>
         /// <param name="rows">尺寸</param>
         /// <returns></returns>
         [HttpGet]
-        public Datagrid GetAll(int page, int rows)
+        public IHttpActionResult GetAll(int page, int rows, string searchString = null)
         {
-            Pagination pagination = new Pagination(page, rows);
-            NameValueCollection filter = ApiHelper.GetParameters();
+            var list = service.List(searchString, page, rows);
 
-            return new Datagrid
-            {
-                rows = _partner.List(pagination, filter),
-                total = pagination.Total
-            };
+            return Ok(new PagedListViewModel<PartnerViewModel>(list));
         }
 
         /// <summary>
         /// 添加渠道主体
         /// </summary>
-        /// qiy		16.03.29
-        /// <param name="value">值</param>
+        /// qiy     16.03.29
+        /// <param name="model">值</param>
         /// <returns></returns>
         [HttpPost]
-        public IHttpActionResult Post(PartnerInfo value)
+        public IHttpActionResult Post(PartnerViewModel model)
         {
-            return _partner.Add(value) ? (IHttpActionResult)Ok() : BadRequest("保存失败");
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            service.Create(model);
+
+            return Ok();
         }
 
         /// <summary>
         /// 修改渠道主体
         /// </summary>
-        /// qiy		16.03.29
-        /// <param name="value">值</param>
+        /// qiy     16.03.29
+        /// <param name="model">值</param>
         /// <returns></returns>
         [HttpPut]
-        public IHttpActionResult Put(PartnerInfo value)
+        public IHttpActionResult Put(PartnerViewModel model)
         {
-            return _partner.Modify(value) ? (IHttpActionResult)Ok() : BadRequest("保存失败");
-        }
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
 
-        private readonly static BLL.Credit.Credit credit = new BLL.Credit.Credit();
+            service.Modify(model);
 
-        /// <summary>
-        /// 查询所有的省，用于页面
-        /// </summary>
-        /// cais    16.05.09
-        /// <returns></returns>
-        [HttpGet]
-        public List<ComboInfo> OptionProvince()
-        {
-            return credit.OptionProvince();
-        }
-
-        /// <summary>
-        /// 通过省查询市，用于页面  列表(Combo)
-        /// </summary>
-        /// cais    16.05.09
-        /// <returns></returns>
-        [HttpGet]
-        public List<ComboInfo> OptionCitys(int ProvinceCode)
-        {
-            return credit.OptionCitys(ProvinceCode);
-        }
-
-        /// <summary>
-        /// 通过市区代码查询市，用于页面列表(Combo)
-        /// </summary>
-        /// cais    16.05.09
-        /// <returns></returns>
-        [HttpGet]
-        public List<ComboInfo> OptionCity(int CityCode)
-        {
-            return credit.OptionCity(CityCode);
+            return Ok();
         }
     }
 }

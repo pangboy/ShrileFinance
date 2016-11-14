@@ -1,5 +1,6 @@
 ﻿namespace Application.Mappings
 {
+    using System.Linq;
     using AutoMapper;
     using Core.Entities;
     using Core.Entities.Customers.Enterprise;
@@ -8,6 +9,7 @@
     using ViewModels.AccountViewModels;
     using ViewModels.FinanceViewModels;
     using ViewModels.OrganizationViewModels;
+    using ViewModels.PartnerViewModels;
     using ViewModels.ProduceViewModel;
 
     public class ViewModelToDomainMappingProfile : Profile
@@ -18,6 +20,9 @@
                 .ForMember(d => d.Id, opt => opt.Condition(s => !string.IsNullOrEmpty(s.Id)))
                 .ForMember(d => d.UserName, opt => opt.Ignore())
                 .ForMember(d => d.PhoneNumber, opt => opt.MapFrom(s => s.Phone));
+
+            CreateMap<PartnerViewModel, Core.Entities.Partner.Partner>()
+                .ForMember(d => d.Accounts, opt => opt.MapFrom(s => s.Accounts.Select(m => new AppUser { Id = m })));
 
             CreateMap<AssociatedEnterpriseViewModel, AssociatedEnterprise>();
             CreateMap<ParentViewModel, OrganizationParent>();
