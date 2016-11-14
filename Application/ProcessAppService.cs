@@ -6,6 +6,8 @@
     using AutoMapper;
     using Core.Entities;
     using Core.Entities.Flow;
+    using Core.Entities.Identity;
+    using Core.Exceptions;
     using Core.Interfaces.Repositories;
     using ViewModels.ProcessViewModels;
     using X.PagedList;
@@ -20,19 +22,22 @@
         private readonly IFormRepository formRepository;
         private readonly IPartnerRepository partnerRepository;
         private readonly AppUserManager userManager;
+        private readonly AppRoleManager roleManager;
 
         public ProcessAppService(
             IFlowRepository flowRepository,
             IInstanceRepository instanceReopsitory,
             IFormRepository formRepository,
             IPartnerRepository partnerRepository,
-            AppUserManager userManager)
+            AppUserManager userManager,
+            AppRoleManager roleManager)
         {
             this.flowRepository = flowRepository;
             this.instanceReopsitory = instanceReopsitory;
             this.formRepository = formRepository;
             this.partnerRepository = partnerRepository;
             this.userManager = userManager;
+            this.roleManager = roleManager;
         }
 
         /// <summary>
@@ -98,7 +103,7 @@
                     user = null;
                     break;
                 default:
-                    throw new InvalidOperationException("创建寻找用户策略失败!");
+                    throw new InvalidOperationAppException("创建寻找用户策略失败!");
             }
 
             instance.CurrentNode = action.Transfer;
@@ -142,14 +147,14 @@
             {
                 if (instance.Status != InstanceStatusEnum.正常)
                 {
-                    throw new InvalidOperationException("流程已结束，无法撤回。");
+                    throw new InvalidOperationAppException("流程已结束，无法撤回。");
                 }
 
                 var lastLog = instance.Logs.Last();
 
                 if (lastLog.ProcessUser != CurrentUser)
                 {
-                    throw new InvalidOperationException("流程已被其他用户处理，无法撤回流程。");
+                    throw new InvalidOperationAppException("流程已被其他用户处理，无法撤回流程。");
                 }
 
                 instance.CurrentNode = lastLog.Node;
@@ -162,7 +167,7 @@
             {
                 if (instance.StartUser != CurrentUser)
                 {
-                    throw new InvalidOperationException("您不是流程的发起者，无法撤回流程。");
+                    throw new InvalidOperationAppException("您不是流程的发起者，无法撤回流程。");
                 }
                 else
                 {
@@ -229,8 +234,7 @@
                         IsOpen = m.IsOpen
                     });
 
-                // TODO: Form.HasInternalOpinion
-                throw new NotImplementedException();
+                frame.HasInnerOpinion = roleManager.FindByIdAsync(CurrentUser.RoleId).Result.Power < 4;
             }
             else
             {

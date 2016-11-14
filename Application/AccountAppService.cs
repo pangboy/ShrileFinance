@@ -8,6 +8,7 @@
     using AutoMapper;
     using Core.Entities;
     using Core.Entities.Identity;
+    using Core.Exceptions;
     using Microsoft.AspNet.Identity;
     using ViewModels.AccountViewModels;
     using X.PagedList;
@@ -52,7 +53,7 @@
         {
             if (string.IsNullOrEmpty(userId))
             {
-                throw new ArgumentNullException(nameof(userId));
+                throw new ArgumentNullAppException(nameof(userId));
             }
 
             var user = userManager.FindById(userId);
@@ -75,7 +76,7 @@
         {
             if (string.IsNullOrEmpty(roleId))
             {
-                throw new ArgumentNullException(roleId);
+                throw new ArgumentNullAppException(roleId);
             }
 
             return userManager.Users.Where(m => m.Roles.Any(n => n.RoleId == roleId));
@@ -211,7 +212,7 @@
 
             if (user == null)
             {
-                throw new ApplicationException("Invalid name or password.");
+                throw new ArgumentNullAppException("Invalid name or password.");
             }
 
             return await userManager.CreateIdentityAsync(user, DefaultAuthenticationTypes.ApplicationCookie);
@@ -226,7 +227,7 @@
         {
             if (string.IsNullOrEmpty(roleId))
             {
-                throw new ArgumentNullException(nameof(roleId));
+                throw new ArgumentNullAppException(nameof(roleId));
             }
 
             return roleManager.FindById(roleId);
