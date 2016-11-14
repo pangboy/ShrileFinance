@@ -1,5 +1,6 @@
 ﻿namespace Application.ViewModels.FinanceViewModels
 {
+    using Core.Entities.Finance;
     using System;
     using System.Collections.Generic;
     using Core.Entities.Finance;
@@ -52,7 +53,7 @@
         /// <summary>
         /// 手续费
         /// </summary>
-        public decimal Poundage { get; set; }
+        public decimal Cost { get; set; }
 
         /// <summary>
         /// 是否为复审

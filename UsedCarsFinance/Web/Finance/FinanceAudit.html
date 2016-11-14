@@ -52,6 +52,10 @@
                         if (data) {
                             $("fieldset[name=FinanceAudit]").form('load', data);
 
+                            // 当前用户
+                            //data.CurentUser
+
+                            // 是否为复审
                             //$("fieldset[name=FinanceAudit]>input[name=isReview]").val('');
 
                             // 加载融资项
@@ -305,7 +309,7 @@
                 </div>
                 <div class="col-6">
                     <label>手续费：</label>
-                    <input name="Poundage" class="easyui-textbox" data-options="readonly:false,required:true,validType:'Amount'" />
+                    <input name="Cost" class="easyui-textbox" data-options="readonly:false,required:true,validType:'Amount'" />
                     <span>元</span>
                 </div>
             </div>

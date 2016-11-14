@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using AutoMapper;
+    using Core.Entities;
     using Core.Entities.Finance;
     using Core.Entities.Produce;
     using Core.Interfaces.Repositories;
@@ -15,12 +16,14 @@
     public class FinanceAppService
     {
         private readonly IFinanceRepository repository;
+        private readonly AppUserManager userManager;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FinanceAppService" /> class.
         /// </summary>
         /// <param name="repository">融资仓储</param>
-        public FinanceAppService(IFinanceRepository repository)
+        /// <param name="userManager">用户管理</param>
+        public FinanceAppService(IFinanceRepository repository, AppUserManager userManager)
         {
             this.repository = repository;
         }
@@ -58,6 +61,10 @@
             // 终审
             creditExamineReportViewModel.FinalPersonId = finance.CreditExamine.FinalPerson.Id;
             creditExamineReportViewModel.FinalPersonId = finance.CreditExamine.FinalPerson.Name;
+
+            // 当前用户
+            var user= userManager.CurrentUser();
+            creditExamineReportViewModel.CurentUser = new KeyValuePair<string, string>(user.Id,user.Name);
 
             return creditExamineReportViewModel;
         }
@@ -123,28 +130,7 @@
                 FinanceId = finance.Id,
 
                 // 厂商指导价
-                ManufacturerGuidePrice = decimal.Parse(string.Empty),
-
-                // 建议融资金额
-                AdviceMoney = finance.AdviceMoney,
-
-                // 建议融资比例
-                AdviceRatio = finance.AdviceRatio,
-
-                // 审批融资金额
-                ApprovalMoney = finance.ApprovalMoney,
-
-                // 审批融资比例
-                ApprovalRatio = finance.ApprovalRatio,
-
-                // 月供额度
-                Payment = finance.Payment,
-
-                /// 手续费
-                Poundage = finance.Cost,
-
-                /// 是否为复审
-                isReview = false,
+                ManufacturerGuidePrice = finance.VehicleInfo.ManufacturerGuidePrice,
 
                 // 融资项（Id、<Name_Maney>）
                 FinancingItems = GetFinancingItems(finance)
@@ -157,7 +143,6 @@
         /// 编辑融资审核
         /// </summary>
         /// <param name="value">融资审核ViewModel</param>
-        /// <param name="isReview">是否为复审</param>
         public void EditFinanceAuidt(FinanceAuidtViewModel value)
         {
             if (value == null || value.FinanceId == null)
@@ -183,8 +168,8 @@
             // 月供额度
             finance.Payment = value.Payment;
 
-            /// 手续费
-            finance.Cost = value.Poundage;
+            // 手续费
+            finance.Cost = value.Cost;
 
             // 初审 修改融资项各金额
             if (!value.isReview)
@@ -209,7 +194,7 @@
             var financingItems = new List<KeyValuePair<Guid, KeyValuePair<string, decimal>>>();
 
             // 提取融资项
-            finance.Produce.FinancingItems.ToList().ForEach(delegate (FinancingItem item)
+            finance.Produce.FinancingItems.ToList().ForEach(delegate(FinancingItem item)
             {
                 financingItems.Add(new KeyValuePair<Guid, KeyValuePair<string, decimal>>(item.FinancingProject.Id, new KeyValuePair<string, decimal>(item.FinancingProject.Name, item.Money)));
             });
@@ -228,7 +213,7 @@
             var financingItemList = financingItems.ToList();
 
             // 更新融资项各金额
-            financingItemList.ForEach(delegate (FinancingItem financingItem)
+            financingItemList.ForEach(delegate(FinancingItem financingItem)
             {
                 // 获取融资项标识
                 var key = financingItem.FinancingProject.Id;
