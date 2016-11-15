@@ -23,7 +23,7 @@
             Property(m => m.MaritalStatus).HasMaxLength(50);
             Property(m => m.Mobile).IsRequired().HasMaxLength(50);
             Property(m => m.Phone).HasMaxLength(50);
-            Property(m => m.LiveHouseAddress).IsRequired().HasMaxLength(50);
+            Property(m => m.LiveHouseAddress).HasMaxLength(50);
             Property(m => m.ContactAddress).HasMaxLength(50);
             Property(m => m.ContactAddressType).HasMaxLength(50);
             Property(m => m.RegisteredAddress).HasMaxLength(50);
@@ -41,9 +41,10 @@
             Property(m => m.OtherIncome);
             Property(m => m.HomeMonthlyIncome);
             Property(m => m.HomeMonthlyExpend);
-            Property(m => m.Degree).IsRequired().HasMaxLength(50);
+            Property(m => m.Degree).HasMaxLength(50);
             Property(m => m.FamilyNumber);
-            Property(m => m.OwneHouse).HasMaxLength(1000);
+            Property(m => m.OwnHouse).HasMaxLength(1000);
+            Property(m => m.OwnHouseCount);
 
             ToTable("FANC_Applicant");
         }

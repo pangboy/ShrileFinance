@@ -90,7 +90,7 @@
             transition: height 0.6s ease-in-out, box-shadow 0.6s linear;
         }
 
-        input:checked ~ article.base {
+        input:checked ~ article.Vehicle {
             height: 965px;
         }
 
@@ -124,7 +124,7 @@
                     200: function (data) {
                         if (data != null) {
                             $("#ProduceId").val(data.Id);
-                            $("#produce_info").form("load", data);
+                            $("#produce").form("load", data);
                             $("#Poundage").datagrid("loadData", data.PoundageList);
                             $("#Financing").datagrid("loadData", data.FinancingItemsList);
                             CostCount("Poundage");
@@ -132,7 +132,7 @@
                         }
                         else {
                             $("#ProduceId").val("");
-                            $("#produce_info").form("clear");
+                            $("#produce").form("clear");
                             $("#Poundage").datagrid("loadData", []);
                             $("#Financing").datagrid("loadData", []);
                             top.$.messager.show({ msg: "该编号对应的产品不存在" });
@@ -354,7 +354,7 @@
                 for (var j = 0; j < fieldset.length ; j++) {
                     fs.push($(fieldset[j]).serializeJson())
                 }
-                data[temp] = fs;
+                data[temp] = $(fieldset[0]).serializeJson();
             }
             //申请人中由于包括自有住房和联系人部分嵌套的fieldset所以单独处理
             var app = [];//用于存放联系人信息
@@ -389,7 +389,7 @@
         <div>
             <input id="ac-1" class="ac-1" name="accordion-1" type="checkbox" />
             <label for="ac-1" class="ac">基本信息</label>
-            <article class="base">
+            <article class="Vehicle">
                 <fieldset id="Vehicle" style="margin-bottom:0px">
                     <legend>联系人信息</legend>
                     <div class="row">
@@ -511,35 +511,35 @@
 
                         <div class="col-6">
                             <label>产品名称:</label>
-                            <input id="Name" name="Name" class="easyui-textbox" disabled />
+                            <input id="Name" name="Name" class="easyui-textbox"  />
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="col-6">
                             <label>费率(年):</label>
-                            <input name="CostRate" class="easyui-textbox" disabled data-options="validType:'Numerical'" />
+                            <input name="CostRate" class="easyui-textbox"  data-options="validType:'Numerical'" />
                             <span class="unit">%</span>
                         </div>
 
                         <div class="col-6">
                             <label>还款方式:</label>
-                            <input name="RepaymentMethodDesc" class="easyui-textbox" disabled />
+                            <input name="RepaymentMethodDesc" class="easyui-textbox"  />
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="col-6">
                             <label>融资比例区间:</label>
-                            <input name="MinFinancingRatio" class="easyui-textbox" style="width:190px;" disabled />
+                            <input name="MinFinancingRatio" class="easyui-textbox" style="width:190px;"  />
                             <span style="display:inline-block;width:22px; text-align:center;">-</span>
-                            <input name="MaxFinancingRatio" class="easyui-textbox" style="width:190px;" disabled />
+                            <input name="MaxFinancingRatio" class="easyui-textbox" style="width:190px;"  />
                             <span class="unit">%</span>
                         </div>
 
                         <div class="col-6">
                             <label>尾款比例:</label>
-                            <input name="FinalRatio" class="easyui-textbox" disabled />
+                            <input name="FinalRatio" class="easyui-textbox"  />
                             <span class="unit">%</span>
                         </div>
                     </div>
@@ -547,13 +547,13 @@
                     <div class="row">
                         <div class="col-6">
                             <label>融资期限:</label>
-                            <input name="FinancingPeriods" class="easyui-textbox" disabled />
+                            <input name="FinancingPeriods" class="easyui-textbox"  />
                             <span class="unit">月</span>
                         </div>
 
                         <div class="col-6">
                             <label>还款间隔:</label>
-                            <input name="RepaymentInterval" class="easyui-textbox" disabled />
+                            <input name="RepaymentInterval" class="easyui-textbox"  />
                             <span class="unit">月</span>
                         </div>
                     </div>
@@ -561,7 +561,7 @@
                     <div class="row">
                         <div class="col-6">
                             <label>客户保证金比例:</label>
-                            <input name="CustomerBailRatio" class="easyui-textbox" disabled />
+                            <input name="CustomerBailRatio" class="easyui-textbox"  />
                             <span class="unit">%</span>
                         </div>
                     </div>
@@ -604,7 +604,6 @@
 
                             <div style="float:left;margin-left: 250px">
                                 <label>融资项总计:<span name="FinancingCount" id="FinancingCount"style="font-weight:bold" /></label>
-                                
                             </div>
                         </div>
                     </div>

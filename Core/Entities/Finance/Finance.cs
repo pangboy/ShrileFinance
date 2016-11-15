@@ -9,6 +9,7 @@
     {
         public Finance()
         {
+            DateEffective = DateTime.Now;
             DateCreated = DateTime.Now;
             Applicant = new List<Applicant>();
             Contact = new List<Contract>();
@@ -66,7 +67,7 @@
         /// <summary>
         /// 放款日期
         /// </summary>
-        public DateTime DateEffective { get; set; }
+        public DateTime? DateEffective { get; set; }
 
         /// <summary>
         /// 创建日期

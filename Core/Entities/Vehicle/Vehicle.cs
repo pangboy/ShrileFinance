@@ -57,7 +57,7 @@ namespace Core.Entities.Vehicle
         /// <summary>
         /// 购买年份
         /// </summary>
-        public DateTime? BuyCarYears { get; set; }
+        public int? BuyCarYears { get; set; }
 
         /// <summary>
         /// 车身颜色
