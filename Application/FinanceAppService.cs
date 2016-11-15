@@ -17,7 +17,7 @@
     {
         private readonly IFinanceRepository repository;
         private readonly AppUserManager userManager;
-
+        
         /// <summary>
         /// Initializes a new instance of the <see cref="FinanceAppService" /> class.
         /// </summary>
@@ -28,6 +28,30 @@
             this.repository = repository;
 
             this.userManager = userManager;
+        }
+
+        public void Create(FinanceAuidtViewModel value)
+        {
+            var finance = Mapper.Map<Finance>(value);
+
+            repository.Create(finance);
+            repository.Commit();
+        }
+
+        public void Modify(FinanceAuidtViewModel value)
+        {
+            var finance = Mapper.Map<Finance>(value);
+
+            repository.Modify(finance);
+            repository.Commit();
+        }
+
+        public FinanceAuidtViewModel Get(Guid id)
+        {
+            var finance = repository.Get(id);
+
+            FinanceAuidtViewModel financeViewModel = Mapper.Map<FinanceAuidtViewModel>(finance);
+            return financeViewModel;
         }
 
         /// <summary>
@@ -204,6 +228,24 @@
             // 实体转ViewModel
             var operationReportViewModel = Mapper.Map<OperationViewModel>(finance.FinanceExtension);
 
+            // 选择还款日
+            operationReportViewModel.RepaymentDate = finance.RepaymentDate;
+
+            // 首次租金支付日期
+            operationReportViewModel.FirstPaymentDate = finance.RepayRentDate;
+
+            // 保证金
+            operationReportViewModel.Margin = finance.Bail;
+
+            // 先付月供
+            operationReportViewModel.PayMonthly = finance.Payment;
+
+            // 一次性付息
+            operationReportViewModel.OnePayInterest = finance.OnePayInterest;
+
+            // 实际用款额
+            operationReportViewModel.ActualAmount = finance.Principal;
+
             return operationReportViewModel;
         }
 
@@ -299,30 +341,6 @@
             });
 
             return financingItemList;
-        }
-
-        public void Create(FinanceAuidtViewModel value)
-        {
-            var finance = Mapper.Map<Finance>(value);
-
-            repository.Create(finance);
-            repository.Commit();
-        }
-
-        public void Modify(FinanceAuidtViewModel value)
-        {
-            var finance = Mapper.Map<Finance>(value);
-
-            repository.Modify(finance);
-            repository.Commit();
-        }
-
-        public FinanceAuidtViewModel Get(Guid id)
-        {
-            var finance = repository.Get(id);
-
-            FinanceAuidtViewModel financeViewModel = Mapper.Map<FinanceAuidtViewModel>(finance);
-            return financeViewModel;
         }
     }
 }
