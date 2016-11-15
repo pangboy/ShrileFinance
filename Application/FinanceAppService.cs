@@ -229,22 +229,22 @@
             var operationReportViewModel = Mapper.Map<OperationViewModel>(finance.FinanceExtension);
 
             // 选择还款日
-            operationReportViewModel.RepaymentDate = finance.RepaymentDate;
+            operationReportViewModel.RepaymentDate = finance.RepaymentDate.Value;
 
             // 首次租金支付日期
-            operationReportViewModel.FirstPaymentDate = finance.RepayRentDate;
+            operationReportViewModel.FirstPaymentDate = finance.RepayRentDate.Value;
 
             // 保证金
-            operationReportViewModel.Margin = finance.Bail;
+            operationReportViewModel.Margin = finance.Bail.Value;
 
             // 先付月供
-            operationReportViewModel.PayMonthly = finance.Payment;
+            operationReportViewModel.PayMonthly = finance.Payment.Value;
 
             // 一次性付息
-            operationReportViewModel.OnePayInterest = finance.OnePayInterest;
+            operationReportViewModel.OnePayInterest = finance.OnePayInterest.Value;
 
             // 实际用款额
-            operationReportViewModel.ActualAmount = finance.Principal;
+            operationReportViewModel.ActualAmount = finance.Principal.Value;
 
             return operationReportViewModel;
         }
