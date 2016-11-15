@@ -115,10 +115,6 @@
     <Compile Include="Migrations\201611150630239_FinanceModel.Designer.cs">
       <DependentUpon>201611150630239_FinanceModel.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201611150635045_Partner.cs" />
-    <Compile Include="Migrations\201611150635045_Partner.Designer.cs">
-      <DependentUpon>201611150635045_Partner.cs</DependentUpon>
-    </Compile>
     <Compile Include="Migrations\Configuration.cs">
       <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
     </Compile>
@@ -324,9 +320,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201611150630239_FinanceModel.resx">
       <DependentUpon>201611150630239_FinanceModel.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201611150635045_Partner.resx">
-      <DependentUpon>201611150635045_Partner.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

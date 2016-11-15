@@ -297,6 +297,7 @@
             self.parent.$("#applicant_dd").dialog({ closed: true });
         }
 
+        //选择通讯地址类型时候加载单位地址和住宅地址
         function CAType(s) {
             if (s == 1) {
                 $("#ContactAddress").textbox('setValue', $("#LiveHouseAddress").textbox('getValue'));

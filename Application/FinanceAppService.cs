@@ -33,16 +33,10 @@
         public void Create(FinanceAuidtViewModel value)
         {
             var finance = Mapper.Map<Finance>(value);
-            try
-            {
-                repository.Create(finance);
-                repository.Commit();
-            }
-            catch (Exception ex)
-            {
-
-                throw;
-            }
+            
+            repository.Create(finance);
+            repository.Commit();
+           
            
         }
 

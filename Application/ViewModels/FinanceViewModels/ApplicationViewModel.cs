@@ -112,9 +112,9 @@
         public string WifePhone { get; set; }
 
         /// <summary>
-        /// 配偶单位电话
+        /// 配偶单位名称
         /// </summary>
-        public string WifeOfficePhone { get; set; }
+        public string WifeOfficeName { get; set; }
 
         /// <summary>
         /// 配偶单位地址
