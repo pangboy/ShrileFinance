@@ -44,22 +44,22 @@
         /// <summary>
         /// 注册登记日期
         /// </summary>
-        public DateTime RegisterDate { get; set; }
+        public DateTime? RegisterDate { get; set; }
 
         /// <summary>
         /// 行驶里程
         /// </summary>
-        public int RunningMiles { get; set; }
+        public int? RunningMiles { get; set; }
 
         /// <summary>
         /// 出厂日期
         /// </summary>
-        public DateTime FactoryDate { get; set; }
+        public DateTime? FactoryDate { get; set; }
 
         /// <summary>
         /// 购买年份
         /// </summary>
-        public DateTime BuyCarYears { get; set; }
+        public DateTime? BuyCarYears { get; set; }
 
         /// <summary>
         /// 车身颜色

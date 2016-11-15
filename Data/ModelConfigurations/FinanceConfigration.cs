@@ -38,7 +38,7 @@
             HasOptional(m => m.CreditExamine).WithOptionalPrincipal().Map(m => m.MapKey("FinanceId")).WillCascadeOnDelete();
 
             // 车辆信息
-            HasOptional(m => m.VehicleInfo).WithOptionalPrincipal().Map(m => m.MapKey("FinanceId")).WillCascadeOnDelete();
+            HasOptional(m => m.Vehicle).WithOptionalPrincipal().Map(m => m.MapKey("FinanceId")).WillCascadeOnDelete();
 
             // 联系人信息
             HasMany(m => m.Applicant).WithOptional().Map(m => m.MapKey("FinanceId")).WillCascadeOnDelete();
