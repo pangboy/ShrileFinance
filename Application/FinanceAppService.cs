@@ -198,7 +198,7 @@
             finance.Cost = value.Cost;
 
             // 初审 修改融资项各金额
-            if (!value.isReview)
+            if (!value.IsReview)
             {
                 // 修改融资项各金额
                 finance.Produce.FinancingItems = EditFinanceAuidts(financingItems: finance.Produce.FinancingItems, financingItemCollection: value.FinancingItems);
@@ -245,6 +245,9 @@
 
             // 实际用款额
             operationReportViewModel.ActualAmount = finance.Principal;
+
+            // 融资项
+            operationReportViewModel.FinancingItems = GetFinancingItems(finance);
 
             return operationReportViewModel;
         }

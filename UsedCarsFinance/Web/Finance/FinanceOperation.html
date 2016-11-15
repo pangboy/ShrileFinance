@@ -14,7 +14,12 @@
 
     <script type="text/javascript">
         $(function () {
-            var query = {};//$.extend(uc.GetParams(), parent.flow.InstanceData);
+            // 获取参数
+            var query = {} //$.extend(uc.GetParams(), parent.flow.InstanceData);
+
+            if (query.FinanceId == undefined || query.FinanceId.length == 0) {
+                query.FinanceId = '683B6AB9-1CA7-E611-80C5-507B9DE4A488';
+            }
 
             // 初始化
             Init(query);
@@ -27,6 +32,9 @@
 
             // 隐藏放款账号信息
             ShowChannel(false);
+
+            // 加载数据
+            LoadData(query);
         }
 
         // 加载数据
@@ -44,17 +52,86 @@
                 statusCode: {
                     200: function (data) {
                         if (data) {
-                            // 加载运营
-                            if (data.LoanPrincipal == "Channel")
-                            {
-                                ShowChannel(true);
-                            }
-                            FieldsetLoadDateFactory('Operation', 'text',data);
+                            // 运营
+                            LoadDataBase(data);
 
-                            // 加载合同
-                            FieldsetLoadDateFactory('Contact', 'table',JSON.parse(data.ContactJson));
+                            // 运营初审
+                            LoadData_Trial(data);
+
+                            // 运营复审
+                            LoadData_Review(data);
                         }
                     }
+                }
+            });
+        }
+
+        // 运营
+        function LoadDataBase(data)
+        {
+            // 加载运营
+            if (data.LoanPrincipal == "Channel") {
+                ShowChannel(true);
+            }
+            FieldsetLoadDateFactory('Operation', 'text', data);
+
+            // 加载合同
+            FieldsetLoadDateFactory('Contact', 'table', JSON.parse(data.ContactJson));
+        }
+
+        // 运营初审
+        function LoadData_Trial(data) {
+            // 加载融资项
+            LoadFinancingItem(data.FinancingItems);
+
+            // 禁用运营
+            Disabled($('fieldset[name=Operation]'));
+
+            // 禁用合同
+            $('fieldset[name=Contact] div[id=Contact_tb]').hide();
+            Disabled($('fieldset[name=Contact]'));
+        }
+
+        // 运营复审
+        function LoadData_Review(data) {
+
+        }
+
+        // 加载融资项
+        function LoadFinancingItem(dataKV) {
+            if (dataKV == null) {
+                return;
+            }
+
+            // 从模版中获取控件及拼装
+            $(dataKV).each(function (i, e) {
+                var context = $("fieldset[name=FinancingItems]>template[name=templateUnit]").html();
+                if (context) {
+                    $("fieldset[name=FinancingItems]>div.row").append(context);
+
+                    var div = $("fieldset[name=FinancingItems]>div.row>div:last");
+                    div.addClass('col-6');
+
+                    // 解析控件
+                    $.parser.parse(div);
+
+                    // 设置属性
+                    div.find("label").text(e.Value.Key);
+                    div.find("input[name=Id]").val(e.Key);
+                    div.find("input[textboxname=Money]").textbox({
+                        readonly: true,
+                        required: false,
+                        validType: ['Amount']
+                    });
+
+                    // 裸车价
+                    if ($.inArray(e.Value.Key, ["裸车价"]) != -1) {
+                        div.attr("name", "NakedCar")
+                        div.find("span[name=unit]").text("万元");
+                    }
+
+                    // 金额赋值
+                    div.find("input[textboxname=Money]").textbox('setValue', e.Value.Value);
                 }
             });
         }
@@ -83,87 +160,24 @@
             return result;
         }
     </script>
-
-    <!-- 辅助方法 -->
-    <script type="text/javascript">
-        // fieldset 数据序列化工厂（type: text or table）
-        function FieldsetSerializeFactory(name, type) {
-            if (name == null || type == null || $.inArray(type, ["text", "table"]) == -1) {
-                return null;
-            }
-
-            var json = new Object();
-
-            if ($("fieldset[name=" + name + "]").length > 0) {
-                if (type == "text") {
-                    // 序列化 text
-                    json = $("fieldset[name=" + name + "]").serializeJson();
-                }
-                else {
-                    // 序列化 table
-                    var json = $("fieldset[name=" + name + "]").find("[id=" + name + "_dg" + "]").datagrid("getRows");
-                }
-            }
-
-            return json;
-        }
-
-        // fieldset 数据加载工厂（type: text or table）
-        function FieldsetLoadDateFactory(name, type, data) {
-            if (name == null || type == null || $.inArray(type, ["text", "table"]) == -1 || !data) {
-                return null;
-            }
-
-            if ($("fieldset[name=" + name + "]").length > 0) {
-                if (type == "text") {
-                    // 加载数据 text
-                    $("fieldset[name=" + name + "]").form('load', data);
-                }
-                else {
-                    // 加载数据 table
-                    $(data).each(function (index, item) {
-                        // 加载数据 table
-                        $("fieldset[name=" + name + "]").find("[id=" + name + "_dg" + "]").datagrid('appendRow', item);;
-                    });
-                }
-            }
-
-            return data;
-        }
-
-        // Json序列化
-        $.fn.serializeJson = function () {
-            var obj = {};
-            var array = this.serializeArray();
-
-            var selector = this.selector;
-
-            if (!!window.ActiveXObject || "ActiveXObject" in window) {
-                array = $(this).parents("form").serializeArray();
-
-                array = $.map(array, function (val) {
-                    if ($("[name=" + val.name + "]").parents(selector).length)
-                        return val;
-                });
-            }
-
-            $.each(array, function (i, e) {
-                if (obj[e.name] !== undefined) {
-                    if (!obj[e.name].push) {
-                        obj[e.name] = [obj[e.name]];
-                    }
-                    obj[e.name].push(e.value || '');
-                } else {
-                    obj[e.name] = e.value || '';
-                }
-            });
-
-            return obj;
-        };
-    </script>
 </head>
 <body>
     <form name="FinanceOperation" class="container">
+        <fieldset name="FinancingItems">
+            <legend>融资项：</legend>
+            <div class="row">
+            </div>
+
+            <template name="templateUnit">
+                <div class="">
+                    <label></label>
+                    <input name="Id" type="hidden" value="" />
+                    <input name="Money" class="easyui-textbox" />
+                    <span name="unit">元</span>
+                </div>
+            </template>
+        </fieldset>
+
         <fieldset name="Operation">
             <legend>运营</legend>
 

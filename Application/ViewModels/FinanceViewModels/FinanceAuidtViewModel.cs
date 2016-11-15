@@ -1,8 +1,8 @@
 ﻿namespace Application.ViewModels.FinanceViewModels
 {
-    using Core.Entities.Finance;
     using System;
     using System.Collections.Generic;
+    using Core.Entities.Finance;
 
     /// <summary>
     /// 融资审核
@@ -15,7 +15,7 @@
         public Guid FinanceId { get; set; }
 
         /// <summary>
-        /// 融资项（Id、<Name_Maney>）
+        /// 融资项（Id、（Name、Maney））
         /// </summary>
         public ICollection<KeyValuePair<Guid, KeyValuePair<string, decimal>>> FinancingItems { get; set; }
 
@@ -57,7 +57,7 @@
         /// <summary>
         /// 是否为复审
         /// </summary>
-        public bool isReview { get; set; }
+        public bool IsReview { get; set; }
 
         /// <summary>
         /// 融资本金
@@ -123,6 +123,7 @@
         /// 车辆信息
         /// </summary>
         public virtual VehicleViewModel.VehicleViewModel VehicleInfo { get; set; }
+
         /// <summary>
         /// 合同
         /// </summary>

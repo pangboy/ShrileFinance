@@ -1,8 +1,7 @@
-﻿
-
-namespace Application.ViewModels.FinanceViewModels
+﻿namespace Application.ViewModels.FinanceViewModels
 {
     using System;
+    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
 
     /// <summary>
@@ -14,6 +13,11 @@ namespace Application.ViewModels.FinanceViewModels
         /// 融资标识
         /// </summary>
         public Guid FinanceId { get; set; }
+
+        /// <summary>
+        /// 融资项（Id、(Name、Maney)）
+        /// </summary>
+        public ICollection<KeyValuePair<Guid, KeyValuePair<string, decimal>>> FinancingItems { get; set; }
 
         /// <summary>
         /// 选择还款日
