@@ -51,7 +51,7 @@
                 .Add(new VehicleConfigration())
                 .Add(new ContactConfiguration())
                 .Add(new FinanceExtensionConfiguration())
-                .Add(new PartnerConfiguration())
+                //.Add(new PartnerConfiguration())
                 ;
 
             base.OnModelCreating(modelBuilder);

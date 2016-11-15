@@ -181,6 +181,11 @@
             // 获取该融资审核对应的融资实体
             var finance = repository.Get(value.FinanceId);
 
+            if (finance == null)
+            {
+                return;
+            }
+
             // 建议融资金额
             finance.AdviceMoney = value.AdviceMoney;
 

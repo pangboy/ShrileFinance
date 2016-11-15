@@ -46,7 +46,7 @@
 
             financeAppService.EditFinanceAuidt(value: value);
 
-            return Ok(value);
+            return Ok();
         }
 
         public IHttpActionResult Create(FinanceAuidtViewModel value)

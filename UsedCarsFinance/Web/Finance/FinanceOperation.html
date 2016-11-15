@@ -18,7 +18,7 @@
             var query = {} //$.extend(uc.GetParams(), parent.flow.InstanceData);
 
             if (query.FinanceId == undefined || query.FinanceId.length == 0) {
-                query.FinanceId = '91F8B525-FEAA-E611-80C5-507B9DE4A488';
+                query.FinanceId = '49833354-0BAB-E611-80C5-507B9DE4A488';
             }
 
             // 初始化
@@ -107,6 +107,9 @@
                 return;
             }
 
+            // 显示融资项
+            $("fieldset[name=FinancingItems]").show();
+
             // 从模版中获取控件及拼装
             $(dataKV).each(function (i, e) {
                 var context = $("fieldset[name=FinancingItems]>template[name=templateUnit]").html();
@@ -155,7 +158,14 @@
             var value = FieldsetSerializeFactory('Operation', 'text');
 
             // 序列化合同信息
-            value.ContactJson = JSON.stringify(FieldsetSerializeFactory('Contact', 'table'));
+            var array = [];
+            $(FieldsetSerializeFactory('Contact', 'table')).each(function (i, e) {
+                if (e.Name.length > 0)
+                {
+                    array.push(e);
+                }
+            });
+            value.ContactJson = JSON.stringify(array);
 
             var result = {};
             result["formName"] = "审批信息";
@@ -181,7 +191,7 @@
 </head>
 <body>
     <form name="FinanceOperation" class="container">
-        <fieldset name="FinancingItems">
+        <fieldset name="FinancingItems" style="display:none">
             <legend>融资项：</legend>
             <div class="row">
             </div>
@@ -215,22 +225,22 @@
                 </div>
                 <div class="col-6">
                     <label>保证金：</label>
-                    <input name="Margin" class="easyui-textbox" data-options="required:true,validType:'',readonly:false" />
+                    <input name="Margin" class="easyui-textbox" data-options="required:true,validType:'Money',readonly:false" />
                     <span name="uint">元</span>
                 </div>
                 <div class="col-6">
                     <label>先付月供：</label>
-                    <input name="PayMonthly" class="easyui-textbox" data-options="required:true,validType:'',readonly:false" />
+                    <input name="PayMonthly" class="easyui-textbox" data-options="required:true,validType:'Money',readonly:false" />
                     <span name="uint">元</span>
                 </div>
                 <div class="col-6">
                     <label>一次性付息：</label>
-                    <input name="OnePayInterest" class="easyui-textbox" data-options="required:true,validType:'',readonly:false" />
+                    <input name="OnePayInterest" class="easyui-textbox" data-options="required:true,validType:'Money',readonly:false" />
                     <span name="uint">元</span>
                 </div>
                 <div class="col-6">
                     <label>实际用款额：</label>
-                    <input name="ActualAmount" class="easyui-textbox" data-options="required:true,validType:'',readonly:false" />
+                    <input name="ActualAmount" class="easyui-textbox" data-options="required:true,validType:'Money',readonly:false" />
                     <span name="uint">万元</span>
                 </div>
             </div>
