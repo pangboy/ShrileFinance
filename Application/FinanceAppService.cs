@@ -17,7 +17,7 @@
     {
         private readonly IFinanceRepository repository;
         private readonly AppUserManager userManager;
-        
+
         /// <summary>
         /// Initializes a new instance of the <see cref="FinanceAppService" /> class.
         /// </summary>
@@ -43,7 +43,7 @@
 
                 throw;
             }
-           
+
         }
 
         public void Modify(FinanceAuidtViewModel value)
@@ -233,26 +233,33 @@
             // 获取信审报告实体
             var finance = repository.Get(financeId);
 
+            if (finance == null)
+            {
+                return new OperationViewModel();
+            }
+
             // 实体转ViewModel
-            var operationReportViewModel = Mapper.Map<OperationViewModel>(finance.FinanceExtension);
+            var operationReportViewModel = Mapper.Map<OperationViewModel>(finance.FinanceExtension) ?? new OperationViewModel();
+
+            operationReportViewModel.FinanceId = finance.Id;
 
             // 选择还款日
-            operationReportViewModel.RepaymentDate = finance.RepaymentDate.Value;
+            operationReportViewModel.RepaymentDate = finance.RepaymentDate;
 
             // 首次租金支付日期
-            operationReportViewModel.FirstPaymentDate = finance.RepayRentDate.Value;
+            operationReportViewModel.FirstPaymentDate = finance.RepayRentDate;
 
             // 保证金
-            operationReportViewModel.Margin = finance.Bail.Value;
+            operationReportViewModel.Margin = finance.Bail;
 
             // 先付月供
-            operationReportViewModel.PayMonthly = finance.Payment.Value;
+            operationReportViewModel.PayMonthly = finance.Payment;
 
             // 一次性付息
-            operationReportViewModel.OnePayInterest = finance.OnePayInterest.Value;
+            operationReportViewModel.OnePayInterest = finance.OnePayInterest;
 
             // 实际用款额
-            operationReportViewModel.ActualAmount = finance.Principal.Value;
+            operationReportViewModel.ActualAmount = finance.Principal;
 
             // 融资项
             operationReportViewModel.FinancingItems = GetFinancingItems(finance);
@@ -274,6 +281,11 @@
             // 获取该信审对应的融资实体
             var finance = repository.Get(value.FinanceId);
 
+            if (finance == null)
+            {
+                return;
+            }
+
             // 选择还款日
             finance.RepaymentDate = value.RepaymentDate;
 
@@ -291,6 +303,11 @@
 
             // 实际用款额
             finance.Principal = value.ActualAmount;
+
+            if (finance.FinanceExtension == null)
+            {
+                finance.FinanceExtension = new FinanceExtension();
+            }
 
             // 放款主体
             finance.FinanceExtension.LoanPrincipal = value.LoanPrincipal;
@@ -323,7 +340,7 @@
             var financingItems = new List<KeyValuePair<Guid, KeyValuePair<string, decimal>>>();
 
             // 提取融资项
-            finance.Produce.FinancingItems.ToList().ForEach(delegate(FinancingItem item)
+            finance.Produce.FinancingItems.ToList().ForEach(delegate (FinancingItem item)
             {
                 financingItems.Add(new KeyValuePair<Guid, KeyValuePair<string, decimal>>(item.FinancingProject.Id, new KeyValuePair<string, decimal>(item.FinancingProject.Name, item.Money)));
             });
@@ -342,7 +359,7 @@
             var financingItemList = financingItems.ToList();
 
             // 更新融资项各金额
-            financingItemList.ForEach(delegate(FinancingItem financingItem)
+            financingItemList.ForEach(delegate (FinancingItem financingItem)
             {
                 // 获取融资项标识
                 var key = financingItem.FinancingProject.Id;
