@@ -65,6 +65,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Entities\Finance\FinanceProduce.cs" />
     <Compile Include="Entities\Flow\Action.cs" />
     <Compile Include="Entities\Flow\ActionAllocationEnum.cs" />
     <Compile Include="Entities\Flow\ActionTypeEnum.cs" />

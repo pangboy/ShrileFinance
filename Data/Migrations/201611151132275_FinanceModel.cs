@@ -7,6 +7,8 @@ namespace Data.Migrations
     {
         public override void Up()
         {
+            DropIndex("dbo.FANC_Finance", new[] { "Produce_Id" });
+            RenameColumn(table: "dbo.FANC_Finance", name: "Produce_Id", newName: "ProduceId");
             CreateTable(
                 "dbo.FANC_Applicant",
                 c => new
@@ -81,6 +83,21 @@ namespace Data.Migrations
                 .Index(t => t.FinanceId);
             
             CreateTable(
+                "dbo.FANC_FinanceProduce",
+                c => new
+                    {
+                        Id = c.Guid(nullable: false, identity: true),
+                        IsFinancing = c.Boolean(nullable: false),
+                        IsEdit = c.Boolean(nullable: false),
+                        Money = c.Decimal(nullable: false, precision: 18, scale: 2),
+                        Name = c.String(),
+                        FinanceId = c.Guid(),
+                    })
+                .PrimaryKey(t => t.Id)
+                .ForeignKey("dbo.FANC_Finance", t => t.FinanceId, cascadeDelete: true)
+                .Index(t => t.FinanceId);
+            
+            CreateTable(
                 "dbo.FANC_Vehicle",
                 c => new
                     {
@@ -122,10 +139,12 @@ namespace Data.Migrations
             AlterColumn("dbo.FANC_Finance", "Bail", c => c.Decimal(precision: 18, scale: 2));
             AlterColumn("dbo.FANC_Finance", "Cost", c => c.Decimal(precision: 18, scale: 2));
             AlterColumn("dbo.FANC_Finance", "DateEffective", c => c.DateTime());
+            AlterColumn("dbo.FANC_Finance", "ProduceId", c => c.Guid(nullable: false));
             AlterColumn("dbo.FANC_CreditExamine", "TrialPersonId", c => c.String(maxLength: 128));
             AlterColumn("dbo.FANC_CreditExamine", "ReviewPersonId", c => c.String(maxLength: 128));
             AlterColumn("dbo.FANC_CreditExamine", "ApprovePersonId", c => c.String(maxLength: 128));
             AlterColumn("dbo.FANC_CreditExamine", "FinalPersonId", c => c.String(maxLength: 128));
+            CreateIndex("dbo.FANC_Finance", "ProduceId");
             CreateIndex("dbo.FANC_CreditExamine", "ApprovePersonId");
             CreateIndex("dbo.FANC_CreditExamine", "FinalPersonId");
             CreateIndex("dbo.FANC_CreditExamine", "ReviewPersonId");
@@ -139,6 +158,7 @@ namespace Data.Migrations
         public override void Down()
         {
             DropForeignKey("dbo.FANC_Vehicle", "FinanceId", "dbo.FANC_Finance");
+            DropForeignKey("dbo.FANC_FinanceProduce", "FinanceId", "dbo.FANC_Finance");
             DropForeignKey("dbo.FANC_FinanceExtension", "FinanceId", "dbo.FANC_Finance");
             DropForeignKey("dbo.FANC_CreditExamine", "TrialPersonId", "dbo.AspNetUsers");
             DropForeignKey("dbo.FANC_CreditExamine", "ReviewPersonId", "dbo.AspNetUsers");
@@ -147,6 +167,7 @@ namespace Data.Migrations
             DropForeignKey("dbo.FANC_Contact", "FinanceId", "dbo.FANC_Finance");
             DropForeignKey("dbo.FANC_Applicant", "FinanceId", "dbo.FANC_Finance");
             DropIndex("dbo.FANC_Vehicle", new[] { "FinanceId" });
+            DropIndex("dbo.FANC_FinanceProduce", new[] { "FinanceId" });
             DropIndex("dbo.FANC_FinanceExtension", new[] { "FinanceId" });
             DropIndex("dbo.FANC_CreditExamine", new[] { "TrialPersonId" });
             DropIndex("dbo.FANC_CreditExamine", new[] { "ReviewPersonId" });
@@ -154,10 +175,12 @@ namespace Data.Migrations
             DropIndex("dbo.FANC_CreditExamine", new[] { "ApprovePersonId" });
             DropIndex("dbo.FANC_Contact", new[] { "FinanceId" });
             DropIndex("dbo.FANC_Applicant", new[] { "FinanceId" });
+            DropIndex("dbo.FANC_Finance", new[] { "ProduceId" });
             AlterColumn("dbo.FANC_CreditExamine", "FinalPersonId", c => c.Guid(nullable: false));
             AlterColumn("dbo.FANC_CreditExamine", "ApprovePersonId", c => c.Guid(nullable: false));
             AlterColumn("dbo.FANC_CreditExamine", "ReviewPersonId", c => c.Guid(nullable: false));
             AlterColumn("dbo.FANC_CreditExamine", "TrialPersonId", c => c.Guid(nullable: false));
+            AlterColumn("dbo.FANC_Finance", "ProduceId", c => c.Guid());
             AlterColumn("dbo.FANC_Finance", "DateEffective", c => c.DateTime(nullable: false));
             AlterColumn("dbo.FANC_Finance", "Cost", c => c.Decimal(nullable: false, precision: 18, scale: 2));
             AlterColumn("dbo.FANC_Finance", "Bail", c => c.Decimal(nullable: false, precision: 18, scale: 2));
@@ -178,9 +201,12 @@ namespace Data.Migrations
             DropColumn("dbo.FANC_Finance", "OnePayInterest");
             DropColumn("dbo.FANC_Finance", "RepaymentScheme");
             DropTable("dbo.FANC_Vehicle");
+            DropTable("dbo.FANC_FinanceProduce");
             DropTable("dbo.FANC_FinanceExtension");
             DropTable("dbo.FANC_Contact");
             DropTable("dbo.FANC_Applicant");
+            RenameColumn(table: "dbo.FANC_Finance", name: "ProduceId", newName: "Produce_Id");
+            CreateIndex("dbo.FANC_Finance", "Produce_Id");
         }
     }
 }

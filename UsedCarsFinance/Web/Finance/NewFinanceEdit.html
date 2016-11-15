@@ -138,10 +138,11 @@
             //$("#InstanceId").val(parent.flow.InstanceId);
             //$("#OncePayMonthsDiv").hide();
             //$("#OncePayMonths").textbox({ required: false });
+            //LoadFinance();
         }
 
         function LoadFinance() {
-            var Id = "";
+            var Id = "98031035-10AB-E611-80C5-507B9DE4A488";
             $.ajax({
                 async: false,
                 data: { Id: Id },
@@ -149,6 +150,7 @@
                 url: "../api/FinanceAuidt/Get",
                 statusCode: {
                     200: function (data) {
+                        debugger
                         if (data != null) {
                             $("#ProduceId").val(data.Id);
                             $("#produce").form("load", data);
@@ -183,6 +185,7 @@
                     200: function (data) {
                         if (data != null) {
                             $("#ProduceId").val(data.Id);
+                            $("#Id").val(data.Id);//ProduceId、ID都表示产品ID
                             $("#produce").form("load", data);
                             $("#Poundage").datagrid("loadData", data.PoundageList);
                             $("#Financing").datagrid("loadData", data.FinancingItemsList);
@@ -191,6 +194,7 @@
                         }
                         else {
                             $("#ProduceId").val("");
+                            $("#Id").val("");//ProduceId、ID都表示产品ID
                             $("#produce").form("clear");
                             $("#Poundage").datagrid("loadData", []);
                             $("#Financing").datagrid("loadData", []);
@@ -408,9 +412,6 @@
             $('#Poundage').datagrid('getEditingRowIndexs');
             $('#Financing').datagrid('getEditingRowIndexs');
             
-            produceInfo["Poundage"] = $('#Poundage').datagrid('getRows');
-            produceInfo["FinancingItems"] = ($('#Financing').datagrid('getRows'));
-
             var data = {};
             var ff = $(".container").find("article")
             for (var i = 0; i < ff.length - 1; i++) {
@@ -436,9 +437,14 @@
             app[0]["OwnHouse"] = JSON.stringify(house);
             //将主要申请人信息存放到数组中
             data["Applicant"] = app;
+            data["ProduceId"] = $("#ProduceId").val();;
             data["IntentionPrincipal"] = $("#IntentionPrincipal").textbox("getValue");
             data["OncePayMonths"] = $("#OncePayMonths").textbox("getValue");
-            debugger
+            data["FinanceProduce"] = $('#Financing').datagrid('getRows');
+
+            for (var i = 0; i < $('#Poundage').datagrid('getRows').length; i++) {
+                data["FinanceProduce"].push($('#Poundage').datagrid('getRows')[i])
+            }
             uc.form.Submit({
                 method: "POST",
                 url: "../api/FinanceAuidt/Create",
@@ -475,7 +481,7 @@
         <div class="hidden">
             <input name="FinanceId" type="hidden" />
             <input type="hidden" id="InstanceId" name="InstanceId">
-            <input name="ProduceId" type="hidden" />
+            <input name="ProduceId" id="ProduceId" type="hidden" />
 
         </div>
         <div>
@@ -589,6 +595,8 @@
             <article class="produce">
                 <fieldset id="produce">
                     <legend>租赁信息</legend>
+                    <input name="Id" id="Id" type="hidden" />
+
                     <div class="row">
                         <div class="col-6">
                             <label>产品代码:</label>
@@ -669,6 +677,8 @@
                                         <th data-options="field:'FinancingProjectId',hidden:true">Id</th>
                                         <th data-options="field:'Name',width:185,align:'center'">名称</th>
                                         <th data-options="field:'Money',width:180,align:'center',editor:{type:'text',options:{required:true}}">价格</th>
+                                        <th data-options="field:'IsFinancing',width:120,align:'center',hidden:true">是否是融资项</th>
+                                        <th data-options="field:'IsEdit',width:120,align:'center',hidden:true">是否可编辑</th>
                                     </tr>
                                 </thead>
                             </table>
@@ -688,6 +698,8 @@
                                         <th data-options="field:'FinancingProjectId',hidden:true">Id</th>
                                         <th data-options="field:'Name',width:185,align:'center'">名称</th>
                                         <th data-options="field:'Money',width:180,align:'center',editor:{type:'text',options:{required:true}}">价格</th>
+                                        <th data-options="field:'IsFinancing',width:120,align:'center',hidden:true">是否是融资项</th>
+                                        <th data-options="field:'IsEdit',width:120,align:'center',hidden:true">是否可编辑</th>
                                     </tr>
                                 </thead>
                             </table>

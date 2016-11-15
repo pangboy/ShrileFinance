@@ -111,9 +111,9 @@
     <Compile Include="Migrations\201611110947526_Workflow.Designer.cs">
       <DependentUpon>201611110947526_Workflow.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201611150630239_FinanceModel.cs" />
-    <Compile Include="Migrations\201611150630239_FinanceModel.Designer.cs">
-      <DependentUpon>201611150630239_FinanceModel.cs</DependentUpon>
+    <Compile Include="Migrations\201611151132275_FinanceModel.cs" />
+    <Compile Include="Migrations\201611151132275_FinanceModel.Designer.cs">
+      <DependentUpon>201611151132275_FinanceModel.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs">
       <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
@@ -127,6 +127,7 @@
     <Compile Include="ModelConfigurations\CreditExamineConfiguration.cs" />
     <Compile Include="ModelConfigurations\FinanceConfigration.cs" />
     <Compile Include="ModelConfigurations\FinanceExtensionConfiguration.cs" />
+    <Compile Include="ModelConfigurations\FinanceProduceConfiguration.cs" />
     <Compile Include="ModelConfigurations\FinancingProjectConfigration.cs" />
     <Compile Include="ModelConfigurations\FinancialAffairsConfiguration.cs" />
     <Compile Include="ModelConfigurations\FlowConfiguration.cs" />
@@ -318,8 +319,8 @@
     <EmbeddedResource Include="Migrations\201611110947526_Workflow.resx">
       <DependentUpon>201611110947526_Workflow.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201611150630239_FinanceModel.resx">
-      <DependentUpon>201611150630239_FinanceModel.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201611151132275_FinanceModel.resx">
+      <DependentUpon>201611151132275_FinanceModel.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

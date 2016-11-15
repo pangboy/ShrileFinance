@@ -49,7 +49,7 @@
             return Ok(value);
         }
 
-        public IHttpActionResult Create(FinanceAuidtViewModel value)
+        public IHttpActionResult Create(FinanceApplyViewModel value)
         {
             if (!ModelState.IsValid)
             {
@@ -59,6 +59,12 @@
             financeAppService.Create(value);
 
             return Ok();
+        }
+
+        public IHttpActionResult Get(Guid Id)
+        {
+            var finance = financeAppService.Get(Id);
+            return Ok(finance);
         }
     }
 }

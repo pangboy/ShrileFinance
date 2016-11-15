@@ -55,6 +55,8 @@
             CreateMap<ContractViewModel, Contract>();
             CreateMap<ApplicationViewModel, Applicant>();
             CreateMap<VehicleViewModel, Vehicle>();
+            CreateMap<FinanceApplyViewModel, Finance>();
+            CreateMap<FinanceProduceViewModel, FinanceProduce>();
         }
     }
 }
