@@ -8,36 +8,6 @@
     public class FinanceExtension : Entity
     {
         /// <summary>
-        /// 选择还款日
-        /// </summary>
-        public DateTime RepaymentDate { get; set; }
-
-        /// <summary>
-        /// 首次租金支付日期
-        /// </summary>
-        public DateTime FirstPaymentDate { get; set; }
-
-        /// <summary>
-        /// 保证金
-        /// </summary>
-        public decimal Margin { get; set; }
-
-        /// <summary>
-        /// 先付月供
-        /// </summary>
-        public decimal PayMonthly { get; set; }
-
-        /// <summary>
-        /// 一次性付息
-        /// </summary>
-        public decimal OnePayInterest { get; set; }
-
-        /// <summary>
-        /// 实际用款额
-        /// </summary>
-        public decimal ActualAmount { get; set; }
-
-        /// <summary>
         /// 放款主体
         /// </summary>
         public string LoanPrincipal { get; set; }

@@ -80,9 +80,4 @@
             return array.Contains(value.ToString());
         }
     }
-
-
-
-
-
 }

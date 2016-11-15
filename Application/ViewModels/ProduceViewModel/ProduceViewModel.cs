@@ -11,6 +11,7 @@
 
             PoundageList = new HashSet<FinancingProjectListViewModel>();
         }
+
         public Guid Id { get; set; }
 
         /// <summary>
@@ -107,7 +108,7 @@
         public virtual ICollection<FinancingItemViewModel> Poundage { get; set; }
 
         public virtual ICollection<FinancingProjectListViewModel> FinancingItemsList { get; set; }
-        public virtual ICollection<FinancingProjectListViewModel> PoundageList { get; set; }
 
+        public virtual ICollection<FinancingProjectListViewModel> PoundageList { get; set; }
     }
 }

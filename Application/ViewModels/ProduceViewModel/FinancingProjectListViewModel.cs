@@ -28,6 +28,5 @@
         /// 是否可编辑
         /// </summary>
         public bool IsEdit { get; set; }
-
     }
 }

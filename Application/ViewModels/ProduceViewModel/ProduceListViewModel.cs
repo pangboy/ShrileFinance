@@ -1,11 +1,12 @@
-﻿using System;
-using static Core.Entities.Produce.Produce;
-
-namespace Application.ViewModels.ProduceViewModel
+﻿namespace Application.ViewModels.ProduceViewModel
 {
+    using System;
+    using static Core.Entities.Produce.Produce;
+
     public class ProduceListViewModel
     {
         public Guid Id { get; set; }
+
         /// <summary>
         /// 产品代码
         /// </summary>

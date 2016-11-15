@@ -5,6 +5,7 @@
    public class ContractViewModel
     {
         public Guid Id { get; set; }
+
         /// <summary>
         /// 合同编号
         /// </summary>

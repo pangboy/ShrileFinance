@@ -14,7 +14,7 @@
             Contact = new List<Contract>();
         }
         /// <summary>
-        /// 融资本金
+        /// 实际用款额(融资本金)
         /// </summary>
         public decimal Principal { get; set; }
 
@@ -54,6 +54,11 @@
         public decimal Cost { get; set; }
 
         /// <summary>
+        /// 一次性付息
+        /// </summary>
+        public decimal OnePayInterest { get; set; }
+
+        /// <summary>
         /// 状态
         /// </summary>
         public FinanceStateEnum State { get; set; }
@@ -67,7 +72,6 @@
         /// 创建日期
         /// </summary>
         public DateTime DateCreated { get; set; }
-
 
         /// <summary>
         /// 意向融资金额

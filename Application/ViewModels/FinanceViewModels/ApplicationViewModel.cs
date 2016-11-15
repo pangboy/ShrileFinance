@@ -4,7 +4,7 @@
 
     public class ApplicationViewModel
     {
-        public Guid  Id { get; set; }
+        public Guid Id { get; set; }
 
         /// <summary>
         /// 申请人姓名

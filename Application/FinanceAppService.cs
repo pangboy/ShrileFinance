@@ -222,22 +222,22 @@
             var finance = repository.Get(value.FinanceId);
 
             // 选择还款日
-            finance.FinanceExtension.RepaymentDate = value.RepaymentDate;
+            finance.RepaymentDate = value.RepaymentDate;
 
             // 首次租金支付日期
-            finance.FinanceExtension.FirstPaymentDate = value.FirstPaymentDate;
+            finance.RepayRentDate = value.FirstPaymentDate;
 
             // 保证金
-            finance.FinanceExtension.Margin = value.Margin;
+            finance.Bail = value.Margin;
 
             // 先付月供
-            finance.FinanceExtension.PayMonthly = value.PayMonthly;
+            finance.Payment = value.PayMonthly;
 
             // 一次性付息
-            finance.FinanceExtension.OnePayInterest = value.OnePayInterest;
+            finance.OnePayInterest = value.OnePayInterest;
 
             // 实际用款额
-            finance.FinanceExtension.ActualAmount = value.ActualAmount;
+            finance.Principal = value.ActualAmount;
 
             // 放款主体
             finance.FinanceExtension.LoanPrincipal = value.LoanPrincipal;
