@@ -18,7 +18,7 @@
             var query = {} //$.extend(uc.GetParams(), parent.flow.InstanceData);
 
             if (query.FinanceId == undefined || query.FinanceId.length == 0) {
-                query.FinanceId = '683B6AB9-1CA7-E611-80C5-507B9DE4A488';
+                query.FinanceId = '49833354-0BAB-E611-80C5-507B9DE4A488';
             }
 
             // 初始化
@@ -28,7 +28,7 @@
         // 初始化
         function Init(query) {
             // 重置表单
-            $("form[name=FinanceOperation] div>input[type=reset]").click();
+            ResetForm();
 
             // 隐藏放款账号信息
             ShowChannel(false);
@@ -59,7 +59,7 @@
                             LoadData_Trial(data);
 
                             // 运营复审
-                            LoadData_Review(data);
+                            //LoadData_Review(data);
                         }
                     }
                 }
@@ -69,21 +69,30 @@
         // 运营
         function LoadDataBase(data)
         {
-            // 加载运营
-            if (data.LoanPrincipal == "Channel") {
-                ShowChannel(true);
-            }
-            FieldsetLoadDateFactory('Operation', 'text', data);
+            if (data)
+            {
+                // 加载运营
+                if (data.LoanPrincipal == "Channel") {
+                    ShowChannel(true);
+                }
 
-            // 加载合同
-            FieldsetLoadDateFactory('Contact', 'table', JSON.parse(data.ContactJson));
+                FieldsetLoadDateFactory('Operation', 'text', data);
+
+                // 加载合同
+                if (data.ContactJson) {
+                    FieldsetLoadDateFactory('Contact', 'table', JSON.parse(data.ContactJson));
+                }
+            }
         }
 
         // 运营初审
         function LoadData_Trial(data) {
             // 加载融资项
             LoadFinancingItem(data.FinancingItems);
+        }
 
+        // 运营复审
+        function LoadData_Review(data) {
             // 禁用运营
             Disabled($('fieldset[name=Operation]'));
 
@@ -92,16 +101,14 @@
             Disabled($('fieldset[name=Contact]'));
         }
 
-        // 运营复审
-        function LoadData_Review(data) {
-
-        }
-
         // 加载融资项
         function LoadFinancingItem(dataKV) {
             if (dataKV == null) {
                 return;
             }
+
+            // 显示融资项
+            $("fieldset[name=FinancingItems]").show();
 
             // 从模版中获取控件及拼装
             $(dataKV).each(function (i, e) {
@@ -151,7 +158,14 @@
             var value = FieldsetSerializeFactory('Operation', 'text');
 
             // 序列化合同信息
-            value.ContactJson = JSON.stringify(FieldsetSerializeFactory('Contact', 'table'));
+            var array = [];
+            $(FieldsetSerializeFactory('Contact', 'table')).each(function (i, e) {
+                if (e.Name.length > 0)
+                {
+                    array.push(e);
+                }
+            });
+            value.ContactJson = JSON.stringify(array);
 
             var result = {};
             result["formName"] = "审批信息";
@@ -159,11 +173,25 @@
 
             return result;
         }
+
+        // 重置表单
+        function ResetForm() {
+            // 重置运营
+            $("form[name=FinanceOperation] div>input[type=reset]").click();
+
+            // 重置合同
+            $($('#Contact_dg').datagrid('getRows')).each(function (i, e) {
+                $('#Contact_dg').datagrid('deleteRow', 0);
+            });
+
+            // 重置融资项
+            $('fieldset[name=FinancingItems]>div.row').children().remove();
+        }
     </script>
 </head>
 <body>
     <form name="FinanceOperation" class="container">
-        <fieldset name="FinancingItems">
+        <fieldset name="FinancingItems" style="display:none">
             <legend>融资项：</legend>
             <div class="row">
             </div>
@@ -197,22 +225,22 @@
                 </div>
                 <div class="col-6">
                     <label>保证金：</label>
-                    <input name="Margin" class="easyui-textbox" data-options="required:true,validType:'',readonly:false" />
+                    <input name="Margin" class="easyui-textbox" data-options="required:true,validType:'Money',readonly:false" />
                     <span name="uint">元</span>
                 </div>
                 <div class="col-6">
                     <label>先付月供：</label>
-                    <input name="PayMonthly" class="easyui-textbox" data-options="required:true,validType:'',readonly:false" />
+                    <input name="PayMonthly" class="easyui-textbox" data-options="required:true,validType:'Money',readonly:false" />
                     <span name="uint">元</span>
                 </div>
                 <div class="col-6">
                     <label>一次性付息：</label>
-                    <input name="OnePayInterest" class="easyui-textbox" data-options="required:true,validType:'',readonly:false" />
+                    <input name="OnePayInterest" class="easyui-textbox" data-options="required:true,validType:'Money',readonly:false" />
                     <span name="uint">元</span>
                 </div>
                 <div class="col-6">
                     <label>实际用款额：</label>
-                    <input name="ActualAmount" class="easyui-textbox" data-options="required:true,validType:'',readonly:false" />
+                    <input name="ActualAmount" class="easyui-textbox" data-options="required:true,validType:'Money',readonly:false" />
                     <span name="uint">万元</span>
                 </div>
             </div>
@@ -409,6 +437,15 @@
 
                     // 启用保存
                     $("#Contact_Save").linkbutton("enable");
+
+                    // Enter事件
+                    $('div#Contact_tb').next().find('table input.datagrid-editable-input').keydown(function (event) {
+                        if (event.keyCode == 13) {
+                            if ($('#Contact_dg').datagrid('validateRow', index)) {
+                                ContactSave(index);
+                            }
+                        }
+                    });
                 }
 
                 // table 保存单元格的修改
@@ -492,15 +529,24 @@
                         url: '../api/Operation/EditOperation',
                         statusCode: {
                             200: function (data) {
+                                $.messager.show({ msg: '处理成功！' });
+
+                                return true;
                             }
                         }
                     });
+                    return true;
+                }
+                else {
+                    $.messager.show({ msg: '请填写完必填项！' });
+
                     return false;
                 }
             }
 
             function Cancel() {
-                
+                // 重置表单
+                ResetForm();
             }
         </script>
     </form>

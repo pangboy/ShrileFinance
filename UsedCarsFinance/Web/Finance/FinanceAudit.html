@@ -19,7 +19,7 @@
             var query = {} //$.extend(uc.GetParams(), parent.flow.InstanceData);
 
             if (query.FinanceId == undefined || query.FinanceId.length == 0) {
-                query.FinanceId = '683B6AB9-1CA7-E611-80C5-507B9DE4A488';
+                query.FinanceId = '49833354-0BAB-E611-80C5-507B9DE4A488';
             }
 
             // 初始化
@@ -55,7 +55,7 @@
                             //data.CurentUser
 
                             // 是否为复审
-                            //$("fieldset[name=FinanceAudit]>input[name=isReview]").val('');
+                            //$("fieldset[name=FinanceAudit]>input[name=IsReview]").val('');
 
                             // 加载融资项
                             LoadFinancingItem(data.FinancingItems);
@@ -92,6 +92,9 @@
                 return;
             }
 
+            // 显示融资项
+            $("fieldset[name=FinancingItems]").show();
+
             // 从模版中获取控件及拼装
             $(dataKV).each(function (i, e) {
                 var context = $("fieldset[name=FinancingItems]>template[name=templateUnit]").html();
@@ -110,7 +113,7 @@
                     div.find("input[textboxname=Money]").textbox({
                         readonly: false,
                         required: true,
-                        validType: ['Amount']
+                        validType: ['Money']
                     });
 
                     // 裸车价
@@ -121,7 +124,7 @@
                         div.find("input[textboxname=Money]").textbox({
                             readonly: false,
                             required: true,
-                            validType: ['Amount'],
+                            validType: ['Money'],
                             onChange: SetRatio
                         });
                     }
@@ -173,7 +176,7 @@
             Disabled($("fieldset[name=FinancingItems]"));
 
             // 设置复审标签
-            $("fieldset[name=FinanceAudit]>input[name=isReview]").val('false');
+            $("fieldset[name=FinanceAudit]>input[name=IsReview]").val('false');
         }
 
         //验证数据
@@ -214,6 +217,15 @@
         }
 
         function Submit() {
+            if (!ValidData())
+            {
+                $.messager.show({ msg: "请填写完必填项!" });
+
+                return false;
+            }
+
+            $('a#save').linkbutton('disable');
+
             var data = BuildData().buildData;
 
             $.ajax({
@@ -223,7 +235,8 @@
                 url: '../api/FinanceAuidt/EditFinanceAuidt',
                 statusCode: {
                     200: function (data) {
-                        
+                        $.messager.show({ msg: "保存成功!" });
+                        $('a#save').linkbutton('enable');
                     }
                 }
             });
@@ -239,7 +252,7 @@
 </head>
 <body>
     <form class="container" name="FinanceAudit">
-        <fieldset name="FinancingItems">
+        <fieldset name="FinancingItems" style="display:none;">
             <legend>融资项：</legend>
             <div class="row">
             </div>
@@ -259,25 +272,12 @@
 
             <input type="hidden" name="FinanceId" value="00000000-0000-0000-0000-000000000000" placeholder="融资标识" />
             <input type="hidden" name="Id" value="00000000-0000-0000-0000-000000000000" placeholder="融资审核标识" />
-            <input type="hidden" name="isReview" value="false" placeholder="是否为复审" />
-
-            <div class="row">
-                <div class="col-6">
-                    <label>厂商指导价：</label>
-                    <input name="ManufacturerGuidePrice" class="easyui-textbox" data-options="readonly:true,value:'0'" />
-                    <span>万元</span>
-                </div>
-                <div class="col-6">
-                    <label>评估现市值：</label>
-                    <input name="ApprovalValue" class="easyui-textbox" data-options="readonly:true,value:'0'" />
-                    <span>万元</span>
-                </div>
-            </div>
+            <input type="hidden" name="IsReview" value="false" placeholder="是否为复审" />
 
             <div class="row">
                 <div class="col-6">
                     <label>建议融资金额：</label>
-                    <input name="AdviceMoney" class="easyui-textbox" data-options="required:true,validType:'Amount',onChange:SetRatio" />
+                    <input name="AdviceMoney" class="easyui-textbox" data-options="required:true,validType:'Money',onChange:SetRatio" />
                     <span>万元</span>
                 </div>
                 <div class="col-6">
@@ -290,7 +290,7 @@
             <div class="row">
                 <div class="col-6">
                     <label>审批融资金额：</label>
-                    <input name="ApprovalMoney" class="easyui-textbox" data-options="required:true,validType:'Amount',onChange:SetRatio" />
+                    <input name="ApprovalMoney" class="easyui-textbox" data-options="required:true,validType:'Money',onChange:SetRatio" />
                     <span>万元</span>
                 </div>
                 <div class="col-6">
@@ -303,12 +303,19 @@
             <div class="row">
                 <div class="col-6">
                     <label>月供额度：</label>
-                    <input name="Payment" class="easyui-textbox" data-options="readonly:false,required:true,validType:'Amount'" />
+                    <input name="Payment" class="easyui-textbox" data-options="readonly:false,required:true,validType:'Money'" />
                     <span>元</span>
                 </div>
+
+                <div class="col-6">
+                    <label>厂商指导价：</label>
+                    <input name="ManufacturerGuidePrice" class="easyui-textbox" data-options="readonly:true,value:'0'" />
+                    <span>万元</span>
+                </div>
+
                 <div class="col-6">
                     <label>手续费：</label>
-                    <input name="Cost" class="easyui-textbox" data-options="readonly:false,required:true,validType:'Amount'" />
+                    <input name="Cost" class="easyui-textbox" data-options="readonly:false,required:true,validType:'Money'" />
                     <span>元</span>
                 </div>
             </div>

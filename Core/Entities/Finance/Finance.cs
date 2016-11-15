@@ -157,7 +157,7 @@
         /// <summary>
         /// 信审报告
         /// </summary>
-        public CreditExamine CreditExamine { get; set; }
+        public virtual CreditExamine CreditExamine { get; set; }
 
         public enum RepaymentSchemeEnum : byte
         {

@@ -87,3 +87,22 @@ function FieldsetLoadDateFactory(name, type, data) {
 
     return data;
 }
+
+$.extend($.fn.validatebox.defaults.rules, {
+    Money: {
+        validator: function (value) {
+            if (/^-?\d+\.\d{2}$/.test(value) || /^\d+$/.test(value))
+            {
+                if (value.length>=2 && /^[0][0-9]*$/.test(value.substr(0,2)))
+                {
+                    return false;
+                }
+                
+                return true;
+            }
+            
+            return false;
+        },
+        message: '请输入整数或两位小数！'
+    }
+});
