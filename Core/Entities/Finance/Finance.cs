@@ -37,7 +37,7 @@
         /// <summary>
         /// 还款日
         /// </summary>
-        public DateTime? RepaymentDate { get; set; }
+        public int? RepaymentDate { get; set; }
 
         /// <summary>
         /// 还款方案

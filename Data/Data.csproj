@@ -111,21 +111,13 @@
     <Compile Include="Migrations\201611110947526_Workflow.Designer.cs">
       <DependentUpon>201611110947526_Workflow.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201611140312301_AddVehicleAndApplicantAddContactsUpdateFinance.cs" />
-    <Compile Include="Migrations\201611140312301_AddVehicleAndApplicantAddContactsUpdateFinance.Designer.cs">
-      <DependentUpon>201611140312301_AddVehicleAndApplicantAddContactsUpdateFinance.cs</DependentUpon>
+    <Compile Include="Migrations\201611150630239_FinanceModel.cs" />
+    <Compile Include="Migrations\201611150630239_FinanceModel.Designer.cs">
+      <DependentUpon>201611150630239_FinanceModel.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201611140553518_Partner.cs" />
-    <Compile Include="Migrations\201611140553518_Partner.Designer.cs">
-      <DependentUpon>201611140553518_Partner.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201611150600293_UpdateApplicantAndFinanceExtension.cs" />
-    <Compile Include="Migrations\201611150600293_UpdateApplicantAndFinanceExtension.Designer.cs">
-      <DependentUpon>201611150600293_UpdateApplicantAndFinanceExtension.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201611150601459_UpdateVehicle.cs" />
-    <Compile Include="Migrations\201611150601459_UpdateVehicle.Designer.cs">
-      <DependentUpon>201611150601459_UpdateVehicle.cs</DependentUpon>
+    <Compile Include="Migrations\201611150635045_Partner.cs" />
+    <Compile Include="Migrations\201611150635045_Partner.Designer.cs">
+      <DependentUpon>201611150635045_Partner.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs">
       <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
@@ -330,17 +322,11 @@
     <EmbeddedResource Include="Migrations\201611110947526_Workflow.resx">
       <DependentUpon>201611110947526_Workflow.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201611140312301_AddVehicleAndApplicantAddContactsUpdateFinance.resx">
-      <DependentUpon>201611140312301_AddVehicleAndApplicantAddContactsUpdateFinance.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201611150630239_FinanceModel.resx">
+      <DependentUpon>201611150630239_FinanceModel.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201611140553518_Partner.resx">
-      <DependentUpon>201611140553518_Partner.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201611150600293_UpdateApplicantAndFinanceExtension.resx">
-      <DependentUpon>201611150600293_UpdateApplicantAndFinanceExtension.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201611150601459_UpdateVehicle.resx">
-      <DependentUpon>201611150601459_UpdateVehicle.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201611150635045_Partner.resx">
+      <DependentUpon>201611150635045_Partner.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

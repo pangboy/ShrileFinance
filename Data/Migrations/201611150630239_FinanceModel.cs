@@ -3,7 +3,7 @@ namespace Data.Migrations
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class AddVehicleAndApplicantAddContactsUpdateFinance : DbMigration
+    public partial class FinanceModel : DbMigration
     {
         public override void Up()
         {
@@ -21,7 +21,7 @@ namespace Data.Migrations
                         MaritalStatus = c.String(maxLength: 50),
                         Mobile = c.String(nullable: false, maxLength: 50),
                         Phone = c.String(maxLength: 50),
-                        LiveHouseAddress = c.String(nullable: false, maxLength: 50),
+                        LiveHouseAddress = c.String(maxLength: 50),
                         ContactAddress = c.String(maxLength: 50),
                         ContactAddressType = c.String(maxLength: 50),
                         RegisteredAddress = c.String(maxLength: 50),
@@ -35,14 +35,14 @@ namespace Data.Migrations
                         WifePhone = c.String(maxLength: 50),
                         WifeOfficePhone = c.String(maxLength: 50),
                         WifeOfficeAddress = c.String(maxLength: 50),
-                        TotalMonthlyIncome = c.Decimal(nullable: false, precision: 18, scale: 2),
-                        OtherIncome = c.Decimal(nullable: false, precision: 18, scale: 2),
-                        HomeMonthlyIncome = c.Decimal(nullable: false, precision: 18, scale: 2),
-                        HomeMonthlyExpend = c.Decimal(nullable: false, precision: 18, scale: 2),
-                        Degree = c.String(nullable: false, maxLength: 50),
-                        FamilyNumber = c.Int(nullable: false),
-                        OwneHouseCount = c.Int(nullable: false),
-                        OwneHouse = c.String(maxLength: 1000),
+                        TotalMonthlyIncome = c.Decimal(precision: 18, scale: 2),
+                        OtherIncome = c.Decimal(precision: 18, scale: 2),
+                        HomeMonthlyIncome = c.Decimal(precision: 18, scale: 2),
+                        HomeMonthlyExpend = c.Decimal(precision: 18, scale: 2),
+                        Degree = c.String(maxLength: 50),
+                        FamilyNumber = c.Int(),
+                        OwnHouseCount = c.Int(nullable: false),
+                        OwnHouse = c.String(maxLength: 1000),
                         FinanceId = c.Guid(),
                     })
                 .PrimaryKey(t => t.Id)
@@ -65,10 +65,15 @@ namespace Data.Migrations
                 .Index(t => t.FinanceId);
             
             CreateTable(
-                "dbo.FinanceExtension",
+                "dbo.FANC_FinanceExtension",
                 c => new
                     {
-                        Id = c.Guid(nullable: false),
+                        Id = c.Guid(nullable: false, identity: true),
+                        LoanPrincipal = c.String(),
+                        CreditAccountId = c.String(),
+                        CreditBankName = c.String(maxLength: 40),
+                        CreditBankCard = c.String(maxLength: 40),
+                        ContactJson = c.String(maxLength: 800),
                         FinanceId = c.Guid(),
                     })
                 .PrimaryKey(t => t.Id)
@@ -76,7 +81,7 @@ namespace Data.Migrations
                 .Index(t => t.FinanceId);
             
             CreateTable(
-                "dbo.FINC_Vehicle",
+                "dbo.FANC_Vehicle",
                 c => new
                     {
                         Id = c.Guid(nullable: false, identity: true),
@@ -87,10 +92,10 @@ namespace Data.Migrations
                         PlateNo = c.String(maxLength: 50),
                         FrameNo = c.String(maxLength: 50),
                         EngineNo = c.String(maxLength: 50),
-                        RegisterDate = c.DateTime(nullable: false),
-                        RunningMiles = c.Int(nullable: false),
-                        FactoryDate = c.DateTime(nullable: false),
-                        BuyCarYears = c.DateTime(nullable: false),
+                        RegisterDate = c.DateTime(),
+                        RunningMiles = c.Int(),
+                        FactoryDate = c.DateTime(),
+                        BuyCarYears = c.Int(),
                         Color = c.String(maxLength: 50),
                         FinanceId = c.Guid(),
                     })
@@ -99,16 +104,24 @@ namespace Data.Migrations
                 .Index(t => t.FinanceId);
             
             AddColumn("dbo.FANC_Finance", "RepaymentScheme", c => c.Byte(nullable: false));
-            AddColumn("dbo.FANC_Finance", "IntentionPrincipal", c => c.Decimal(nullable: false, precision: 18, scale: 2));
-            AddColumn("dbo.FANC_Finance", "OncePayMonths", c => c.Int(nullable: false));
-            AddColumn("dbo.FANC_Finance", "AdviceMoney", c => c.Decimal(nullable: false, precision: 18, scale: 2));
-            AddColumn("dbo.FANC_Finance", "AdviceRatio", c => c.Decimal(nullable: false, precision: 18, scale: 2));
-            AddColumn("dbo.FANC_Finance", "ApprovalMoney", c => c.Decimal(nullable: false, precision: 18, scale: 2));
-            AddColumn("dbo.FANC_Finance", "ApprovalRatio", c => c.Decimal(nullable: false, precision: 18, scale: 2));
-            AddColumn("dbo.FANC_Finance", "Payment", c => c.Decimal(nullable: false, precision: 18, scale: 2));
-            AddColumn("dbo.FANC_Finance", "RepayDate", c => c.DateTime(nullable: false));
-            AddColumn("dbo.FANC_Finance", "RepayRentDate", c => c.DateTime(nullable: false));
-            AlterColumn("dbo.FANC_Finance", "RepaymentDate", c => c.DateTime(nullable: false));
+            AddColumn("dbo.FANC_Finance", "OnePayInterest", c => c.Decimal(precision: 18, scale: 2));
+            AddColumn("dbo.FANC_Finance", "IntentionPrincipal", c => c.Decimal(precision: 18, scale: 2));
+            AddColumn("dbo.FANC_Finance", "OncePayMonths", c => c.Int());
+            AddColumn("dbo.FANC_Finance", "AdviceMoney", c => c.Decimal(precision: 18, scale: 2));
+            AddColumn("dbo.FANC_Finance", "AdviceRatio", c => c.Decimal(precision: 18, scale: 2));
+            AddColumn("dbo.FANC_Finance", "ApprovalMoney", c => c.Decimal(precision: 18, scale: 2));
+            AddColumn("dbo.FANC_Finance", "ApprovalRatio", c => c.Decimal(precision: 18, scale: 2));
+            AddColumn("dbo.FANC_Finance", "Payment", c => c.Decimal(precision: 18, scale: 2));
+            AddColumn("dbo.FANC_Finance", "RepayDate", c => c.DateTime());
+            AddColumn("dbo.FANC_Finance", "RepayRentDate", c => c.DateTime());
+            AlterColumn("dbo.FANC_Finance", "Principal", c => c.Decimal(precision: 18, scale: 2));
+            AlterColumn("dbo.FANC_Finance", "InterestRate", c => c.Double());
+            AlterColumn("dbo.FANC_Finance", "Periods", c => c.Int());
+            AlterColumn("dbo.FANC_Finance", "RepaymentInterval", c => c.Int());
+            AlterColumn("dbo.FANC_Finance", "RepaymentDate", c => c.Int());
+            AlterColumn("dbo.FANC_Finance", "Bail", c => c.Decimal(precision: 18, scale: 2));
+            AlterColumn("dbo.FANC_Finance", "Cost", c => c.Decimal(precision: 18, scale: 2));
+            AlterColumn("dbo.FANC_Finance", "DateEffective", c => c.DateTime());
             AlterColumn("dbo.FANC_CreditExamine", "TrialPersonId", c => c.String(maxLength: 128));
             AlterColumn("dbo.FANC_CreditExamine", "ReviewPersonId", c => c.String(maxLength: 128));
             AlterColumn("dbo.FANC_CreditExamine", "ApprovePersonId", c => c.String(maxLength: 128));
@@ -125,16 +138,16 @@ namespace Data.Migrations
         
         public override void Down()
         {
-            DropForeignKey("dbo.FINC_Vehicle", "FinanceId", "dbo.FANC_Finance");
-            DropForeignKey("dbo.FinanceExtension", "FinanceId", "dbo.FANC_Finance");
+            DropForeignKey("dbo.FANC_Vehicle", "FinanceId", "dbo.FANC_Finance");
+            DropForeignKey("dbo.FANC_FinanceExtension", "FinanceId", "dbo.FANC_Finance");
             DropForeignKey("dbo.FANC_CreditExamine", "TrialPersonId", "dbo.AspNetUsers");
             DropForeignKey("dbo.FANC_CreditExamine", "ReviewPersonId", "dbo.AspNetUsers");
             DropForeignKey("dbo.FANC_CreditExamine", "FinalPersonId", "dbo.AspNetUsers");
             DropForeignKey("dbo.FANC_CreditExamine", "ApprovePersonId", "dbo.AspNetUsers");
             DropForeignKey("dbo.FANC_Contact", "FinanceId", "dbo.FANC_Finance");
             DropForeignKey("dbo.FANC_Applicant", "FinanceId", "dbo.FANC_Finance");
-            DropIndex("dbo.FINC_Vehicle", new[] { "FinanceId" });
-            DropIndex("dbo.FinanceExtension", new[] { "FinanceId" });
+            DropIndex("dbo.FANC_Vehicle", new[] { "FinanceId" });
+            DropIndex("dbo.FANC_FinanceExtension", new[] { "FinanceId" });
             DropIndex("dbo.FANC_CreditExamine", new[] { "TrialPersonId" });
             DropIndex("dbo.FANC_CreditExamine", new[] { "ReviewPersonId" });
             DropIndex("dbo.FANC_CreditExamine", new[] { "FinalPersonId" });
@@ -145,7 +158,14 @@ namespace Data.Migrations
             AlterColumn("dbo.FANC_CreditExamine", "ApprovePersonId", c => c.Guid(nullable: false));
             AlterColumn("dbo.FANC_CreditExamine", "ReviewPersonId", c => c.Guid(nullable: false));
             AlterColumn("dbo.FANC_CreditExamine", "TrialPersonId", c => c.Guid(nullable: false));
+            AlterColumn("dbo.FANC_Finance", "DateEffective", c => c.DateTime(nullable: false));
+            AlterColumn("dbo.FANC_Finance", "Cost", c => c.Decimal(nullable: false, precision: 18, scale: 2));
+            AlterColumn("dbo.FANC_Finance", "Bail", c => c.Decimal(nullable: false, precision: 18, scale: 2));
             AlterColumn("dbo.FANC_Finance", "RepaymentDate", c => c.Int(nullable: false));
+            AlterColumn("dbo.FANC_Finance", "RepaymentInterval", c => c.Int(nullable: false));
+            AlterColumn("dbo.FANC_Finance", "Periods", c => c.Int(nullable: false));
+            AlterColumn("dbo.FANC_Finance", "InterestRate", c => c.Double(nullable: false));
+            AlterColumn("dbo.FANC_Finance", "Principal", c => c.Decimal(nullable: false, precision: 18, scale: 2));
             DropColumn("dbo.FANC_Finance", "RepayRentDate");
             DropColumn("dbo.FANC_Finance", "RepayDate");
             DropColumn("dbo.FANC_Finance", "Payment");
@@ -155,9 +175,10 @@ namespace Data.Migrations
             DropColumn("dbo.FANC_Finance", "AdviceMoney");
             DropColumn("dbo.FANC_Finance", "OncePayMonths");
             DropColumn("dbo.FANC_Finance", "IntentionPrincipal");
+            DropColumn("dbo.FANC_Finance", "OnePayInterest");
             DropColumn("dbo.FANC_Finance", "RepaymentScheme");
-            DropTable("dbo.FINC_Vehicle");
-            DropTable("dbo.FinanceExtension");
+            DropTable("dbo.FANC_Vehicle");
+            DropTable("dbo.FANC_FinanceExtension");
             DropTable("dbo.FANC_Contact");
             DropTable("dbo.FANC_Applicant");
         }

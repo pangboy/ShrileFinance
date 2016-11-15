@@ -23,7 +23,7 @@
         /// 选择还款日
         /// </summary>
         [Required(ErrorMessage = "选择还款日 不可为空")]
-        public DateTime RepaymentDate { get; set; }
+        public int RepaymentDate { get; set; }
 
         /// <summary>
         /// 首次租金支付日期
