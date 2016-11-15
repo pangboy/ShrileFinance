@@ -111,8 +111,67 @@
         uc.form = new UCForm(".container");
 
         $(function () {
-            LoadBrand();
+            Init();
         });
+
+        function Init() {
+            //var query;
+            //// 首次进行融资申请时,不存在InstanceData
+            //if (typeof (parent.flow.InstanceData) == "undefined") {
+            //    query = uc.GetParams();
+            //}
+            //// 合并URL参数和流程参数
+            //else {
+            //    query = $.extend(uc.GetParams(), parent.flow.InstanceData);
+            //}
+
+            LoadBrand();
+            //if (query.Status == "1") {
+
+            //} else {
+            //}
+
+            //if (query.FinanceId) {
+            //    LoadData(query.FinanceId);
+            //}
+
+            //$("#InstanceId").val(parent.flow.InstanceId);
+            //$("#OncePayMonthsDiv").hide();
+            //$("#OncePayMonths").textbox({ required: false });
+        }
+
+        function LoadFinance() {
+            var Id = "";
+            $.ajax({
+                async: false,
+                data: { Id: Id },
+                type: "GET",
+                url: "../api/FinanceAuidt/Get",
+                statusCode: {
+                    200: function (data) {
+                        if (data != null) {
+                            $("#ProduceId").val(data.Id);
+                            $("#produce").form("load", data);
+                            $("#Poundage").datagrid("loadData", data.PoundageList);
+                            $("#Financing").datagrid("loadData", data.FinancingItemsList);
+                            CostCount("Poundage");
+                            CostCount("Financing");//这两句代码是计算金额求和
+                        }
+                        else {
+                            $("#ProduceId").val("");
+                            $("#produce").form("clear");
+                            $("#Poundage").datagrid("loadData", []);
+                            $("#Financing").datagrid("loadData", []);
+                            top.$.messager.show({ msg: "该编号对应的产品不存在" });
+                        }
+                    }
+                }
+            });
+        }
+
+
+
+
         function CheckProduce() {
             var code = $(this).textbox("getText");
             $.ajax({
@@ -157,7 +216,7 @@
         function SelectModel(record) {
             $("select[comboname='FamilyCode']").combobox("clear");
             $("select[comboname='VehicleKey']").combobox("clear");
-            $("input[textboxname='ManufacturerGuidePrice']").textbox("clear"); 
+            $("input[textboxname='ManufacturerGuidePrice']").textbox("clear");
             $("input[textboxname='Displacement']").textbox("clear");
             $.ajax({
                 async: false,
@@ -197,6 +256,8 @@
         }
         //双击编辑行
         function onEditor(index, field, value) {
+            $('#Poundage').datagrid('getEditingRowIndexs');
+            $('#Financing').datagrid('getEditingRowIndexs');
             if (editIndex != index) {
                 var row = $('#' + this.id).datagrid("getSelected");
                 //不可编辑状态
@@ -244,19 +305,17 @@
         }
         //手续费融资项求和
         function CostCount(id) {
-           var count = 0;
-           var rows = $("#" + id).datagrid("getRows");
-           for (var i = 0; i < rows.length; i++) {
-               count +=parseInt($('#' + id).datagrid('getRows')[i]['Money']);
-           }
-           if (id == "Financing")
-           {
-               $("#FinancingCount").text(count);
-           }
-           else
-           {
-               $("#PoundageCount").text(count);
-           }
+            var count = 0;
+            var rows = $("#" + id).datagrid("getRows");
+            for (var i = 0; i < rows.length; i++) {
+                count += parseInt($('#' + id).datagrid('getRows')[i]['Money']);
+            }
+            if (id == "Financing") {
+                $("#FinancingCount").text(count);
+            }
+            else {
+                $("#PoundageCount").text(count);
+            }
         }
 
         //键盘enter键
@@ -303,7 +362,7 @@
             });
 
             $("#OwnHouseCount").textbox("setValue", ownhouse);
-            $('<fieldset>').attr({ "id": "OwnHouse" + ownhouse, "class":"house", "style": "margin:20px 0" }).append(clone).appendTo("#ownHouse")
+            $('<fieldset>').attr({ "id": "OwnHouse" + ownhouse, "class": "house", "style": "margin:20px 0" }).append(clone).appendTo("#ownHouse")
             $.parser.parse('#ownHouse');
         }
         //移除自有住房
@@ -334,7 +393,7 @@
         }
         function CheckProduct() {
             $("#dd").dialog('open');
-            $("#dd").panel( { top: $(document).scrollTop() + ($(window).height() - 600) * 0.5 });
+            $("#dd").panel({ top: $(document).scrollTop() + ($(window).height() - 600) * 0.5 });
         }
 
         function ChooseProduce() {
@@ -345,15 +404,19 @@
         }
 
         function Submit() {
+            //调用getEditingRowIndexs当点击保存时候保存手续费和融资项中的值到datagrid
+            $('#Poundage').datagrid('getEditingRowIndexs');
+            $('#Financing').datagrid('getEditingRowIndexs');
+            
+            produceInfo["Poundage"] = $('#Poundage').datagrid('getRows');
+            produceInfo["FinancingItems"] = ($('#Financing').datagrid('getRows'));
+
             var data = {};
             var ff = $(".container").find("article")
             for (var i = 0; i < ff.length - 1; i++) {
                 temp = $(ff[i]).attr("class");
                 var fs = new Array();
                 var fieldset = $(ff[i]).children("fieldset");
-                for (var j = 0; j < fieldset.length ; j++) {
-                    fs.push($(fieldset[j]).serializeJson())
-                }
                 data[temp] = $(fieldset[0]).serializeJson();
             }
             //申请人中由于包括自有住房和联系人部分嵌套的fieldset所以单独处理
@@ -368,23 +431,52 @@
                     house.push($($(ff[ff.length - 1]).find("fieldset")[i]).serializeJson());
                 }
             }
+
             //将自有住房添加到主要申请人中
             app[0]["OwnHouse"] = JSON.stringify(house);
             //将主要申请人信息存放到数组中
             data["Applicant"] = app;
-
+            data["IntentionPrincipal"] = $("#IntentionPrincipal").textbox("getValue");
+            data["OncePayMonths"] = $("#OncePayMonths").textbox("getValue");
+            debugger
             uc.form.Submit({
                 method: "POST",
                 url: "../api/FinanceAuidt/Create",
                 data: data
             });
         }
+        //选择通讯地址类型时候加载单位地址和住宅地址
+        function CAType(s) {
+            if (s == 1) {
+                $("#ContactAddress").textbox('setValue', $("#LiveHouseAddress").textbox('getValue'));
+            }
+            if (s == 2) {
+                $("#ContactAddress").textbox('setValue', $("#OfficeAddress").textbox('getValue'));
+            }
+            $("#ContactAddress").textbox('readonly', true);//只读
+            rdCA = s;
+        }
+
+        function ChooseMarital() {
+            var status = $(this).combobox("getValue");
+            if (status == 1) {
+                $("#wife").show();
+            }
+            else {
+                $("#wife").hide();
+            }
+        }
+
+
     </script>
 </head>
 <body>
     <form id="finance_ff" class="container">
         <div class="hidden">
             <input name="FinanceId" type="hidden" />
+            <input type="hidden" id="InstanceId" name="InstanceId">
+            <input name="ProduceId" type="hidden" />
+
         </div>
         <div>
             <input id="ac-1" class="ac-1" name="accordion-1" type="checkbox" />
@@ -395,18 +487,18 @@
                     <div class="row">
                         <div class="col-6">
                             <label>渠道名称:</label>
-                            <input name="ProxyArea" class="easyui-textbox" />
+                            <input name="ProxyArea" class="easyui-textbox" readonly/>
                         </div>
 
                         <div class="col-6">
                             <label>联系人:</label>
-                            <input name="Name" class="easyui-textbox" />
+                            <input name="Name" class="easyui-textbox" readonly/>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-6">
                             <label>电话:</label>
-                            <input name="Phone" class="easyui-textbox" />
+                            <input name="Phone" class="easyui-textbox" readonly/>
                         </div>
                     </div>
 
@@ -496,50 +588,48 @@
             <label for="ac-2" class="ac">租赁信息</label>
             <article class="produce">
                 <fieldset id="produce">
-                    <div class="hidden">
-                        <input name="ProudceId" id="ProudceId" type="hidden"/>
-                    </div>
                     <legend>租赁信息</legend>
                     <div class="row">
                         <div class="col-6">
                             <label>产品代码:</label>
                             <input id="Code" name="Code" class="easyui-textbox" required data-options="width:360,onChange:CheckProduce" />
-                            <a onclick="CheckProduct()" style="float: right;padding-right:50px">
+                            <a class="easyui-linkbutton" href="javascript:void(0)" data-options="onClick:CheckProduct">选择产品</a>
+                            <!--<a onclick="CheckProduct()" style="float: right;padding-right:50px">
                                 <img src="images/choose.png" />
-                            </a>
+                            </a>-->
                         </div>
 
                         <div class="col-6">
                             <label>产品名称:</label>
-                            <input id="Name" name="Name" class="easyui-textbox"  />
+                            <input id="Name" name="Name" class="easyui-textbox" readonly />
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="col-6">
                             <label>费率(年):</label>
-                            <input name="CostRate" class="easyui-textbox"  data-options="validType:'Numerical'" />
+                            <input name="CostRate" class="easyui-textbox" data-options="validType:'Numerical'" readonly />
                             <span class="unit">%</span>
                         </div>
 
                         <div class="col-6">
                             <label>还款方式:</label>
-                            <input name="RepaymentMethodDesc" class="easyui-textbox"  />
+                            <input name="RepaymentMethodDesc" class="easyui-textbox" readonly />
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="col-6">
                             <label>融资比例区间:</label>
-                            <input name="MinFinancingRatio" class="easyui-textbox" style="width:190px;"  />
+                            <input name="MinFinancingRatio" class="easyui-textbox" style="width:190px;" readonly />
                             <span style="display:inline-block;width:22px; text-align:center;">-</span>
-                            <input name="MaxFinancingRatio" class="easyui-textbox" style="width:190px;"  />
+                            <input name="MaxFinancingRatio" class="easyui-textbox" style="width:190px;" readonly />
                             <span class="unit">%</span>
                         </div>
 
                         <div class="col-6">
                             <label>尾款比例:</label>
-                            <input name="FinalRatio" class="easyui-textbox"  />
+                            <input name="FinalRatio" class="easyui-textbox" readonly />
                             <span class="unit">%</span>
                         </div>
                     </div>
@@ -547,13 +637,13 @@
                     <div class="row">
                         <div class="col-6">
                             <label>融资期限:</label>
-                            <input name="FinancingPeriods" class="easyui-textbox"  />
+                            <input name="FinancingPeriods" class="easyui-textbox" readonly />
                             <span class="unit">月</span>
                         </div>
 
                         <div class="col-6">
                             <label>还款间隔:</label>
-                            <input name="RepaymentInterval" class="easyui-textbox"  />
+                            <input name="RepaymentInterval" class="easyui-textbox" readonly />
                             <span class="unit">月</span>
                         </div>
                     </div>
@@ -561,7 +651,7 @@
                     <div class="row">
                         <div class="col-6">
                             <label>客户保证金比例:</label>
-                            <input name="CustomerBailRatio" class="easyui-textbox"  />
+                            <input name="CustomerBailRatio" class="easyui-textbox" readonly />
                             <span class="unit">%</span>
                         </div>
                     </div>
@@ -603,7 +693,7 @@
                             </table>
 
                             <div style="float:left;margin-left: 250px">
-                                <label>融资项总计:<span name="FinancingCount" id="FinancingCount"style="font-weight:bold" /></label>
+                                <label>融资项总计:<span name="FinancingCount" id="FinancingCount" style="font-weight:bold" /></label>
                             </div>
                         </div>
                     </div>
@@ -636,7 +726,7 @@
                     <div class="row">
                         <div class="col-6">
                             <label>姓名:</label>
-                            <input id="Name" name="Name" class="easyui-textbox" />
+                            <input id="Name" name="Name" class="easyui-textbox" data-options="required:true" />
                         </div>
 
                         <div class="col-6">
@@ -664,14 +754,14 @@
 
                         <div class="col-6">
                             <label>证件号码:</label>
-                            <input id="Identity" name="Identity" class="easyui-textbox" />
+                            <input id="Identity" name="Identity" class="easyui-textbox" data-options="required:true" />
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="col-6">
                             <label>婚姻状况:</label>
-                            <select id="MaritalStatus" name="MaritalStatus" class="easyui-combobox" data-options="editable:false">
+                            <select id="MaritalStatus" name="MaritalStatus" class="easyui-combobox" data-options="editable:false,onSelect:ChooseMarital">
                                 <option value="1">已婚</option>
                                 <option value="2">未婚</option>
                                 <option value="3">离异</option>
@@ -681,7 +771,7 @@
 
                         <div class="col-6">
                             <label>手机:</label>
-                            <input id="Mobile" name="Mobile" class="easyui-textbox" data-options="validType:'Mobile'" />
+                            <input id="Mobile" name="Mobile" class="easyui-textbox" data-options="validType:'Mobile',required:true" />
                         </div>
                     </div>
 
@@ -695,23 +785,14 @@
                     <div class="row">
                         <div class="col-12">
                             <label>现居住地址:</label>
-                            <input id="LiveHouseAddress" name="LiveHouseAddress" class="easyui-textbox" data-options="width:895" />
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-12">
-                            <label>通讯地址:</label>
-                            <input id="ContactAddressType1" name="ContactAddressType" type="radio" class="easyui-validatebox" value="住宅">住宅<span style="margin-right:20px;"> </span>
-                            <input id="ContactAddressType2" name="ContactAddressType" type="radio" class="easyui-validatebox" value="单位">单位<span style="margin-right:20px;"> </span>
-                            <input id="ContactAddress" name="ContactAddress" class="easyui-textbox" data-options="width:760" />
+                            <input id="LiveHouseAddress" name="LiveHouseAddress" class="easyui-textbox" data-options="width:895,required:true" />
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="col-6">
                             <label>户口所在地:</label>
-                            <input id="RegisteredAddress" name="RegisteredAddress" class="easyui-textbox" />
+                            <input id="RegisteredAddress" name="RegisteredAddress" class="easyui-textbox" data-options="required:true" />
                         </div>
 
                         <div class="col-6">
@@ -767,56 +848,56 @@
                     <div class="row">
                         <div class="col-12">
                             <label>单位地址:</label>
-                            <input id="OfficeAddress" name="OfficeAddress" class="easyui-textbox" />
+                            <input id="OfficeAddress" name="OfficeAddress" class="easyui-textbox" data-options="required:true" />
                         </div>
                     </div>
+                    <div id="wife">
+                        <div class="row">
+                            <div class="col-6">
+                                <label>配偶姓名:</label>
+                                <input id="WifeName" name="WifeName" class="easyui-textbox" />
+                            </div>
 
-                    <div class="row">
-                        <div class="col-6">
-                            <label>配偶姓名:</label>
-                            <input id="WifeName" name="WifeName" class="easyui-textbox" />
+                            <div class="col-6">
+                                <label>配偶移动电话:</label>
+                                <input id="WifePhone" name="WifePhone" class="easyui-textbox" data-options="validType:'PhoneOrMobile'" />
+                            </div>
                         </div>
 
-                        <div class="col-6">
-                            <label>移动电话:</label>
-                            <input id="WifePhone" name="WifePhone" class="easyui-textbox" />
+                        <div class="row">
+                            <div class="col-6">
+                                <label>配偶单位名称:</label>
+                                <input id="WifeOfficeName" name="WifeOfficeName" class="easyui-textbox" />
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12">
+                                <label>配偶单位地址:</label>
+                                <input id="WifeOfficeAddress" name="WifeOfficeAddress" class="easyui-textbox" />
+                            </div>
                         </div>
                     </div>
-
-                    <div class="row">
-                        <div class="col-6">
-                            <label>单位电话:</label>
-                            <input id="WifeOfficePhone" name="WifeOfficePhone" class="easyui-textbox" data-options="validType:'PhoneOrMobile'" />
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-12">
-                            <label>单位地址:</label>
-                            <input id="WifeOfficeAddress" name="WifeOfficeAddress" class="easyui-textbox" />
-                        </div>
-                    </div>
-
                     <div class="row">
                         <div class="col-6">
                             <label>申请人月收入</label>
-                            <input id="TotalMonthlyIncome" name="TotalMonthlyIncome" class="easyui-textbox" data-options="validType:'Price'" /><span class="unit">元</span>
+                            <input id="TotalMonthlyIncome" name="TotalMonthlyIncome" class="easyui-textbox" data-options="validType:'Price',required:true" /><span class="unit">元</span>
                         </div>
                         <div class="col-6">
                             <label>其他月收入:</label>
-                            <input id="OtherIncome" name="OtherIncome" class="easyui-textbox" data-options="validType:'Price'" /><span class="unit">元</span>
+                            <input id="OtherIncome" name="OtherIncome" class="easyui-textbox" data-options="validType:'Price',required:true" /><span class="unit">元</span>
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="col-6">
                             <label>家庭月收入:</label>
-                            <input id="HomeMonthlyIncome" name="HomeMonthlyIncome" class="easyui-textbox" data-options="validType:'Price'" /><span class="unit">元</span>
+                            <input id="HomeMonthlyIncome" name="HomeMonthlyIncome" class="easyui-textbox" data-options="validType:'Price',required:true" /><span class="unit">元</span>
                         </div>
 
                         <div class="col-6">
                             <label>家庭月支出:</label>
-                            <input id="HomeMonthlyExpend" name="HomeMonthlyExpend" class="easyui-textbox" data-options="validType:'Price'" /><span class="unit">元</span>
+                            <input id="HomeMonthlyExpend" name="HomeMonthlyExpend" class="easyui-textbox" data-options="validType:'Price',required:true" /><span class="unit">元</span>
                         </div>
 
                     </div>
@@ -835,21 +916,16 @@
 
                         <div class="col-6">
                             <label>供养人数:</label>
-                            <input id="FamilyNumber" name="FamilyNumber" class="easyui-textbox" data-options="validType:'Integer'" /><span class="unit">人</span>
+                            <input id="FamilyNumber" name="FamilyNumber" class="easyui-textbox" data-options="validType:'Integer',required:true" /><span class="unit">人</span>
                         </div>
                     </div>
 
                     <div class="row">
-                        <div class="col-6">
-                            <label>是否有担保:</label>
-                            <input id="isGuarantee1" name="isGuarantee" type="radio" value="1">是
-                            <input id="isGuarantee2" name="isGuarantee" type="radio" checked="checked" value="2">否
-                        </div>
-
-                        <div class="col-6">
-                            <label>是否有联系人:</label>
-                            <input id="isContacts1" name="isContacts" type="radio" value="1">是
-                            <input id="isContacts2" name="isContacts" type="radio" checked="checked" value="2">否
+                        <div class="col-12">
+                            <label>通讯地址:</label>
+                            <input id="ContactAddressType1" name="ContactAddressType" type="radio" class="easyui-validatebox" value="住宅" onclick="CAType(1)">住宅<span style="margin-right:20px;"> </span>
+                            <input id="ContactAddressType2" name="ContactAddressType" type="radio" class="easyui-validatebox" value="单位" onclick="CAType(2)">单位<span style="margin-right:20px;"> </span>
+                            <input id="ContactAddress" name="ContactAddress" class="easyui-textbox" data-options="width:760" />
                         </div>
                     </div>
 
@@ -928,7 +1004,7 @@
                     <div class="row">
                         <div class="col-6">
                             <label>姓名:</label>
-                            <input id="Name" name="Name" class="easyui-textbox" />
+                            <input id="Name" name="Name" class="easyui-textbox" data-options="required:true" />
                         </div>
 
                         <div class="col-6">
@@ -954,7 +1030,7 @@
 
                         <div class="col-6">
                             <label>手机:</label>
-                            <input id="Mobile" name="Mobile" class="easyui-textbox" data-options="validType:'Mobile'" />
+                            <input id="Mobile" name="Mobile" class="easyui-textbox" data-options="validType:'Mobile',required:true" />
                         </div>
                     </div>
 
@@ -1028,7 +1104,7 @@
                     <div class="row">
                         <div class="col-12">
                             <label>单位地址:</label>
-                            <input id="OfficeAddress" name="OfficeAddress" class="easyui-textbox" />
+                            <input id="OfficeAddress" name="OfficeAddress" class="easyui-textbox" data-options="required:true" />
                         </div>
                     </div>
                 </fieldset>
@@ -1042,7 +1118,7 @@
                     <div class="row">
                         <div class="col-6">
                             <label>姓名:</label>
-                            <input id="Name" name="Name" class="easyui-textbox" />
+                            <input id="Name" name="Name" class="easyui-textbox" data-options="required:true" />
                         </div>
 
                         <div class="col-6">
@@ -1068,7 +1144,7 @@
 
                         <div class="col-6">
                             <label>手机:</label>
-                            <input id="Mobile" name="Mobile" class="easyui-textbox" data-options="validType:'Mobile'" />
+                            <input id="Mobile" name="Mobile" class="easyui-textbox" data-options="validType:'Mobile',required:true" />
                         </div>
                     </div>
 
@@ -1103,7 +1179,7 @@
 
                         <div class="col-6">
                             <label>证件号码:</label>
-                            <input id="Identity" name="Identity" class="easyui-textbox" />
+                            <input id="Identity" name="Identity" class="easyui-textbox" data-options="required:true" />
                         </div>
                     </div>
 
@@ -1142,7 +1218,7 @@
                     <div class="row">
                         <div class="col-12">
                             <label>单位地址:</label>
-                            <input id="OfficeAddress" name="OfficeAddress" class="easyui-textbox" />
+                            <input id="OfficeAddress" name="OfficeAddress" class="easyui-textbox" data-options="required:true" />
                         </div>
                     </div>
                 </fieldset>
@@ -1155,7 +1231,7 @@
                         </a>
                     </legend>
 
-                   <div id="ContactContent"></div>
+                    <div id="ContactContent"></div>
 
                     <template id="contactTemplate">
                         <div class="hidden">
@@ -1170,7 +1246,7 @@
                         <div class="row">
                             <div class="col-6">
                                 <label>姓名:</label>
-                                <input name="Name" class="easyui-textbox" />
+                                <input name="Name" class="easyui-textbox" data-options="required:true" />
                             </div>
 
                             <div class="col-6">
@@ -1198,14 +1274,14 @@
 
                             <div class="col-6">
                                 <label>移动电话:</label>
-                                <input name="Mobile" class="easyui-textbox" />
+                                <input name="Mobile" class="easyui-textbox" data-options="required:true" />
                             </div>
                         </div>
 
                         <div class="row">
                             <div class="col-12">
                                 <label>现居住地址:</label>
-                                <input id="LiveHouseAddress" name="LiveHouseAddress" class="easyui-textbox" />
+                                <input id="LiveHouseAddress" name="LiveHouseAddress" class="easyui-textbox" data-options="required:true" />
                             </div>
                         </div>
                     </template>

@@ -17,7 +17,7 @@
     {
         private readonly IFinanceRepository repository;
         private readonly AppUserManager userManager;
-
+        
         /// <summary>
         /// Initializes a new instance of the <see cref="FinanceAppService" /> class.
         /// </summary>
@@ -33,17 +33,11 @@
         public void Create(FinanceAuidtViewModel value)
         {
             var finance = Mapper.Map<Finance>(value);
-            try
-            {
+            
                 repository.Create(finance);
                 repository.Commit();
-            }
-            catch (Exception ex)
-            {
 
-                throw;
-            }
-
+           
         }
 
         public void Modify(FinanceAuidtViewModel value)
