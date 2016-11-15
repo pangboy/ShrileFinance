@@ -14,7 +14,7 @@
     {
         private readonly DbContext context;
 
-        protected BaseRepository(DbContext context)
+        protected BaseRepository(MyContext context)
         {
             this.context = context;
         }
@@ -62,7 +62,6 @@
         public void Remove(TEntity entity)
         {
             Context.Entry(entity).State = EntityState.Deleted;
-            ////Entities.Remove(entity);
         }
 
         public int Commit()
