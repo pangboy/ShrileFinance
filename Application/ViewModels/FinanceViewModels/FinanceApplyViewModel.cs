@@ -9,7 +9,7 @@ namespace Application.ViewModels.FinanceViewModels
         /// <summary>
         /// 融资标识
         /// </summary>
-        public Guid FinanceId { get; set; }
+        public Guid Id { get; set; }
 
         /// <summary>
         /// 产品ID

@@ -34,9 +34,8 @@
         {
             var finance = Mapper.Map<Finance>(value);
             
-                repository.Create(finance);
-                repository.Commit();
-
+            repository.Create(finance);
+            repository.Commit();
            
         }
 

@@ -107,6 +107,8 @@
     <script>
         // 判断datagrid中行是否可编辑
         var editIndex = undefined;
+        var contents = 0;//联系人个数
+        var ownhouse = 0;//自有住房数
 
         uc.form = new UCForm(".container");
 
@@ -138,11 +140,11 @@
             //$("#InstanceId").val(parent.flow.InstanceId);
             //$("#OncePayMonthsDiv").hide();
             //$("#OncePayMonths").textbox({ required: false });
-            //LoadFinance();
+            LoadFinance();
         }
 
         function LoadFinance() {
-            var Id = "98031035-10AB-E611-80C5-507B9DE4A488";
+            var Id = "CF69EF4B-2FAB-E611-80C5-507B9DE4A488";
             $.ajax({
                 async: false,
                 data: { Id: Id },
@@ -150,21 +152,30 @@
                 url: "../api/FinanceAuidt/Get",
                 statusCode: {
                     200: function (data) {
-                        debugger
-                        if (data != null) {
-                            $("#ProduceId").val(data.Id);
-                            $("#produce").form("load", data);
-                            $("#Poundage").datagrid("loadData", data.PoundageList);
-                            $("#Financing").datagrid("loadData", data.FinancingItemsList);
-                            CostCount("Poundage");
-                            CostCount("Financing");//这两句代码是计算金额求和
-                        }
-                        else {
-                            $("#ProduceId").val("");
-                            $("#produce").form("clear");
-                            $("#Poundage").datagrid("loadData", []);
-                            $("#Financing").datagrid("loadData", []);
-                            top.$.messager.show({ msg: "该编号对应的产品不存在" });
+                        $("#produce").form("load", data);
+                        $("#produce").form("load", data.Produce);
+                        $("#Vehicle").form("load", data.Vehicle);
+                        for (var i = 0; i < data.Applicant.length; i++) {
+                            if (data.Applicant[i].Type == "1") {
+                                $("#mainapplicant").form("load", data.Applicant[i]);
+                                if (data.Applicant[i].OwnHouse.length > 0) {
+                                    var house = $.parseJSON(data.Applicant[i].OwnHouse);
+                                    for (var i = 0; i < house.length; i++) {
+                                        AddOwnHouse();
+                                        $("#OwnHouse" + ownhouse).form("load", house[i]);
+                                    }
+                                }
+                            }
+                            else if (data.Applicant[i].Type == "2") {
+                                $("#joint").form("load", data.Applicant[i]);
+                            }
+                            else if (data.Applicant[i].Type == "3") {
+                                $("#Guarantee").form("load", data.Applicant[i]);
+                            }
+                            else {
+                                AddContact();
+                                $("#contact" + contents).form("load", data.Applicant[i]);
+                            }
                         }
                     }
                 }
@@ -346,7 +357,6 @@
             }
         });
 
-        var ownhouse = 0;//自有住房数
         //当有自有住房时候追加
         function AddOwnHouse() {
             ownhouse++;
@@ -376,7 +386,6 @@
             $("#OwnHouseCount").textbox("setValue", ownhouse);
         }
 
-        var contents = 0;//联系人个数
         function AddContact() {
             contents++;
             var template = document.querySelector("#contactTemplate");
@@ -411,7 +420,7 @@
             //调用getEditingRowIndexs当点击保存时候保存手续费和融资项中的值到datagrid
             $('#Poundage').datagrid('getEditingRowIndexs');
             $('#Financing').datagrid('getEditingRowIndexs');
-            
+
             var data = {};
             var ff = $(".container").find("article")
             for (var i = 0; i < ff.length - 1; i++) {
@@ -493,18 +502,18 @@
                     <div class="row">
                         <div class="col-6">
                             <label>渠道名称:</label>
-                            <input name="ProxyArea" class="easyui-textbox" readonly/>
+                            <input name="ProxyArea" class="easyui-textbox" readonly />
                         </div>
 
                         <div class="col-6">
                             <label>联系人:</label>
-                            <input name="Name" class="easyui-textbox" readonly/>
+                            <input name="Name" class="easyui-textbox" readonly />
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-6">
                             <label>电话:</label>
-                            <input name="Phone" class="easyui-textbox" readonly/>
+                            <input name="Phone" class="easyui-textbox" readonly />
                         </div>
                     </div>
 
@@ -969,9 +978,9 @@
                         <div class="row">
                             <div class="col-6">
                                 <label>自有住房类型:</label>
-                                <input id="ownHouse1" name="ownHouseType" type="radio" checked="checked" value="1">自置（无按揭）
-                                <input id="ownHouse2" name="ownHouseType" type="radio" value="2">自置（有按揭）
-                                <input id="ownHouse3" name="ownHouseType" type="radio" value="3">其他
+                                <input id="ownHouse1" name="OwnHouseType" type="radio" checked="checked" value="1" cl>自置（无按揭）
+                                <input id="ownHouse2" name="OwnHouseType" type="radio" value="2">自置（有按揭）
+                                <input id="ownHouse3" name="OwnHouseType" type="radio" value="3">其他
                             </div>
 
                             <div class="col-6">
@@ -986,19 +995,19 @@
                         <div class="row">
                             <div class="col-12">
                                 <label>自有住房地址:</label>
-                                <input id="ownHouseAddress" name="ownHouseAddress" class="easyui-textbox" />
+                                <input id="ownHouseAddress" name="OwnHouseAddress" class="easyui-textbox" />
                             </div>
                         </div>
 
                         <div class="row">
                             <div class="col-6">
                                 <label>自有住房面积:</label>
-                                <input id="ownHouseSize" name="ownHouseSize" class="easyui-textbox" />
+                                <input id="ownHouseSize" name="OwnHouseSize" class="easyui-textbox" />
                             </div>
 
                             <div class="col-6">
                                 <label>自有住房登记日期:</label>
-                                <input id="ownHouseRegisterDate" name="ownHouseRegisterDate" class="easyui-textbox" />
+                                <input id="ownHouseRegisterDate" name="OwnHouseRegisterDate" class="easyui-textbox" />
                             </div>
                         </div>
 
