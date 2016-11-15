@@ -90,11 +90,11 @@
             transition: height 0.6s ease-in-out, box-shadow 0.6s linear;
         }
 
-        input:checked ~ article.base {
+        input:checked ~ article.Vehicle {
             height: 965px;
         }
 
-        input:checked ~ article.produce {
+        input:checked ~ article.Produce {
             height: 920px;
         }
 
@@ -122,9 +122,10 @@
                 url: "../api/Produce/GetByCode",
                 statusCode: {
                     200: function (data) {
+
                         if (data != null) {
                             $("#ProduceId").val(data.Id);
-                            $("#produce_info").form("load", data);
+                            $("#Produce").form("load", data);
                             $("#Poundage").datagrid("loadData", data.PoundageList);
                             $("#Financing").datagrid("loadData", data.FinancingItemsList);
                             CostCount("Poundage");
@@ -132,7 +133,7 @@
                         }
                         else {
                             $("#ProduceId").val("");
-                            $("#produce_info").form("clear");
+                            $("#Produce").form("clear");
                             $("#Poundage").datagrid("loadData", []);
                             $("#Financing").datagrid("loadData", []);
                             top.$.messager.show({ msg: "该编号对应的产品不存在" });
@@ -354,7 +355,7 @@
                 for (var j = 0; j < fieldset.length ; j++) {
                     fs.push($(fieldset[j]).serializeJson())
                 }
-                data[temp] = fs;
+                data[temp] = $(fieldset[0]).serializeJson();
             }
             //申请人中由于包括自有住房和联系人部分嵌套的fieldset所以单独处理
             var app = [];//用于存放联系人信息
@@ -372,7 +373,7 @@
             app[0]["OwnHouse"] = JSON.stringify(house);
             //将主要申请人信息存放到数组中
             data["Applicant"] = app;
-
+            debugger
             uc.form.Submit({
                 method: "POST",
                 url: "../api/FinanceAuidt/Create",
@@ -385,11 +386,12 @@
     <form id="finance_ff" class="container">
         <div class="hidden">
             <input name="FinanceId" type="hidden" />
+            <input name="ProudceId" id="ProudceId" type="hidden" />
         </div>
         <div>
             <input id="ac-1" class="ac-1" name="accordion-1" type="checkbox" />
             <label for="ac-1" class="ac">基本信息</label>
-            <article class="base">
+            <article class="Vehicle">
                 <fieldset id="Vehicle" style="margin-bottom:0px">
                     <legend>联系人信息</legend>
                     <div class="row">
@@ -494,11 +496,9 @@
         <div>
             <input id="ac-2" class="ac-1" name="accordion-1" type="checkbox" />
             <label for="ac-2" class="ac">租赁信息</label>
-            <article class="produce">
-                <fieldset id="produce">
-                    <div class="hidden">
-                        <input name="ProudceId" id="ProudceId" type="hidden"/>
-                    </div>
+            <article class="Produce">
+                <fieldset id="Produce">
+                   
                     <legend>租赁信息</legend>
                     <div class="row">
                         <div class="col-6">
@@ -637,7 +637,7 @@
                     <div class="row">
                         <div class="col-6">
                             <label>姓名:</label>
-                            <input id="Name" name="Name" class="easyui-textbox" />
+                            <input id="Name" name="Name" class="easyui-textbox" data-options="required:true"/>
                         </div>
 
                         <div class="col-6">
@@ -665,7 +665,7 @@
 
                         <div class="col-6">
                             <label>证件号码:</label>
-                            <input id="Identity" name="Identity" class="easyui-textbox" />
+                            <input id="Identity" name="Identity" class="easyui-textbox" data-options="required:true"/>
                         </div>
                     </div>
 
@@ -705,19 +705,19 @@
                             <label>通讯地址:</label>
                             <input id="ContactAddressType1" name="ContactAddressType" type="radio" class="easyui-validatebox" value="住宅">住宅<span style="margin-right:20px;"> </span>
                             <input id="ContactAddressType2" name="ContactAddressType" type="radio" class="easyui-validatebox" value="单位">单位<span style="margin-right:20px;"> </span>
-                            <input id="ContactAddress" name="ContactAddress" class="easyui-textbox" data-options="width:760" />
+                            <input id="ContactAddress" name="ContactAddress" class="easyui-textbox" data-options="width:760 ,required:true" />
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="col-6">
                             <label>户口所在地:</label>
-                            <input id="RegisteredAddress" name="RegisteredAddress" class="easyui-textbox" />
+                            <input id="RegisteredAddress" name="RegisteredAddress" class="easyui-textbox" data-options="required:true"/>
                         </div>
 
                         <div class="col-6">
                             <label>单位名称:</label>
-                            <input id="OfficeName" name="OfficeName" class="easyui-textbox" data-options="required:true" />
+                            <input id="OfficeName" name="OfficeName" class="easyui-textbox" />
                         </div>
                     </div>
 
@@ -768,7 +768,7 @@
                     <div class="row">
                         <div class="col-12">
                             <label>单位地址:</label>
-                            <input id="OfficeAddress" name="OfficeAddress" class="easyui-textbox" />
+                            <input id="OfficeAddress" name="OfficeAddress" class="easyui-textbox" data-options="required:true"  />
                         </div>
                     </div>
 
@@ -786,14 +786,14 @@
 
                     <div class="row">
                         <div class="col-6">
-                            <label>单位电话:</label>
+                            <label>配偶单位电话:</label>
                             <input id="WifeOfficePhone" name="WifeOfficePhone" class="easyui-textbox" data-options="validType:'PhoneOrMobile'" />
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="col-12">
-                            <label>单位地址:</label>
+                            <label>配偶单位地址:</label>
                             <input id="WifeOfficeAddress" name="WifeOfficeAddress" class="easyui-textbox" />
                         </div>
                     </div>
@@ -801,23 +801,23 @@
                     <div class="row">
                         <div class="col-6">
                             <label>申请人月收入</label>
-                            <input id="TotalMonthlyIncome" name="TotalMonthlyIncome" class="easyui-textbox" data-options="validType:'Price'" /><span class="unit">元</span>
+                            <input id="TotalMonthlyIncome" name="TotalMonthlyIncome" class="easyui-textbox" data-options="validType:'Price',required:true" /><span class="unit">元</span>
                         </div>
                         <div class="col-6">
                             <label>其他月收入:</label>
-                            <input id="OtherIncome" name="OtherIncome" class="easyui-textbox" data-options="validType:'Price'" /><span class="unit">元</span>
+                            <input id="OtherIncome" name="OtherIncome" class="easyui-textbox" data-options="validType:'Price',required:true" /><span class="unit">元</span>
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="col-6">
                             <label>家庭月收入:</label>
-                            <input id="HomeMonthlyIncome" name="HomeMonthlyIncome" class="easyui-textbox" data-options="validType:'Price'" /><span class="unit">元</span>
+                            <input id="HomeMonthlyIncome" name="HomeMonthlyIncome" class="easyui-textbox" data-options="validType:'Price',required:true" /><span class="unit">元</span>
                         </div>
 
                         <div class="col-6">
                             <label>家庭月支出:</label>
-                            <input id="HomeMonthlyExpend" name="HomeMonthlyExpend" class="easyui-textbox" data-options="validType:'Price'" /><span class="unit">元</span>
+                            <input id="HomeMonthlyExpend" name="HomeMonthlyExpend" class="easyui-textbox" data-options="validType:'Price',required:true" /><span class="unit">元</span>
                         </div>
 
                     </div>
@@ -836,7 +836,7 @@
 
                         <div class="col-6">
                             <label>供养人数:</label>
-                            <input id="FamilyNumber" name="FamilyNumber" class="easyui-textbox" data-options="validType:'Integer'" /><span class="unit">人</span>
+                            <input id="FamilyNumber" name="FamilyNumber" class="easyui-textbox" data-options="validType:'Integer',required:true" /><span class="unit">人</span>
                         </div>
                     </div>
 
@@ -929,7 +929,7 @@
                     <div class="row">
                         <div class="col-6">
                             <label>姓名:</label>
-                            <input id="Name" name="Name" class="easyui-textbox" />
+                            <input id="Name" name="Name" class="easyui-textbox" data-options="required:true"/>
                         </div>
 
                         <div class="col-6">
@@ -990,7 +990,7 @@
 
                         <div class="col-6">
                             <label>证件号码:</label>
-                            <input id="Identity" name="Identity" class="easyui-textbox" />
+                            <input id="Identity" name="Identity" class="easyui-textbox" data-options="required:true"/>
                         </div>
                     </div>
 
@@ -1029,7 +1029,7 @@
                     <div class="row">
                         <div class="col-12">
                             <label>单位地址:</label>
-                            <input id="OfficeAddress" name="OfficeAddress" class="easyui-textbox" />
+                            <input id="OfficeAddress" name="OfficeAddress" class="easyui-textbox" data-options="required:true"/>
                         </div>
                     </div>
                 </fieldset>
@@ -1043,7 +1043,7 @@
                     <div class="row">
                         <div class="col-6">
                             <label>姓名:</label>
-                            <input id="Name" name="Name" class="easyui-textbox" />
+                            <input id="Name" name="Name" class="easyui-textbox" data-options="required:true"/>
                         </div>
 
                         <div class="col-6">
@@ -1104,14 +1104,14 @@
 
                         <div class="col-6">
                             <label>证件号码:</label>
-                            <input id="Identity" name="Identity" class="easyui-textbox" />
+                            <input id="Identity" name="Identity" class="easyui-textbox" data-options="required:true"/>
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="col-6">
                             <label>单位名称:</label>
-                            <input id="OfficeName" name="OfficeName" class="easyui-textbox" data-options="required:true" />
+                            <input id="OfficeName" name="OfficeName" class="easyui-textbox"/>
                         </div>
 
                         <div class="col-6">
@@ -1171,7 +1171,7 @@
                         <div class="row">
                             <div class="col-6">
                                 <label>姓名:</label>
-                                <input name="Name" class="easyui-textbox" />
+                                <input name="Name" class="easyui-textbox" data-options="required:true"/>
                             </div>
 
                             <div class="col-6">

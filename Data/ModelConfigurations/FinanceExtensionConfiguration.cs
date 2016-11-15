@@ -12,15 +12,15 @@
             HasKey(m => m.Id);
             Property(m => m.Id).HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
 
-            Property(m => m.LoanPrincipal).IsRequired();
+            Property(m => m.LoanPrincipal);
 
-            Property(m => m.CreditAccountId).IsRequired();
+            Property(m => m.CreditAccountId);
 
-            Property(m => m.CreditBankName).IsRequired().HasMaxLength(40);
+            Property(m => m.CreditBankName).HasMaxLength(40);
 
-            Property(m => m.CreditBankCard).IsRequired().HasMaxLength(40);
+            Property(m => m.CreditBankCard).HasMaxLength(40);
 
-            Property(m => m.ContactJson).IsRequired().HasMaxLength(800);
+            Property(m => m.ContactJson).HasMaxLength(800);
 
             ToTable("FANC_FinanceExtension");
         }

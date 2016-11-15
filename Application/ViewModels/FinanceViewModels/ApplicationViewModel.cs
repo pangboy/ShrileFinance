@@ -124,22 +124,22 @@
         /// <summary>
         /// 申请人月收入
         /// </summary>
-        public decimal TotalMonthlyIncome { get; set; }
+        public decimal? TotalMonthlyIncome { get; set; }
 
         /// <summary>
         /// 其他月收入
         /// </summary>
-        public decimal OtherIncome { get; set; }
+        public decimal? OtherIncome { get; set; }
 
         /// <summary>
         /// 家庭月收入
         /// </summary>
-        public decimal HomeMonthlyIncome { get; set; }
+        public decimal? HomeMonthlyIncome { get; set; }
 
         /// <summary>
         /// 家庭月支出
         /// </summary>
-        public decimal HomeMonthlyExpend { get; set; }
+        public decimal? HomeMonthlyExpend { get; set; }
 
         /// <summary>
         /// 学历
@@ -149,7 +149,7 @@
         /// <summary>
         /// 供养人数
         /// </summary>
-        public int FamilyNumber { get; set; }
+        public int? FamilyNumber { get; set; }
 
         /// <summary>
         /// 自有住房数

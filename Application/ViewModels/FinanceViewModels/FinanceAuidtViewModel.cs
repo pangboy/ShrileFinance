@@ -15,6 +15,11 @@
         public Guid FinanceId { get; set; }
 
         /// <summary>
+        /// 产品ID
+        /// </summary>
+        public Guid ProduceId { get; set; }
+
+        /// <summary>
         /// 融资项（Id、<Name_Maney>）
         /// </summary>
         public ICollection<KeyValuePair<Guid, KeyValuePair<string, decimal>>> FinancingItems { get; set; }
@@ -122,7 +127,7 @@
         /// <summary>
         /// 车辆信息
         /// </summary>
-        public virtual VehicleViewModel.VehicleViewModel VehicleInfo { get; set; }
+        public virtual VehicleViewModel.VehicleViewModel Vehicle { get; set; }
         /// <summary>
         /// 合同
         /// </summary>

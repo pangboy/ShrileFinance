@@ -132,7 +132,7 @@
                 FinanceId = finance.Id,
 
                 // 厂商指导价
-                ManufacturerGuidePrice = finance.VehicleInfo.ManufacturerGuidePrice,
+                ManufacturerGuidePrice = finance.Vehicle.ManufacturerGuidePrice,
 
                 // 融资项（Id、<Name_Maney>）
                 FinancingItems = GetFinancingItems(finance)
