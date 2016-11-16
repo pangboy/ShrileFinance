@@ -142,9 +142,9 @@
                 top.$.messager.show({ msg: "融资比例下限必须小于融资比例上限！" });
                 return;
             }
-            toUppers();
+           // toUppers();
 
-            if (disction) {
+            //if (disction) {
                 var produceInfo = $(".container").serializeJson();
                 produceInfo["Poundage"] = $('#Poundage').datagrid('getChecked');
                 produceInfo["FinancingItems"] = ($('#Financing').datagrid('getChecked'));
@@ -154,10 +154,10 @@
                 $('#Financing').datagrid('getEditingRowIndexs');
                 uc.form.Submit({
                     method: "POST",
-                    url: "../api/Produce/Create",
+                    url: "../api/Produce/Modify",
                     data: produceInfo
                 });
-            }
+           // }
         }
 
         $.extend($.fn.datagrid.methods, {

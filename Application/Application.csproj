@@ -100,6 +100,7 @@
     </Compile>
     <Compile Include="Startup.cs" />
     <Compile Include="AccountAppService.cs" />
+    <Compile Include="UpdateBind.cs" />
     <Compile Include="ViewModels\AccountViewModels\ChangePasswordViewModel.cs" />
     <Compile Include="ViewModels\AccountViewModels\LoginViewModel.cs" />
     <Compile Include="ViewModels\FinanceViewModels\ApplicationViewModel.cs" />
@@ -111,6 +112,7 @@
     <Compile Include="ViewModels\FinanceViewModels\FinanceAuidtViewModel.cs" />
     <Compile Include="ViewModels\FinanceViewModels\FinanceProduceViewModel.cs" />
     <Compile Include="ViewModels\FinanceViewModels\OperationViewModel.cs" />
+    <Compile Include="ViewModels\IEntityViewModel.cs" />
     <Compile Include="ViewModels\OrganizationViewModels\BigEventViewModel.cs" />
     <Compile Include="ViewModels\OrganizationViewModels\CashFlowViewModel.cs" />
     <Compile Include="ViewModels\OrganizationViewModels\FamilyMemberViewModel.cs" />

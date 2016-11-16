@@ -7,6 +7,7 @@
     using Core.Entities;
     using Core.Entities.Finance;
     using Core.Entities.Produce;
+    using Core.Interfaces;
     using Core.Interfaces.Repositories;
     using ViewModels.FinanceViewModels;
 
@@ -17,7 +18,7 @@
     {
         private readonly IFinanceRepository repository;
         private readonly AppUserManager userManager;
-        
+
         /// <summary>
         /// Initializes a new instance of the <see cref="FinanceAppService" /> class.
         /// </summary>
@@ -33,19 +34,33 @@
         public void Create(FinanceApplyViewModel value)
         {
             var finance = Mapper.Map<Finance>(value);
-            
+
+            finance.Produce = null;
             repository.Create(finance);
             repository.Commit();
-           
+
         }
 
-        public void Modify(FinanceApplyViewModel value)
+        public void Modify(FinanceApplyViewModel model)
         {
-            var finance = Mapper.Map<Finance>(value);
+            var finance = repository.Get(model.Id.Value);
+            Mapper.Map(model, finance);
+
+            finance.FinanceProduce.Clear();
+            model.FinanceProduce.ToList().ForEach(delegate (FinanceProduceViewModel item)
+            {
+                finance.FinanceProduce.Add(Mapper.Map<FinanceProduce>(item));
+            });
+
+            new UpdateBind().Bind(finance.FinanceProduce, model.FinanceProduce);
+
+            new UpdateBind().Bind(finance.Applicant, model.Applicant);
+
 
             repository.Modify(finance);
             repository.Commit();
         }
+
 
         public FinanceApplyViewModel Get(Guid id)
         {

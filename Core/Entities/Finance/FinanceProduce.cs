@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Core.Entities.Finance
+﻿namespace Core.Entities.Finance
 {
     public class FinanceProduce : Entity
     {
@@ -16,13 +10,11 @@ namespace Core.Entities.Finance
         /// <summary>
         /// 是否可编辑
         /// </summary>
-
         public bool IsEdit { get; set; }
 
         /// <summary>
         /// 金额
         /// </summary>
-
         public decimal Money { get; set; }
 
         /// <summary>

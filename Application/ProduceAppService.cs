@@ -36,6 +36,7 @@ namespace Application
                 foreach (var item in value.Poundage)
                 {
                     var financingItem = Mapper.Map<FinancingItem>(item);
+                  
                     produce.FinancingItems.Add(financingItem);
                 }
             }
@@ -46,6 +47,7 @@ namespace Application
 
         public void Modify(ProduceViewModel value)
         {
+            var asd = repository.Get(value.Id);
             var produce = Mapper.Map<Produce>(value);
             if (value.Poundage != null)
             {
@@ -55,8 +57,9 @@ namespace Application
                     produce.FinancingItems.Add(financingItem);
                 }
             }
+            asd= produce;
 
-            repository.Modify(produce);
+            repository.Modify(asd);
             repository.Commit();
         }
 

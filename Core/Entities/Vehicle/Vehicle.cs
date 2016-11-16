@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace Core.Entities.Vehicle
+﻿namespace Core.Entities.Vehicle
 {
+    using System;
+
     public class Vehicle : Entity
     {
         /// <summary>
@@ -13,6 +13,7 @@ namespace Core.Entities.Vehicle
         /// 系列
         /// </summary>
         public string FamilyCode { get; set; }
+
         /// <summary>
         /// 车型ID
         /// </summary>
