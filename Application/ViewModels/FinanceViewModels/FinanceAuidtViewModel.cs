@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using Core.Entities.Finance;
 
     /// <summary>
     /// 融资审核
@@ -15,49 +14,44 @@
         public Guid FinanceId { get; set; }
 
         /// <summary>
-        /// 产品ID
-        /// </summary>
-        public Guid ProduceId { get; set; }
-
-        /// <summary>
         /// 融资项（Id、<Name_Maney>）
         /// </summary>
-        public ICollection<KeyValuePair<Guid, KeyValuePair<string, decimal>>> FinancingItems { get; set; }
+        public ICollection<KeyValuePair<Guid, KeyValuePair<string, decimal?>>> FinancingItems { get; set; }
 
         /// <summary>
         /// 厂商指导价
         /// </summary>
-        public decimal ManufacturerGuidePrice { get; set; }
+        public decimal? ManufacturerGuidePrice { get; set; }
 
         /// <summary>
         /// 建议融资金额
         /// </summary>
-        public decimal AdviceMoney { get; set; }
+        public decimal? AdviceMoney { get; set; }
 
         /// <summary>
         /// 建议融资比例
         /// </summary>
-        public decimal AdviceRatio { get; set; }
+        public decimal? AdviceRatio { get; set; }
 
         /// <summary>
         /// 审批融资金额
         /// </summary>
-        public decimal ApprovalMoney { get; set; }
+        public decimal? ApprovalMoney { get; set; }
 
         /// <summary>
         /// 审批融资比例
         /// </summary>
-        public decimal ApprovalRatio { get; set; }
+        public decimal? ApprovalRatio { get; set; }
 
         /// <summary>
         /// 月供额度
         /// </summary>
-        public decimal Payment { get; set; }
+        public decimal? Payment { get; set; }
 
         /// <summary>
         /// 手续费
         /// </summary>
-        public decimal Cost { get; set; }
+        public decimal? Cost { get; set; }
 
         /// <summary>
         /// 是否为复审

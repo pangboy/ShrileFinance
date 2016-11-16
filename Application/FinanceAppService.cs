@@ -17,7 +17,7 @@
     {
         private readonly IFinanceRepository repository;
         private readonly AppUserManager userManager;
-        
+
         /// <summary>
         /// Initializes a new instance of the <see cref="FinanceAppService" /> class.
         /// </summary>
@@ -33,10 +33,9 @@
         public void Create(FinanceApplyViewModel value)
         {
             var finance = Mapper.Map<Finance>(value);
-            
-                repository.Create(finance);
-                repository.Commit();
 
+            repository.Create(finance);
+            repository.Commit();
         }
 
         public void Modify(FinanceApplyViewModel value)
@@ -80,25 +79,20 @@
 
             creditExamineReportViewModel.FinanceId = finance.Id;
 
-            // 初审
-            creditExamineReportViewModel.TrialPersonId = finance.CreditExamine.TrialPerson.Id;
-            creditExamineReportViewModel.TrialPersonName = finance.CreditExamine.TrialPerson.Name;
-
-            // 复审
-            creditExamineReportViewModel.ReviewPersonId = finance.CreditExamine.ReviewPerson.Id;
-            creditExamineReportViewModel.ReviewPersonName = finance.CreditExamine.ReviewPerson.Name;
-
-            // 审批
-            creditExamineReportViewModel.ApprovePersonId = finance.CreditExamine.ApprovePerson.Id;
-            creditExamineReportViewModel.ApprovePersonName = finance.CreditExamine.ApprovePerson.Name;
-
-            // 终审
-            creditExamineReportViewModel.FinalPersonId = finance.CreditExamine.FinalPerson.Id;
-            creditExamineReportViewModel.FinalPersonId = finance.CreditExamine.FinalPerson.Name;
-
             // 当前用户
             var user = userManager.CurrentUser();
-            creditExamineReportViewModel.CurentUser = new KeyValuePair<string, string>(user.Id, user.Name);
+
+            // 初审
+            creditExamineReportViewModel.TrialPerson = new KeyValuePair<string, string>(finance.CreditExamine.TrialPerson.Id, finance.CreditExamine.TrialPerson.Name);
+
+            // 复审
+            creditExamineReportViewModel.ReviewPerson = new KeyValuePair<string, string>(finance.CreditExamine.ReviewPerson.Id, finance.CreditExamine.ReviewPerson.Name);
+
+            // 审批
+            creditExamineReportViewModel.ApprovePerson = new KeyValuePair<string, string>(finance.CreditExamine.ApprovePerson.Id, finance.CreditExamine.ApprovePerson.Name);
+
+            // 终审
+            creditExamineReportViewModel.FinalPerson = new KeyValuePair<string, string>(finance.CreditExamine.FinalPerson.Id, finance.CreditExamine.FinalPerson.Name);
 
             return creditExamineReportViewModel;
         }
@@ -121,20 +115,20 @@
             finance.CreditExamine = Mapper.Map<CreditExamine>(value);
 
             // 初审
-            finance.CreditExamine.TrialPerson.Id = value.TrialPersonId;
-            finance.CreditExamine.TrialPerson.Name = value.TrialPersonName;
+            finance.CreditExamine.TrialPerson.Id = value.TrialPerson.Key;
+            finance.CreditExamine.TrialPerson.Name = value.TrialPerson.Value;
 
             // 复审
-            finance.CreditExamine.ReviewPerson.Id = value.ReviewPersonId;
-            finance.CreditExamine.ReviewPerson.Name = value.ReviewPersonName;
+            finance.CreditExamine.ReviewPerson.Id = value.ReviewPerson.Key;
+            finance.CreditExamine.ReviewPerson.Name = value.ReviewPerson.Value;
 
             // 审批
-            finance.CreditExamine.ApprovePerson.Id = value.ApprovePersonId;
-            finance.CreditExamine.ApprovePerson.Name = value.ApprovePersonName;
+            finance.CreditExamine.ApprovePerson.Id = value.ApprovePerson.Key;
+            finance.CreditExamine.ApprovePerson.Name = value.ApprovePerson.Value;
 
             // 终审
-            finance.CreditExamine.FinalPerson.Id = value.FinalPersonId;
-            finance.CreditExamine.FinalPerson.Name = value.FinalPersonId;
+            finance.CreditExamine.FinalPerson.Id = value.FinalPerson.Key;
+            finance.CreditExamine.FinalPerson.Name = value.FinalPerson.Value;
 
             repository.Modify(finance);
 
@@ -154,7 +148,7 @@
                 return null;
             }
 
-            // 获取信审报告实体
+            // 获取融资实体
             var finance = repository.Get(financeId);
 
             if (finance == null)
@@ -167,6 +161,18 @@
             {
                 // 融资标识
                 FinanceId = finance.Id,
+
+                AdviceMoney = finance.AdviceMoney,
+
+                AdviceRatio = finance.AdviceRatio,
+
+                ApprovalMoney = finance.ApprovalMoney,
+
+                ApprovalRatio = finance.ApprovalRatio,
+
+                Payment = finance.Payment,
+
+                Cost = finance.Cost,
 
                 // 厂商指导价
                 ManufacturerGuidePrice = finance.Vehicle.ManufacturerGuidePrice,
@@ -219,7 +225,7 @@
             if (!value.IsReview)
             {
                 // 修改融资项各金额
-                finance.Produce.FinancingItems = EditFinanceAuidts(financingItems: finance.Produce.FinancingItems, financingItemCollection: value.FinancingItems);
+                finance.FinanceProduce = EditFinanceAuidts(financingItems: finance.FinanceProduce, financingItemCollection: value.FinancingItems);
             }
 
             repository.Modify(finance);
@@ -345,14 +351,14 @@
         /// </summary>
         /// <param name="finance">融资实体</param>
         /// <returns>融资项</returns>
-        private ICollection<KeyValuePair<Guid, KeyValuePair<string, decimal>>> GetFinancingItems(Finance finance)
+        private ICollection<KeyValuePair<Guid, KeyValuePair<string, decimal?>>> GetFinancingItems(Finance finance)
         {
-            var financingItems = new List<KeyValuePair<Guid, KeyValuePair<string, decimal>>>();
+            var financingItems = new List<KeyValuePair<Guid, KeyValuePair<string, decimal?>>>();
 
             // 提取融资项
-            finance.Produce.FinancingItems.ToList().ForEach(delegate (FinancingItem item)
+            finance.FinanceProduce.ToList().ForEach(delegate(FinanceProduce item)
             {
-                financingItems.Add(new KeyValuePair<Guid, KeyValuePair<string, decimal>>(item.FinancingProject.Id, new KeyValuePair<string, decimal>(item.FinancingProject.Name, item.Money)));
+                financingItems.Add(new KeyValuePair<Guid, KeyValuePair<string, decimal?>>(item.Id, new KeyValuePair<string, decimal?>(item.Name, item.Money)));
             });
 
             return financingItems;
@@ -361,21 +367,21 @@
         /// <summary>
         /// 修改融资项各金额
         /// </summary>
-        /// <param name="financingItems">产品对应的融资项</param>
-        /// <param name="financingItemCollection">前端传回融资项</param>
+        /// <param name="financingItems">融资对应的融资项</param>
+        /// <param name="financingItemCollection">前端传回的融资项</param>
         /// <returns></returns>
-        private ICollection<FinancingItem> EditFinanceAuidts(ICollection<FinancingItem> financingItems, ICollection<KeyValuePair<Guid, KeyValuePair<string, decimal>>> financingItemCollection)
+        private ICollection<FinanceProduce> EditFinanceAuidts(ICollection<FinanceProduce> financingItems, ICollection<KeyValuePair<Guid, KeyValuePair<string, decimal?>>> financingItemCollection)
         {
             var financingItemList = financingItems.ToList();
 
             // 更新融资项各金额
-            financingItemList.ForEach(delegate (FinancingItem financingItem)
+            financingItemList.ForEach(delegate(FinanceProduce financingItem)
             {
                 // 获取融资项标识
-                var key = financingItem.FinancingProject.Id;
+                var key = financingItem.Id;
 
                 // 更新指定融资项对应的金额
-                financingItem.Money = financingItemCollection.Single(m => m.Key.Equals(key)).Value.Value;
+                financingItem.Money = financingItemCollection.Single(m => m.Key.Equals(key)).Value.Value.Value;
             });
 
             return financingItemList;

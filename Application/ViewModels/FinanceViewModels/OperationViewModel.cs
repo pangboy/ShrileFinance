@@ -17,7 +17,7 @@
         /// <summary>
         /// 融资项（Id、(Name、Maney)）
         /// </summary>
-        public ICollection<KeyValuePair<Guid, KeyValuePair<string, decimal>>> FinancingItems { get; set; }
+        public ICollection<KeyValuePair<Guid, KeyValuePair<string, decimal?>>> FinancingItems { get; set; }
 
         /// <summary>
         /// 选择还款日
