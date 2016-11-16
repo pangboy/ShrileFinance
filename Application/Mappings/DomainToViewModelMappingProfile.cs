@@ -5,12 +5,14 @@
     using Core.Entities.Customers.Enterprise;
     using Core.Entities.Finance;
     using Core.Entities.Produce;
+    using Core.Entities.Vehicle;
     using ViewModels.AccountViewModels;
     using ViewModels.FinanceViewModels;
     using ViewModels.OrganizationViewModels;
     using ViewModels.PartnerViewModels;
     using ViewModels.ProcessViewModels;
     using ViewModels.ProduceViewModel;
+    using ViewModels.VehicleViewModel;
     using X.PagedList;
 
     public class DomainToViewModelMappingProfile : Profile
@@ -51,11 +53,14 @@
             CreateMap<Produce, ProduceViewModel>();
             CreateMap<FinancingItem, FinancingItemViewModel>();
             CreateMap<FinancingProject, FinancingProjectViewModel>();
+            CreateMap<Finance, FinanceApplyViewModel>();
+            CreateMap<Vehicle, VehicleViewModel>();
+            CreateMap<Applicant, ApplicationViewModel>();
 
             CreateMap<CreditExamine, CreditExamineViewModel>();
-
             // 运营
             CreateMap<FinanceExtension,OperationViewModel>();
+            CreateMap<FinanceProduce, FinanceProduceViewModel>();
         }
     }
 }

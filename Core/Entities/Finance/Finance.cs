@@ -15,6 +15,11 @@
             Contact = new List<Contract>();
         }
         /// <summary>
+        /// 产品ID
+        /// </summary>
+        public Guid ProduceId { get; set; }
+
+        /// <summary>
         /// 实际用款额(融资本金)
         /// </summary>
         public decimal? Principal { get; set; }
@@ -143,6 +148,11 @@
         /// 产品
         /// </summary>
         public virtual Produce Produce { get; set; }
+
+        /// <summary>
+        /// 融资对应产品的融资项
+        /// </summary>
+        public virtual ICollection<FinanceProduce> FinanceProduce { get; set; }
 
         /// <summary>
         /// 信审报告
