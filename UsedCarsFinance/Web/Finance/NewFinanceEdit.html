@@ -142,7 +142,7 @@
             //$("#OncePayMonths").textbox({ required: false });
             LoadFinance();
         }
-
+        //加载融资信息
         function LoadFinance() {
             var Id = "CF69EF4B-2FAB-E611-80C5-507B9DE4A488";
             $.ajax({
@@ -153,7 +153,7 @@
                 statusCode: {
                     200: function (data) {
                         $("#produce").form("load", data);
-                        $("#produce").form("load", data.Produce);
+                        CheckProduce();
                         $("#Vehicle").form("load", data.Vehicle);
                         for (var i = 0; i < data.Applicant.length; i++) {
                             if (data.Applicant[i].Type == "1") {
@@ -182,11 +182,8 @@
             });
         }
 
-
-
-
         function CheckProduce() {
-            var code = $(this).textbox("getText");
+            var code = $("#Code").textbox("getText");
             $.ajax({
                 async: false,
                 data: { code: code },

@@ -5,6 +5,15 @@ namespace Core.Entities.Vehicle
     public class Vehicle : Entity
     {
         /// <summary>
+        /// 品牌
+        /// </summary>
+        public string MakeCode { get; set; }
+
+        /// <summary>
+        /// 系列
+        /// </summary>
+        public string FamilyCode { get; set; }
+        /// <summary>
         /// 车型ID
         /// </summary>
         public string VehicleKey { get; set; }

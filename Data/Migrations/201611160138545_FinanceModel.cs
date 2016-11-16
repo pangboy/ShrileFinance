@@ -102,6 +102,8 @@ namespace Data.Migrations
                 c => new
                     {
                         Id = c.Guid(nullable: false, identity: true),
+                        MakeCode = c.String(nullable: false, maxLength: 50),
+                        FamilyCode = c.String(nullable: false, maxLength: 50),
                         VehicleKey = c.String(nullable: false, maxLength: 20),
                         ManufacturerGuidePrice = c.Decimal(nullable: false, precision: 18, scale: 2),
                         RegisterCity = c.String(maxLength: 50),

@@ -12,6 +12,8 @@
             HasKey(m => m.Id);
             Property(m => m.Id).HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
 
+            Property(m => m.MakeCode).IsRequired().HasMaxLength(50);
+            Property(m => m.FamilyCode).IsRequired().HasMaxLength(50);
             Property(m => m.VehicleKey).IsRequired().HasMaxLength(20);
             Property(m => m.ManufacturerGuidePrice);
             Property(m => m.RegisterCity).HasMaxLength(50);
