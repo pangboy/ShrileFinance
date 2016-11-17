@@ -160,21 +160,21 @@
         /// <summary>
         /// 初审人
         /// </summary>
-        public virtual AppUser TrialPerson { get; set; }
+        public virtual AppUser TrialUser { get; set; }
 
         /// <summary>
         /// 复审人
         /// </summary>
-        public virtual AppUser ReviewPerson { get; set; }
+        public virtual AppUser ReviewUser { get; set; }
 
         /// <summary>
         /// 审批人
         /// </summary>
-        public virtual AppUser ApprovePerson { get; set; }
+        public virtual AppUser ApproveUser { get; set; }
 
         /// <summary>
         /// 终审人
         /// </summary>
-        public virtual AppUser FinalPerson { get; set; }
+        public virtual AppUser FinalUser { get; set; }
     }
 }

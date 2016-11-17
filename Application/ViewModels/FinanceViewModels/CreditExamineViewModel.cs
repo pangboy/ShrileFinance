@@ -221,7 +221,7 @@
         /// 房产
         /// </summary>
         [Required(ErrorMessage = "房产 不可为空")]
-        [RealEstate(ErrorMessage ="房产 值错误")]
+        [RealEstate(ErrorMessage = "房产 值错误")]
         public string RealEstate { get; set; }
 
         /// <summary>
@@ -268,7 +268,7 @@
         /// 初审人
         /// </summary>
         public KeyValuePair<string, string> TrialPerson { get; set; }
-        
+
         /// <summary>
         /// 复审人
         /// </summary>
@@ -306,12 +306,12 @@
     /// </summary>
     public enum ProductCategorieEnum
     {
-        新车交易贷,
-        二手车交易贷,
-        车抵贷,
-        押车贷,
-        快速贷,
-        以租代购
+        新车交易贷 = 0,
+        二手车交易贷 = 1,
+        车抵贷 = 2,
+        押车贷 = 3,
+        快速贷 = 4,
+        以租代购 = 5
     }
 
     /// <summary>
@@ -319,10 +319,10 @@
     /// </summary>
     public enum CustomerCategoryEnum
     {
-        优良职业,
-        标准受薪,
-        自雇人士,
-        自由职业
+        优良职业 = 0,
+        标准受薪 = 1,
+        自雇人士 = 2,
+        自由职业 = 3
     }
 
     /// <summary>

@@ -40,6 +40,7 @@
         /// 编辑信审报告
         /// </summary>
         /// <param name="value">信审ViewModel</param>
+        /// <returns>处理结果</returns>
         [HttpPost]
         public IHttpActionResult EditCreditExamine(CreditExamineViewModel value)
         {

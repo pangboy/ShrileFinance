@@ -6,8 +6,9 @@
     using AutoMapper;
     using Core.Entities;
     using Core.Entities.Finance;
-    using Core.Entities.Produce;
+    using Core.Entities.Identity;
     using Core.Interfaces.Repositories;
+    using Microsoft.AspNet.Identity;
     using ViewModels.FinanceViewModels;
 
     /// <summary>
@@ -17,17 +18,19 @@
     {
         private readonly IFinanceRepository repository;
         private readonly AppUserManager userManager;
+        private readonly AppRoleManager roleManager;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FinanceAppService" /> class.
         /// </summary>
         /// <param name="repository">融资仓储</param>
         /// <param name="userManager">用户管理</param>
-        public FinanceAppService(IFinanceRepository repository, AppUserManager userManager)
+        /// <param name="roleManager">角色管理</param>
+        public FinanceAppService(IFinanceRepository repository, AppUserManager userManager, AppRoleManager roleManager)
         {
             this.repository = repository;
-
             this.userManager = userManager;
+            this.roleManager = roleManager;
         }
 
         public void Create(FinanceApplyViewModel value)
@@ -66,7 +69,7 @@
                 return null;
             }
 
-            // 获取信审报告实体
+            // 获取融资实体
             var finance = repository.Get(financeId);
 
             if (finance == null)
@@ -74,25 +77,83 @@
                 return null;
             }
 
-            // 实体转ViewModel
-            var creditExamineReportViewModel = Mapper.Map<CreditExamineViewModel>(finance.CreditExamine) ?? new CreditExamineViewModel();
+            // 当前用户
+            var curentUser = userManager.CurrentUser();
 
+            if (curentUser == null)
+            {
+                return null;
+            }
+
+            finance.CreditExamine = finance.CreditExamine ?? new CreditExamine();
+
+            // 实体转ViewModel
+            var creditExamineReportViewModel = Mapper.Map<CreditExamineViewModel>(finance.CreditExamine);
+
+            // 融资标识
             creditExamineReportViewModel.FinanceId = finance.Id;
 
-            // 当前用户
-            var user = userManager.CurrentUser();
+            // 保证金
+            if (!string.IsNullOrEmpty(finance.CreditExamine.Margin))
+            {
+                var array = finance.CreditExamine.Margin.Split('-');
+                creditExamineReportViewModel.Margin1 = array[0];
+                creditExamineReportViewModel.Margin2 = array[1];
+            }
 
-            // 初审
-            creditExamineReportViewModel.TrialPerson = new KeyValuePair<string, string>(finance.CreditExamine.TrialPerson.Id, finance.CreditExamine.TrialPerson.Name);
+            // 产品编号
+            creditExamineReportViewModel.ProductNumber = finance.Produce.Code;
 
-            // 复审
-            creditExamineReportViewModel.ReviewPerson = new KeyValuePair<string, string>(finance.CreditExamine.ReviewPerson.Id, finance.CreditExamine.ReviewPerson.Name);
+            // 产品详解
+            creditExamineReportViewModel.ProductExplain = finance.Produce.Remarks;
 
-            // 审批
-            creditExamineReportViewModel.ApprovePerson = new KeyValuePair<string, string>(finance.CreditExamine.ApprovePerson.Id, finance.CreditExamine.ApprovePerson.Name);
+            // 产品种类
+            creditExamineReportViewModel.ProductCategorie = ProductCategorieEnum.以租代购;
 
-            // 终审
-            creditExamineReportViewModel.FinalPerson = new KeyValuePair<string, string>(finance.CreditExamine.FinalPerson.Id, finance.CreditExamine.FinalPerson.Name);
+            // 承租人
+            var lessee = finance.Applicant.ToList().Find(m => m.Type == Applicant.TypeEnum.主要申请人);
+            creditExamineReportViewModel.LesseeName = lessee.Name;
+            creditExamineReportViewModel.LesseeIdCard = lessee.IdentityType.Equals("身份证") ? lessee.Identity : null;
+            creditExamineReportViewModel.LesseeMobile = lessee.Mobile;
+
+            // 共借人
+            creditExamineReportViewModel.CommonBorrwerName1 = finance.Applicant.ToList().Find(m => m.Type == Applicant.TypeEnum.共同申请人).Name;
+
+            // 保证人
+            creditExamineReportViewModel.Guarantor1 = finance.Applicant.ToList().Find(m => m.Type == Applicant.TypeEnum.担保人).Name;
+
+            // 当前角色
+            var curentRole = roleManager.FindByIdAsync(curentUser.RoleId).Result;
+
+            if (curentRole != null)
+            {
+                var trialUser = finance.CreditExamine.TrialUser ?? new AppUser();
+                var reviewUser = finance.CreditExamine.ReviewUser ?? new AppUser();
+                var approveUser = finance.CreditExamine.ApproveUser ?? new AppUser();
+                var finalUser = finance.CreditExamine.FinalUser ?? new AppUser();
+
+                creditExamineReportViewModel.TrialPerson = new KeyValuePair<string, string>(trialUser.Id, trialUser.UserName);
+                creditExamineReportViewModel.ReviewPerson = new KeyValuePair<string, string>(reviewUser.Id, reviewUser.Name);
+                creditExamineReportViewModel.ApprovePerson = new KeyValuePair<string, string>(approveUser.Id, approveUser.Name);
+                creditExamineReportViewModel.FinalPerson = new KeyValuePair<string, string>(finalUser.Id, finalUser.Name);
+
+                if (curentRole.Name.Equals("初审员"))
+                {
+                    creditExamineReportViewModel.TrialPerson = new KeyValuePair<string, string>(trialUser.Id, trialUser.UserName);
+                }
+                else if (curentRole.Name.Equals("复审员"))
+                {
+                    creditExamineReportViewModel.ReviewPerson = new KeyValuePair<string, string>(reviewUser.Id, reviewUser.Name);
+                }
+                else if (curentRole.Name.Equals("审批员"))
+                {
+                    creditExamineReportViewModel.ApprovePerson = new KeyValuePair<string, string>(approveUser.Id, approveUser.Name);
+                }
+                else if (curentRole.Name.Equals("终审员"))
+                {
+                    creditExamineReportViewModel.FinalPerson = new KeyValuePair<string, string>(finalUser.Id, finalUser.Name);
+                }
+            }
 
             return creditExamineReportViewModel;
         }
@@ -111,24 +172,46 @@
             // 获取该信审对应的融资实体
             var finance = repository.Get(value.FinanceId);
 
+            if (finance == null)
+            {
+                return;
+            }
+
+            // 当前用户
+            var curentUser = userManager.CurrentUser();
+
+            if (curentUser == null)
+            {
+                return;
+            }
+
+            finance.CreditExamine = finance.CreditExamine ?? new CreditExamine();
+
             // 信审ViewModel转信审实体，更新信审
-            finance.CreditExamine = Mapper.Map<CreditExamine>(value);
+            Mapper.Map(value, finance.CreditExamine);
 
-            // 初审
-            finance.CreditExamine.TrialPerson.Id = value.TrialPerson.Key;
-            finance.CreditExamine.TrialPerson.Name = value.TrialPerson.Value;
+            // 保证金
+            finance.CreditExamine.Margin = value.Margin1 + "-" + value.Margin2;
 
-            // 复审
-            finance.CreditExamine.ReviewPerson.Id = value.ReviewPerson.Key;
-            finance.CreditExamine.ReviewPerson.Name = value.ReviewPerson.Value;
+            // 当前角色
+            var curentRole = roleManager.FindByIdAsync(curentUser.RoleId).Result;
 
-            // 审批
-            finance.CreditExamine.ApprovePerson.Id = value.ApprovePerson.Key;
-            finance.CreditExamine.ApprovePerson.Name = value.ApprovePerson.Value;
-
-            // 终审
-            finance.CreditExamine.FinalPerson.Id = value.FinalPerson.Key;
-            finance.CreditExamine.FinalPerson.Name = value.FinalPerson.Value;
+            if (curentRole.Name.Equals("初审员"))
+            {
+                finance.CreditExamine.TrialUser = curentUser;
+            }
+            else if (curentRole.Name.Equals("复审员"))
+            {
+                finance.CreditExamine.ReviewUser = curentUser;
+            }
+            else if (curentRole.Name.Equals("审批员"))
+            {
+                finance.CreditExamine.ReviewUser = curentUser;
+            }
+            else if (curentRole.Name.Equals("终审员"))
+            {
+                finance.CreditExamine.ReviewUser = curentUser;
+            }
 
             repository.Modify(finance);
 

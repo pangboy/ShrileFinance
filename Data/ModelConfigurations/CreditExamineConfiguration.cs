@@ -106,19 +106,19 @@
             Property(m => m.SurveyOpinionReson).HasMaxLength(400);
 
             // 初审人标识
-            HasOptional(m => m.TrialPerson).WithMany()
+            HasOptional(m => m.TrialUser).WithMany()
                 .Map(m => m.MapKey("TrialPersonId"));
 
             // 复审人标识
-            HasOptional(m => m.ReviewPerson).WithMany()
+            HasOptional(m => m.ReviewUser).WithMany()
                 .Map(m => m.MapKey("ReviewPersonId"));
 
             // 审批人标识
-            HasOptional(m => m.ApprovePerson).WithMany()
+            HasOptional(m => m.ApproveUser).WithMany()
                 .Map(m => m.MapKey("ApprovePersonId"));
 
             // 终审人标识
-            HasOptional(m => m.FinalPerson).WithMany()
+            HasOptional(m => m.FinalUser).WithMany()
                 .Map(m => m.MapKey("FinalPersonId"));
 
             // 设置表名
