@@ -29,42 +29,44 @@
             get { return context.Set<TEntity>(); }
         }
 
-        public TEntity Get(Guid key)
+        public virtual TEntity Get(Guid key)
         {
             return Entities.Find(key);
         }
 
-        public IQueryable<TEntity> GetAll()
+        public virtual IQueryable<TEntity> GetAll()
         {
             return Entities;
         }
 
-        public IQueryable<TEntity> GetAll(Expression<Func<TEntity, bool>> predicate)
+        public virtual IQueryable<TEntity> GetAll(Expression<Func<TEntity, bool>> predicate)
         {
             return Entities.Where(predicate);
         }
 
-        public IPagedList<TEntity> PagedList(Expression<Func<TEntity, bool>> predicate, int pageNumber, int pageSize)
+        public virtual IPagedList<TEntity> PagedList(Expression<Func<TEntity, bool>> predicate, int pageNumber, int pageSize)
         {
             return GetAll(predicate).OrderByDescending(m => m.Id).ToPagedList(pageNumber, pageSize);
         }
 
-        public void Create(TEntity entity)
+        public virtual Guid Create(TEntity entity)
         {
             Entities.Add(entity);
+
+            return entity.Id;
         }
 
-        public void Modify(TEntity entity)
+        public virtual void Modify(TEntity entity)
         {
             Context.Entry(entity).State = EntityState.Modified;
         }
 
-        public void Remove(TEntity entity)
+        public virtual void Remove(TEntity entity)
         {
             Context.Entry(entity).State = EntityState.Deleted;
         }
 
-        public int Commit()
+        public virtual int Commit()
         {
             return Context.SaveChanges();
         }

@@ -1,7 +1,6 @@
 ﻿namespace Data.Repositories
 {
     using System;
-    using System.Linq;
     using Core.Entities;
     using Core.Entities.Partner;
     using Core.Interfaces.Repositories;
@@ -14,12 +13,11 @@
 
         public Partner GetByUser(AppUser user)
         {
-            // TODO: 模拟数据
-            var approvers = Context.Set<AppUser>().GroupBy(m => m.Roles.FirstOrDefault()).Select(m => m.FirstOrDefault()).ToList();
+            var query = Context.Database.SqlQuery<Guid>("SELECT PartnerId FROM CRET_PartnerAccount WHERE AccountId = @p0", user.Id);
 
-            return new Partner {
-                Approvers = approvers
-            };
+            var partnerId = query.SingleAsync().Result;
+
+            return Get(partnerId);
         }
     }
 }

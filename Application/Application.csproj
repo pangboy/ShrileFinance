@@ -137,6 +137,7 @@
     <Compile Include="ViewModels\OrganizationViewModels\InstitutionLiabilitiesViewModel.cs" />
     <Compile Include="ViewModels\PagedListViewModel.cs" />
     <Compile Include="ViewModels\PartnerViewModels\PartnerViewModel.cs" />
+    <Compile Include="ViewModels\PartnerViewModels\ProduceViewModel.cs" />
     <Compile Include="ViewModels\ProduceViewModel\FinancingProjectViewModel.cs" />
     <Compile Include="ViewModels\ProduceViewModel\FinancingItemViewModel.cs" />
     <Compile Include="ViewModels\ProduceViewModel\FinancingProjectListViewModel.cs" />

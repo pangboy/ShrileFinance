@@ -24,7 +24,9 @@
                 .ForMember(d => d.PhoneNumber, opt => opt.MapFrom(s => s.Phone));
 
             CreateMap<PartnerViewModel, Core.Entities.Partner.Partner>()
-                .ForMember(d => d.Accounts, opt => opt.MapFrom(s => s.Accounts.Select(m => new AppUser { Id = m })));
+                .ForMember(d => d.Produces, opt => opt.Ignore())
+                .ForMember(d => d.Accounts, opt => opt.Ignore())
+                .ForMember(d => d.Approvers, opt => opt.Ignore());
 
             CreateMap<AssociatedEnterpriseViewModel, AssociatedEnterprise>();
             CreateMap<ParentViewModel, OrganizationParent>();
@@ -45,7 +47,7 @@
             CreateMap<InstitutionIncomeExpenditureViewModel, InstitutionIncomeExpenditure>();
             CreateMap<InstitutionLiabilitiesViewModel, InstitutionLiabilities>();
 
-            CreateMap<ProduceViewModel, Produce>();
+            CreateMap<ViewModels.ProduceViewModel.ProduceViewModel, Produce>();
             CreateMap<FinancingItemViewModel, FinancingItem>();
             CreateMap<FinancingProjectViewModel, FinancingProject>();
 

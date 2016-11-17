@@ -40,25 +40,39 @@
                             ProduceAdd(this.Code, this.Id);
                         });
 
-                        approvers = data.Approvers;
-                        accounts = data.Accounts;
+                        $(data.Approvers).each(function () {
+                            var userId = this;
+
+                            $("select.approvers").each(function () {
+                                var users = $(this).combobox("getData");
+
+                                for (var i = 0; i < users.length; i++) {
+                                    if (users[i].value == userId) {
+                                        $(this).combobox("select", userId);
+
+                                        return false;
+                                    }
+                                }
+                            })
+                        });
                     }
                 });
             }
         }
 
-        var approvers, accounts;
-
         function Submit() {
             var value = $.extend({},
                 $("#credit_info").serializeJson(),
                 $("#partner_info").serializeJson(),
-                { Approvers: approvers, Accounts: accounts }
+                { Produces: [], Approvers: [] }
                 );
 
-            value.Produces = [];
             $("select[name=Produces] option").each(function () {
                 value.Produces.push({ Id: this.value });
+            });
+
+            $("select.approvers").each(function () {
+                value.Approvers.push($(this).combobox("getValue"));
             });
 
             uc.form.Submit({
@@ -114,11 +128,12 @@
             <div class="row">
                 <div class="col-6">
                     <label>选择产品:</label>
-                    <select name="Produce" class="easyui-combobox" data-options="
-                            method:'GET',
-                            url:'../api/Produce/Option',
-                    editable:false,
-                    width:315
+                    <select name="Produce" class="easyui-combobox" data-options="method: 'GET',
+                        url: '../api/Produce/GetAll',
+                        editable:false,
+                        width:315,
+                        valueField:'Id',
+                        textField:'Code'
                     "></select>
                     <button type="button" onclick="ProduceAppend()">添加</button>
                     <button type="button" onclick="ProduceRemove()">移除</button>
@@ -192,31 +207,31 @@
             <div class="row">
                 <div class="col-6">
                     <label>初审人员:</label>
-                    <select name="User1" class="easyui-combobox" data-options="editable:false" ></select>
+                    <select name="User1" class="easyui-combobox approvers" data-options="editable:false" required></select>
                 </div>
 
                 <div class="col-6">
                     <label>复审人员:</label>
-                    <select name="User2" class="easyui-combobox" data-options="editable:false" ></select>
+                    <select name="User2" class="easyui-combobox approvers" data-options="editable:false" required></select>
                 </div>
             </div>
 
             <div class="row">
                 <div class="col-6">
                     <label>运营初审人员:</label>
-                    <select name="User3" class="easyui-combobox" data-options="editable:false" ></select>
+                    <select name="User3" class="easyui-combobox approvers" data-options="editable:false" required></select>
                 </div>
 
                 <div class="col-6">
                     <label>运营复审人员:</label>
-                    <select name="User4" class="easyui-combobox" data-options="editable:false" ></select>
+                    <select name="User4" class="easyui-combobox approvers" data-options="editable:false" required></select>
                 </div>
             </div>
 
             <div class="row">
                 <div class="col-6">
                     <label>财务审核人员:</label>
-                    <select name="User5" class="easyui-combobox" data-options="editable:false" ></select>
+                    <select name="User5" class="easyui-combobox approvers" data-options="editable:false" required></select>
                 </div>
             </div>
 

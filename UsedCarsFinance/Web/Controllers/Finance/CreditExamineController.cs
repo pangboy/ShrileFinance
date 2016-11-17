@@ -24,11 +24,16 @@
         /// <param name="financeId">融资标识</param>
         /// <returns>信审ViewModel</returns>
         [HttpGet]
-        public CreditExamineViewModel GetCreditExamine(Guid financeId)
+        public IHttpActionResult GetCreditExamine(Guid financeId)
         {
             var creditExamineViewModel = financeAppService.GetCreditExamineByFinanceId(financeId);
 
-            return creditExamineViewModel;
+            if (creditExamineViewModel == null)
+            {
+                return BadRequest();
+            }
+
+            return Ok(creditExamineViewModel);
         }
 
         /// <summary>

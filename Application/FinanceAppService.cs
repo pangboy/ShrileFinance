@@ -76,8 +76,15 @@
             // 获取信审报告实体
             var finance = repository.Get(financeId);
 
+            if (finance == null)
+            {
+                return null;
+            }
+
             // 实体转ViewModel
-            var creditExamineReportViewModel = Mapper.Map<CreditExamineViewModel>(finance.CreditExamine);
+            var creditExamineReportViewModel = Mapper.Map<CreditExamineViewModel>(finance.CreditExamine) ?? new CreditExamineViewModel();
+
+            creditExamineReportViewModel.FinanceId = finance.Id;
 
             // 初审
             creditExamineReportViewModel.TrialPersonId = finance.CreditExamine.TrialPerson.Id;
@@ -155,6 +162,11 @@
 
             // 获取信审报告实体
             var finance = repository.Get(financeId);
+
+            if (finance == null)
+            {
+                return null;
+            }
 
             // 实体转ViewModel
             var financeAuditViewModel = new FinanceAuidtViewModel()
@@ -239,7 +251,7 @@
 
             if (finance == null)
             {
-                return new OperationViewModel();
+                return null;
             }
 
             // 实体转ViewModel
