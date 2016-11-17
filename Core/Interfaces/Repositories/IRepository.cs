@@ -17,7 +17,7 @@
 
         IPagedList<TEntity> PagedList(Expression<Func<TEntity, bool>> predicate, int pageNumber, int pageSize);
 
-        void Create(TEntity entity);
+        Guid Create(TEntity entity);
 
         void Modify(TEntity entity);
 
