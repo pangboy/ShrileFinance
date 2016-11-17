@@ -6,9 +6,9 @@
     using AutoMapper;
     using Core.Entities;
     using Core.Entities.Finance;
+    using Core.Entities.Identity;
     using Core.Interfaces.Repositories;
     using ViewModels.FinanceViewModels;
-    using Core.Entities.Identity;
 
     /// <summary>
     /// 融资
@@ -52,7 +52,6 @@
             repository.Modify(finance);
             repository.Commit();
         }
-
 
         public FinanceApplyViewModel Get(Guid id)
         {

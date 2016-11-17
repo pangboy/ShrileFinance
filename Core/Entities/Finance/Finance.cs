@@ -15,6 +15,24 @@
             Contact = new List<Contract>();
         }
 
+        public enum RepaymentSchemeEnum : byte
+        {
+            /// <summary>
+            /// 等额本息
+            /// </summary>
+            等额本息 = 1,
+
+            /// <summary>
+            /// 月供提前付
+            /// </summary>
+            月供提前付 = 2,
+
+            /// <summary>
+            /// 一次性付息
+            /// </summary>
+            一次性付息 = 3
+        }
+
         /// <summary>
         /// 产品ID
         /// </summary>
@@ -159,23 +177,5 @@
         /// 信审报告
         /// </summary>
         public virtual CreditExamine CreditExamine { get; set; }
-
-        public enum RepaymentSchemeEnum : byte
-        {
-            /// <summary>
-            /// 等额本息
-            /// </summary>
-            等额本息 = 1,
-
-            /// <summary>
-            /// 月供提前付
-            /// </summary>
-            月供提前付 = 2,
-
-            /// <summary>
-            /// 一次性付息
-            /// </summary>
-            一次性付息 = 3
-        }
     }
 }

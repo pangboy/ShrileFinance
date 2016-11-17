@@ -40,7 +40,7 @@
             // 车辆信息
             HasOptional(m => m.Vehicle).WithOptionalPrincipal().Map(m => m.MapKey("FinanceId")).WillCascadeOnDelete();
 
-            //融资中对应的产品融资项
+            // 融资中对应的产品融资项
             HasMany(m => m.FinanceProduce).WithOptional().Map(m => m.MapKey("FinanceId")).WillCascadeOnDelete();
 
             // 联系人信息

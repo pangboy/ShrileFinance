@@ -4,6 +4,32 @@
 
     public class ApplicationViewModel : IEntityViewModel
     {
+        /// <summary>
+        /// 申请人类型枚举
+        /// </summary>
+        public enum TypeEnum : byte
+        {
+            /// <summary>
+            /// 主要申请人
+            /// </summary>
+            主要申请人 = 1,
+
+            /// <summary>
+            /// 共同申请人
+            /// </summary>
+            共同申请人 = 2,
+
+            /// <summary>
+            /// 担保人
+            /// </summary>
+            担保人 = 3,
+
+            /// <summary>
+            /// 联系人
+            /// </summary>
+            联系人 = 4
+        }
+
         public Guid? Id { get; set; }
 
         /// <summary>
@@ -160,31 +186,5 @@
         /// 自有住房信息
         /// </summary>
         public string OwnHouse { get; set; }
-
-        /// <summary>
-        /// 申请人类型枚举
-        /// </summary>
-        public enum TypeEnum : byte
-        {
-            /// <summary>
-            /// 主要申请人
-            /// </summary>
-            主要申请人 = 1,
-
-            /// <summary>
-            /// 共同申请人
-            /// </summary>
-            共同申请人 = 2,
-
-            /// <summary>
-            /// 担保人
-            /// </summary>
-            担保人 = 3,
-
-            /// <summary>
-            /// 联系人
-            /// </summary>
-            联系人 = 4
-        }
     }
 }
