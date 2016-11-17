@@ -24,11 +24,16 @@
         /// <param name="financeId">融资标识</param>
         /// <returns>融资审核ViewModel</returns>
         [HttpGet]
-        public FinanceAuidtViewModel GetFinanceAuidt(Guid financeId)
+        public IHttpActionResult GetFinanceAuidt(Guid financeId)
         {
             var financeAuidtViewModel = financeAppService.GetFinanceAuidtByFinanceId(financeId);
 
-            return financeAuidtViewModel;
+            if (financeAuidtViewModel == null)
+            {
+                return BadRequest();
+            }
+
+            return Ok(financeAuidtViewModel);
         }
 
         /// <summary>
