@@ -1,11 +1,11 @@
-﻿using System.Collections.Generic;
-using Application.ViewModels.ProduceViewModel;
-using AutoMapper;
-using Core.Entities.Produce;
-using Core.Interfaces.Repositories;
-
-namespace Application
+﻿namespace Application
 {
+    using System.Collections.Generic;
+    using Application.ViewModels.ProduceViewModel;
+    using AutoMapper;
+    using Core.Entities.Produce;
+    using Core.Interfaces.Repositories;
+
     public class FinancingProjectAppService
     {
         private readonly IFinancingProjectRepository repository;
@@ -34,8 +34,8 @@ namespace Application
         public List<FinancingProjectListViewModel> GetAll()
         {
             var financingProjectList = repository.GetAll();
-            List<FinancingProjectListViewModel> List = new List<FinancingProjectListViewModel>();
-            if (financingProjectList!=null)
+            List<FinancingProjectListViewModel> list = new List<FinancingProjectListViewModel>();
+            if (financingProjectList != null)
             {
                 foreach (var financingProject in financingProjectList)
                 {
@@ -45,17 +45,17 @@ namespace Application
                         IsFinancing = financingProject.IsFinancing
                     };
 
-                    List.Add(financinglist);
+                    list.Add(financinglist);
                 }
             }
 
-            return List;
+            return list;
         }
 
-        public IEnumerable<FinancingProjectListViewModel> GetByIsFinancing( bool isFinancing)
+        public IEnumerable<FinancingProjectListViewModel> GetByIsFinancing(bool isFinancing)
         {
            var financingProjectList = repository.GetByIsFinacing(isFinancing);
-            List<FinancingProjectListViewModel> List = new List<FinancingProjectListViewModel>();
+           List<FinancingProjectListViewModel> list = new List<FinancingProjectListViewModel>();
             if (financingProjectList != null)
             {
                 foreach (var financingProject in financingProjectList)
@@ -67,11 +67,11 @@ namespace Application
                         IsFinancing = financingProject.IsFinancing
                     };
 
-                    List.Add(financinglist);
+                    list.Add(financinglist);
                 }
             }
 
-            return List;
+            return list;
         }
     }
 }

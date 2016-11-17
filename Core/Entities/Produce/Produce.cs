@@ -12,6 +12,27 @@
         }
 
         /// <summary>
+        /// 还款方式枚举
+        /// </summary>
+        public enum RepaymentMethodEnum : byte
+        {
+            /// <summary>
+            /// 等额本息
+            /// </summary>
+            等额本息 = 1,
+
+            /// <summary>
+            /// 月供提前付
+            /// </summary>
+            月供提前付 = 2,
+
+            /// <summary>
+            /// 一次性付息
+            /// </summary>
+            一次性付息 = 3
+        }
+
+        /// <summary>
         /// 产品代码
         /// </summary>
         public string Code { get; set; }
@@ -75,27 +96,6 @@
         /// 备注
         /// </summary>
         public string Remarks { get; set; }
-
-        /// <summary>
-        /// 还款方式枚举
-        /// </summary>
-        public enum RepaymentMethodEnum : byte
-        {
-            /// <summary>
-            /// 等额本息
-            /// </summary>
-            等额本息 = 1,
-
-            /// <summary>
-            /// 月供提前付
-            /// </summary>
-            月供提前付 = 2,
-
-            /// <summary>
-            /// 一次性付息
-            /// </summary>
-            一次性付息 = 3
-        }
 
         /// <summary>
         /// 每个产品对应的融资项
