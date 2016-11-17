@@ -8,6 +8,7 @@
         /// GuidId
         /// </summary>
         public Guid Id { get; set; }
+
         /// <summary>
         /// 客户号
         /// </summary>

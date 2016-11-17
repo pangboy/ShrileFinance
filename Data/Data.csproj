@@ -119,6 +119,10 @@
     <Compile Include="Migrations\201611160141176_PartnerModel.Designer.cs">
       <DependentUpon>201611160141176_PartnerModel.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201611170734354_AddAttributeForFinanceExtension.cs" />
+    <Compile Include="Migrations\201611170734354_AddAttributeForFinanceExtension.Designer.cs">
+      <DependentUpon>201611170734354_AddAttributeForFinanceExtension.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs">
       <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
     </Compile>
@@ -328,6 +332,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201611160141176_PartnerModel.resx">
       <DependentUpon>201611160141176_PartnerModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611170734354_AddAttributeForFinanceExtension.resx">
+      <DependentUpon>201611170734354_AddAttributeForFinanceExtension.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

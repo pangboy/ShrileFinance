@@ -3,7 +3,7 @@
     using Core.Entities.Finance;
     using Core.Interfaces.Repositories;
 
-    public class FinanceRepository:BaseRepository<Finance>, IFinanceRepository
+    public class FinanceRepository : BaseRepository<Finance>, IFinanceRepository
     {
         private readonly MyContext context;
 

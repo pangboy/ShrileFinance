@@ -6,9 +6,9 @@
     using AutoMapper;
     using Core.Entities;
     using Core.Entities.Finance;
+    using Core.Entities.Identity;
     using Core.Interfaces.Repositories;
     using ViewModels.FinanceViewModels;
-    using Core.Entities.Identity;
 
     /// <summary>
     /// 融资
@@ -52,7 +52,6 @@
             repository.Modify(finance);
             repository.Commit();
         }
-
 
         public FinanceApplyViewModel Get(Guid id)
         {
@@ -390,43 +389,50 @@
                 return;
             }
 
-            // 选择还款日
-            finance.RepaymentDate = value.RepaymentDate;
-
-            // 首次租金支付日期
-            finance.RepayRentDate = value.FirstPaymentDate;
-
-            // 保证金
-            finance.Bail = value.Margin;
-
-            // 先付月供
-            finance.Payment = value.PayMonthly;
-
-            // 一次性付息
-            finance.OnePayInterest = value.OnePayInterest;
-
-            // 实际用款额
-            finance.Principal = value.ActualAmount;
-
             if (finance.FinanceExtension == null)
             {
                 finance.FinanceExtension = new FinanceExtension();
             }
 
-            // 放款主体
-            finance.FinanceExtension.LoanPrincipal = value.LoanPrincipal;
+            if (value.NodeType.Equals("Customer"))
+            {
 
-            // 放款账户
-            finance.FinanceExtension.CreditAccountId = value.CreditAccountId;
+            }
+            else
+            {
+                // 选择还款日
+                finance.RepaymentDate = value.RepaymentDate;
 
-            // 放款账户开户行
-            finance.FinanceExtension.CreditBankName = value.CreditBankName;
+                // 首次租金支付日期
+                finance.RepayRentDate = value.FirstPaymentDate;
 
-            // 放款账户卡号
-            finance.FinanceExtension.CreditBankCard = value.CreditBankCard;
+                // 保证金
+                finance.Bail = value.Margin;
 
-            // 合同Json
-            finance.FinanceExtension.ContactJson = value.ContactJson;
+                // 先付月供
+                finance.Payment = value.PayMonthly;
+
+                // 一次性付息
+                finance.OnePayInterest = value.OnePayInterest;
+
+                // 实际用款额
+                finance.Principal = value.ActualAmount;
+
+                // 放款主体
+                finance.FinanceExtension.LoanPrincipal = value.LoanPrincipal;
+
+                // 放款账户
+                finance.FinanceExtension.CreditAccountName = value.CreditAccountName;
+
+                // 放款账户开户行
+                finance.FinanceExtension.CreditBankName = value.CreditBankName;
+
+                // 放款账户卡号
+                finance.FinanceExtension.CreditBankCard = value.CreditBankCard;
+
+                // 合同Json
+                finance.FinanceExtension.ContactJson = value.ContactJson;
+            }
 
             repository.Modify(finance);
 

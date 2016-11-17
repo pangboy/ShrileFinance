@@ -12,6 +12,27 @@
             PoundageList = new HashSet<FinancingProjectListViewModel>();
         }
 
+        /// <summary>
+        /// 还款方式枚举
+        /// </summary>
+        public enum RepaymentMethodEnum : byte
+        {
+            /// <summary>
+            /// 等额本息
+            /// </summary>
+            等额本息 = 1,
+
+            /// <summary>
+            /// 月供提前付
+            /// </summary>
+            月供提前付 = 2,
+
+            /// <summary>
+            /// 一次性付息
+            /// </summary>
+            一次性付息 = 3
+        }
+
         public Guid Id { get; set; }
 
         /// <summary>
@@ -39,7 +60,9 @@
         /// </summary>
         public RepaymentMethodEnum RepaymentMethod { get; set; }
 
-        public string RepaymentMethodDesc { get { return RepaymentMethod.ToString(); } }
+        public string RepaymentMethodDesc { get
+            { return RepaymentMethod.ToString(); }
+        }
 
         /// <summary>
         /// 最小融资比例
@@ -75,27 +98,6 @@
         /// 备注
         /// </summary>
         public string Remarks { get; set; }
-
-        /// <summary>
-        /// 还款方式枚举
-        /// </summary>
-        public enum RepaymentMethodEnum : byte
-        {
-            /// <summary>
-            /// 等额本息
-            /// </summary>
-            等额本息 = 1,
-
-            /// <summary>
-            /// 月供提前付
-            /// </summary>
-            月供提前付 = 2,
-
-            /// <summary>
-            /// 一次性付息
-            /// </summary>
-            一次性付息 = 3
-        }
 
         /// <summary>
         /// 每个产品对应的融资项
