@@ -1,7 +1,10 @@
-﻿namespace Application.ViewModels.ProduceViewModel
+﻿using System;
+
+namespace Application.ViewModels.ProduceViewModel
 {
-    public class FinancingItemViewModel
+    public class FinancingItemViewModel : IEntityViewModel
     {
+        public Guid? Id { get; set; }
         /// <summary>
         /// 融资项目标识
         /// </summary>

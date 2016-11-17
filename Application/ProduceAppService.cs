@@ -45,21 +45,23 @@ namespace Application
             repository.Commit();
         }
 
-        public void Modify(ProduceViewModel value)
+        public void Modify(ProduceViewModel model)
         {
-            var asd = repository.Get(value.Id);
-            var produce = Mapper.Map<Produce>(value);
-            if (value.Poundage != null)
+            var produce = repository.Get(model.Id);
+            Mapper.Map(model, produce);
+            //var produce = Mapper.Map<Produce>(value);
+            if (model.Poundage != null)
             {
-                foreach (var item in value.Poundage)
+                foreach (var item in model.Poundage)
                 {
                     var financingItem = Mapper.Map<FinancingItem>(item);
-                    produce.FinancingItems.Add(financingItem);
+                    model.FinancingItems.Add(item);
                 }
             }
-            asd= produce;
 
-            repository.Modify(asd);
+            new UpdateBind().Bind(produce.FinancingItems, model.FinancingItems);
+
+            repository.Modify(produce);
             repository.Commit();
         }
 

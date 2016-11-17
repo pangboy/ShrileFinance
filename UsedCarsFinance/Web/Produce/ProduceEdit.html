@@ -47,7 +47,7 @@
                         var financing = $("#Financing").datagrid("getRows");
                         var poundage = $("#Poundage").datagrid("getRows");
                         $(".container").form("load", data);
-
+                        debugger
                         //该部分代码还需要优化调整，等功能点做完之后在优化
                         //加载时候给融资项金额赋值
                         for (var i = 0 ; i < data.FinancingItems.length; i++) {
@@ -55,7 +55,8 @@
                                 for (var j = 0; j < financing.length; j++) {
                                     if (data.FinancingItems[i].FinancingProjectId == financing[j].FinancingProjectId) {
                                         financing[j].Money = data.FinancingItems[i].Money;
-
+                                        financing[j].IsEdit = data.FinancingItems[i].IsEdit;
+                                        financing[j].IsFinancing = data.FinancingItems[i].FinancingProject.IsFinancing;
                                     }
                                 }
                             }
@@ -77,6 +78,8 @@
                                 for (var j = 0; j < poundage.length; j++) {
                                     if (data.FinancingItems[i].FinancingProjectId == poundage[j].FinancingProjectId) {
                                         poundage[j].Money = data.FinancingItems[i].Money;
+                                        poundage[j].IsEdit = data.FinancingItems[i].IsEdit;
+                                        poundage[j].IsFinancing = data.FinancingItems[i].FinancingProject.IsFinancing;
                                     }
                                 }
                             }
@@ -119,6 +122,24 @@
                 }
             });
         }
+        //用于提交数据时候改变是否融资项和是否可编辑状态“是”改为true "否"改为false
+        function ChangeStatus(datagridId) {
+            var datarows = $("#" + datagridId).datagrid("getRows");
+            for (var i = 0 ; i < datarows.length; i++) {
+                if (datarows[i]["IsFinancing"] == "是") {
+                    datarows[i]["IsFinancing"] = true;
+                }
+                else {
+                    datarows[i]["IsFinancing"] = false;
+                }
+                if (datarows[i]["IsEdit"] == "是") {
+                    datarows[i]["IsEdit"] = true;
+                }
+                else {
+                    datarows[i]["IsEdit"] = false;
+                }
+            }
+        }
 
         function Submit() {
             if ($("#MinFinancingRatio").val() > 100) {
@@ -145,7 +166,9 @@
            // toUppers();
 
             //if (disction) {
-                var produceInfo = $(".container").serializeJson();
+            var produceInfo = $(".container").serializeJson();
+                ChangeStatus("Poundage");
+                ChangeStatus("Financing");
                 produceInfo["Poundage"] = $('#Poundage').datagrid('getChecked');
                 produceInfo["FinancingItems"] = ($('#Financing').datagrid('getChecked'));
 
@@ -243,10 +266,18 @@
             };
             if (data.length > 0) {
                 for (var i = 0 ; i < data.length; i++) {
-                    //if (data[i].IsEdit == false)
-                    //    data[i].IsEdit = "否"
-                    //else
-                    //    data[i].IsEdit = "是"
+                    if (data[i].IsFinancing == false){
+                        data[i].IsFinancing = "否"
+                    }
+                    else {
+                        data[i].IsFinancing = "是"
+                    }
+                    if (data[i].IsEdit == false){
+                        data[i].IsEdit = "否"
+                    }
+                    else {
+                        data[i].IsEdit = "是"
+                    }
                     value.rows[i] = data[i];
                 }
                 return value;
@@ -376,8 +407,8 @@
                             <th data-options="field:'FinancingProjectId',hidden:true">Id</th>
                             <th data-options="field:'Name',width:200,align:'center'">名称</th>
                             <th data-options="field:'Money',width:200,align:'center',editor:{type:'text',options:{required:true}}">价格</th>
-                            <th data-options="field:'IsFinancing',width:120,align:'center',editor:{type:'checkbox',options:{required:true,on:'true',off:'false'}}">是否是融资项</th>
-                            <th data-options="field:'IsEdit',width:120,align:'center',editor:{type:'checkbox',options:{required:true,on:'true',off:'false'}}">是否可编辑</th>
+                            <th data-options="field:'IsFinancing',width:120,align:'center',editor:{type:'checkbox',options:{required:true,on:'是',off:'否'}}">是否是融资项</th>
+                            <th data-options="field:'IsEdit',width:120,align:'center',editor:{type:'checkbox',options:{required:true,on:'是',off:'否'}}">是否可编辑</th>
                         </tr>
                     </thead>
                 </table>

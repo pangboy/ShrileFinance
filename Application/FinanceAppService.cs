@@ -38,7 +38,6 @@
             finance.Produce = null;
             repository.Create(finance);
             repository.Commit();
-
         }
 
         public void Modify(FinanceApplyViewModel model)
@@ -46,16 +45,8 @@
             var finance = repository.Get(model.Id.Value);
             Mapper.Map(model, finance);
 
-            finance.FinanceProduce.Clear();
-            model.FinanceProduce.ToList().ForEach(delegate (FinanceProduceViewModel item)
-            {
-                finance.FinanceProduce.Add(Mapper.Map<FinanceProduce>(item));
-            });
-
             new UpdateBind().Bind(finance.FinanceProduce, model.FinanceProduce);
-
             new UpdateBind().Bind(finance.Applicant, model.Applicant);
-
 
             repository.Modify(finance);
             repository.Commit();
