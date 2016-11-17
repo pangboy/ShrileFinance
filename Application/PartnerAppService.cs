@@ -36,9 +36,15 @@
         {
             var partner = Mapper.Map<Partner>(model);
 
-            produceRepository.GetAll().ToList().ForEach(m => partner.Produces.Add(m));
-            partner.Accounts = repository.GetByUser(new AppUser()).Approvers;
-            partner.Approvers = partner.Accounts;
+            var produceIds = model.Produces.Select(m => m.Id);
+            partner.Produces = produceRepository.GetAll(m => produceIds.Contains(m.Id)).ToList();
+
+            partner.Approvers = userManager.Users.Where(m => model.Approvers.Contains(m.Id)).ToList();
+
+            if (partner.Approvers.Select(m => m.RoleId).Count() != 5)
+            {
+                throw new Core.Exceptions.InvalidOperationAppException("每个角色有且仅有一个审批用户.");
+            }
 
             repository.Create(partner);
             repository.Commit();
@@ -46,11 +52,20 @@
 
         public void Modify(PartnerViewModel model)
         {
-            var partner = Mapper.Map<Partner>(model);
+            var partner = repository.Get(model.Id.Value);
+            Mapper.Map(model, partner);
 
-            partner = repository.Get(model.Id.Value);
+            var produceIds = model.Produces.Select(m => m.Id);
+            partner.Produces.Clear();
+            partner.Produces = produceRepository.GetAll(m => produceIds.Contains(m.Id)).ToList();
 
-            var produces = model.Produces.Select(m => produceRepository.Get(m.Id)).ToList();
+            partner.Approvers.Clear();
+            partner.Approvers = userManager.Users.Where(m => model.Approvers.Contains(m.Id)).ToList();
+
+            if (partner.Approvers.Select(m => m.RoleId).Count() != 5)
+            {
+                throw new Core.Exceptions.InvalidOperationAppException("每个角色有且仅有一个审批用户.");
+            }
 
             repository.Modify(partner);
             repository.Commit();

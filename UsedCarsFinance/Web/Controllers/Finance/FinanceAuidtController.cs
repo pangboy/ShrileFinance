@@ -66,6 +66,18 @@
             return Ok();
         }
 
+        public IHttpActionResult Modify(FinanceApplyViewModel value)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ValidModel.ShowErrorFirst(ModelState));
+            }
+
+            financeAppService.Modify(value);
+
+            return Ok();
+        }
+
         public IHttpActionResult Get(Guid Id)
         {
             var finance = financeAppService.Get(Id);

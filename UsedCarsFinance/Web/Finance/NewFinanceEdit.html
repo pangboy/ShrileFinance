@@ -144,7 +144,7 @@
         }
         //加载融资信息
         function LoadFinance() {
-            var Id = "CF69EF4B-2FAB-E611-80C5-507B9DE4A488";
+            var Id = "AFFEA390-C7AB-E611-80C6-507B9DE4A488";
             $.ajax({
                 async: false,
                 data: { Id: Id },
@@ -152,34 +152,69 @@
                 url: "../api/FinanceAuidt/Get",
                 statusCode: {
                     200: function (data) {
-                        $("#produce").form("load", data);
-                        CheckProduce();
-                        $("#Vehicle").form("load", data.Vehicle);
-                        for (var i = 0; i < data.Applicant.length; i++) {
-                            if (data.Applicant[i].Type == "1") {
-                                $("#mainapplicant").form("load", data.Applicant[i]);
-                                if (data.Applicant[i].OwnHouse.length > 0) {
-                                    var house = $.parseJSON(data.Applicant[i].OwnHouse);
-                                    for (var i = 0; i < house.length; i++) {
-                                        AddOwnHouse();
-                                        $("#OwnHouse" + ownhouse).form("load", house[i]);
-                                    }
-                                }
-                            }
-                            else if (data.Applicant[i].Type == "2") {
-                                $("#joint").form("load", data.Applicant[i]);
-                            }
-                            else if (data.Applicant[i].Type == "3") {
-                                $("#Guarantee").form("load", data.Applicant[i]);
-                            }
-                            else {
-                                AddContact();
-                                $("#contact" + contents).form("load", data.Applicant[i]);
-                            }
+                        if (data != null) {
+                            $("#financeId").val(data.Id);
+                            $("#produce").form("load", data);
+                            $("#produce").form("load", data.Produce);
+                            CheckProduce();
+                            FinanceProduce(data.FinanceProduce);
+                            $("#Vehicle").form("load", data.Vehicle);
+                            $("select[comboname='MakeCode']").combobox("unselect", data.Vehicle.MakeCode).combobox("select", data.Vehicle.MakeCode);
+                            $("select[comboname='FamilyCode']").combobox("select", data.Vehicle.FamilyCode);
+                            $("select[comboname='VehicleKey']").combobox("select", data.Vehicle.VehicleKey);
+                            //加载联系人
+                            LoadApplicant(data);
                         }
                     }
                 }
             });
+        }
+        //加载联系人信息
+        function LoadApplicant(data) {
+            for (var i = 0; i < data.Applicant.length; i++) {
+                //主要申请人
+                if (data.Applicant[i].Type == "1") {
+                    $("#mainapplicant").form("load", data.Applicant[i]);
+                    if (data.Applicant[i].OwnHouse.length > 0) {
+                        var house = $.parseJSON(data.Applicant[i].OwnHouse);
+                        for (var j = 0; j < house.length; j++) {
+                            AddOwnHouse();
+                            $("#OwnHouse" + ownhouse).form("load", house[j]);
+                        }
+                    }
+                }
+                    //共同申请人
+                else if (data.Applicant[i].Type == "2") {
+                    $("#joint").form("load", data.Applicant[i]);
+                }
+                    //担保人
+                else if (data.Applicant[i].Type == "3") {
+                    $("#Guarantee").form("load", data.Applicant[i]);
+                }
+                    //联系人
+                else {
+                    AddContact();
+                    $("#contact" + contents).form("load", data.Applicant[i]);
+                }
+            }
+        }
+
+        //加载融资产品的值
+        function FinanceProduce(produce) {
+            var Poundage = Array();
+            var Financing = Array();
+            for (var i = 0; i < produce.length; i++) {
+                if (produce[i]["IsFinancing"] == false) {
+                    Poundage.push(produce[i]);
+                }
+                else {
+                    Financing.push(produce[i])
+                }
+            }
+            $("#Poundage").datagrid("loadData", Poundage);
+            $("#Financing").datagrid("loadData", Financing);
+            CostCount("Poundage");
+            CostCount("Financing");//这两句代码是计算金额求和
         }
 
         function CheckProduce() {
@@ -273,7 +308,7 @@
             if (editIndex != index) {
                 var row = $('#' + this.id).datagrid("getSelected");
                 //不可编辑状态
-                if (row["IsEdit"] == "否") {
+                if (row["IsEdit"] == false) {
                     $('#' + this.id).datagrid('selectRow', editIndex);
                 }
                 else {
@@ -447,13 +482,13 @@
             data["IntentionPrincipal"] = $("#IntentionPrincipal").textbox("getValue");
             data["OncePayMonths"] = $("#OncePayMonths").textbox("getValue");
             data["FinanceProduce"] = $('#Financing').datagrid('getRows');
-
+            data["Id"] =$("#financeId").val();
             for (var i = 0; i < $('#Poundage').datagrid('getRows').length; i++) {
                 data["FinanceProduce"].push($('#Poundage').datagrid('getRows')[i])
             }
             uc.form.Submit({
                 method: "POST",
-                url: "../api/FinanceAuidt/Create",
+                url: "../api/FinanceAuidt/Modify",
                 data: data
             });
         }
@@ -485,7 +520,7 @@
 <body>
     <form id="finance_ff" class="container">
         <div class="hidden">
-            <input name="FinanceId" type="hidden" />
+            <input id="financeId" name="Id" type="hidden" />
             <input type="hidden" id="InstanceId" name="InstanceId">
             <input name="ProduceId" id="ProduceId" type="hidden" />
 
@@ -495,6 +530,7 @@
             <label for="ac-1" class="ac">基本信息</label>
             <article class="Vehicle">
                 <fieldset id="Vehicle" style="margin-bottom:0px">
+                    <input name="Id" id="Id" type="hidden" />
                     <legend>联系人信息</legend>
                     <div class="row">
                         <div class="col-6">
@@ -719,12 +755,12 @@
                     <div class="row">
                         <div class="col-6">
                             <label>意向融资金额:</label>
-                            <input id="IntentionPrincipal" name="IntentionPrincipal" class="easyui-textbox" data-options="validType:'Price'" />
+                            <input id="IntentionPrincipal" name="IntentionPrincipal" class="easyui-textbox" data-options="validType:'Price',required:true" />
                             <span class="unit">元</span>
                         </div>
                         <div class="col-6" id="OncePayMonthsDiv">
                             <label>月供先付期数:</label>
-                            <input name="OncePayMonths" id="OncePayMonths" class="easyui-textbox" data-options="validType:'Integer'" />
+                            <input name="OncePayMonths" id="OncePayMonths" class="easyui-textbox" data-options="validType:'Integer',required:true" />
                             <span class="unit">期</span>
                         </div>
                     </div>
@@ -739,6 +775,7 @@
                 <fieldset id="mainapplicant" class="applicant">
                     <div class="hidden">
                         <input name="Type" type="hidden" value="1" />
+                        <input name="Id" type="hidden" />
                     </div>
                     <legend>主要申请人</legend>
                     <div class="row">
@@ -1016,6 +1053,7 @@
                 <fieldset id="joint" class="applicant">
                     <div class="hidden">
                         <input name="Type" type="hidden" value="2" />
+                        <input name="Id" type="hidden" />
                     </div>
                     <legend>共同申请人</legend>
 
@@ -1083,7 +1121,7 @@
 
                         <div class="col-6">
                             <label>证件号码:</label>
-                            <input id="Identity" name="Identity" class="easyui-textbox" />
+                            <input id="Identity" name="Identity" class="easyui-textbox" data-options="required:true"/>
                         </div>
                     </div>
 
@@ -1131,6 +1169,7 @@
                     <legend>担保人</legend>
                     <div class="hidden">
                         <input name="Type" type="hidden" value="3" />
+                        <input name="Id" type="hidden" />
                     </div>
 
                     <div class="row">
@@ -1254,6 +1293,7 @@
                     <template id="contactTemplate">
                         <div class="hidden">
                             <input name="Type" type="hidden" value="4" />
+                            <input name="Id" type="hidden" />
                         </div>
                         <div class="minusdiv">
                             <a class="add" onclick="MinusContacts(this)">

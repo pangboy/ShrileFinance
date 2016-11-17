@@ -27,7 +27,8 @@
             CreateMap<Core.Entities.Flow.Instance, InstanceViewModel>();
 
             CreateMap<Core.Entities.Partner.Partner, PartnerViewModel>()
-                .ForMember(d => d.Accounts, opt => opt.ResolveUsing(s => s.Accounts.Select(m => m.Id)));
+                .ForMember(d => d.Approvers, opt => opt.ResolveUsing(s => s.Approvers.Select(m => m.Id)));
+            CreateMap<Produce, ViewModels.PartnerViewModels.ProduceViewModel>();
 
             CreateMap<Organization, OrganizationViewModel>();
             CreateMap<AssociatedEnterprise, AssociatedEnterpriseViewModel>();
@@ -50,7 +51,7 @@
             CreateMap<InstitutionIncomeExpenditure, InstitutionIncomeExpenditureViewModel>();
             CreateMap<InstitutionLiabilities, InstitutionLiabilitiesViewModel>();
 
-            CreateMap<Produce, ProduceViewModel>();
+            CreateMap<Produce, ViewModels.ProduceViewModel.ProduceViewModel>();
             CreateMap<FinancingItem, FinancingItemViewModel>();
             CreateMap<FinancingProject, FinancingProjectViewModel>();
             CreateMap<Finance, FinanceApplyViewModel>();
@@ -59,7 +60,7 @@
 
             CreateMap<CreditExamine, CreditExamineViewModel>();
             // 运营
-            CreateMap<FinanceExtension,OperationViewModel>();
+            CreateMap<FinanceExtension, OperationViewModel>();
             CreateMap<FinanceProduce, FinanceProduceViewModel>();
         }
     }

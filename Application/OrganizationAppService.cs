@@ -31,24 +31,19 @@
             var customer = Mapper.Map<Core.Entities.Customers.Enterprise.Organization>(model.Base);
             customer = Mapper.Map(model, customer);
 
-            try
-            {
-                //var organizate = repository.Get(model.Base.Id);
-                //// organizate.Managers.RemoveRange(0, organizate.Managers.Count);
-                // organizate.Managers.Clear();
-                // organizate.Shareholders.Clear();
-                // organizate.BigEvent.Clear();
-                // organizate.Litigation.Clear();
-                // organizate.AssociatedEnterprises.Clear();
-                // organizate = Mapper.Map(model, organizate);
-                // organizate.Managers.RemoveAt(0);
-                repository.Modify(customer);
+            //var organizate = repository.Get(model.Base.Id);
+            //// organizate.Managers.RemoveRange(0, organizate.Managers.Count);
+            // organizate.Managers.Clear();
+            // organizate.Shareholders.Clear();
+            // organizate.BigEvent.Clear();
+            // organizate.Litigation.Clear();
+            // organizate.AssociatedEnterprises.Clear();
+            // organizate = Mapper.Map(model, organizate);
+            // organizate.Managers.RemoveAt(0);
+            repository.Modify(customer);
 
-                repository.Commit();
-            }
-            catch (Exception ex)
-            {
-            }
+            repository.Commit();
+          
         }
 
         public OrganizationViewModel Get(Guid id)

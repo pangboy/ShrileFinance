@@ -2,12 +2,9 @@
 {
     using System;
 
-    class FinanceProduceViewModel
+    public class FinanceProduceViewModel : IEntityViewModel
     {
-        /// <summary>
-        /// 融资项目标识
-        /// </summary>
-        public Guid FinanceId { get; set; }
+        public Guid? Id { get; set; }
 
         /// <summary>
         /// 项目名称

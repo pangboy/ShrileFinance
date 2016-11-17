@@ -1,15 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using Core.Entities.Finance;
-
-namespace Application.ViewModels.FinanceViewModels
+﻿namespace Application.ViewModels.FinanceViewModels
 {
-    public class FinanceApplyViewModel
+    using System;
+    using System.Collections.Generic;
+    using Core.Entities.Finance;
+
+    public class FinanceApplyViewModel : IEntityViewModel
     {
         /// <summary>
         /// 融资标识
         /// </summary>
-        public Guid Id { get; set; }
+        public Guid? Id { get; set; }
 
         /// <summary>
         /// 产品ID
@@ -79,7 +79,7 @@ namespace Application.ViewModels.FinanceViewModels
         /// <summary>
         /// 还款日
         /// </summary>
-        public DateTime? RepaymentDate { get; set; }
+        public int? RepaymentDate { get; set; }
 
         /// <summary>
         /// 保证金
@@ -114,23 +114,28 @@ namespace Application.ViewModels.FinanceViewModels
         /// <summary>
         /// 联系人
         /// </summary>
-        public virtual ICollection<ApplicationViewModel> Applicant { get; set; }
+        public virtual IEnumerable<ApplicationViewModel> Applicant { get; set; }
 
         /// <summary>
         /// 车辆信息
         /// </summary>
         public virtual VehicleViewModel.VehicleViewModel Vehicle { get; set; }
+
         /// <summary>
         /// 合同
         /// </summary>
-        public virtual ICollection<ContractViewModel> Contact { get; set; }
+        public virtual IEnumerable<ContractViewModel> Contact { get; set; }
 
         /// <summary>
         /// 产品
         /// </summary>
         public virtual ProduceViewModel.ProduceViewModel Produce { get; set; }
 
-        public virtual ICollection<FinanceProduce> FinanceProduce { get; set; }
+        /// <summary>
+        /// 融资产品项
+        /// </summary>
+        public virtual IEnumerable<FinanceProduceViewModel> FinanceProduce { get; set; }
+
         /// <summary>
         /// 信审报告
         /// </summary>

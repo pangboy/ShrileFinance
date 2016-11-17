@@ -14,6 +14,7 @@
             Applicant = new List<Applicant>();
             Contact = new List<Contract>();
         }
+
         /// <summary>
         /// 产品ID
         /// </summary>

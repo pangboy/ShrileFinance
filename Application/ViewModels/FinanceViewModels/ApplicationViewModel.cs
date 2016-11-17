@@ -2,9 +2,9 @@
 {
     using System;
 
-    public class ApplicationViewModel
+    public class ApplicationViewModel : IEntityViewModel
     {
-        public Guid Id { get; set; }
+        public Guid? Id { get; set; }
 
         /// <summary>
         /// 申请人姓名

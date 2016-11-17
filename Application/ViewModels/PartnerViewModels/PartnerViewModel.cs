@@ -30,14 +30,10 @@
 
         public string ControllerPhone { get; set; }
 
-        //public DateTime DateCreated { get; set; }
-
         public string Remarks { get; set; }
 
-        public IEnumerable<ProduceViewModel.ProduceViewModel> Produces { get; set; }
+        public IEnumerable<ProduceViewModel> Produces { get; set; }
 
-        public IEnumerable<UserViewModel> Approvers { get; set; }
-
-        public IEnumerable<string> Accounts { get; set; }
+        public IEnumerable<string> Approvers { get; set; }
     }
 }

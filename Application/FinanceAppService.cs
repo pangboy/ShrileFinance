@@ -6,10 +6,9 @@
     using AutoMapper;
     using Core.Entities;
     using Core.Entities.Finance;
-    using Core.Entities.Identity;
     using Core.Interfaces.Repositories;
-    using Microsoft.AspNet.Identity;
     using ViewModels.FinanceViewModels;
+    using Core.Entities.Identity;
 
     /// <summary>
     /// 融资
@@ -19,7 +18,7 @@
         private readonly IFinanceRepository repository;
         private readonly AppUserManager userManager;
         private readonly AppRoleManager roleManager;
-
+        
         /// <summary>
         /// Initializes a new instance of the <see cref="FinanceAppService" /> class.
         /// </summary>
@@ -36,18 +35,24 @@
         public void Create(FinanceApplyViewModel value)
         {
             var finance = Mapper.Map<Finance>(value);
-
-            repository.Create(finance);
-            repository.Commit();
+            
+            finance.Produce = null;
+                repository.Create(finance);
+                repository.Commit();
         }
 
-        public void Modify(FinanceApplyViewModel value)
+        public void Modify(FinanceApplyViewModel model)
         {
-            var finance = Mapper.Map<Finance>(value);
+            var finance = repository.Get(model.Id.Value);
+            Mapper.Map(model, finance);
+
+            new UpdateBind().Bind(finance.FinanceProduce, model.FinanceProduce);
+            new UpdateBind().Bind(finance.Applicant, model.Applicant);
 
             repository.Modify(finance);
             repository.Commit();
         }
+
 
         public FinanceApplyViewModel Get(Guid id)
         {
