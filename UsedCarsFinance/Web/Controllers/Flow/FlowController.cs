@@ -37,35 +37,5 @@ namespace Web.Controllers.Flow
 
             return _node.Option(flowId);
         }
-
-        /// <summary>
-        /// 获取流程框架信息
-        /// </summary>
-        /// qiy     16.04.29
-        /// yaoy    16.07.26
-        /// <param name="instanceId">实例标识</param>
-        /// <returns></returns>
-        [HttpGet]
-        public IHttpActionResult Frame(int instanceId)
-        {
-            var result = new BLL.Flow.Frame().GetFrameAllInfo(instanceId);
-
-            return Ok(result);
-        }
-
-
-        /// <summary>
-        /// 获取流程框架信息
-        /// </summary>
-        /// qiy     16.04.29
-        /// <param name="instanceId">实例标识</param>
-        /// <returns></returns>
-        [HttpGet]
-        public object FrameView(int instanceId)
-        {
-            var _flow = new BLL.Flow.Frame();
-
-            return _flow.GetFrameInfo(instanceId);
-        }
     }
 }

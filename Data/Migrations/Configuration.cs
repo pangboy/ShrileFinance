@@ -157,7 +157,7 @@
 
             context.Set<Form>().AddOrUpdate(
                 m => m.Id,
-                new Form { Id = new Guid("{57DC5FCF-18A4-E611-80C5-507B9DE4A488}"), FlowId = new Guid("{228C8C80-06A4-E611-80C5-507B9DE4A488}"), Name = "融资申请", Link = "../Finance/FinanceEdit.html", Sort = 200 },
+                new Form { Id = new Guid("{57DC5FCF-18A4-E611-80C5-507B9DE4A488}"), FlowId = new Guid("{228C8C80-06A4-E611-80C5-507B9DE4A488}"), Name = "融资申请", Link = "../Finance/NewFinanceEdit.html", Sort = 200 },
                 new Form { Id = new Guid("{58DC5FCF-18A4-E611-80C5-507B9DE4A488}"), FlowId = new Guid("{228C8C80-06A4-E611-80C5-507B9DE4A488}"), Name = "融资审核", Link = "../Finance/Review.html", Sort = 200 },
                 new Form { Id = new Guid("{59DC5FCF-18A4-E611-80C5-507B9DE4A488}"), FlowId = new Guid("{228C8C80-06A4-E611-80C5-507B9DE4A488}"), Name = "信审报告", Link = "../Finance/CreditExamineReport.html", Sort = 200 },
                 new Form { Id = new Guid("{5ADC5FCF-18A4-E611-80C5-507B9DE4A488}"), FlowId = new Guid("{228C8C80-06A4-E611-80C5-507B9DE4A488}"), Name = "信息补充", Link = "../Finance/Operation.html", Sort = 200 },
