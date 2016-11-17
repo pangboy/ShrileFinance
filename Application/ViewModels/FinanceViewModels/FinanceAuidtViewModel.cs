@@ -14,7 +14,7 @@
         public Guid FinanceId { get; set; }
 
         /// <summary>
-        /// 融资项（Id、<Name_Maney>）
+        /// 融资项（Id、（Name、Maney））
         /// </summary>
         public ICollection<KeyValuePair<Guid, KeyValuePair<string, decimal?>>> FinancingItems { get; set; }
 
