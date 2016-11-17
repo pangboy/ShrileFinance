@@ -2,6 +2,8 @@
 {
     using System;
     using Core.Entities.Flow;
+    using Newtonsoft.Json;
+    using Newtonsoft.Json.Converters;
 
     public class InstanceViewModel
     {
@@ -17,14 +19,15 @@
 
         public string ProcessUser { get; set; }
 
-        public DateTime ProcessTime { get; set; }
+        public DateTime? ProcessTime { get; set; }
 
         public string StartUser { get; set; }
 
         public DateTime StartTime { get; set; }
 
-        public DateTime DateTime { get; set; }
+        public DateTime? EndTime { get; set; }
 
+        [JsonConverter(typeof(StringEnumConverter))]
         public InstanceStatusEnum Status { get; set; }
     }
 }

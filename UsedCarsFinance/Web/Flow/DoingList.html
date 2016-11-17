@@ -12,24 +12,25 @@
     <script>
         uc.grid = new UCGrid("#dg");
 
-        $(function () {
-            // TODO: 是否展示发起流程按钮.
-            if (top.$("#role_id").val() == 8) {
-                $("#add").show();
+        function Search() {
+            var isValid = $("#search_form").form("validate");
+
+            if (isValid) {
+                uc.grid.Reload();
             }
-        });
+        }
 
         function SetFilters(params) {
-            params.MainInfo = $("#MainInfo").textbox("getValue");
-            params.CurrentNode = $("#CurrentNode").textbox("getValue");
+            params.searchString = $("#SearchString").textbox("getValue");
+            params.currentNode = $("#CurrentNode").textbox("getValue");
 
             if ($("#BeginTime").datebox("isValid")) {
-                params.BeginTime = $("#BeginTime").datebox("getValue");
+                params.beginTime = $("#BeginTime").datebox("getValue");
             }
             if ($("#EndTime").datebox("isValid")) {
-                params.EndTime = $("#EndTime").datebox("getValue");
+                params.endTime = $("#EndTime").datebox("getValue");
             }
-          
+
             for (var p in params) {
                 if (params[p] == "") {
                     delete params[p];
@@ -43,33 +44,27 @@
                 url: "../api/Instance/StartProcess",
                 statusCode: {
                     200: function (data) {
-                        if (data > 0) {
-                            uc.ShowWindow("详情页", "Flow/Frame.html?Status=1&instanceId=" + data);
-                        }
+                        uc.ShowWindow("详情页", "Flow/Frame.html?instanceId=" + data);
                     }
                 }
             });
         }
 
         function Process() {
-            var url = "Flow/Frame.html?Status=1";
+            var url = "Flow/Frame.html";
 
             var row = uc.grid.GetSelected();
             if (row) {
-                url += "&instanceId=" + row.InstanceId;
-            }
-            else {
-                return;
-            }
+                url += "?instanceId=" + row.Id;
 
-            uc.ShowWindow("详情页", url);
+                uc.ShowWindow("详情页", url);
+            }
         }
     </script>
 </head>
 
 <body>
-    <table id="dg" class="easyui-datagrid" data-options="
-        height: 630,
+    <table id="dg" class="easyui-datagrid" data-options="height: 630,
         toolbar: '#tb',
         rownumbers: true,
         singleSelect: true,
@@ -83,24 +78,22 @@
         ">
         <thead>
             <tr>
-                <th data-options="field:'InstanceId',hidden:true">InstanceId</th>
-                <th data-options="field:'MainInfo',width:500,align:'center'">主要信息</th>
-                <th data-options="field:'FlowName',width:150,align:'center'">所处流程</th>
-                <th data-options="field:'CurrentNodeName',width:150,align:'center'">当前节点</th>
-                <th data-options="field:'CurrentUserName',width:100,align:'center'">当前操作者</th>
-                <th data-options="field:'ProcessUserName',width:100,align:'center'">上一个操作者</th>
+                <th data-options="field:'Title',width:500,align:'center'">标题</th>
+                <th data-options="field:'Flow',width:150,align:'center'">所处流程</th>
+                <th data-options="field:'CurrentNode',width:150,align:'center'">当前节点</th>
+                <th data-options="field:'CurrentUser',width:100,align:'center'">当前操作者</th>
+                <th data-options="field:'ProcessUser',width:100,align:'center'">上一个操作者</th>
                 <th data-options="field:'ProcessTime',width:150,align:'center'">处理时间</th>
-                <th data-options="field:'StartUserName',width:150,align:'center'">发起者</th>
+                <th data-options="field:'StartUser',width:150,align:'center'">发起者</th>
                 <th data-options="field:'StartTime',width:150,align:'center'">发起时间</th>
-                <th data-options="field:'StatusDesc',width:150,align:'center'">状态</th>
+                <th data-options="field:'Status',width:150,align:'center'">状态</th>
             </tr>
         </thead>
     </table>
 
     <div id="tb">
-        <div>
-            <label for="MainInfo">主要信息:</label>
-            <input  id="MainInfo" name="MainInfo" class="easyui-textbox"data-options="width:200,prompt: '输入车牌或客户姓名查询'"/>
+        <form id="search_form">
+            <input id="SearchString" name="SearchString" class="easyui-textbox" data-options="width:200,prompt: '输入车牌或客户姓名查询'" />
             <label for="CurrentNode">当前节点:</label>
             <select id="CurrentNode" name="CurrentNode" class="easyui-combobox" data-options="width:120,editable:false,method:'GET',url:'../api/Flow/NodeOption'"></select>
             <label for="BeginTime">发起时间 从:</label>
@@ -108,12 +101,12 @@
             <label for="EndTime">至:</label>
             <input id="EndTime" name="EndTime" class="easyui-datebox" data-options="width:100,validType:'Date'">
 
-            <a id="search" class="easyui-linkbutton" href="javascript:void(0)" data-options="onClick:uc.grid.Reload,iconCls:'icon-search',plain:true">搜索</a>
+            <a id="search" class="easyui-linkbutton" href="javascript:void(0)" data-options="onClick:Search,iconCls:'icon-search',plain:true">搜索</a>
             <a id="reset" class="easyui-linkbutton" href="javascript:void(0)" data-options="onClick:uc.grid.Reset,iconCls:'icon-reload',plain:true">重置</a>
-        </div>
+        </form>
 
         <div>
-            <a id="add" class="easyui-linkbutton" href="javascript:void(0)" data-options="onClick:Start,iconCls:'icon-add',plain:true" style="display:none">发起流程</a>
+            <a id="add" class="easyui-linkbutton" href="javascript:void(0)" data-options="onClick:Start,iconCls:'icon-add',plain:true">发起流程</a>
             <a id="mod" class="easyui-linkbutton" href="javascript:void(0)" data-options="onClick:Process,iconCls:'icon-edit',plain:true">处理</a>
         </div>
     </div>

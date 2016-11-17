@@ -77,13 +77,11 @@
         /// <summary>
         /// 流转
         /// </summary>
-        /// <param name="instanceId">实例标识</param>
-        /// <param name="actionId">行为标识</param>
-        /// <param name="opinion">审批意见</param>
-        public void Process(Guid instanceId, Guid actionId, AuditOpinion opinion)
+        /// <param name="model">提交的数据</param>
+        public void Process(ProcessPostedViewModel model)
         {
-            var instance = instanceReopsitory.Get(instanceId);
-            var action = instance.CurrentNode.Actions.Single(m => m.Id == actionId);
+            var instance = instanceReopsitory.Get(model.InstanceId);
+            var action = instance.CurrentNode.Actions.Single(m => m.Id == model.ActionId);
 
             AppUser user;
 
@@ -128,7 +126,10 @@
                 Action = action,
                 ProcessUser = CurrentUser,
                 ProcessTime = DateTime.Now,
-                Opinion = opinion
+                Opinion = new AuditOpinion {
+                    ExnernalOpinion = model.ExnernalOpinion,
+                    InternalOpinion = model.InternalOpinion
+                }
             });
 
             instanceReopsitory.Modify(instance);
