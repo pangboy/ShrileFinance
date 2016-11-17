@@ -64,7 +64,7 @@
         /// <summary>
         /// 放款账户
         /// </summary>
-        public string CreditAccountId { get; set; }
+        public string CreditAccountName { get; set; }
 
         /// <summary>
         /// 放款账户开户行
@@ -80,5 +80,25 @@
         /// 合同Json
         /// </summary>
         public string ContactJson { get; set; }
+
+        /// <summary>
+        /// 还款账户
+        /// </summary>
+        public string CustomerAccountName { get; set; }
+
+        /// <summary>
+        /// 还款账户开户行
+        /// </summary>
+        public string CustomerBankName { get; set; }
+
+        /// <summary>
+        /// 还款账户卡号
+        /// </summary>
+        public string CustomerBankCard { get; set; }
+
+        /// <summary>
+        /// 节点类型（运营/客户）
+        /// </summary>
+        public string NodeType { get; set; }
     }
 }
