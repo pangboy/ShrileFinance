@@ -57,6 +57,7 @@
                                 // 客户页面及数据加载
                                 LoadCustomer(data);
                             }
+
                         }
                     }
                 }
@@ -74,43 +75,47 @@
 
         //构建数据
         function BuildData() {
-            var data = {};
-            var NodeType = $('form[name=FinanceOperation]>input[name=NodeType]').val();
+            // 序列化运营信息
+            var value = FieldsetSerializeFactory('Operation', 'text');
 
-            if (NodeType == 'Operation') {
-                // 序列化运营信息
-                var value = FieldsetSerializeFactory('Operation', 'text');
+            // 序列化放款信息
+            if (value.LoanPrincipal == "Channel") {
+                var LoanInfo = FieldsetSerializeFactory('CreditBankInfo', 'text');
 
-                // 序列化放款信息
-                if (value.LoanPrincipal == "Channel") {
-                    var LoanInfo = FieldsetSerializeFactory('LoanPrincipalBankInfo', 'text');
+                $(['CreditAccountName', 'CreditBankName', 'CreditBankCard']).each(function (i, e) {
+                    value[e] = LoanInfo[e];
+                });
+            }
 
+            // 序列化合同信息
+            var array = [];
+            $(FieldsetSerializeFactory('Contact', 'table')).each(function (i, e) {
+                if (e.Name.length > 0) {
+                    array.push(e);
+                }
+            });
+            value.ContactJson = JSON.stringify(array);
+
+            value.NodeType = $('form[name=FinanceOperation]>input[name=NodeType]').val();
+            if (value.NodeType != "Operation") {
+                // 还款账户信息
+                var CustomerBankInfo = FieldsetSerializeFactory('CustomerBankInfo', text);
+                $(['CustomerAccountName', 'CustomerBankName', 'CustomerBankCard']).each(function (i, e) {
+                    value[e] = CustomerBankInfo[e];
+                });
+
+                if (value.LoanPrincipal != 'Channel') {
+                    // 放款账户信息
+                    var CreditBankInfo = FieldsetSerializeFactory('CreditBankInfo', text);
                     $(['CreditAccountName', 'CreditBankName', 'CreditBankCard']).each(function (i, e) {
-                        value[e] = LoanInfo[e];
+                        value[e] = CreditBankInfo[e];
                     });
                 }
 
-                // 序列化合同信息
-                var array = [];
-                $(FieldsetSerializeFactory('Contact', 'table')).each(function (i, e) {
-                    if (e.Name.length > 0) {
-                        array.push(e);
-                    }
-                });
-                value.ContactJson = JSON.stringify(array);
 
-                data = value;
+
+
             }
-            else {
-                var value = null;
-
-
-
-
-                data = value;
-            }
-            
-            data.NodeType = NodeType;
 
             var result = {};
             result["formName"] = "审批信息";
@@ -134,10 +139,8 @@
         }
 
         // 运营数据加载
-        function LoadOperationData(data)
-        {
-            if (data == null)
-            {
+        function LoadOperationData(data) {
+            if (data == null) {
                 return;
             }
 
@@ -158,7 +161,7 @@
                 if (data.LoanPrincipal == "Channel") {
                     // 显示放款信息
                     ShowChannel(true);
-                    FieldsetLoadDateFactory('LoanPrincipalBankInfo', 'text', data);
+                    FieldsetLoadDateFactory('CreditBankInfo', 'text', data);
                 }
 
                 FieldsetLoadDateFactory('Operation', 'text', data);
@@ -167,6 +170,15 @@
                 if (data.ContactJson) {
                     FieldsetLoadDateFactory('Contact', 'table', JSON.parse(data.ContactJson));
                 }
+                else {
+                    var contactTempData = [
+                        { Name: "融资租赁合同" }, { Name: "保证合同" }, { Name: "车辆抵押合同" }, { Name: "建行授权书" },
+                        { Name: "收据" }, { Name: "付款指示函" }, { Name: "扣款委托书" }, { Name: "未婚申明书" }
+                    ];
+                    FieldsetLoadDateFactory('Contact', 'table', contactTempData);
+                }
+
+                $('fieldset[name=Contact] table#Contact_dg').prev().find('table tr#datagrid-row-r1-2-0 input[type=checkbox]').hide();
             }
         }
 
@@ -233,13 +245,11 @@
     <script type="text/javascript">
         // 客户页面及数据加载
         function LoadCustomer(data) {
-            if (data == null)
-            {
+            if (data == null) {
                 return;
             }
-            // 显示客户页面
-            $($('form[name=FinanceOperation] template#Customer').html()).insertAfter($('form[name=FinanceOperation]>fieldset[name=Operation]'));
-            $.parser.parse($('form[name=FinanceOperation]>fieldset[name=Customer]'));
+            // 记录节点类型
+            $('form[name=FinanceOperation]>input[name=NodeType]').val("Customer");
 
             // 隐藏运营放款信息
             $('form[name=FinanceOperation]>fieldset[name=Operation] select[textboxname=LoanPrincipal]').parent().hide();
@@ -251,6 +261,21 @@
             // 禁用合同
             $('fieldset[name=Contact] div[id=Contact_tb]').hide();
             Disabled($('fieldset[name=Contact]'));
+
+            // 显示还款页面
+            $($('form[name=FinanceOperation] template#CustomerBankInfo').html()).insertAfter($('form[name=FinanceOperation]>fieldset[name=Operation]'));
+            $.parser.parse($('form[name=FinanceOperation]>fieldset[name=CustomerBankInfo]'));
+
+            // 显示放款页面
+            if (data.LoanPrincipal == 'Customer') {
+
+                ShowChannel(true, $('form[name=FinanceOperation]>fieldset[name=Operation]'));
+            }
+
+            // 显示车辆补充信息
+            $($('form[name=FinanceOperation] template#VehicleInfo').html()).insertBefore($('form[name=FinanceOperation]>fieldset[name=Contact]'));
+            $.parser.parse($('form[name=FinanceOperation]>fieldset[name=VehicleInfo]'));
+
         }
 
         // 客户数据加载
@@ -344,20 +369,18 @@
                         }
 
                         // 渠道放款信息
-                        function ShowChannel(bool,Obj) {
+                        function ShowChannel(bool, Obj) {
                             if (bool) {
-                                if (Obj == null)
-                                {
+                                if (Obj == null) {
                                     Obj = $('form[name=FinanceOperation]>fieldset[name=Operation]');
                                 }
 
-                                $($('form[name=FinanceOperation] template#LoanPrincipalBankInfo').html()).insertAfter(Obj);
-                                $.parser.parse($('form[name=FinanceOperation]>fieldset[name=LoanPrincipalBankInfo]'));
+                                $($('form[name=FinanceOperation] template#CreditBankInfo').html()).insertAfter(Obj);
+                                $.parser.parse($('form[name=FinanceOperation]>fieldset[name=CreditBankInfo]'));
                             }
                             else {
-                                if ($('form[name=FinanceOperation]>fieldset[name=LoanPrincipalBankInfo]')[0]!=undefined)
-                                {
-                                    $('form[name=FinanceOperation]>fieldset[name=LoanPrincipalBankInfo]').remove();
+                                if ($('form[name=FinanceOperation]>fieldset[name=CreditBankInfo]')[0] != undefined) {
+                                    $('form[name=FinanceOperation]>fieldset[name=CreditBankInfo]').remove();
                                 }
                             }
                         }
@@ -365,8 +388,8 @@
                 </div>
             </fieldset>
 
-            <template id="LoanPrincipalBankInfo">
-                <fieldset name="LoanPrincipalBankInfo">
+            <template id="CreditBankInfo">
+                <fieldset name="CreditBankInfo">
                     <legend>放款信息</legend>
                     <div class="row">
                         <div class="col-6">
@@ -391,6 +414,32 @@
                 </fieldset>
             </template>
 
+            <template id="CustomerBankInfo">
+                <fieldset name="CustomerBankInfo">
+                    <legend>还款信息</legend>
+                    <div class="row">
+                        <div class="col-6">
+                            <label>还款账户:</label>
+                            <!--<input name="CustomerAccountName" class="easyui-combobox" data-options="
+                                    method:'GET',
+                                    url:'../api/Credit/Option',
+                                    editable:false,
+                                    required:true,
+                            " />-->
+                            <input name="CustomerAccountName" class="easyui-textbox" data-options="required:true,validType:'',value:''" />
+                        </div>
+                        <div class="col-6">
+                            <label>开户行:</label>
+                            <input name="CustomerBankName" class="easyui-textbox" data-options="required:true,validType:'',value:''" />
+                        </div>
+                        <div class="col-6">
+                            <label>卡号:</label>
+                            <input name="CustomerBankCard" class="easyui-textbox" data-options="required:true,validType:'',value:''" />
+                        </div>
+                    </div>
+                </fieldset>
+            </template>
+
             <fieldset name="Contact">
                 <legend>合同</legend>
                 <table id="Contact_dg" class="easyui-datagrid" style="width:890px;" data-options="toolbar: '#Contact_tb',
@@ -400,7 +449,7 @@
                    onDblClickCell:ContactDblClickCell,
                    onSelectAll:SelectAll,
                    onUnselectAll:SelectAll,
-                   title:'合同'
+                   title:'合同列表'
                    ">
                     <thead>
                         <tr>
@@ -418,6 +467,12 @@
                 <script type="text/javascript">
                     // table onSelect事件
                     function ContactSelect(index, row) {
+                        if (index == 0)
+                        {
+                            $('#Contact_dg').datagrid('uncheckRow', 0);
+                            return false;
+                        }
+
                         if (row) {
                             if (editRowIndex != index) {
                                 ContactSave();
@@ -448,7 +503,7 @@
                     function ContactDelete() {
                         var rows = $('#Contact_dg').datagrid('getSelections');
 
-                        if (rows.length > 0) {
+                        if (rows.length > 1) {
                             $.messager.confirm('确认', '确认删除选中的合同？', function (r) {
                                 if (r) {
                                     // 清除所有选择的行
@@ -458,11 +513,14 @@
                                     $(rows).each(function (i, e) {
                                         var rowIndex = $('#Contact_dg').datagrid('getRowIndex', e);
 
-                                        // 保存指定行
-                                        ContactSave(rowIndex, true);
+                                        if (rowIndex != 0)
+                                        {
+                                            // 保存指定行
+                                            ContactSave(rowIndex, true);
 
-                                        if ($('#Contact_dg').datagrid('validateRow', rowIndex)) {
-                                            $('#Contact_dg').datagrid('deleteRow', rowIndex);
+                                            if ($('#Contact_dg').datagrid('validateRow', rowIndex)) {
+                                                $('#Contact_dg').datagrid('deleteRow', rowIndex);
+                                            }
                                         }
                                     });
 
@@ -475,7 +533,6 @@
                     // table 添加按钮
                     function ContactAdd() {
                         if ($("fieldset[name=Contact]").form("validate")) {
-
                             $('#Contact_dg').datagrid('appendRow', { Name: '' });
 
                             // 双击新增行Name单元格
@@ -496,6 +553,14 @@
                         }
 
                         editRowIndex = index;
+
+                        // 融资租赁合同不可编辑
+                        if (index == 0)
+                        {
+                            return;
+                        }
+
+                        $('fieldset[name=Contact] input[type=checkbox]').attr("disabled", true);
 
                         // 在双击一个单元格的时候开始编辑并生成编辑器，然后定位到编辑器的输入框上
                         $('#Contact_dg').datagrid('beginEdit', index);
@@ -555,6 +620,8 @@
 
                             }
 
+                            $('fieldset[name=Contact] input[type=checkbox]').attr("disabled", false);
+
                             // 禁用保存按钮
                             $("#Contact_Save").linkbutton("disable");
 
@@ -566,6 +633,8 @@
 
                     // table 选择所有
                     function SelectAll() {
+                        $('#Contact_dg').datagrid('uncheckRow', 0)
+
                         var rows = $('#Contact_dg').datagrid('getSelections');
 
                         if (rows.length > 0) {
@@ -622,10 +691,40 @@
             </script>
         </template>
 
-        <template id="Customer">
-            <fieldset name="Customer">
-                <legend>客户</legend>
-                <div class="row"></div>
+        <template id="VehicleInfo">
+            <fieldset name="VehicleInfo">
+                <legend style="margin-top:25px;">车辆补充信息</legend>
+                <div class="row">
+                    <div class="col-6">
+                        <label>注册登记日期:</label>
+                        <input name="RegisterDate" class="easyui-textbox" data-options="validType:'YearMonth'" />
+                    </div>
+
+                    <div class="col-6">
+                        <label>行驶里程:</label>
+                        <input name="RunningMiles" class="easyui-textbox" data-options="validType:'Integer'" />
+                        <span class="unit">公里</span>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-6">
+                        <label>车辆出厂日期:</label>
+                        <input name="FactoryDate" class="easyui-textbox" data-options="validType:'Date'" />
+                    </div>
+
+                    <div class="col-6">
+                        <label>业务类型:</label>
+                        <select id="Type" name="Type" class="easyui-combobox" data-options="editable:false">
+                            <option value="1">以租代购</option>
+                            <option value="2">快速贷</option>
+                            <option value="3">押车贷</option>
+                            <option value="4">车抵贷</option>
+                            <option value="5">二手车交易贷</option>
+                            <option value="6">新车交易贷</option>
+                        </select>
+                    </div>
+                    </div>
             </fieldset>
         </template>
     </form>

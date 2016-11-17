@@ -4,6 +4,52 @@
 
     public class Vehicle : Entity
     {
+        public enum ConditionEnum : byte
+        {
+            /// <summary>
+            /// 新车
+            /// </summary>
+            新车 = 0,
+
+            /// <summary>
+            /// 二手车
+            /// </summary>
+            二手车 = 1
+        }
+
+        public enum BusinessTypeEnum : byte
+        {
+            /// <summary>
+            /// 新车交易贷
+            /// </summary>
+            新车交易贷 = 0,
+
+            /// <summary>
+            /// 二手车交易贷
+            /// </summary>
+            二手车交易贷 = 1,
+
+            /// <summary>
+            /// 车抵贷
+            /// </summary>
+            车抵贷 = 2,
+
+            /// <summary>
+            /// 押车贷
+            /// </summary>
+            押车贷 = 3,
+
+            /// <summary>
+            /// 快速贷
+            /// </summary>
+            快速贷 = 4,
+
+            /// <summary>
+            /// 以租代购
+            /// </summary>
+            以租代购 = 5
+        }
+
         /// <summary>
         /// 品牌
         /// </summary>
@@ -73,5 +119,15 @@
         /// 车身颜色
         /// </summary>
         public string Color { get; set; }
+
+        /// <summary>
+        /// 车况
+        /// </summary>
+        public ConditionEnum Condition { get; set; }
+
+        /// <summary>
+        /// 业务种类
+        /// </summary>
+        public BusinessTypeEnum BusinessType { get; set; }
     }
 }

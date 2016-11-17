@@ -31,42 +31,6 @@
     }
 
     /// <summary>
-    /// 产品种类 枚举
-    /// </summary>
-    public enum ProductCategorieEnum
-    {
-        /// <summary>
-        /// 新车交易贷
-        /// </summary>
-        新车交易贷 = 0,
-
-        /// <summary>
-        /// 二手车交易贷
-        /// </summary>
-        二手车交易贷 = 1,
-
-        /// <summary>
-        /// 车抵贷
-        /// </summary>
-        车抵贷 = 2,
-
-        /// <summary>
-        /// 押车贷
-        /// </summary>
-        押车贷 = 3,
-
-        /// <summary>
-        /// 快速贷
-        /// </summary>
-        快速贷 = 4,
-
-        /// <summary>
-        /// 以租代购
-        /// </summary>
-        以租代购 = 5
-    }
-
-    /// <summary>
     /// 客户类别 枚举
     /// </summary>
     public enum CustomerCategoryEnum
@@ -262,7 +226,7 @@
         /// <summary>
         /// 产品种类
         /// </summary>
-        public ProductCategorieEnum ProductCategorie { get; set; }
+        public string ProductCategorie { get; set; }
 
         /// <summary>
         /// 产品编号

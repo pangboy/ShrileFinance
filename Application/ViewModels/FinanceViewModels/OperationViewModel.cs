@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
+    using Core.Entities.Vehicle;
 
     /// <summary>
     /// 运营
@@ -100,5 +101,25 @@
         /// 节点类型（运营/客户）
         /// </summary>
         public string NodeType { get; set; }
+
+        /// <summary>
+        /// 注册登记日期
+        /// </summary>
+        public DateTime? RegisterDate { get; set; }
+
+        /// <summary>
+        /// 行驶里程
+        /// </summary>
+        public int? RunningMiles { get; set; }
+
+        /// <summary>
+        /// 出厂日期
+        /// </summary>
+        public DateTime? FactoryDate { get; set; }
+
+        /// <summary>
+        /// 业务种类
+        /// </summary>
+        public Vehicle.BusinessTypeEnum BusinessType { get; set; }
     }
 }

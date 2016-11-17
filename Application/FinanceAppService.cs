@@ -112,7 +112,7 @@
             creditExamineReportViewModel.ProductExplain = finance.Produce.Remarks;
 
             // 产品种类
-            creditExamineReportViewModel.ProductCategorie = ProductCategorieEnum.以租代购;
+            creditExamineReportViewModel.ProductCategorie = finance.Vehicle.BusinessType.ToString();
 
             // 承租人
             var lessee = finance.Applicant.ToList().Find(m => m.Type == Applicant.TypeEnum.主要申请人);
@@ -396,7 +396,24 @@
 
             if (value.NodeType.Equals("Customer"))
             {
+                // 还款信息
+                finance.FinanceExtension.CustomerAccountName = value.CustomerAccountName;
+                finance.FinanceExtension.CustomerBankName = value.CustomerBankName;
+                finance.FinanceExtension.CustomerBankCard = value.CustomerBankCard;
 
+                if (!finance.FinanceExtension.LoanPrincipal.Equals("Channel"))
+                {
+                    // 放款信息
+                    finance.FinanceExtension.CreditAccountName = value.CreditAccountName;
+                    finance.FinanceExtension.CreditBankName = value.CreditBankName;
+                    finance.FinanceExtension.CreditBankCard = value.CreditBankCard;
+                }
+
+                // 车辆补充信息
+                finance.Vehicle.RegisterDate = value.RegisterDate;
+                finance.Vehicle.RunningMiles = value.RunningMiles;
+                finance.Vehicle.FactoryDate = value.FactoryDate;
+                finance.Vehicle.BusinessType = value.BusinessType;
             }
             else
             {

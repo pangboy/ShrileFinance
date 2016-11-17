@@ -31,7 +31,6 @@
             Property(m => m.ApprovalMoney);
             Property(m => m.ApprovalRatio);
             Property(m => m.Payment);
-            Property(m => m.RepayDate);
             Property(m => m.RepayRentDate);
 
             // 信审报告
@@ -51,6 +50,12 @@
 
             // 融资扩展
             HasOptional(m => m.FinanceExtension).WithOptionalPrincipal().Map(m => m.MapKey("FinanceId")).WillCascadeOnDelete();
+
+            // 合作商
+            ////HasOptional(m => m.CreateBy).WithOptionalPrincipal().Map(m => m.MapKey("FinanceId")).WillCascadeOnDelete();
+
+            // 用户
+            ////HasOptional(m => m.CreateOf).WithOptionalPrincipal().Map(m => m.MapKey("FinanceId")).WillCascadeOnDelete();
 
             ToTable("FANC_Finance");
         }
