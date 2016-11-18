@@ -7,8 +7,8 @@ namespace Data.Migrations
     {
         public override void Up()
         {
-            AddColumn("dbo.FANC_Finance", "CreateBy_Id", c => c.Guid());
-            AddColumn("dbo.FANC_Finance", "CreateOf_Id", c => c.String(maxLength: 128));
+            AddColumn("dbo.FANC_Finance", "CreateBy_Id", c => c.String(maxLength: 128));
+            AddColumn("dbo.FANC_Finance", "CreateOf_Id", c => c.Guid());
             AddColumn("dbo.FANC_FinanceExtension", "CreditAccountName", c => c.String(maxLength: 20));
             AddColumn("dbo.FANC_FinanceExtension", "CustomerAccountName", c => c.String(maxLength: 40));
             AddColumn("dbo.FANC_FinanceExtension", "CustomerBankName", c => c.String(maxLength: 40));
@@ -18,8 +18,8 @@ namespace Data.Migrations
             AlterColumn("dbo.FANC_FinanceExtension", "LoanPrincipal", c => c.String(maxLength: 20));
             CreateIndex("dbo.FANC_Finance", "CreateBy_Id");
             CreateIndex("dbo.FANC_Finance", "CreateOf_Id");
-            AddForeignKey("dbo.FANC_Finance", "CreateBy_Id", "dbo.CRET_Partner", "Id");
-            AddForeignKey("dbo.FANC_Finance", "CreateOf_Id", "dbo.AspNetUsers", "Id");
+            AddForeignKey("dbo.FANC_Finance", "CreateBy_Id", "dbo.AspNetUsers", "Id");
+            AddForeignKey("dbo.FANC_Finance", "CreateOf_Id", "dbo.CRET_Partner", "Id");
             DropColumn("dbo.FANC_Finance", "RepayDate");
             DropColumn("dbo.FANC_FinanceExtension", "CreditAccountId");
         }
@@ -28,8 +28,8 @@ namespace Data.Migrations
         {
             AddColumn("dbo.FANC_FinanceExtension", "CreditAccountId", c => c.String());
             AddColumn("dbo.FANC_Finance", "RepayDate", c => c.DateTime());
-            DropForeignKey("dbo.FANC_Finance", "CreateOf_Id", "dbo.AspNetUsers");
-            DropForeignKey("dbo.FANC_Finance", "CreateBy_Id", "dbo.CRET_Partner");
+            DropForeignKey("dbo.FANC_Finance", "CreateOf_Id", "dbo.CRET_Partner");
+            DropForeignKey("dbo.FANC_Finance", "CreateBy_Id", "dbo.AspNetUsers");
             DropIndex("dbo.FANC_Finance", new[] { "CreateOf_Id" });
             DropIndex("dbo.FANC_Finance", new[] { "CreateBy_Id" });
             AlterColumn("dbo.FANC_FinanceExtension", "LoanPrincipal", c => c.String());

@@ -15,11 +15,11 @@ namespace Data.PDF
         /// <param name="fileName">合同模板名</param>
         /// <param name="param">参数</param>
         /// <param name="targetPdfName">需要生成的pdf的名字</param>
-        private string TransformPdf(string fileName, string param, string targetPdfName)
+        public string TransformPdf(string fileName, string param, string targetPdfName)
         {
-            string url = System.Web.Configuration.WebConfigurationManager.AppSettings["PrintUrl"].ToString();
-
-            url = url + "fileName=" + fileName;
+            //string url = System.Web.Configuration.WebConfigurationManager.AppSettings["PrintUrl"].ToString();
+            string url = "D:\\Projects\\UsedCarsFinance\\trunk\\Web\\upload\\PDF";
+            url ="fileName=" + fileName;
 
             // 创建httpWebRequest对象
             HttpWebRequest webRequest = (HttpWebRequest)WebRequest.Create(new Uri(url));
@@ -89,7 +89,7 @@ namespace Data.PDF
         /// wangpf  16.08.01
         /// <param name="dt">DataRow</param>
         /// <returns></returns>
-        private string DataRowToParams(DataRow dr)
+        public string DataRowToParams(DataRow dr)
         {
             StringBuilder sb = new StringBuilder();
 
