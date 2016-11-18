@@ -53,7 +53,6 @@ namespace Data.Migrations
                         Remarks = c.String(maxLength: 200),
                     })
                 .PrimaryKey(t => t.Id);
-            
         }
         
         public override void Down()

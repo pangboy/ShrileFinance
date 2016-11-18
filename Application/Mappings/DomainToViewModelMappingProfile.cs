@@ -4,13 +4,13 @@
     using AutoMapper;
     using Core.Entities.Customers.Enterprise;
     using Core.Entities.Finance;
+    using Core.Entities.Flow;
     using Core.Entities.Produce;
     using Core.Entities.Vehicle;
     using ViewModels.AccountViewModels;
     using ViewModels.FinanceViewModels;
     using ViewModels.OrganizationViewModels;
     using ViewModels.PartnerViewModels;
-    using ViewModels.ProcessViewModels;
     using ViewModels.ProduceViewModel;
     using ViewModels.VehicleViewModel;
     using X.PagedList;
@@ -24,7 +24,21 @@
             CreateMap<Core.Entities.AppUser, UserViewModel>()
                 .ForMember(d => d.Phone, opt => opt.MapFrom(s => s.PhoneNumber));
 
-            CreateMap<Core.Entities.Flow.Instance, InstanceViewModel>();
+            CreateMap<Instance, ViewModels.ProcessViewModels.InstanceViewModel>()
+                .ConvertUsing(s => new ViewModels.ProcessViewModels.InstanceViewModel {
+                    Id = s.Id,
+                    Title = s.Title,
+                    Flow = s.Flow.Name,
+                    CurrentNode = s.CurrentNode.Name,
+                    CurrentUser = s.CurrentUser?.Name,
+                    ProcessUser = s.ProcessUser?.Name,
+                    ProcessTime = s.ProcessTime,
+                    StartUser = s.StartUser.Name,
+                    StartTime = s.StartTime,
+                    EndTime = s.EndTime,
+                    Status = s.Status
+                });
+            CreateMap<FAction, ViewModels.ProcessViewModels.ActionViewModel>();
 
             CreateMap<Core.Entities.Partner.Partner, PartnerViewModel>()
                 .ForMember(d => d.Approvers, opt => opt.ResolveUsing(s => s.Approvers.Select(m => m.Id)));

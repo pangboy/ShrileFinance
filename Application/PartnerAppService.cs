@@ -90,7 +90,7 @@
 
             if (!createResult.Succeeded)
             {
-
+                throw new InvalidOperationException("创建用户失败.");
             }
 
             var user = userManager.FindById(model.Id);
