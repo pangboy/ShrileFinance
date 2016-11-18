@@ -16,7 +16,7 @@
 
         public Guid FlowId { get; set; }
 
-        public Guid CurrentNodeId { get; set; }
+        public Guid? CurrentNodeId { get; set; }
 
         public string CurrentUserId { get; set; }
 

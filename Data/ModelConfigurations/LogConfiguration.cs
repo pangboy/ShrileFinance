@@ -20,7 +20,7 @@
             Property(m => m.Opinion.InternalOpinion).HasMaxLength(500);
             Property(m => m.Opinion.ExnernalOpinion).HasMaxLength(500);
 
-            HasRequired(m => m.Instance).WithMany(m => m.Logs)
+            HasOptional(m => m.Instance).WithMany(m => m.Logs)
                 .WillCascadeOnDelete();
             HasRequired(m => m.Node).WithMany();
             HasRequired(m => m.Action).WithMany();

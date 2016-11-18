@@ -1,7 +1,6 @@
 ﻿namespace Application.ViewModels.ProcessViewModels
 {
     using System;
-    using System.Collections.Generic;
 
     public class ProcessPostedViewModel
     {
@@ -13,6 +12,6 @@
 
         public string ExnernalOpinion { get; set; }
 
-        public IEnumerable<string> Data { get; set; }
+        public string Data { get; set; }
     }
 }

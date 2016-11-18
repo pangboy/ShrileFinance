@@ -91,6 +91,7 @@
   <ItemGroup>
     <Compile Include="ContactAppService.cs" />
     <Compile Include="FinanceAppService.cs" />
+    <Compile Include="FinanceScriptService.cs" />
     <Compile Include="FinancingProjectAppService.cs" />
     <Compile Include="Mappings\PagedListTypeConverter.cs" />
     <Compile Include="PartnerAppService.cs" />

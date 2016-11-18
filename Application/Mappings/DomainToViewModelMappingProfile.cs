@@ -29,7 +29,7 @@
                     Id = s.Id,
                     Title = s.Title,
                     Flow = s.Flow.Name,
-                    CurrentNode = s.CurrentNode.Name,
+                    CurrentNode = s.CurrentNode?.Name,
                     CurrentUser = s.CurrentUser?.Name,
                     ProcessUser = s.ProcessUser?.Name,
                     ProcessTime = s.ProcessTime,

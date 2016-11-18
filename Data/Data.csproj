@@ -124,6 +124,10 @@
     <Compile Include="Migrations\201611180224403_AddAttributeForFinanceExtension.Designer.cs">
       <DependentUpon>201611180224403_AddAttributeForFinanceExtension.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201611181001478_Workflow_Log.cs" />
+    <Compile Include="Migrations\201611181001478_Workflow_Log.Designer.cs">
+      <DependentUpon>201611181001478_Workflow_Log.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs">
       <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
     </Compile>
@@ -339,6 +343,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201611180224403_AddAttributeForFinanceExtension.resx">
       <DependentUpon>201611180224403_AddAttributeForFinanceExtension.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611181001478_Workflow_Log.resx">
+      <DependentUpon>201611181001478_Workflow_Log.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
