@@ -81,7 +81,7 @@
             // 保存的PDF名称(以合同编号命名)
             string pdfName = String.Empty;
             // 合同模板名称
-            string contractName = "FinancingLease.doc";
+            string contractName = "FinancingLease.docx";
             // 合同pdf地址
             string pdfPath = String.Empty;
             CreatePdf pdf = new CreatePdf();
