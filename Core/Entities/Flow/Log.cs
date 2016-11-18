@@ -5,7 +5,7 @@
 
     public class Log : Entity
     {
-        public Guid InstanceId { get; set; }
+        public Guid? InstanceId { get; set; }
 
         public Guid NodeId { get; set; }
 
