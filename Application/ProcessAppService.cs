@@ -94,10 +94,15 @@
             {
                 throw new InvalidOperationAppException("无法操作该流程.");
             }
-            
+
             // 动态调用业务方法
             if (!string.IsNullOrEmpty(action.Method))
             {
+                if (string.IsNullOrEmpty(model.Data))
+                {
+                    throw new ArgumentNullAppException(nameof(model.Data));
+                }
+
                 scriptService.Instance = instance;
                 scriptService.Data = Newtonsoft.Json.Linq.JObject.Parse(model.Data);
 

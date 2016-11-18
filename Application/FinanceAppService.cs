@@ -82,8 +82,7 @@
             string pdfName = string.Empty;
 
             // 合同模板名称
-            string contractName = "FinancingLease.doc";
-
+            string contractName = "FinancingLease.docx";
             // 合同pdf地址
             string pdfPath = string.Empty;
 

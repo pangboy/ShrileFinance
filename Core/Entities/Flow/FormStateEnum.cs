@@ -3,7 +3,7 @@
     public enum FormStateEnum : byte
     {
         禁用 = 0,
-        启用 = 1,
-        部分禁用 = 2
+        状态1 = 1,
+        状态2 = 2
     }
 }

@@ -1,8 +1,8 @@
 ﻿namespace Application
 {
-    using Core.Entities.Finance;
     using Core.Entities.Flow;
     using Newtonsoft.Json.Linq;
+    using ViewModels.FinanceViewModels;
 
     public class FinanceScriptAppService
     {
@@ -16,7 +16,7 @@
         public void FinanceApply()
         {
             // 获取数据
-            var finance = GetData<Finance>("57DC5FCF-18A4-E611-80C5-507B9DE4A488");
+            var finance = GetData<FinanceApplyViewModel>("57DC5FCF-18A4-E611-80C5-507B9DE4A488");
 
             // 创建或修改
             // Create(finance);
@@ -52,7 +52,7 @@
 
         private T GetData<T>(string formId) where T : class, new()
         {
-            return Data[formId].ToObject<T>();
+            return Data[formId.ToLower()].ToObject<T>();
         }
     }
 }

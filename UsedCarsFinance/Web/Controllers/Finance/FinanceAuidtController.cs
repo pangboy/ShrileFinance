@@ -88,6 +88,7 @@
         [HttpGet]
         public IHttpActionResult LeaseeContract(Guid Id)
         {
+            string url = System.Web.Configuration.WebConfigurationManager.AppSettings["PrintUrl"].ToString();
             string result = financeAppService.CreateLeaseInfoPdf(Id);
             return Ok(result);
         }

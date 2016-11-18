@@ -494,6 +494,14 @@
         }
 
 
+        //验证数据
+        function ValidData() {
+            if (!$(".container").form("validate")) {
+                return false;
+            }
+            return true;
+        }
+
         //构建数据
         function BuildData() {
             var result = {};
@@ -533,10 +541,10 @@
             for (var i = 0; i < $('#Poundage').datagrid('getRows').length; i++) {
                 data["FinanceProduce"].push($('#Poundage').datagrid('getRows')[i])
             }
-            result["formName"] = "融资申请信息";
-            result["buildData"] = data;
-
-            return result;
+            //result["formName"] = "融资申请信息";
+            //result["buildData"] = data;
+            debugger
+            return data;
         }
         //选择通讯地址类型时候加载单位地址和住宅地址
         function CAType(s) {
