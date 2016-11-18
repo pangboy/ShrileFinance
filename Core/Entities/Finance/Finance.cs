@@ -48,6 +48,7 @@
         /// </summary>
         public double? InterestRate { get; set; }
 
+
         /// <summary>
         /// 融资期限 (月)
         /// </summary>
@@ -57,6 +58,8 @@
         /// 还款间隔 (月)
         /// </summary>
         public int? RepaymentInterval { get; set; }
+
+
 
         /// <summary>
         /// 还款日

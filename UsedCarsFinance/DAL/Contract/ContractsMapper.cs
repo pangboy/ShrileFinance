@@ -213,13 +213,13 @@ namespace DAL.Contract
             SqlCommand comm = DHelper.GetSqlCommand(@"
                 SELECT rz.OldName  AS '[融资租赁合同]', db.OldName AS '[担保合同]',  
 	             ma.Name AS '[乙方姓名]', ma.[Identity] AS '[乙方证件号码]',
-	             ja.Name  AS '[共同借款人姓名]', ja.[Identity] AS '[共同借款人证件号码]',
-	             vi.PlateNo AS '[车牌号]', vi.FrameNo AS '[车架号]', vi.EngineNo AS '[发动机号]',vi.SallerName AS '[所有权人]',
-	             ch.CarBrand AS '[车辆品牌]', ch.Series AS '[型号]',	
-	             '' AS '[融资额大写]',fri.ApprovalPrincipal AS '[融资额]',fi.ProduceId,
-	             pi.FinancingPeriods AS '[融资期限]','' AS '[手续费大写]',pi.CustomerPoundage AS '[手续费]',
-	             '' AS '[保证金大写]',(pi.CustomerBailRatio * fri.ApprovalPrincipal)AS '[保证金]',
-	             fri.RepaymentDate AS '[还款日]','' AS '[月还款金额大写]',fri.Payment AS '[月还款金额]',
+	             ja.Name  AS '[共借人姓名]', ja.[Identity] AS '[共借人证件号码]',
+	             vi.PlateNo AS '[车牌号]', vi.FrameNo AS '[车架号]', vi.EngineNo AS '[发动机号]',vi.RunningMiles AS '[读表里程数]'
+	             ch.CarBrand AS '[品牌]', ch.Series AS '[型号]',	
+	             '' AS '[融资额大写]',fri.Principal AS '[融资额]',fi.ProduceId,
+	             pi.Periods AS '[融资期限]','' AS '[手续费大写]',pi.Cost AS '[手续费]',
+	             '' AS '[保证金大写]',(pi.CustomerBailRatio * fri.Principal)AS '[保证金]',
+	             fri.RepaymentDate AS '[还款日]',
 	             YEAR( DATEADD(MM, 1,pi.AddDate)) AS '[首次支付年]',MONTH(DATEADD(MM, 1,pi.AddDate)) AS '[首次支付月]', fri.RepaymentDate AS '[首次支付日]',
 	             bi.Name AS '[户名]', bi.BankName AS '[开户行]',bi.BankCard AS '[账号]'
                 FROM FANC_FinanceInfo AS fi 
@@ -276,23 +276,137 @@ namespace DAL.Contract
             foreach (DataRow dr in dt.Rows)
             {
                 string approvalPrincipal = String.IsNullOrEmpty(dr["[融资额]"].ToString()) ? "0" : dr["[融资额]"].ToString();
-                dr["[融资额大写]"] = moneyToUpper.RMBToUpper(Convert.ToDecimal(approvalPrincipal)*10000,2);
-                dr["[融资额]"] = Math.Round(Convert.ToDecimal(approvalPrincipal)*10000,2);
+                dr["[融资额大写]"] = moneyToUpper.RMBToUpper(Convert.ToDecimal(approvalPrincipal) * 10000, 2);
+                dr["[融资额]"] = Math.Round(Convert.ToDecimal(approvalPrincipal) * 10000, 2);
 
                 string customerPoundage = String.IsNullOrEmpty(dr["[手续费]"].ToString()) ? "0" : dr["[手续费]"].ToString();
-                dr["[手续费大写]"] = moneyToUpper.RMBToUpper(customerPoundage,2);
+                dr["[手续费大写]"] = moneyToUpper.RMBToUpper(customerPoundage, 2);
                 dr["[手续费]"] = Math.Round(Convert.ToDecimal(customerPoundage), 2);
 
-                string ensurePrice = String.IsNullOrEmpty(dr["[保证金]"].ToString()) ? "0": dr["[保证金]"].ToString();
+                string ensurePrice = String.IsNullOrEmpty(dr["[保证金]"].ToString()) ? "0" : dr["[保证金]"].ToString();
                 dr["[保证金大写]"] = moneyToUpper.RMBToUpper(Convert.ToDecimal(ensurePrice) * 100, 2);
-                dr["[保证金]"] = Math.Round(Convert.ToDecimal(ensurePrice)*100, 2);
+                dr["[保证金]"] = Math.Round(Convert.ToDecimal(ensurePrice) * 100, 2);
 
                 string payment = String.IsNullOrEmpty(dr["[月还款金额]"].ToString()) ? "0" : dr["[月还款金额]"].ToString();
-                dr["[月还款金额大写]"] = moneyToUpper.RMBToUpper(payment,2);
+                dr["[月还款金额大写]"] = moneyToUpper.RMBToUpper(payment, 2);
                 dr["[月还款金额]"] = Math.Round(Convert.ToDecimal(payment), 2);
             }
 
             return dt;
         }
+
+        /// <summary>
+        /// 新的融资租赁合同
+        /// </summary>
+        /// yand    16.11.17
+        /// <param name="financeId"></param>
+        /// <returns></returns>
+        public DataTable FindLease(Guid financeId)
+        {
+            SqlCommand comm = DHelper.GetSqlCommand(@"
+            SELECT rz.Number AS '[融资租赁合同]', rz.Number AS '[担保合同]',  
+	             ma.Name AS '[乙方姓名]', ma.[Identity] AS '[乙方证件号码]',
+	             ja.Name AS '[共借人姓名]', ja.[Identity] AS '[共借人证件号码]',
+	             fv.PlateNo AS '[车牌号]', fv.FrameNo AS '[车架号]', fv.EngineNo AS '[发动机号]',fv.RunningMiles AS '[读表里程数]',
+	             vvi.CarBrand AS '[品牌]', vvi.Series AS '[型号]',	
+	             '' AS '[融资额大写]',fi.Principal AS '[融资额]',fi.ProduceId,
+	             pi.FinancingPeriods AS '[融资期限]','' AS '[手续费大写]',fi.Cost AS '[手续费]',
+	             '' AS '[保证金大写]',(pi.CustomerBailRatio * fi.Principal)AS '[保证金]',
+	             fi.RepaymentDate AS '[还款日]',
+	             YEAR(DATEADD(MM, 1, fi.RepayRentDate)) AS '[首次支付年]',MONTH(DATEADD(MM, 1, fi.RepayRentDate)) AS '[首次支付月]', fi.RepayRentDate AS '[首次支付日]',
+	             fe.CreditAccountId AS '[户名]', fe.CreditBankName AS '[开户行]',fe.CreditBankCard AS '[账号]'
+                FROM FANC_Finance AS fi
+                LEFT JOIN PROD_Produce AS pi ON fi.ProduceId = pi.Id
+                LEFT JOIN FANC_Vehicle AS fv ON fv.FinanceId = fi.Id
+                LEFT JOIN FANC_FinanceExtension AS fe ON fe.FinanceId = fi.Id
+                LEFT JOIN (
+                    SELECT ai.FinanceId, ai.Name, ai.[Identity]
+                    FROM FANC_Applicant AS ai
+                    WHERE ai.FinanceId = @financeId AND Type = 1
+                ) AS ma ON ma.FinanceId = fi.Id
+                LEFT JOIN (
+                   SELECT ai.FinanceId, ai.Name, ai.[Identity]
+                    FROM FANC_Applicant AS ai
+                    WHERE ai.FinanceId = @financeId AND Type = 2
+                ) AS ja ON ja.FinanceId = fi.Id
+               LEFT JOIN (
+                 SELECT sv.Vehicle, ss.Series, sb.CarBrand, sv.VehicleCode FROM ywcommondb.dbo.Sys_Vehicle AS sv
+                    LEFT JOIN ywcommondb.dbo.Sys_Series AS ss ON sv.SeriesCode = ss.SeriesCode
+                    LEFT JOIN ywcommondb.dbo.Sys_Brand AS sb ON sb.BrandCode = ss.BrandCode
+			   ) AS vvi ON fv.VehicleKey = vvi.VehicleCode
+               LEFT JOIN (
+                SELECT Number, FinanceId FROM FANC_Contact AS fc WHERE fc.FinanceId = @financeId AND Name = '融资租赁合同（回租）'
+			   ) AS rz ON rz.FinanceId = fi.Id
+               LEFT JOIN(
+                SELECT Number, FinanceId FROM FANC_Contact AS fc WHERE fc.FinanceId = @financeId AND Name = '保证合同'
+			   )AS bz ON bz.FinanceId = fi.Id
+               WHERE fi.Id = @financeId");
+            DHelper.AddInParameter(comm, "@FinanceId", SqlDbType.NVarChar, financeId);
+            DataTable dt = DHelper.ExecuteDataTable(comm);
+
+            Sys.MoneyToUpper moneyToUpper = new Sys.MoneyToUpper();
+            // 金额转大写
+            foreach (DataRow dr in dt.Rows)
+            {
+                string approvalPrincipal = String.IsNullOrEmpty(dr["[融资额]"].ToString()) ? "0" : dr["[融资额]"].ToString();
+                dr["[融资额大写]"] = moneyToUpper.RMBToUpper(Convert.ToDecimal(approvalPrincipal) * 10000, 2);
+                dr["[融资额]"] = Math.Round(Convert.ToDecimal(approvalPrincipal) * 10000, 2);
+
+                string customerPoundage = String.IsNullOrEmpty(dr["[手续费]"].ToString()) ? "0" : dr["[手续费]"].ToString();
+                dr["[手续费大写]"] = moneyToUpper.RMBToUpper(customerPoundage, 2);
+                dr["[手续费]"] = Math.Round(Convert.ToDecimal(customerPoundage), 2);
+
+                string ensurePrice = String.IsNullOrEmpty(dr["[保证金]"].ToString()) ? "0" : dr["[保证金]"].ToString();
+                dr["[保证金大写]"] = moneyToUpper.RMBToUpper(Convert.ToDecimal(ensurePrice) * 100, 2);
+                dr["[保证金]"] = Math.Round(Convert.ToDecimal(ensurePrice) * 100, 2);
+
+                string payment = String.IsNullOrEmpty(dr["[月还款金额]"].ToString()) ? "0" : dr["[月还款金额]"].ToString();
+                dr["[月还款金额大写]"] = moneyToUpper.RMBToUpper(payment, 2);
+                dr["[月还款金额]"] = Math.Round(Convert.ToDecimal(payment), 2);
+            }
+
+            return dt;
+        }
+
+
+        /// <summary>
+        /// 新的保证合同信息
+        /// </summary>
+        /// yand    16.11.17
+        /// 暂时无用，后期可能有用（车辆抵押合同后期用到在做）
+        /// <param name="financeId">融资Id</param>
+        /// <returns></returns>
+        public DataTable FindEnsure(int financeId)
+        {
+            SqlCommand comm = DHelper.GetSqlCommand(@"
+                  SELECT gt.Name AS '[承租人]', gt.[Identity] AS '[承租人身份证号]',
+	               db.Name AS '[保证人]',db.[Identity] AS '[身份证号]',gt.LiveHouseAddress AS '[住址]',gt.Mobile  AS '[联系电话]',
+	               rz.Number AS '[融资租赁合同]',
+	               bz.Number  AS '[保证合同编号]'   
+				   FROM FANC_Applicant AS fa
+				   LEFT JOIN FANC_Finance AS ff ON ff.Id = fa.FinanceId
+				   LEFT JOIN(
+				     SELECT gt.FinanceId, gt.Name , gt.[Identity], gt.LiveHouseAddress ,gt.Mobile
+	                FROM  FANC_Applicant AS gt
+	                WHERE gt.FinanceId = @FinanceId AND gt.Type = 1
+				   ) AS gt ON gt.FinanceId = ff.Id
+				      LEFT JOIN(
+				     SELECT db.FinanceId, db.Name , db.[Identity]
+	                FROM  FANC_Applicant AS db
+	                WHERE db.FinanceId = @FinanceId AND db.Type = 3
+				   ) AS db ON db.FinanceId = ff.Id
+				      LEFT JOIN (
+                SELECT Number, FinanceId FROM FANC_Contact AS fc WHERE fc.FinanceId = @financeId AND Name = '融资租赁合同（回租）'
+			   ) AS rz ON rz.FinanceId = ff.Id
+               LEFT JOIN(
+                SELECT Number, FinanceId FROM FANC_Contact AS fc WHERE fc.FinanceId = @financeId AND Name = '保证合同'
+			   )AS bz ON bz.FinanceId = ff.Id
+                WHERE ff.Id = @FinanceId
+            ");
+            DHelper.AddInParameter(comm, "@FinanceId", SqlDbType.NVarChar, financeId);
+
+            return DHelper.ExecuteDataTable(comm);
+        }
+        
     }
 }

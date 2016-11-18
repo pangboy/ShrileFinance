@@ -124,6 +124,7 @@
     <Compile Include="Exceptions\InvalidOperationAppException.cs" />
     <Compile Include="Interfaces\IAggregateRoot.cs" />
     <Compile Include="Interfaces\IEntity.cs" />
+    <Compile Include="Interfaces\Repositories\IContractRepository.cs" />
     <Compile Include="Interfaces\Repositories\IFlowRepository.cs" />
     <Compile Include="Interfaces\Repositories\IFormRepository.cs" />
     <Compile Include="Interfaces\Repositories\IInstanceRepository.cs" />
