@@ -21,6 +21,7 @@
         private readonly IInstanceRepository instanceReopsitory;
         private readonly IFormRepository formRepository;
         private readonly IPartnerRepository partnerRepository;
+        private readonly IFinanceRepository financeRepository;
         private readonly AppUserManager userManager;
         private readonly AppRoleManager roleManager;
 
@@ -29,6 +30,7 @@
             IInstanceRepository instanceReopsitory,
             IFormRepository formRepository,
             IPartnerRepository partnerRepository,
+            IFinanceRepository financeRepository,
             AppUserManager userManager,
             AppRoleManager roleManager)
         {
@@ -36,6 +38,7 @@
             this.instanceReopsitory = instanceReopsitory;
             this.formRepository = formRepository;
             this.partnerRepository = partnerRepository;
+            this.financeRepository = financeRepository;
             this.userManager = userManager;
             this.roleManager = roleManager;
         }
@@ -88,7 +91,10 @@
             switch (action.AllocationType)
             {
                 case ActionAllocationEnum.指定:
-                    var partner = partnerRepository.GetByUser(CurrentUser);
+                    var finance = financeRepository.Get(instance.RootKey.Value);
+                    //var partner = finance.CreateBy;
+                    // TODO: 模拟合作商
+                    var partner = partnerRepository.Get(new Guid("341fac9b-6aac-e611-80c6-507b9de4a488"));
                     user = partner.Approvers.Single(m => m.RoleId == action.Transfer.RoleId);
                     break;
                 case ActionAllocationEnum.记录:
@@ -100,12 +106,17 @@
                 case ActionAllocationEnum.无:
                     user = null;
                     break;
+                case ActionAllocationEnum.渠道经理:
+                    var partner1 = partnerRepository.GetByUser(CurrentUser);
+                    user = partner1.Accounts.First(m => m.RoleId == action.Transfer.RoleId);
+                    break;
                 default:
                     throw new InvalidOperationAppException("创建寻找用户策略失败!");
             }
 
             instance.CurrentNode = action.Transfer;
-            instance.CurrentUser = null;
+            instance.CurrentUserId = user?.Id;
+            //instance.CurrentUser = user;
 
             if (action.Type == ActionTypeEnum.完成)
             {
@@ -225,7 +236,7 @@
                 var instance = instanceReopsitory.Get(instanceId.Value);
 
                 frame.Actions = Mapper.Map<IEnumerable<ActionViewModel>>(instance.CurrentNode.Actions);
-                frame.Forms = formRepository.GetByNode(instance.CurrentNodeId)
+                frame.Forms = formRepository.GetByNode(instance.CurrentNodeId.Value)
                     .Select(m => new FormViewModel {
                         Id = m.FormId,
                         Name = m.Form.Name,

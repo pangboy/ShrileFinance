@@ -16,7 +16,7 @@
     </style>
     <script>
         var flow = {
-            InstanceId: query.instanceId,
+            InstanceId: "",
             Forms: []
         };
 
@@ -92,17 +92,49 @@
         }
 
         function RanderButtons(actions) {
+            // TODO: 模拟测试, click 事件使用 Transfer 方法
             $(actions).each(function (i, action) {
                 $("<a>").linkbutton({
                     id: "action_" + action.Id,
                     text: action.Name,
                     plain: false,
                     onClick: Transfer
+                    // onClick: action.Method ? TransferWithData : Transfer
                 }).appendTo("#buttons");
             });
         }
 
-        function Transfer() {
+        function Transfer(data) {
+            $("#buttons .l-btn").not(":first").linkbutton("disable");
+
+            var dataPosted = {
+                InstanceId: flow.InstanceId,
+                ActionId: this.id.substr(7),
+                InOpinion: $("#InOpinion").textbox("getValue"),
+                ExOpinion: $("#ExOpinion").textbox("getValue"),
+                Data: data
+            };
+
+            $.ajax({
+                async: true,
+                data: dataPosted,
+                method: "POST",
+                url: "../api/Instance/Transfer",
+                statusCode: {
+                    200: function (data) {
+                        $.messager.show({ msg: "执行流程成功！" });
+
+                        uc.CloseWindow();
+                    },
+                    400: uc.E400
+                },
+                error: function () {
+                    $("#buttons .l-btn").not(":first").linkbutton("enable");
+                }
+            });
+        }
+
+        function TransferWithData() {
             var isValid = true;
 
             $(flow.Forms).each(function (i, form) {
@@ -120,39 +152,15 @@
             });
 
             if (isValid) {
-                $("#buttons .l-btn").not(":first").linkbutton("disable");
-
-                var dataPosted = {
-                    InstanceId: flow.InstanceId,
-                    ActionId: this.id.substr(7),
-                    InOpinion: $("#InOpinion").textbox("getValue"),
-                    ExOpinion: $("#ExOpinion").textbox("getValue"),
-                    Data: {}
-                };
+                var data = {};
 
                 $(flow.Forms).each(function (i, form) {
                     var frame = frames[form.Id];
 
-                    dataPosted.Data[form.Id] = JSON.stringify(frame.BuildData());
+                    data[form.Id] = JSON.stringify(frame.BuildData());
                 });
 
-                $.ajax({
-                    async: true,
-                    data: dataPosted,
-                    method: "POST",
-                    url: "../api/Instance/Transfer",
-                    statusCode: {
-                        200: function (data) {
-                            $.messager.show({ msg: "执行流程成功！" });
-
-                            uc.CloseWindow();
-                        },
-                        400: uc.E400
-                    },
-                    error: function () {
-                        $("#buttons .l-btn").not(":first").linkbutton("enable");
-                    }
-                });
+                Transfer(data);
             }
         }
     </script>
