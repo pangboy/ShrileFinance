@@ -5,6 +5,7 @@
     using System.Data;
     using System.Data.SqlClient;
     using System.Linq;
+    using System.Reflection;
     using AutoMapper;
     using Core.Entities;
     using Core.Entities.Finance;
@@ -12,8 +13,6 @@
     using Core.Interfaces.Repositories;
     using Data.PDF;
     using ViewModels.FinanceViewModels;
-    using System.Collections;
-    using System.Reflection;
 
     /// <summary>
     /// 融资
@@ -24,13 +23,14 @@
         private readonly AppUserManager userManager;
         private readonly AppRoleManager roleManager;
         private readonly IContractRepository contractRepository;
-        
+
         /// <summary>
         /// Initializes a new instance of the <see cref="FinanceAppService" /> class.
         /// </summary>
         /// <param name="repository">融资仓储</param>
         /// <param name="userManager">用户管理</param>
         /// <param name="roleManager">角色管理</param>
+        /// <param name="contractRepository">合同</param>
         public FinanceAppService(IFinanceRepository repository, AppUserManager userManager, AppRoleManager roleManager, IContractRepository contractRepository)
         {
             this.repository = repository;
@@ -42,10 +42,10 @@
         public void Create(FinanceApplyViewModel value)
         {
             var finance = Mapper.Map<Finance>(value);
-            
+
             finance.Produce = null;
-                repository.Create(finance);
-                repository.Commit();
+            repository.Create(finance);
+            repository.Commit();
         }
 
         public void Modify(FinanceApplyViewModel model)
@@ -68,7 +68,6 @@
             return financeViewModel;
         }
 
-
         public string CreateLeaseInfoPdf(Guid financeId)
         {
             // 获取融资信息
@@ -77,13 +76,16 @@
             DataTable dt = repository.LeaseeContract(sqlparams);
 
             // 合同参数
-            string contractParams = String.Empty;
+            string contractParams = string.Empty;
+
             // 保存的PDF名称(以合同编号命名)
-            string pdfName = String.Empty;
+            string pdfName = string.Empty;
+
             // 合同模板名称
             string contractName = "FinancingLease.docx";
             // 合同pdf地址
-            string pdfPath = String.Empty;
+            string pdfPath = string.Empty;
+
             CreatePdf pdf = new CreatePdf();
 
             if (dt.Rows.Count > 0)
@@ -93,7 +95,7 @@
             }
 
             // 合同名称为空,表示该合同数据不存在不需要生成
-            if (!String.IsNullOrEmpty(pdfName))
+            if (!string.IsNullOrEmpty(pdfName))
             {
                 pdfPath = pdf.TransformPdf(contractName, contractParams, pdfName);
             }
@@ -108,12 +110,13 @@
             string AAAA = "";
             string CCCC = "";
             string DDD = "";
+
             //查询合作商ID
             Guid BB = FindByCreateOf(financeid, ref error);
             if (BB != null && error == "")
             {
-
                 AAAA = GetCityCode(BB);
+
                 //合作商编码
                 var partnerCode = "01";
                 CCCC = GetYYMM();
@@ -127,7 +130,8 @@
 
             }
 
-            string all = AAAA + BB + CCCC + DDD;//组成AAAABBCCCCDDD
+            //组成AAAABBCCCCDDD
+            string all = AAAA + BB + CCCC + DDD;
 
             //同一个主合同号只能有一个，没有就增加一个
             var finance = repository.Get(financeid);
@@ -166,7 +170,7 @@
             }
             else
             {
-                 varCreateOf = finance.CreateOf.Id;
+                varCreateOf = finance.CreateOf.Id;
             }
 
             return varCreateOf;
@@ -197,7 +201,6 @@
             }
             return "";
         }
-
 
         /// <summary>
         /// 通过融资标识获取信审ViewModel
@@ -387,24 +390,16 @@
                 // 融资标识
                 FinanceId = finance.Id,
 
-                AdviceMoney = finance.AdviceMoney,
-
-                AdviceRatio = finance.AdviceRatio,
-
-                ApprovalMoney = finance.ApprovalMoney,
-
-                ApprovalRatio = finance.ApprovalRatio,
-
-                Payment = finance.Payment,
-
-                Cost = finance.Cost,
-
                 // 厂商指导价
                 ManufacturerGuidePrice = finance.Vehicle.ManufacturerGuidePrice,
 
                 // 融资项（Id、<Name_Maney>）
                 FinancingItems = GetFinancingItems(finance)
             };
+
+            // 部分映射
+            var array = new string[] { "AdviceMoney", "AdviceRatio", "ApprovalMoney", "ApprovalRatio", "Payment", "Cost" };
+            financeAuditViewModel = PartialMapper(financeId, financeAuditViewModel, array);
 
             return financeAuditViewModel;
         }
@@ -428,23 +423,9 @@
                 return;
             }
 
-            // 建议融资金额
-            finance.AdviceMoney = value.AdviceMoney;
-
-            // 建议融资比例
-            finance.AdviceRatio = value.AdviceRatio;
-
-            // 审批融资金额
-            finance.ApprovalMoney = value.ApprovalMoney;
-
-            // 审批融资比例
-            finance.ApprovalRatio = value.ApprovalRatio;
-
-            // 月供额度
-            finance.Payment = value.Payment;
-
-            // 手续费
-            finance.Cost = value.Cost;
+            // 建议融资金额、建议融资比例、审批融资金额、审批融资比例、月供额度、手续费
+            var array = new string[] { "AdviceMoney", "AdviceRatio", "ApprovalMoney", "ApprovalRatio", "Payment", "Cost" };
+            finance = PartialMapper(value, finance, array);
 
             // 初审 修改融资项各金额
             if (!value.IsReview)
@@ -484,41 +465,22 @@
 
             operationReportViewModel.FinanceId = finance.Id;
 
-            // 选择还款日
-            operationReportViewModel.RepaymentDate = finance.RepaymentDate;
-
-            // 首次租金支付日期
-            operationReportViewModel.RepayRentDate = finance.RepayRentDate;
-
-            // 保证金
-            operationReportViewModel.Margin = finance.Bail;
-
             // 先付月供
             operationReportViewModel.PayMonthly = finance.Payment;
 
-            // 一次性付息
-            operationReportViewModel.OnePayInterest = finance.OnePayInterest;
-
             // 实际用款额
             operationReportViewModel.ActualAmount = finance.Principal;
+
+            // 选择还款日、首次租金支付日期、保证金、一次性付息、、
+            var array = new string[] { "RepaymentDate", "Bail", "RepayRentDate", "OnePayInterest" };
+            operationReportViewModel = PartialMapper(finance, operationReportViewModel, array);
 
             // 融资项
             operationReportViewModel.FinancingItems = GetFinancingItems(finance);
 
             // 车辆补充信息
-            var array = new string[] { "RegisterDate", "RunningMiles", "FactoryDate", "BusinessType", "PlateNo", "FrameNo", "EngineNo", "RegisterCity", "Condition" };
-            operationReportViewModel = PartialMapper(finance.Vehicle,operationReportViewModel);
-
-            ////operationReportViewModel.RegisterDate = finance.Vehicle.RegisterDate;
-            ////operationReportViewModel.RunningMiles = finance.Vehicle.RunningMiles;
-            ////operationReportViewModel.FactoryDate = finance.Vehicle.FactoryDate;
-            ////operationReportViewModel.BusinessType = finance.Vehicle.BusinessType;
-
-            ////operationReportViewModel.PlateNo = finance.Vehicle.PlateNo;
-            ////operationReportViewModel.FrameNo = finance.Vehicle.FrameNo;
-            ////operationReportViewModel.EngineNo = finance.Vehicle.EngineNo;
-            ////operationReportViewModel.RegisterCity = finance.Vehicle.RegisterCity;
-            ////operationReportViewModel.Condition = finance.Vehicle.Condition;
+            var array1 = new string[] { "RegisterDate", "RunningMiles", "FactoryDate", "BusinessType", "PlateNo", "FrameNo", "EngineNo", "RegisterCity", "Condition" };
+            operationReportViewModel = PartialMapper(finance.Vehicle, operationReportViewModel, array1);
 
             return operationReportViewModel;
         }
@@ -542,71 +504,38 @@
                 return;
             }
 
-            if (finance.FinanceExtension == null)
-            {
-                finance.FinanceExtension = new FinanceExtension();
-            }
+            finance.FinanceExtension = finance.FinanceExtension ?? new FinanceExtension();
 
             if (value.NodeType.Equals("Customer"))
             {
                 // 还款信息
-                finance.FinanceExtension.CustomerAccountName = value.CustomerAccountName;
-                finance.FinanceExtension.CustomerBankName = value.CustomerBankName;
-                finance.FinanceExtension.CustomerBankCard = value.CustomerBankCard;
+                var customerArray = new string[] { "CustomerAccountName", "CustomerBankName", "CustomerBankCard" };
+                finance.FinanceExtension = PartialMapper(value, finance.FinanceExtension, customerArray);
 
                 if (!finance.FinanceExtension.LoanPrincipal.Equals("Channel"))
                 {
                     // 放款信息
-                    finance.FinanceExtension.CreditAccountName = value.CreditAccountName;
-                    finance.FinanceExtension.CreditBankName = value.CreditBankName;
-                    finance.FinanceExtension.CreditBankCard = value.CreditBankCard;
+                    var creditArray = new string[] { "CreditAccountName", "CreditBankName", "CreditBankCard" };
+                    finance.FinanceExtension = PartialMapper(value, finance.FinanceExtension, creditArray);
                 }
 
                 // 车辆补充信息
-                finance.Vehicle.PlateNo = value.PlateNo;
-                finance.Vehicle.FrameNo = value.FrameNo;
-                finance.Vehicle.EngineNo = value.EngineNo;
-                finance.Vehicle.RegisterDate = value.RegisterDate;
-                finance.Vehicle.RunningMiles = value.RunningMiles;
-                finance.Vehicle.FactoryDate = value.FactoryDate;
-                finance.Vehicle.BusinessType = value.BusinessType;
-                finance.Vehicle.RegisterCity = value.RegisterCity;
-                finance.Vehicle.Condition = value.Condition;
+                var array1 = new string[] { "RegisterDate", "RunningMiles", "FactoryDate", "BusinessType", "PlateNo", "FrameNo", "EngineNo", "RegisterCity", "Condition" };
+                finance.Vehicle = PartialMapper(value, finance.Vehicle, array1);
             }
             else
             {
                 // 选择还款日
                 finance.RepaymentDate = value.RepaymentDate;
 
-                // 首次租金支付日期
-                finance.RepayRentDate = value.RepayRentDate;
+                // 选择还款日、首次租金支付日期、保证金、先付月供、一次性付息、实际用款额、放款主体、放款账户、放款账户开户行、放款账户卡号、合同Json
+                var operationArray = new string[] { "RepaymentDate", "RepayRentDate", "Bail", "PayMonthly", "OnePayInterest", "ActualAmount", "LoanPrincipal", "CreditAccountName", "CreditBankName", "CreditBankCard", "ContactJson" };
+                if (!value.LoanPrincipal.Equals("Channel"))
+                {
+                    operationArray = new string[] { "RepaymentDate", "RepayRentDate", "Bail", "PayMonthly", "OnePayInterest", "ActualAmount", "LoanPrincipal", "ContactJson" };
+                }
 
-                // 保证金
-                finance.Bail = value.Margin;
-
-                // 先付月供
-                finance.Payment = value.PayMonthly;
-
-                // 一次性付息
-                finance.OnePayInterest = value.OnePayInterest;
-
-                // 实际用款额
-                finance.Principal = value.ActualAmount;
-
-                // 放款主体
-                finance.FinanceExtension.LoanPrincipal = value.LoanPrincipal;
-
-                // 放款账户
-                finance.FinanceExtension.CreditAccountName = value.CreditAccountName;
-
-                // 放款账户开户行
-                finance.FinanceExtension.CreditBankName = value.CreditBankName;
-
-                // 放款账户卡号
-                finance.FinanceExtension.CreditBankCard = value.CreditBankCard;
-
-                // 合同Json
-                finance.FinanceExtension.ContactJson = value.ContactJson;
+                finance.FinanceExtension = PartialMapper(value, finance.FinanceExtension, operationArray);
             }
 
             repository.Modify(finance);
@@ -625,7 +554,7 @@
             var financingItems = new List<KeyValuePair<Guid, KeyValuePair<string, decimal?>>>();
 
             // 提取融资项
-            finance.FinanceProduce.ToList().ForEach(delegate (FinanceProduce item)
+            finance.FinanceProduce.ToList().ForEach(delegate(FinanceProduce item)
             {
                 financingItems.Add(new KeyValuePair<Guid, KeyValuePair<string, decimal?>>(item.Id, new KeyValuePair<string, decimal?>(item.Name, item.Money)));
             });
@@ -644,7 +573,7 @@
             var financingItemList = financingItems.ToList();
 
             // 更新融资项各金额
-            financingItemList.ForEach(delegate (FinanceProduce financingItem)
+            financingItemList.ForEach(delegate(FinanceProduce financingItem)
             {
                 // 获取融资项标识
                 var key = financingItem.Id;
@@ -657,15 +586,15 @@
         }
 
         /// <summary>
-        /// 映射类
+        /// 部分映射
         /// </summary>
-        /// <typeparam name="T">类型</typeparam>
-        /// <typeparam name="T1">类型</typeparam>
+        /// <typeparam name="refT">输入类型</typeparam>
+        /// <typeparam name="outT">输出类型</typeparam>
         /// <param name="refObj">输入对象</param>
         /// <param name="outObj">输出对象</param>
         /// <param name="array">属性名数组</param>
-        /// <returns></returns>
-        private T1 PartialMapper<T, T1>(T refObj, T1 outObj, string[] array = null)
+        /// <returns>输出对象（地址不变）</returns>
+        private outT PartialMapper<refT, outT>(refT refObj, outT outObj, string[] array = null)
         {
             if (refObj == null)
             {
@@ -674,27 +603,27 @@
 
             if (outObj == null)
             {
-                outObj = Activator.CreateInstance<T1>();
+                outObj = Activator.CreateInstance<outT>();
             }
 
             // 字典记录属性的值
             var container = new Dictionary<object, object>();
-            refObj.GetType().GetProperties(BindingFlags.Public).ToList().ForEach(delegate (PropertyInfo item)
+            foreach (var item in refObj.GetType().GetProperties())
             {
                 if (array == null || array.Contains(item.Name))
                 {
                     container.Add(item.Name, item.GetValue(refObj));
-    }
-            });
+                }
+            }
 
             // 字典为空，则返回
             if (container.Keys.Count == 0)
             {
                 return outObj;
-}
+            }
 
             // 从字典取值，并对输出对象对应的属性赋值
-            foreach (PropertyInfo item in outObj.GetType().GetProperties(BindingFlags.Public))
+            foreach (PropertyInfo item in outObj.GetType().GetProperties())
             {
                 if (array == null || array.Contains(item.Name))
                 {
@@ -711,5 +640,3 @@
         }
     }
 }
-
-
