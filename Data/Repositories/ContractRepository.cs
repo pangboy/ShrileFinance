@@ -6,9 +6,9 @@
     using Core.Entities.Finance;
     using Core.Interfaces.Repositories;
 
-    public class ContractRespository:BaseRepository<Contract>, IContractRepository
+    public class ContractRepository:BaseRepository<Contract>, IContractRepository
     {
-        public ContractRespository(MyContext context):base(context)
+        public ContractRepository(MyContext context):base(context)
         {
         }
     }
