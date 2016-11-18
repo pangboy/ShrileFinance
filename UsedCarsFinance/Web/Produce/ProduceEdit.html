@@ -47,9 +47,8 @@
                         var financing = $("#Financing").datagrid("getRows");
                         var poundage = $("#Poundage").datagrid("getRows");
                         $(".container").form("load", data);
-                        debugger
                         //该部分代码还需要优化调整，等功能点做完之后在优化
-                        //加载时候给融资项金额赋值
+                        //加载时候给融资项赋值
                         for (var i = 0 ; i < data.FinancingItems.length; i++) {
                             if (data.FinancingItems[i].FinancingProject.IsFinancing == true) {
                                 for (var j = 0; j < financing.length; j++) {

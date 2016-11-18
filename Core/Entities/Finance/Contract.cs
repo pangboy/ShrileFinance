@@ -1,11 +1,12 @@
 ﻿namespace Core.Entities.Finance
 {
     using System;
+    using Interfaces;
 
     /// <summary>
     /// 合同
     /// </summary>
-    public class Contract : Entity
+    public class Contract : Entity, IAggregateRoot
     {
         /// <summary>
         /// 合同编号

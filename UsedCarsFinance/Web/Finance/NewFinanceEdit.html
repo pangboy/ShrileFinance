@@ -492,6 +492,52 @@
                 data: data
             });
         }
+
+
+        //构建数据
+        function BuildData() {
+            var result = {};
+            // 保存datagrid处在编辑状态时候的数据
+            $('#Poundage').datagrid('getEditingRowIndexs');
+            $('#Financing').datagrid('getEditingRowIndexs');
+
+            var data = {};
+            var ff = $(".container").find("article")
+            for (var i = 0; i < ff.length - 1; i++) {
+                temp = $(ff[i]).attr("class");
+                var fs = new Array();
+                var fieldset = $(ff[i]).children("fieldset");
+                data[temp] = $(fieldset[0]).serializeJson();
+            }
+            //申请人中由于包括自有住房和联系人部分嵌套的fieldset所以单独处理
+            var app = [];//用于存放联系人信息
+            var house = [];//用于存放自有住房信息
+            for (var i = 0; i < $(ff[ff.length - 1]).find("fieldset").length; i++) {
+                var findclass = $($(ff[ff.length - 1]).find("fieldset")[i]).attr("class");
+                if (findclass == "applicant") {
+                    app.push($($(ff[ff.length - 1]).find("fieldset")[i]).serializeJson());
+                }
+                else if (findclass == "house") {
+                    house.push($($(ff[ff.length - 1]).find("fieldset")[i]).serializeJson());
+                }
+            }
+            //将自有住房添加到主要申请人中
+            app[0]["OwnHouse"] = JSON.stringify(house);
+            //将主要申请人信息存放到数组中
+            data["Applicant"] = app;
+            data["ProduceId"] = $("#ProduceId").val();;
+            data["IntentionPrincipal"] = $("#IntentionPrincipal").textbox("getValue");
+            data["OncePayMonths"] = $("#OncePayMonths").textbox("getValue");
+            data["FinanceProduce"] = $('#Financing').datagrid('getRows');
+            data["Id"] = $("#financeId").val();
+            for (var i = 0; i < $('#Poundage').datagrid('getRows').length; i++) {
+                data["FinanceProduce"].push($('#Poundage').datagrid('getRows')[i])
+            }
+            result["formName"] = "融资申请信息";
+            result["buildData"] = data;
+
+            return result;
+        }
         //选择通讯地址类型时候加载单位地址和住宅地址
         function CAType(s) {
             if (s == 1) {

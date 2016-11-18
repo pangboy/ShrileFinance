@@ -57,6 +57,7 @@ namespace BLL.Contract
             string all = AAAA + BB + CCCC + DDD;//组成AAAABBCCCCDDD
 
             //同一个主合同号只能有一个，没有就增加一个
+
             DataTable ContractMainCodeDT = contract.Find(financeid);
 
             if (ContractMainCodeDT.Rows.Count == 1) {

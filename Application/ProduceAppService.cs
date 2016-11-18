@@ -112,7 +112,7 @@ namespace Application
                         }
                         else
                         {
-                            var aaa = new FinancingProjectListViewModel()
+                            var produceModel = new FinancingProjectListViewModel()
                             {
                                 FinancingProjectId = financing.FinancingProjectId,
                                 IsEdit = financing.IsEdit,
@@ -120,7 +120,7 @@ namespace Application
                                 Money = financing.Money,
                                 Name = financing.FinancingProject.Name
                             };
-                            produceViewModel.FinancingItemsList.Add(aaa);
+                            produceViewModel.FinancingItemsList.Add(produceModel);
                         }
                     }
                 }
