@@ -12,6 +12,8 @@
     using Core.Interfaces.Repositories;
     using Data.PDF;
     using ViewModels.FinanceViewModels;
+    using System.Collections;
+    using System.Reflection;
 
     /// <summary>
     /// 融资
@@ -22,7 +24,7 @@
         private readonly AppUserManager userManager;
         private readonly AppRoleManager roleManager;
         private readonly IContractRepository contractRepository;
-
+        
         /// <summary>
         /// Initializes a new instance of the <see cref="FinanceAppService" /> class.
         /// </summary>
@@ -486,7 +488,7 @@
             operationReportViewModel.RepaymentDate = finance.RepaymentDate;
 
             // 首次租金支付日期
-            operationReportViewModel.FirstPaymentDate = finance.RepayRentDate;
+            operationReportViewModel.RepayRentDate = finance.RepayRentDate;
 
             // 保证金
             operationReportViewModel.Margin = finance.Bail;
@@ -502,6 +504,21 @@
 
             // 融资项
             operationReportViewModel.FinancingItems = GetFinancingItems(finance);
+
+            // 车辆补充信息
+            var array = new string[] { "RegisterDate", "RunningMiles", "FactoryDate", "BusinessType", "PlateNo", "FrameNo", "EngineNo", "RegisterCity", "Condition" };
+            operationReportViewModel = PartialMapper(finance.Vehicle,operationReportViewModel);
+
+            ////operationReportViewModel.RegisterDate = finance.Vehicle.RegisterDate;
+            ////operationReportViewModel.RunningMiles = finance.Vehicle.RunningMiles;
+            ////operationReportViewModel.FactoryDate = finance.Vehicle.FactoryDate;
+            ////operationReportViewModel.BusinessType = finance.Vehicle.BusinessType;
+
+            ////operationReportViewModel.PlateNo = finance.Vehicle.PlateNo;
+            ////operationReportViewModel.FrameNo = finance.Vehicle.FrameNo;
+            ////operationReportViewModel.EngineNo = finance.Vehicle.EngineNo;
+            ////operationReportViewModel.RegisterCity = finance.Vehicle.RegisterCity;
+            ////operationReportViewModel.Condition = finance.Vehicle.Condition;
 
             return operationReportViewModel;
         }
@@ -546,10 +563,15 @@
                 }
 
                 // 车辆补充信息
+                finance.Vehicle.PlateNo = value.PlateNo;
+                finance.Vehicle.FrameNo = value.FrameNo;
+                finance.Vehicle.EngineNo = value.EngineNo;
                 finance.Vehicle.RegisterDate = value.RegisterDate;
                 finance.Vehicle.RunningMiles = value.RunningMiles;
                 finance.Vehicle.FactoryDate = value.FactoryDate;
                 finance.Vehicle.BusinessType = value.BusinessType;
+                finance.Vehicle.RegisterCity = value.RegisterCity;
+                finance.Vehicle.Condition = value.Condition;
             }
             else
             {
@@ -557,7 +579,7 @@
                 finance.RepaymentDate = value.RepaymentDate;
 
                 // 首次租金支付日期
-                finance.RepayRentDate = value.FirstPaymentDate;
+                finance.RepayRentDate = value.RepayRentDate;
 
                 // 保证金
                 finance.Bail = value.Margin;
@@ -603,7 +625,7 @@
             var financingItems = new List<KeyValuePair<Guid, KeyValuePair<string, decimal?>>>();
 
             // 提取融资项
-            finance.FinanceProduce.ToList().ForEach(delegate(FinanceProduce item)
+            finance.FinanceProduce.ToList().ForEach(delegate (FinanceProduce item)
             {
                 financingItems.Add(new KeyValuePair<Guid, KeyValuePair<string, decimal?>>(item.Id, new KeyValuePair<string, decimal?>(item.Name, item.Money)));
             });
@@ -622,7 +644,7 @@
             var financingItemList = financingItems.ToList();
 
             // 更新融资项各金额
-            financingItemList.ForEach(delegate(FinanceProduce financingItem)
+            financingItemList.ForEach(delegate (FinanceProduce financingItem)
             {
                 // 获取融资项标识
                 var key = financingItem.Id;
@@ -633,5 +655,61 @@
 
             return financingItemList;
         }
+
+        /// <summary>
+        /// 映射类
+        /// </summary>
+        /// <typeparam name="T">类型</typeparam>
+        /// <typeparam name="T1">类型</typeparam>
+        /// <param name="refObj">输入对象</param>
+        /// <param name="outObj">输出对象</param>
+        /// <param name="array">属性名数组</param>
+        /// <returns></returns>
+        private T1 PartialMapper<T, T1>(T refObj, T1 outObj, string[] array = null)
+        {
+            if (refObj == null)
+            {
+                return outObj;
+            }
+
+            if (outObj == null)
+            {
+                outObj = Activator.CreateInstance<T1>();
+            }
+
+            // 字典记录属性的值
+            var container = new Dictionary<object, object>();
+            refObj.GetType().GetProperties(BindingFlags.Public).ToList().ForEach(delegate (PropertyInfo item)
+            {
+                if (array == null || array.Contains(item.Name))
+                {
+                    container.Add(item.Name, item.GetValue(refObj));
+    }
+            });
+
+            // 字典为空，则返回
+            if (container.Keys.Count == 0)
+            {
+                return outObj;
+}
+
+            // 从字典取值，并对输出对象对应的属性赋值
+            foreach (PropertyInfo item in outObj.GetType().GetProperties(BindingFlags.Public))
+            {
+                if (array == null || array.Contains(item.Name))
+                {
+                    if (container.Keys.Contains(item.Name))
+                    {
+                        item.SetValue(outObj, container[item.Name], null);
+
+                        container.Remove(item.Name);
+                    }
+                }
+            }
+
+            return outObj;
+        }
     }
 }
+
+
