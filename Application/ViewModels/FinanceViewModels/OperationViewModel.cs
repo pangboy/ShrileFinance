@@ -36,7 +36,7 @@
         /// 保证金
         /// </summary>
         [Required(ErrorMessage = "保证金 不可为空")]
-        public decimal? Margin { get; set; }
+        public decimal? Bail { get; set; }
 
         /// <summary>
         /// 先付月供
