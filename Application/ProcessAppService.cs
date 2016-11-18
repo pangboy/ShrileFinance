@@ -24,6 +24,7 @@
         private readonly IFinanceRepository financeRepository;
         private readonly AppUserManager userManager;
         private readonly AppRoleManager roleManager;
+        private readonly FinanceScriptAppService scriptService;
 
         public ProcessAppService(
             IFlowRepository flowRepository,
@@ -31,6 +32,7 @@
             IFormRepository formRepository,
             IPartnerRepository partnerRepository,
             IFinanceRepository financeRepository,
+            FinanceScriptAppService scriptService,
             AppUserManager userManager,
             AppRoleManager roleManager)
         {
@@ -39,6 +41,7 @@
             this.formRepository = formRepository;
             this.partnerRepository = partnerRepository;
             this.financeRepository = financeRepository;
+            this.scriptService = scriptService;
             this.userManager = userManager;
             this.roleManager = roleManager;
         }
@@ -86,14 +89,32 @@
             var instance = instanceReopsitory.Get(model.InstanceId);
             var action = instance.CurrentNode.Actions.Single(m => m.Id == model.ActionId);
 
+            if ((instance.CurrentUser != CurrentUser && instance.CurrentUser != null) ||
+                (instance.Status != InstanceStatusEnum.正常))
+            {
+                throw new InvalidOperationAppException("无法操作该流程.");
+            }
+            
+            // 动态调用业务方法
+            if (!string.IsNullOrEmpty(action.Method))
+            {
+                scriptService.Instance = instance;
+                scriptService.Data = Newtonsoft.Json.Linq.JObject.Parse(model.Data);
+
+                var method = scriptService.GetType().GetMethod(action.Method);
+
+                method.Invoke(scriptService, null);
+            }
+
+            // 流转
             AppUser user;
 
             switch (action.AllocationType)
             {
                 case ActionAllocationEnum.指定:
                     var finance = financeRepository.Get(instance.RootKey.Value);
-                    //var partner = finance.CreateBy;
                     // TODO: 模拟合作商
+                    // var partner = finance.CreateOf;
                     var partner = partnerRepository.Get(new Guid("341fac9b-6aac-e611-80c6-507b9de4a488"));
                     user = partner.Approvers.Single(m => m.RoleId == action.Transfer.RoleId);
                     break;

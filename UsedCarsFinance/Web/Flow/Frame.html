@@ -92,14 +92,12 @@
         }
 
         function RanderButtons(actions) {
-            // TODO: 模拟测试, click 事件使用 Transfer 方法
             $(actions).each(function (i, action) {
                 $("<a>").linkbutton({
                     id: "action_" + action.Id,
                     text: action.Name,
                     plain: false,
-                    onClick: Transfer
-                    // onClick: action.Method ? TransferWithData : Transfer
+                    onClick: action.Method ? TransferWithData : Transfer
                 }).appendTo("#buttons");
             });
         }
@@ -107,12 +105,14 @@
         function Transfer(data) {
             $("#buttons .l-btn").not(":first").linkbutton("disable");
 
+            var dataString = JSON.stringify(data);
+
             var dataPosted = {
                 InstanceId: flow.InstanceId,
                 ActionId: this.id.substr(7),
                 InOpinion: $("#InOpinion").textbox("getValue"),
                 ExOpinion: $("#ExOpinion").textbox("getValue"),
-                Data: data
+                Data: dataString
             };
 
             $.ajax({
@@ -157,7 +157,7 @@
                 $(flow.Forms).each(function (i, form) {
                     var frame = frames[form.Id];
 
-                    data[form.Id] = JSON.stringify(frame.BuildData());
+                    data[form.Id] = frame.BuildData();
                 });
 
                 Transfer(data);
