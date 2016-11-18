@@ -86,9 +86,10 @@
         }
 
         [HttpGet]
-        public string LeaseeContract(Guid id)
+        public IHttpActionResult LeaseeContract(Guid Id)
         {
-            return financeAppService.CreateLeaseInfoPdf(id);
+            string result = financeAppService.CreateLeaseInfoPdf(Id);
+            return Ok(result);
         }
     }
 }

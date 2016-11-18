@@ -40,7 +40,7 @@ namespace Data.PDF
             Stream stream = webResponse.GetResponseStream();
 
             // 请求下载的pdf地址
-            string pdfFile = System.Web.HttpContext.Current.Server.MapPath("~\\upload\\PDF\\" + targetPdfName + ".pdf");
+            string pdfFile = "";//System.Web.HttpContext.Current.Server.MapPath("~\\upload\\PDF\\" + targetPdfName + ".pdf");
 
             FileStream fs = new FileStream(pdfFile, FileMode.Create);
 
