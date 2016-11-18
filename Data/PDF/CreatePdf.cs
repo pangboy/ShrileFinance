@@ -15,11 +15,11 @@ namespace Data.PDF
         /// <param name="fileName">合同模板名</param>
         /// <param name="param">参数</param>
         /// <param name="targetPdfName">需要生成的pdf的名字</param>
-        public string TransformPdf(string fileName, string param, string targetPdfName)
+        public string TransformPdf( string fileName, string param, string targetPdfName)
         {
-            //string url = System.Web.Configuration.WebConfigurationManager.AppSettings["PrintUrl"].ToString();
-            string url = "D:\\Projects\\UsedCarsFinance\\trunk\\Web\\upload\\PDF";
-            url ="fileName=" + fileName;
+            string url = System.Web.Configuration.WebConfigurationManager.AppSettings["PrintUrl"].ToString();
+           // string url = "D:\\Projects\\UsedCarsFinance\\trunk\\Web\\upload\\PDF";
+            url = url+"fileName=" + fileName;
 
             // 创建httpWebRequest对象
             HttpWebRequest webRequest = (HttpWebRequest)WebRequest.Create(new Uri(url));
@@ -40,7 +40,7 @@ namespace Data.PDF
             Stream stream = webResponse.GetResponseStream();
 
             // 请求下载的pdf地址
-            string pdfFile = "";//System.Web.HttpContext.Current.Server.MapPath("~\\upload\\PDF\\" + targetPdfName + ".pdf");
+            string pdfFile = System.Web.HttpContext.Current.Server.MapPath("~\\upload\\PDF\\" + targetPdfName + ".pdf");
 
             FileStream fs = new FileStream(pdfFile, FileMode.Create);
 
