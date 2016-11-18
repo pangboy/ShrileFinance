@@ -5,6 +5,194 @@
     using System.ComponentModel.DataAnnotations;
 
     /// <summary>
+    /// 牌照登记至 枚举
+    /// </summary>
+    public enum LicenseRegistrationEnum
+    {
+        /// <summary>
+        /// 承租人名下
+        /// </summary>
+        承租人名下 = 0,
+
+        /// <summary>
+        /// 渠道个人名下
+        /// </summary>
+        渠道个人名下 = 1,
+
+        /// <summary>
+        /// 渠道企业名下
+        /// </summary>
+        渠道企业名下 = 2,
+
+        /// <summary>
+        /// 晟融名下
+        /// </summary>
+        晟融名下 = 3
+    }
+
+    /// <summary>
+    /// 客户类别 枚举
+    /// </summary>
+    public enum CustomerCategoryEnum
+    {
+        /// <summary>
+        /// 优良职业
+        /// </summary>
+        优良职业 = 0,
+
+        /// <summary>
+        /// 标准受薪
+        /// </summary>
+        标准受薪 = 1,
+
+        /// <summary>
+        /// 自雇人士
+        /// </summary>
+        自雇人士 = 2,
+
+        /// <summary>
+        /// 自由职业
+        /// </summary>
+        自由职业 = 3
+    }
+
+    /// <summary>
+    /// 户籍所在地 枚举
+    /// </summary>
+    public enum CensusRegisterSeatEnum
+    {
+        /// <summary>
+        /// 本地户籍
+        /// </summary>
+        本地户籍 = 0,
+
+        /// <summary>
+        /// 异地户籍
+        /// </summary>
+        异地户籍 = 1
+    }
+
+    /// <summary>
+    /// 婚姻 枚举
+    /// </summary>
+    public enum MarriageStateEnum
+    {
+        /// <summary>
+        /// 已婚
+        /// </summary>
+        已婚 = 0,
+
+        /// <summary>
+        /// 离异
+        /// </summary>
+        离异 = 1,
+
+        /// <summary>
+        /// 单身
+        /// </summary>
+        单身 = 2
+    }
+
+    /// <summary>
+    /// 居住 枚举
+    /// </summary>
+    public enum LiveEnum
+    {
+        /// <summary>
+        /// 自有房产
+        /// </summary>
+        自有房产 = 0,
+
+        /// <summary>
+        /// 亲属房产
+        /// </summary>
+        亲属房产 = 1,
+
+        /// <summary>
+        /// 租房
+        /// </summary>
+        租房 = 2,
+
+        /// <summary>
+        /// 其它
+        /// </summary>
+        其它 = 3
+    }
+
+    /// <summary>
+    /// 工作 枚举
+    /// </summary>
+    public enum WorkEnum
+    {
+        /// <summary>
+        /// 同一单位5年以上
+        /// </summary>
+        同一单位5年以上 = 0,
+
+        /// <summary>
+        /// 营业执照满3年
+        /// </summary>
+        营业执照满3年 = 1,
+
+        /// <summary>
+        /// 其它
+        /// </summary>
+        其它 = 2
+    }
+
+    /// <summary>
+    /// 家访 枚举
+    /// </summary>
+    public enum FamilyVisitEnum
+    {
+        /// <summary>
+        /// 无需家访
+        /// </summary>
+        无需家访 = 0,
+
+        /// <summary>
+        /// 需要家访
+        /// </summary>
+        需要家访 = 1,
+
+        /// <summary>
+        /// 信息符合
+        /// </summary>
+        信息符合 = 2,
+
+        /// <summary>
+        /// 信息不符合
+        /// </summary>
+        信息不符合 = 3
+    }
+
+    /// <summary>
+    /// 调查意见 枚举
+    /// </summary>
+    public enum SurveyOpinionEnum
+    {
+        /// <summary>
+        /// 通过
+        /// </summary>
+        通过 = 0,
+
+        /// <summary>
+        /// 建议通过
+        /// </summary>
+        建议通过 = 1,
+
+        /// <summary>
+        /// 例外通过
+        /// </summary>
+        例外通过 = 2,
+
+        /// <summary>
+        /// 拒单
+        /// </summary>
+        拒单 = 3
+    }
+
+    /// <summary>
     /// 信审报告
     /// </summary>
     public class CreditExamineViewModel
@@ -38,7 +226,7 @@
         /// <summary>
         /// 产品种类
         /// </summary>
-        public ProductCategorieEnum ProductCategorie { get; set; }
+        public string ProductCategorie { get; set; }
 
         /// <summary>
         /// 产品编号
@@ -289,101 +477,4 @@
         /// </summary>
         public int CurentUser { get; set; }
     }
-
-    /// <summary>
-    /// 牌照登记至 枚举
-    /// </summary>
-    public enum LicenseRegistrationEnum
-    {
-        承租人名下,
-        渠道个人名下,
-        渠道企业名下,
-        晟融名下
-    }
-
-    /// <summary>
-    /// 产品种类 枚举
-    /// </summary>
-    public enum ProductCategorieEnum
-    {
-        新车交易贷 = 0,
-        二手车交易贷 = 1,
-        车抵贷 = 2,
-        押车贷 = 3,
-        快速贷 = 4,
-        以租代购 = 5
-    }
-
-    /// <summary>
-    /// 客户类别 枚举
-    /// </summary>
-    public enum CustomerCategoryEnum
-    {
-        优良职业 = 0,
-        标准受薪 = 1,
-        自雇人士 = 2,
-        自由职业 = 3
-    }
-
-    /// <summary>
-    /// 户籍所在地 枚举
-    /// </summary>
-    public enum CensusRegisterSeatEnum
-    {
-        本地户籍,
-        异地户籍
-    }
-
-    /// 婚姻 枚举
-    /// </summary>
-    public enum MarriageStateEnum
-    {
-        已婚,
-        离异,
-        单身
-    }
-
-    /// <summary>
-    /// 居住 枚举
-    /// </summary>
-    public enum LiveEnum
-    {
-        自有房产,
-        亲属房产,
-        租房,
-        其它
-    }
-
-    /// <summary>
-    /// 工作 枚举
-    /// </summary>
-    public enum WorkEnum
-    {
-        同一单位5年以上,
-        营业执照满3年,
-        其它
-    }
-
-    /// <summary>
-    /// 家访 枚举
-    /// </summary>
-    public enum FamilyVisitEnum
-    {
-        无需家访,
-        需要家访,
-        信息符合,
-        信息不符合
-    }
-
-    /// <summary>
-    /// 调查意见 枚举
-    /// </summary>
-    public enum SurveyOpinionEnum
-    {
-        通过,
-        建议通过,
-        例外通过,
-        拒单
-    }
-
 }

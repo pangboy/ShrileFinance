@@ -72,7 +72,6 @@ namespace Data.Migrations
                 .PrimaryKey(t => t.Id)
                 .ForeignKey("dbo.FANC_Finance", t => t.FinanceId, cascadeDelete: true)
                 .Index(t => t.FinanceId);
-            
         }
         
         public override void Down()

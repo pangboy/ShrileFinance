@@ -112,7 +112,7 @@
             creditExamineReportViewModel.ProductExplain = finance.Produce.Remarks;
 
             // 产品种类
-            creditExamineReportViewModel.ProductCategorie = ProductCategorieEnum.以租代购;
+            creditExamineReportViewModel.ProductCategorie = finance.Vehicle.BusinessType.ToString();
 
             // 承租人
             var lessee = finance.Applicant.ToList().Find(m => m.Type == Applicant.TypeEnum.主要申请人);
@@ -389,43 +389,67 @@
                 return;
             }
 
-            // 选择还款日
-            finance.RepaymentDate = value.RepaymentDate;
-
-            // 首次租金支付日期
-            finance.RepayRentDate = value.FirstPaymentDate;
-
-            // 保证金
-            finance.Bail = value.Margin;
-
-            // 先付月供
-            finance.Payment = value.PayMonthly;
-
-            // 一次性付息
-            finance.OnePayInterest = value.OnePayInterest;
-
-            // 实际用款额
-            finance.Principal = value.ActualAmount;
-
             if (finance.FinanceExtension == null)
             {
                 finance.FinanceExtension = new FinanceExtension();
             }
 
-            // 放款主体
-            finance.FinanceExtension.LoanPrincipal = value.LoanPrincipal;
+            if (value.NodeType.Equals("Customer"))
+            {
+                // 还款信息
+                finance.FinanceExtension.CustomerAccountName = value.CustomerAccountName;
+                finance.FinanceExtension.CustomerBankName = value.CustomerBankName;
+                finance.FinanceExtension.CustomerBankCard = value.CustomerBankCard;
 
-            // 放款账户
-            finance.FinanceExtension.CreditAccountId = value.CreditAccountId;
+                if (!finance.FinanceExtension.LoanPrincipal.Equals("Channel"))
+                {
+                    // 放款信息
+                    finance.FinanceExtension.CreditAccountName = value.CreditAccountName;
+                    finance.FinanceExtension.CreditBankName = value.CreditBankName;
+                    finance.FinanceExtension.CreditBankCard = value.CreditBankCard;
+                }
 
-            // 放款账户开户行
-            finance.FinanceExtension.CreditBankName = value.CreditBankName;
+                // 车辆补充信息
+                finance.Vehicle.RegisterDate = value.RegisterDate;
+                finance.Vehicle.RunningMiles = value.RunningMiles;
+                finance.Vehicle.FactoryDate = value.FactoryDate;
+                finance.Vehicle.BusinessType = value.BusinessType;
+            }
+            else
+            {
+                // 选择还款日
+                finance.RepaymentDate = value.RepaymentDate;
 
-            // 放款账户卡号
-            finance.FinanceExtension.CreditBankCard = value.CreditBankCard;
+                // 首次租金支付日期
+                finance.RepayRentDate = value.FirstPaymentDate;
 
-            // 合同Json
-            finance.FinanceExtension.ContactJson = value.ContactJson;
+                // 保证金
+                finance.Bail = value.Margin;
+
+                // 先付月供
+                finance.Payment = value.PayMonthly;
+
+                // 一次性付息
+                finance.OnePayInterest = value.OnePayInterest;
+
+                // 实际用款额
+                finance.Principal = value.ActualAmount;
+
+                // 放款主体
+                finance.FinanceExtension.LoanPrincipal = value.LoanPrincipal;
+
+                // 放款账户
+                finance.FinanceExtension.CreditAccountName = value.CreditAccountName;
+
+                // 放款账户开户行
+                finance.FinanceExtension.CreditBankName = value.CreditBankName;
+
+                // 放款账户卡号
+                finance.FinanceExtension.CreditBankCard = value.CreditBankCard;
+
+                // 合同Json
+                finance.FinanceExtension.ContactJson = value.ContactJson;
+            }
 
             repository.Modify(finance);
 

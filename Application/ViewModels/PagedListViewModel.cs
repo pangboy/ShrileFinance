@@ -1,18 +1,21 @@
 ﻿namespace Application.ViewModels
 {
     using System.Collections.Generic;
+    using Newtonsoft.Json;
     using X.PagedList;
 
     public class PagedListViewModel<Entity>
     {
         public PagedListViewModel(IPagedList<Entity> entitys)
         {
-            rows = entitys;
-            total = entitys.TotalItemCount;
+            Rows = entitys;
+            Total = entitys.TotalItemCount;
         }
 
-        public IEnumerable<Entity> rows { get; set; }
+        [JsonProperty(PropertyName = "rows")]
+        public IEnumerable<Entity> Rows { get; set; }
 
-        public int total { get; set; }
+        [JsonProperty(PropertyName = "total")]
+        public int Total { get; set; }
     }
 }

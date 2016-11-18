@@ -1,22 +1,18 @@
-﻿using System;
-using System.Collections.Specialized;
-using System.Web.Http;
-using Models;
-using Models.Flow;
-using Models.Finance;
-using System.Collections.Generic;
-using Application;
-using Application.ViewModels;
-using Application.ViewModels.ProcessViewModels;
-
-namespace Web.Controllers.Flow
+﻿namespace Web.Controllers.Flow
 {
+    using System;
+    using System.Web.Http;
+    using Application;
+    using Application.ViewModels;
+    using Application.ViewModels.ProcessViewModels;
+    using Core.Exceptions;
+
     public class InstanceController : ApiController
     {
-        private readonly static BLL.Flow.Instance _instance = new BLL.Flow.Instance();
+        private static readonly BLL.Flow.Instance Instance = new BLL.Flow.Instance();
         private readonly ProcessAppService service;
 
-        public InstanceController(Application.ProcessAppService service)
+        public InstanceController(ProcessAppService service)
         {
             this.service = service;
         }
@@ -24,7 +20,6 @@ namespace Web.Controllers.Flow
         /// <summary>
         /// 待办列表
         /// </summary>
-        /// qiy     16.04.29
         /// <param name="page">页数</param>
         /// <param name="rows">行数</param>
         /// <returns></returns>
@@ -34,21 +29,11 @@ namespace Web.Controllers.Flow
             var list = service.DoingPagedList(null, page, rows);
 
             return Ok(new PagedListViewModel<InstanceViewModel>(list));
-
-            //Pagination pagination = new Pagination(page, rows);
-            //NameValueCollection filter = ApiHelper.GetParameters();
-
-            //return new Datagrid
-            //{
-            //    rows = _instance.DoingList(pagination, filter),
-            //    total = pagination.Total
-            //};
         }
 
         /// <summary>
         /// 已办列表
         /// </summary>
-        /// qiy     16.04.29
         /// <param name="page">页数</param>
         /// <param name="rows">行数</param>
         /// <returns></returns>
@@ -58,20 +43,11 @@ namespace Web.Controllers.Flow
             var list = service.DonePagedList(null, page, rows);
 
             return Ok(new PagedListViewModel<InstanceViewModel>(list));
-            //Pagination pagination = new Pagination(page, rows);
-            //NameValueCollection filter = ApiHelper.GetParameters();
-
-            //return new Datagrid
-            //{
-            //    rows = _instance.DoneList(pagination, filter),
-            //    total = pagination.Total
-            //};
         }
 
         /// <summary>
         /// 添加待发起流程
         /// </summary>
-        /// yaoy    16.07.26
         /// <returns></returns>
         [HttpPost]
         public IHttpActionResult StartProcess()
@@ -81,14 +57,27 @@ namespace Web.Controllers.Flow
             var instanceId = service.StartNew(finacneFlow);
 
             return Ok(instanceId);
-            //return _instance.StartProcess();
+        }
+
+        [HttpPost]
+        public IHttpActionResult Transfer(ProcessPostedViewModel model)
+        {
+            try
+            {
+                service.Process(model);
+
+                return Ok();
+            }
+            catch (InvalidOperationAppException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         /// <summary>
         /// 流程撤回
         /// </summary>
-        /// yaoy    16.08.30
-        /// <param name="instanceId"></param>
+        /// <param name="instanceId">实例标识</param>
         /// <returns></returns>
         [HttpGet]
         public IHttpActionResult Revoke(Guid instanceId)
@@ -99,63 +88,18 @@ namespace Web.Controllers.Flow
 
                 return Ok();
             }
-            catch (InvalidOperationException ex)
+            catch (InvalidOperationAppException ex)
             {
                 return BadRequest(ex.Message);
             }
-            //var result = false;
-            //string message = string.Empty;
-
-            //result = new BLL.Flow.RevokeUtil().RevokeFlow(instanceId, ref message);
-
-            //if (result)
-            //{
-            //    return Ok(result);
-            //}
-            //else
-            //{
-            //    return BadRequest(message);
-            //}
         }
 
-        /// <summary>
-        /// 保存临时数据
-        /// </summary>
-        /// yaoy    16.08.29
-        /// <param name="data"></param>
-        /// <returns></returns>
-        [HttpPost]
-        public IHttpActionResult SaveTempData(FlowData data)
-        {
-            var instanceId = Convert.ToInt32(data.InstanceId);
-            var value = data.BusinessData;
-            var result = _instance.ModifyTempData(instanceId, value);
-
-            return Ok(result);
-        }
-
-        /// <summary>
-        /// 查询临时数据
-        /// </summary>
-        /// yaoy    16.07.26
-        /// <param name="instanceId"></param>
-        /// <returns></returns>
         [HttpGet]
-        public string GetTempData(int instanceId)
+        public IHttpActionResult GetFrame(Guid instanceId)
         {
-            return _instance.GetData(instanceId);
-        }
+            var frame = service.GetFrame(instanceId);
 
-        /// <summary>
-        /// 查询KeyXML数据
-        /// </summary>
-        /// yaoy    16.07.27
-        /// <param name="instanceId"></param>
-        /// <returns></returns>
-        [HttpGet]
-        public string GetXMLData(int instanceId)
-        {
-            return _instance.GetXMLData(instanceId);
+            return Ok(frame);
         }
     }
 }

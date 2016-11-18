@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using Interfaces;
+    using Partner;
     using Produce;
 
     public class Finance : Entity, IAggregateRoot
@@ -137,14 +138,19 @@
         public decimal? Payment { get; set; }
 
         /// <summary>
-        /// 还款日
-        /// </summary>
-        public DateTime? RepayDate { get; set; }
-
-        /// <summary>
         /// 首次租金支付日期
         /// </summary>
         public DateTime? RepayRentDate { get; set; }
+        
+        /// <summary>
+        /// 合作商
+        /// </summary>
+        public Partner CreateBy { get; set; }
+
+        /// <summary>
+        /// 用户
+        /// </summary>
+        public AppUser CreateOf { get; set; }
 
         /// <summary>
         /// 联系人

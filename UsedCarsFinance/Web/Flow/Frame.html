@@ -10,53 +10,36 @@
     <script src="../Scripts/easyui/locale/easyui-lang-zh_CN.js"></script>
     <script src="../Scripts/usedcars.js"></script>
     <style>
-        #opinion, #buttons {
-            text-align: center;
-            margin: 7px auto;
-        }
-
-            #buttons .l-btn {
-                width: 80px;
-                margin: 0 15px;
-            }
-
-                #buttons .l-btn .l-btn-text {
-                    line-height: 30px;
-                }
+        #opinion, #buttons { text-align: center; margin: 7px auto; }
+        #buttons .l-btn { width: 80px; margin: 0 15px; }
+        #buttons .l-btn .l-btn-text { line-height: 30px; }
     </style>
     <script>
-        // 用于保存表单数据
-        var FormList = {};
-        var query = uc.GetParams();
-        // 设置全局变量
         var flow = {
             InstanceId: query.instanceId,
-            InstanceData: {},
-            InstanceTempData: {}
-        }
+            Forms: []
+        };
 
         $(function () {
-            Init();
-            AutoSaveData();
+            flow.InstanceId = uc.GetParams().instanceId;
+
+            if (flow.InstanceId) {
+                LoadFrame(flow.InstanceId);
+            }
         });
 
-        function Init() {
-            var query = uc.GetParams();
-
+        function LoadFrame(instanceId) {
             $.ajax({
-                async: false,
-                data: { instanceId: query.instanceId },
+                async: true,
+                data: { instanceId: instanceId },
                 method: "GET",
-                url: "../api/Flow/Frame",
+                url: "../api/Instance/GetFrame",
                 statusCode: {
                     200: function (data) {
-                        FormList = data.FormInfo;
-                        RanderTabs(data.FormInfo);
+                        RanderTabs(data.Forms);
                         RanderButtons(data.Actions);
-                        SaveTempData(data.Actions);
-                        GetInstanceTempData();
-                        flow.InstanceData = data.XMLData && JSON.parse(data.XMLData);
-                        if (data.InOpinion) {
+
+                        if (data.HasInnerOpinion) {
                             $("#InOpinion").parent().show();
                         }
                     }
@@ -64,247 +47,105 @@
             });
         }
 
-        // 获取实例草稿数据
-        function GetInstanceTempData() {
-            var query = uc.GetParams();
-            $.ajax({
-                async: false,
-                data: { instanceId: query.instanceId },
-                method: "GET",
-                url: "../api/Instance/GetTempData",
-                statusCode: {
-                    200: function (data) {
-                        if (data != "null" && data != "") {
-                            flow.InstanceTempData = JSON.parse(data);
-                        }
-                    }
-                }
-            });
-        }
+        function RanderTabs(forms) {
+            var openIndex;
 
-        // 定时服务
-        function AutoSaveData() {
-            //setTimeout(function () {
-            //    $("#saveTempData").click();
-            //    AutoSaveData();
-            //}, 180000);
+            $(forms).each(function (i, form) {
+                var link = form.Link;
 
-            // 每3分钟点击一次保存草稿按钮
-            var IntervalHandler = setInterval(function () {
-                // 判断是否存在保存草稿按钮
-                if ($("a[id=saveTempData]:visible")[0] != undefined) {
-                    $.ajax({
-                        async: true,
-                        type: "GET",
-                        url: "../api/User/CurrentUser",
-                        statusCode: {
-                            200: function (data) {
-                                // 用户存在，且存在保存草稿按钮
-                                if (data != undefined && $("a[id=saveTempData]:visible")[0] != undefined) {
-                                    if (data.Message == undefined) {
-                                        $("a[id=saveTempData]:visible").click();
-                                    }
-                                    else {
-                                        // 清除定时器
-                                        clearInterval(IntervalHandler);
-                                        //$.messager.show({ msg: "登陆过期，请重新登陆！" });
-                                    }
-                                }
-                            }
-                        }
-                    });
-                }
-            }, 180000);
-        }
+                link += "?state=" + form.State;
 
-        // 保存临时数据
-        function SaveTempData(actions) {
-            var enableClick = false;
-            $(actions).each(function (i, e) {
-                if (e.Method == "Submit") {
-                    enableClick = true;
-                    return;
-                }
-            });
-            // 判断是否禁用保存临时数据按钮
-            if (!enableClick) {
-                $("#buttons").find(":first").linkbutton("disable");
-            }
-
-            $("#saveTempData").bind("click", function () {
-                var arr = {};
-                //查找所有的框架页面中的表单
-                for (var j = 0; j < frames.length; j++) {
-                    //查找所有需要操作的表单
-                    for (var i = 0; i < FormList.length; i++) {
-                        var formId = "D" + FormList[i].FormId;
-
-                        //判断该表单是否需要操作并且构建数据中获取的表单ID==需要操作的表单ID
-                        if (FormList[i].IsHandler == "1" && (formId == frames[j].name)) {
-                            var result = frames[j].BuildData().buildData;
-                            arr[formId] = result;
-                        }
-                    }
+                if (form.IsHandler) {
+                    flow.Forms.push(form);
                 }
 
-                var flowInfo = FlowInfo.call(this);
-                flowInfo.BusinessData = JSON.stringify(arr);
-
-                $.ajax({
-                    async: false,
-                    data: flowInfo,
-                    method: "POST",
-                    url: "../api/Instance/SaveTempData",
-                    statusCode: {
-                        200: function (data) {
-                            top.$.messager.show({ msg: "已存至草稿箱！" });
-                        },
-                        400: uc.E400
-                    },
-                });
-            });
-        }
-
-        // 获取KeyXML的值
-        function GetXMLData(instanceId) {
-            $.ajax({
-                method: "GET",
-                async: false,
-                data: { instanceId: instanceId },
-                url: "../api/Instance/GetXMLData",
-                statusCode: {
-                    200: function (data) {
-                        flow.InstanceData = JSON.parse(data);
-                    }
+                if (openIndex == undefined && form.IsOpen) {
+                    openIndex = i;
                 }
-            });
-        }
 
-        function RanderTabs(tabs) {
-            var actives = [];
-            var open;
-            $(tabs).each(function (i) {
                 $("#tabs").tabs("add", {
-                    title: this.Name
-                });
-                var Link = this.Link + "?Status=" + this.Status + "";
-                if (this.IsHandler) {
-
-                    Link = Link + "&IsHandler=" + this.IsHandler + "";
-                    actives.push(i);
-                }
-                else {
-                    Link = Link;
-                }
-                if (this.IsOpen) {
-                    open = i;
-                }
-
-                $("#tabs").tabs("getTab", i).data("url", Link).data("id", "D" + this.FormId);
-
+                    id: form.Id,
+                    title: form.Name
+                }).tabs("getTab", i).data("url", link);
             });
 
-            if (actives.length) {
-                $(actives).each(function (i, e) {
-                    if (open == e) {
-                        $("#tabs").tabs("select", e);
-                    }
-                });
-            } else {
-                $("#tabs").tabs("select", 0);
+            if (forms.length > 0) {
+                $("#tabs").tabs("select", openIndex || 0);
             }
         }
 
         function TabSelect(title, index) {
             var tab = $("#tabs").tabs("getSelected");
+
             var url = tab.data("url");
-            var id = tab.data("id");
+
             if (url) {
                 $("#tabs").tabs("update", {
                     tab: tab,
                     options: {
-                        content: "<iframe name='" + id + "' scrolling='auto' frameborder='0'  src='" + url + "' style='width:100%;height:99%;'></iframe>"
+                        content: "<iframe name='" + tab.attr("id") + "' scrolling='auto' frameborder='0'  src='" + url + "' style='width:100%;height:99%;'></iframe>"
                     }
                 });
+
                 tab.removeData("url");
             }
         }
 
         function RanderButtons(actions) {
-            $(actions).each(function (i, e) {
-                var fn = window[this.Method];
+            $(actions).each(function (i, action) {
                 $("<a>").linkbutton({
-                    id: "action_" + this.ActionId,
-                    text: this.Name,
+                    id: "action_" + action.Id,
+                    text: action.Name,
                     plain: false,
-                    onClick: (typeof fn === "function") ? fn : undefined
-                }).appendTo("#buttons")
+                    onClick: Transfer
+                }).appendTo("#buttons");
             });
         }
 
-        function Submit() {
-            var data = {}
-            var arr = {};
-            var temp;
-            var Db;
-            var valid = true;
-            var query = uc.GetParams();
+        function Transfer() {
+            var isValid = true;
 
-            for (var j = 0; j < frames.length; j++) {
-                for (var i = 0; i < FormList.length; i++) {
-                   
-                    //判断该表单是否需要操作并且构建数据中获取的表单ID==需要操作的表单ID
-                    if (FormList[i].IsHandler == "1") {
-                        var formId = "D" + FormList[i].FormId;
-                        if (window.frames[formId] == undefined) {
-                            top.$.messager.show({ msg: FormList[i].Name + "中数据需要处理" })
-                            return;
-                        }
-                        else {
-                            if (formId == frames[j].name) {
-                                valid = frames[j].ValidData();
-                                if (valid == false) {
-                                    top.$.messager.show({ msg: frames[j].BuildData().formName + "中必填项未填写" })
-                                    return;
-                                }
-                            }
-                        }
+            $(flow.Forms).each(function (i, form) {
+                var frame = frames[form.Id];
+
+                if (frame) {
+                    isValid &= frame.ValidData();
+
+                    if (!isValid) {
+                        $.messager.show({ msg: form.Name + "验证未通过." });
                     }
+                } else {
+                    $.messager.show({ msg: form.Name + "尚未处理." });
                 }
-            }
-            //验证通过
-            if (valid) {
-                //查找所有的框架页面中的表单
-                for (var j = 0; j < frames.length; j++) {
-                    //查找所有需要操作的表单
-                    for (var i = 0; i < FormList.length; i++) {
-                        var formId = "D" + FormList[i].FormId;
-                        //判断该表单是否需要操作并且构建数据中获取的表单ID==需要操作的表单ID
-                        if (FormList[i].IsHandler == "1" && (formId == frames[j].name)) {
-                            var result = frames[j].BuildData().buildData;
-                            arr[formId] = result;
-                        }
-                    }
-                }
-                var DataList = FlowInfo.call(this);
-                DataList.BusinessData = JSON.stringify(arr);
+            });
+
+            if (isValid) {
                 $("#buttons .l-btn").not(":first").linkbutton("disable");
+
+                var dataPosted = {
+                    InstanceId: flow.InstanceId,
+                    ActionId: this.id.substr(7),
+                    InOpinion: $("#InOpinion").textbox("getValue"),
+                    ExOpinion: $("#ExOpinion").textbox("getValue"),
+                    Data: {}
+                };
+
+                $(flow.Forms).each(function (i, form) {
+                    var frame = frames[form.Id];
+
+                    dataPosted.Data[form.Id] = JSON.stringify(frame.BuildData());
+                });
+
                 $.ajax({
                     async: true,
-                    data: DataList,
+                    data: dataPosted,
                     method: "POST",
-                    url: "../api/FinanceScript/SaveData",
+                    url: "../api/Instance/Transfer",
                     statusCode: {
                         200: function (data) {
-                            top.$.messager.show({ msg: "执行流程成功！" });
-                            // 执行流程成功
-                            GetXMLData(query.instanceId);
-                            if (DataList.ActionId == '1') {
-                                location.search = "?Status=1&instanceId=" + query.instanceId;
-                            }
-                            else {
-                                uc.CloseWindow();
-                            }
+                            $.messager.show({ msg: "执行流程成功！" });
+
+                            uc.CloseWindow();
                         },
                         400: uc.E400
                     },
@@ -313,40 +154,6 @@
                     }
                 });
             }
-        }
-
-        function Transfer() {
-            var data = FlowInfo.call(this);
-
-            $("#buttons .l-btn").not(":first").linkbutton("disable");
-            $.ajax({
-                async: true,
-                data: data,
-                method: "POST",
-                url: "../api/FinanceScript/Transfer",
-                statusCode: {
-                    200: function (data) {
-                        top.$.messager.show({ msg: "执行流程成功！" });
-                        uc.CloseWindow();
-                    },
-                    400: uc.E400
-                },
-                error: function () {
-                    $("#buttons .l-btn").not(":first").linkbutton("enable");
-                }
-            });
-        }
-
-        function FlowInfo() {
-            var query = uc.GetParams();
-
-            return {
-                instanceId: query.instanceId || '',
-                flowId: query.flowId || 1,
-                ActionId: parseInt(this.id.substr(7)),
-                InOpinion: $("#InOpinion").textbox("getValue"),
-                ExOpinion: $("#ExOpinion").textbox("getValue")
-            };
         }
     </script>
 </head>

@@ -26,6 +26,8 @@
             Property(m => m.FactoryDate);
             Property(m => m.BuyCarYears);
             Property(m => m.Color).HasMaxLength(50);
+            Property(m => m.BusinessType);
+            Property(m => m.Condition);
 
             ToTable("FANC_Vehicle");
         }

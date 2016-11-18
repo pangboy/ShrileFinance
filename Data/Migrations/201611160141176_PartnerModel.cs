@@ -64,7 +64,6 @@ namespace Data.Migrations
                 .ForeignKey("dbo.PROD_Produce", t => t.ProduceId, cascadeDelete: true)
                 .Index(t => t.PartnerId)
                 .Index(t => t.ProduceId);
-            
         }
         
         public override void Down()

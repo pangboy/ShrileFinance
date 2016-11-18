@@ -123,6 +123,8 @@
                 return createResult;
             }
 
+            model.Id = user.Id;
+
             return await userManager.AddToRoleAsync(user.Id, model.Role);
         }
 

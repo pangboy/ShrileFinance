@@ -2,27 +2,33 @@
 {
     using System;
     using System.Linq;
+    using System.Threading.Tasks;
     using AutoMapper;
     using Core.Entities;
     using Core.Entities.Partner;
     using Core.Interfaces.Repositories;
+    using Microsoft.AspNet.Identity;
+    using ViewModels.AccountViewModels;
     using ViewModels.PartnerViewModels;
     using X.PagedList;
 
     public class PartnerAppService
     {
         private readonly IPartnerRepository repository;
-        private readonly AppUserManager userManager;
         private readonly IProduceRepository produceRepository;
+        private readonly AppUserManager userManager;
+        private AccountAppService accountService;
 
         public PartnerAppService(
             IPartnerRepository repository,
+            IProduceRepository produceRepository,
             AppUserManager userManager,
-            IProduceRepository produceRepository)
+            AccountAppService accountService)
         {
             this.repository = repository;
-            this.userManager = userManager;
             this.produceRepository = produceRepository;
+            this.userManager = userManager;
+            this.accountService = accountService;
         }
 
         public PartnerViewModel Get(Guid key)
@@ -68,6 +74,29 @@
             }
 
             repository.Modify(partner);
+            repository.Commit();
+        }
+
+        public async Task CreateAccount(UserViewModel model, Guid partnerId)
+        {
+            var partner = repository.Get(partnerId);
+
+            if (model.Role != "C342BEE1-05A4-E611-80C5-507B9DE4A488" && model.Role != "C442BEE1-05A4-E611-80C5-507B9DE4A488")
+            {
+                throw new Core.Exceptions.InvalidOperationAppException("用户的角色只能是客户经理或渠道经理.");
+            }
+
+            var createResult = await accountService.CreateUserAsync(model);
+
+            if (!createResult.Succeeded)
+            {
+                throw new InvalidOperationException("创建用户失败.");
+            }
+
+            var user = userManager.FindById(model.Id);
+
+            partner.Accounts.Add(user);
+
             repository.Commit();
         }
 
