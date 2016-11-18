@@ -11,6 +11,8 @@
     <script src="../Scripts/easyui/jquery.easyui.js"></script>
     <script src="../Scripts/easyui/locale/easyui-lang-zh_CN.js"></script>
     <script src="Content/FinanceJs.js"></script>
+    <script src="../Scripts/usedcars.js"></script>
+    <script src="../BankInfo/JS/validType.js"></script>
 
     <script type="text/javascript">
         $(function () {
@@ -20,6 +22,8 @@
             if (query.FinanceId == undefined || query.FinanceId.length == 0) {
                 query.FinanceId = 'ED468191-9FAB-E611-80C5-507B9DE4A488';
             }
+
+            nodeType = $('form[name=FinanceOperation]>input[name=NodeType]').val();
 
             // 初始化
             Init(query);
@@ -55,9 +59,8 @@
                             // 由流程节点决定类型（运营/客户）
                             if ("客户") {
                                 // 客户页面及数据加载
-                                LoadCustomer(data);
+                                //LoadCustomer(data);
                             }
-
                         }
                     }
                 }
@@ -70,6 +73,16 @@
                 return false;
             }
 
+            var CustomerBankCard = $('form fieldset[name=CustomerBankInfo] input[textboxname=CustomerBankCard]');
+            var CreditBankCard = $('form fieldset[name=CreditBankInfo] input[textboxname=CreditBankCard]');
+
+            if (CustomerBankCard[0] != undefined && CreditBankCard[0] != undefined) {
+                if (CustomerBankCard.textbox('getValue') == CreditBankCard.textbox('getValue')) {
+                    $.messager.show({ msg: "还款账号不能与放款账号相同！" });
+                    return false;
+                }
+            }
+
             return true;
         }
 
@@ -80,11 +93,7 @@
 
             // 序列化放款信息
             if (value.LoanPrincipal == "Channel") {
-                var LoanInfo = FieldsetSerializeFactory('CreditBankInfo', 'text');
-
-                $(['CreditAccountName', 'CreditBankName', 'CreditBankCard']).each(function (i, e) {
-                    value[e] = LoanInfo[e];
-                });
+                TraverseDateFactory(FieldsetSerializeFactory('CreditBankInfo', 'text'), value, false);
             }
 
             // 序列化合同信息
@@ -96,25 +105,19 @@
             });
             value.ContactJson = JSON.stringify(array);
 
+            // 客户
             value.NodeType = $('form[name=FinanceOperation]>input[name=NodeType]').val();
             if (value.NodeType != "Operation") {
                 // 还款账户信息
-                var CustomerBankInfo = FieldsetSerializeFactory('CustomerBankInfo', text);
-                $(['CustomerAccountName', 'CustomerBankName', 'CustomerBankCard']).each(function (i, e) {
-                    value[e] = CustomerBankInfo[e];
-                });
+                TraverseDateFactory(FieldsetSerializeFactory('CustomerBankInfo', 'text'), value, false);
 
                 if (value.LoanPrincipal != 'Channel') {
                     // 放款账户信息
-                    var CreditBankInfo = FieldsetSerializeFactory('CreditBankInfo', text);
-                    $(['CreditAccountName', 'CreditBankName', 'CreditBankCard']).each(function (i, e) {
-                        value[e] = CreditBankInfo[e];
-                    });
+                    TraverseDateFactory(FieldsetSerializeFactory('CreditBankInfo', 'text'), value, false);
                 }
 
-
-
-
+                // 车辆补充信息
+                TraverseDateFactory(FieldsetSerializeFactory('VehicleInfo', 'text'), value, false);
             }
 
             var result = {};
@@ -143,6 +146,9 @@
             if (data == null) {
                 return;
             }
+
+            // 记录节点类型
+            $('form[name=FinanceOperation]>input[name=NodeType]').val("Operation");
 
             // 运营
             LoadDataBase(data);
@@ -224,13 +230,11 @@
                     div.find("input[name=Id]").val(e.Key);
                     div.find("input[textboxname=Money]").textbox({
                         readonly: true,
-                        required: false,
-                        validType: ['Amount']
+                        required: false
                     });
 
                     // 裸车价
                     if ($.inArray(e.Value.Key, ["裸车价"]) != -1) {
-                        div.attr("name", "NakedCar")
                         div.find("span[name=unit]").text("万元");
                     }
 
@@ -248,6 +252,7 @@
             if (data == null) {
                 return;
             }
+
             // 记录节点类型
             $('form[name=FinanceOperation]>input[name=NodeType]').val("Customer");
 
@@ -261,26 +266,24 @@
             // 禁用合同
             $('fieldset[name=Contact] div[id=Contact_tb]').hide();
             Disabled($('fieldset[name=Contact]'));
+            ContactCheck = false;
 
             // 显示还款页面
             $($('form[name=FinanceOperation] template#CustomerBankInfo').html()).insertAfter($('form[name=FinanceOperation]>fieldset[name=Operation]'));
             $.parser.parse($('form[name=FinanceOperation]>fieldset[name=CustomerBankInfo]'));
+            FieldsetLoadDateFactory("CustomerBankInfo", 'text', data);
 
             // 显示放款页面
             if (data.LoanPrincipal == 'Customer') {
-
                 ShowChannel(true, $('form[name=FinanceOperation]>fieldset[name=Operation]'));
+
+                FieldsetLoadDateFactory("CreditBankInfo", 'text', data);
             }
 
             // 显示车辆补充信息
             $($('form[name=FinanceOperation] template#VehicleInfo').html()).insertBefore($('form[name=FinanceOperation]>fieldset[name=Contact]'));
             $.parser.parse($('form[name=FinanceOperation]>fieldset[name=VehicleInfo]'));
-
-        }
-
-        // 客户数据加载
-        function LoadCustomerData(data) {
-
+            FieldsetLoadDateFactory("VehicleInfo", 'text', data);
         }
     </script>
 </head>
@@ -304,7 +307,7 @@
             </fieldset>
 
             <fieldset name="Operation">
-                <legend>运营</legend>
+                <legend><!--运营-->租赁信息</legend>
                 <input type="hidden" name="FinanceId" value="00000000-0000-0000-0000-000000000000" placeholder="融资标识" />
 
                 <div class="row">
@@ -317,7 +320,7 @@
                     </div>
                     <div class="col-6">
                         <label>首次租金支付日期：</label>
-                        <input name="FirstPaymentDate" class="easyui-datebox" data-options="required:true,validType:'',readonly:false,editable:false,width:410" />
+                        <input name="RepayRentDate" class="easyui-datebox" data-options="required:true,validType:'',readonly:false,editable:false,width:410" />
                     </div>
                     <div class="col-6">
                         <label>保证金：</label>
@@ -325,7 +328,7 @@
                         <span name="uint">元</span>
                     </div>
                     <div class="col-6">
-                        <label>先付月供：</label>
+                        <label><!--先付月供：-->月供金额</label>
                         <input name="PayMonthly" class="easyui-textbox" data-options="required:true,validType:'Money',readonly:false" />
                         <span name="uint">元</span>
                     </div>
@@ -380,7 +383,7 @@
                             }
                             else {
                                 if ($('form[name=FinanceOperation]>fieldset[name=CreditBankInfo]')[0] != undefined) {
-                                    $('form[name=FinanceOperation]>fieldset[name=CreditBankInfo]').remove();
+                                    $('form[name=FinanceOperation]>fieldset[name=CreditBankInfo]').hide();
                                 }
                             }
                         }
@@ -408,7 +411,7 @@
                         </div>
                         <div class="col-6">
                             <label>卡号:</label>
-                            <input name="CreditBankCard" class="easyui-textbox" data-options="required:true,validType:'',value:''" />
+                            <input name="CreditBankCard" class="easyui-textbox" data-options="required:true,validType:['Integer','length[19,19]'],value:''" />
                         </div>
                     </div>
                 </fieldset>
@@ -434,7 +437,7 @@
                         </div>
                         <div class="col-6">
                             <label>卡号:</label>
-                            <input name="CustomerBankCard" class="easyui-textbox" data-options="required:true,validType:'',value:''" />
+                            <input name="CustomerBankCard" class="easyui-textbox" data-options="required:true,validType:['Integer','length[19,19]'],value:''" />
                         </div>
                     </div>
                 </fieldset>
@@ -467,9 +470,8 @@
                 <script type="text/javascript">
                     // table onSelect事件
                     function ContactSelect(index, row) {
-                        if (index == 0)
-                        {
-                            $('#Contact_dg').datagrid('uncheckRow', 0);
+                        if (index == 0 || ContactCheck == false) {
+                            $('#Contact_dg').datagrid('uncheckRow', index);
                             return false;
                         }
 
@@ -481,6 +483,7 @@
                             $("#Contact_del").linkbutton("enable");
                         }
                     }
+                    var ContactCheck = true;
 
                     // table 取消选择
                     function ContactUnselect(index, row) {
@@ -503,7 +506,7 @@
                     function ContactDelete() {
                         var rows = $('#Contact_dg').datagrid('getSelections');
 
-                        if (rows.length > 1) {
+                        if (rows.length > 0) {
                             $.messager.confirm('确认', '确认删除选中的合同？', function (r) {
                                 if (r) {
                                     // 清除所有选择的行
@@ -513,8 +516,7 @@
                                     $(rows).each(function (i, e) {
                                         var rowIndex = $('#Contact_dg').datagrid('getRowIndex', e);
 
-                                        if (rowIndex != 0)
-                                        {
+                                        if (rowIndex >= 0) {
                                             // 保存指定行
                                             ContactSave(rowIndex, true);
 
@@ -539,7 +541,7 @@
                             var newRow = $('#Contact_dg').datagrid('getRows')
 
                             // 双击新增行
-                            ContactDblClickCell(newRow.length - 1, 'Name', newRow.Name);
+                            ContactDblClickCell(newRow.length - 1, 'Name', null);
                         }
                     }
 
@@ -548,17 +550,16 @@
 
                     // table 单元格双击
                     function ContactDblClickCell(index, field, value) {
+                        // 融资租赁合同不可编辑
+                        if (index == 0 || ContactCheck==false) {
+                            return;
+                        }
+
                         if (editRowIndex > -1) {
                             ContactSave();
                         }
 
                         editRowIndex = index;
-
-                        // 融资租赁合同不可编辑
-                        if (index == 0)
-                        {
-                            return;
-                        }
 
                         $('fieldset[name=Contact] input[type=checkbox]').attr("disabled", true);
 
@@ -596,11 +597,32 @@
                         var ed = $('#Contact_dg').datagrid('getEditors', index);
 
                         if (ed.length > 0) {
+                            // 重复合同判断
+                            var sameflag = false;
+                            $($('#Contact_dg').datagrid('getRows')).each(function (i, e) {
+                                if (e.Name.length > 0 && i != index && e.Name == ed[0].target.val()) {
+                                    sameflag = true;
+                                }
+                            });
+                            if (sameflag) {
+                                $.messager.show({ msg: "合同列表已经存在 " + ed[0].target.val() });
+
+                                return;
+                            }
+
+
+
                             if (!$('#Contact_dg').datagrid('validateRow', index)) {
                                 if (flag == true) {
                                     $(ed[0].target).val('FillData');
+                                    $('#Contact_dg').datagrid('endEdit', index);
+                                    $('#Contact_dg').datagrid('acceptChanges');
+                                    $('#Contact_dg').datagrid('refreshRow', index);
                                 }
                                 else {
+                                    $('#Contact_dg').datagrid('endEdit', index);
+                                    $('#Contact_dg').datagrid('acceptChanges');
+                                    $('#Contact_dg').datagrid('refreshRow', index);
                                     $('#Contact_dg').datagrid('deleteRow', index);
                                 }
                             }
@@ -611,13 +633,9 @@
 
                                 $('#Contact_dg').datagrid('acceptChanges');
 
-                                var row = $('#Contact_dg').datagrid('getRows')[index];
-
                                 $('#Contact_dg').datagrid('refreshRow', index);
 
-                                //row.editing = false;
                                 editRowIndex = -1;
-
                             }
 
                             $('fieldset[name=Contact] input[type=checkbox]').attr("disabled", false);
@@ -648,84 +666,101 @@
             </fieldset>
         </template>
 
-        <template id="btn">
-            <div id="btn">
-                <a id="save" class="easyui-linkbutton" href="javascript:void(0)" data-options="iconCls:'icon-ok',onClick:Submit">提交</a>
-                <a id="back" class="easyui-linkbutton" href="javascript:void(0)" data-options="iconCls:'icon-redo',onClick:Cancel">返回</a>
-                <input type="reset" style="display:none" />
-            </div>
-            <script type="text/javascript">
-            function Submit() {
-                if (ValidData()) {
-                    var result = BuildData().buildData;
-                    debugger
-
-                    var data = BuildData().buildData;
-
-                    $.ajax({
-                        async: false,
-                        method: "POST",
-                        data: data,
-                        url: '../api/Operation/EditOperation',
-                        statusCode: {
-                            200: function (data) {
-                                $.messager.show({ msg: '处理成功！' });
-
-                                return true;
-                            }
-                        }
-                    });
-                    return true;
-                }
-                else {
-                    $.messager.show({ msg: '请填写完必填项！' });
-
-                    return false;
-                }
-            }
-
-            function Cancel() {
-                // 重置表单
-                ResetForm();
-            }
-            </script>
-        </template>
-
         <template id="VehicleInfo">
             <fieldset name="VehicleInfo">
                 <legend style="margin-top:25px;">车辆补充信息</legend>
                 <div class="row">
                     <div class="col-6">
+                        <label>车牌号:</label>
+                        <input name="PlateNo" class="easyui-textbox" data-options="validType:['PlateNo'],required:true" />
+                    </div>
+
+                    <div class="col-6">
+                        <label>车架号:</label>
+                        <input name="FrameNo" class="easyui-textbox" data-options="validType:['AN','length[17,17]'],required:true" />
+                    </div>
+
+                    <div class="col-6">
+                        <label>发动机号:</label>
+                        <input name="EngineNo" class="easyui-textbox" data-options="validType:['AN','length[5,7]'],required:true" />
+                    </div>
+
+                    <div class="col-6">
                         <label>注册登记日期:</label>
-                        <input name="RegisterDate" class="easyui-textbox" data-options="validType:'YearMonth'" />
+                        <input name="RegisterDate" class="easyui-datebox" data-options="validType:'Date',required:true,editable:false,width:410" />
                     </div>
 
                     <div class="col-6">
                         <label>行驶里程:</label>
-                        <input name="RunningMiles" class="easyui-textbox" data-options="validType:'Integer'" />
+                        <input name="RunningMiles" class="easyui-textbox" data-options="validType:['Integer','length[0,9]'],required:true" />
                         <span class="unit">公里</span>
                     </div>
-                </div>
 
-                <div class="row">
                     <div class="col-6">
                         <label>车辆出厂日期:</label>
-                        <input name="FactoryDate" class="easyui-textbox" data-options="validType:'Date'" />
+                        <input name="FactoryDate" class="easyui-datebox" data-options="validType:'Date',required:true,editable:false,width:410" />
                     </div>
 
                     <div class="col-6">
                         <label>业务类型:</label>
-                        <select id="Type" name="Type" class="easyui-combobox" data-options="editable:false">
+                        <select name="BusinessType" class="easyui-combobox" data-options="editable:false,required:true,value:''">
                             <option value="1">以租代购</option>
                             <option value="2">快速贷</option>
                             <option value="3">押车贷</option>
                             <option value="4">车抵贷</option>
                             <option value="5">二手车交易贷</option>
-                            <option value="6">新车交易贷</option>
+                            <option value="0">新车交易贷</option>
                         </select>
                     </div>
+
+                    <div class="col-6">
+                        <label>车辆上牌城市:</label>
+                        <input name="RegisterCity" class="easyui-textbox" data-options="validType:[],required:true" />
                     </div>
+
+                    <div class="col-6">
+                        <label>车况:</label>
+                        <input name="Condition" type="radio" checked value="0"><span onclick="$(this).prev().click()">新车</span>
+                        <input name="Condition" type="radio" value="1"><span onclick="$(this).prev().click()">二手车</span>
+                    </div>
+                </div>
             </fieldset>
+        </template>
+
+        <template id="btn">
+            <div id="btn">
+                <a id="save" class="easyui-linkbutton" href="javascript:void(0)" data-options="iconCls:'icon-ok',onClick:Submit">提交</a>
+                <a id="back" class="easyui-linkbutton" href="javascript:void(0)" data-options="iconCls:'icon-redo',onClick:Cancel">返回</a>
+            </div>
+            <script type="text/javascript">
+                function Submit() {
+                    if (ValidData()) {
+                        var data = BuildData().buildData;
+
+                        $.ajax({
+                            async: false,
+                            method: "POST",
+                            data: data,
+                            url: '../api/Operation/EditOperation',
+                            statusCode: {
+                                200: function (data) {
+                                    $.messager.show({ msg: '处理成功！' });
+
+                                    return true;
+                                }
+                            }
+                        });
+                        return true;
+                    }
+
+                    return false;
+                }
+
+                function Cancel() {
+                    // 重置表单
+                    ResetForm();
+                }
+            </script>
         </template>
     </form>
 </body>

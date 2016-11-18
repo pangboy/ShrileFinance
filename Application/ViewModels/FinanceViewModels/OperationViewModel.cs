@@ -30,7 +30,7 @@
         /// 首次租金支付日期
         /// </summary>
         [Required(ErrorMessage = "首次租金支付日期 不可为空")]
-        public DateTime? FirstPaymentDate { get; set; }
+        public DateTime? RepayRentDate { get; set; }
 
         /// <summary>
         /// 保证金
@@ -121,5 +121,30 @@
         /// 业务种类
         /// </summary>
         public Vehicle.BusinessTypeEnum BusinessType { get; set; }
+
+        /// <summary>
+        /// 上牌城市
+        /// </summary>
+        public string RegisterCity { get; set; }
+
+        /// <summary>
+        /// 车况
+        /// </summary>
+        public Vehicle.ConditionEnum Condition { get; set; }
+
+        /// <summary>
+        /// 车牌号
+        /// </summary>
+        public string PlateNo { get; set; }
+
+        /// <summary>
+        /// 车架号
+        /// </summary>
+        public string FrameNo { get; set; }
+
+        /// <summary>
+        /// 发动机号
+        /// </summary>
+        public string EngineNo { get; set; }
     }
 }

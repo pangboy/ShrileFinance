@@ -1,6 +1,7 @@
 ﻿namespace Web.Controllers.Finance
 {
     using System;
+    using System.Data;
     using System.Web.Http;
     using Application;
     using Application.ViewModels.FinanceViewModels;
@@ -82,6 +83,12 @@
         {
             var finance = financeAppService.Get(Id);
             return Ok(finance);
+        }
+
+        [HttpGet]
+        public string LeaseeContract(Guid id)
+        {
+            return financeAppService.CreateLeaseInfoPdf(id);
         }
     }
 }

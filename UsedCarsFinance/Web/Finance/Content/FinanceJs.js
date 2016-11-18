@@ -88,6 +88,32 @@ function FieldsetLoadDateFactory(name, type, data) {
     return data;
 }
 
+// 对象遍历工厂 （isFunction：true or false）
+function TraverseDateFactory(RefObj, OutObj, isFunction) {
+    if (RefObj == null)
+    {
+        return OutObj;
+    }
+
+    if (isFunction==true) {
+        for (var name in RefObj) {
+            if (typeof (RefObj[name]) == "function") {
+                OutObj[name] = RefObj[name];
+            }
+        }
+    }
+    else {
+        for (var name in RefObj) {
+            if (typeof (RefObj[name]) != "function") {
+                OutObj[name] = RefObj[name];
+            }
+        }
+    }
+
+    return OutObj;
+}
+
+
 $.extend($.fn.validatebox.defaults.rules, {
     Money: {
         validator: function (value) {

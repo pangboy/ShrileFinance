@@ -49,6 +49,7 @@
         /// </summary>
         public double? InterestRate { get; set; }
 
+
         /// <summary>
         /// 融资期限 (月)
         /// </summary>
@@ -58,6 +59,8 @@
         /// 还款间隔 (月)
         /// </summary>
         public int? RepaymentInterval { get; set; }
+
+
 
         /// <summary>
         /// 还款日
@@ -142,12 +145,12 @@
         /// <summary>
         /// 合作商
         /// </summary>
-        public Partner CreateBy { get; set; }
+        public Partner CreateOf { get; set; }
 
         /// <summary>
         /// 用户
         /// </summary>
-        public AppUser CreateOf { get; set; }
+        public AppUser CreateBy { get; set; }
 
         /// <summary>
         /// 联系人
