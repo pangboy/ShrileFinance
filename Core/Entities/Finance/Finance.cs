@@ -60,8 +60,6 @@
         /// </summary>
         public int? RepaymentInterval { get; set; }
 
-
-
         /// <summary>
         /// 还款日
         /// </summary>
@@ -90,7 +88,7 @@
         /// <summary>
         /// 状态
         /// </summary>
-        public FinanceStateEnum State { get; set; }
+        public  FinanceStateEnum State { get; set; }
 
         /// <summary>
         /// 放款日期
@@ -145,12 +143,12 @@
         /// <summary>
         /// 合作商
         /// </summary>
-        public Partner CreateOf { get; set; }
+        public virtual Partner CreateOf { get; set; }
 
         /// <summary>
         /// 用户
         /// </summary>
-        public AppUser CreateBy { get; set; }
+        public virtual AppUser CreateBy { get; set; }
 
         /// <summary>
         /// 联系人
