@@ -273,6 +273,7 @@
                     });
 
                 frame.HasInnerOpinion = roleManager.FindByIdAsync(CurrentUser.RoleId).Result.Power < 4;
+                frame.RootKey = instance.RootKey;
             }
             else
             {
