@@ -54,7 +54,16 @@ function Login() {
 					location.href = "Index.html";
 				},
 				400: function (xhr) {
-					$.messager.alert("登录失败!", xhr.responseJSON.Message, "info");
+					var message = "";
+					var modelState = xhr.responseJSON.ModelState;
+
+					for (item in modelState) {
+						$(modelState[item]).each(function () {
+							message += this + '\n';
+						});
+					}
+
+					$.messager.alert("登录失败!", message, "info");
 				}
 			}
 		});
@@ -67,7 +76,7 @@ function Login() {
 
 function Loading(content) {
 	$("<div class=\"datagrid-mask\"></div>").css({ display: "block", width: "100%", height: $(window).height() }).appendTo("body");
-	$("<div class=\"datagrid-mask-msg\"></div>").html(content).appendTo("body").css({ display: "block", left: ($(document.body).outerWidth(true) - 190) / 2, top: 400});
+	$("<div class=\"datagrid-mask-msg\"></div>").html(content).appendTo("body").css({ display: "block", left: ($(document.body).outerWidth(true) - 190) / 2, top: 400 });
 }
 
 function LoadEnd() {
