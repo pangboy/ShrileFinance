@@ -525,6 +525,7 @@
     <Content Include="Flow\FrameView.html" />
     <Content Include="BankInfo\DictionaryType\DictionaryTypeEdit.html" />
     <Content Include="BankInfo\DictionaryType\DictionaryTypeList.html" />
+    <Content Include="Scripts\draft.js" />
     <Content Include="Scripts\easyui\themes\black\accordion.css" />
     <Content Include="Scripts\easyui\themes\black\calendar.css" />
     <Content Include="Scripts\easyui\themes\black\combo.css" />
@@ -931,6 +932,7 @@
     <Compile Include="Controllers\Notice\NoticeController.cs" />
     <Compile Include="Controllers\Produce\FinancingProjectController.cs" />
     <Compile Include="Controllers\Produce\ProduceController.cs" />
+    <Compile Include="Controllers\Sys\DraftController.cs" />
     <Compile Include="Controllers\Sys\FileController.cs" />
     <Compile Include="Controllers\TestController.cs" />
     <Compile Include="Controllers\Unused\ActionController.cs" />

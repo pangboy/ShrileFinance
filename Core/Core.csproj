@@ -65,6 +65,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Entities\Other\Draft.cs" />
     <Compile Include="Entities\Finance\FinanceProduce.cs" />
     <Compile Include="Entities\Finance\LeaseeContract.cs" />
     <Compile Include="Entities\Flow\Action.cs" />
@@ -126,6 +127,7 @@
     <Compile Include="Interfaces\IAggregateRoot.cs" />
     <Compile Include="Interfaces\IEntity.cs" />
     <Compile Include="Interfaces\Repositories\IContractRepository.cs" />
+    <Compile Include="Interfaces\Repositories\IDraftRepository.cs" />
     <Compile Include="Interfaces\Repositories\IFlowRepository.cs" />
     <Compile Include="Interfaces\Repositories\IFormRepository.cs" />
     <Compile Include="Interfaces\Repositories\IInstanceRepository.cs" />

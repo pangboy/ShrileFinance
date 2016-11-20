@@ -52,6 +52,7 @@
                 .Add(new FinanceExtensionConfiguration())
                 .Add(new FinanceProduceConfiguration())
                 .Add(new PartnerConfiguration())
+                .Add(new DraftConfiguration())
                 ;
 
             base.OnModelCreating(modelBuilder);
