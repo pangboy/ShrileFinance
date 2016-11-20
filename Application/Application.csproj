@@ -90,7 +90,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ContactAppService.cs" />
     <Compile Include="DraftAppService.cs" />
     <Compile Include="FinanceAppService.cs" />
     <Compile Include="FinanceScriptService.cs" />

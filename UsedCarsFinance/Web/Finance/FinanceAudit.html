@@ -20,6 +20,7 @@
         $(function () {
             // 获取参数
             var query = $.extend(uc.GetParams(), parent.flow.InstanceData);
+            query.FinanceId = parent.flow.RootKey;
             debugger
             if (query.FinanceId == undefined || query.FinanceId.length == 0) {
                 query.FinanceId = 'ED468191-9FAB-E611-80C5-507B9DE4A488';
@@ -56,10 +57,15 @@
 
                             if (query.state == 0)
                             {
+                                // 禁用所有
                                 Disabled($("fieldset"));
+                            }
+                            else if (query.state == 1) {
+                                // 初审
                             }
                             else if (query.state == 2)
                             {
+                                // 复审
                                 Review();
                             }
                         }

@@ -18,12 +18,11 @@
         $(function () {
             // 获取参数
             var query = $.extend(uc.GetParams(), parent.flow.InstanceData);
+            query.FinanceId = parent.flow.RootKey;
             debugger
             if (query.FinanceId == undefined || query.FinanceId.length == 0) {
                 query.FinanceId = 'ED468191-9FAB-E611-80C5-507B9DE4A488';
             }
-
-            nodeType = $('form[name=FinanceOperation]>input[name=NodeType]').val();
 
             // 初始化
             Init(query);
@@ -56,12 +55,15 @@
                             // 运营数据加载
                             LoadOperationData(data);
 
-                            // 初审审
-                            if ("初审") {
-
+                            if (query.state == 0) {
+                                // 禁用所有
+                                Disabled($("fieldset"));
                             }
-                            else if ("复审") {
-
+                            else if (query.state == 1) {
+                                // 初审
+                            }
+                            else if (query.state == 2) {
+                                // 复审
                             }
                         }
                     }
@@ -102,17 +104,9 @@
 
             // 客户
             value.NodeType = $('form[name=FinanceOperation]>input[name=NodeType]').val();
-            if (value.NodeType != "Operation") {
-                // 还款账户信息
-                TraverseDateFactory(FieldsetSerializeFactory('CustomerBankInfo', 'text'), value, false);
-
-                if (value.LoanPrincipal != 'Channel') {
-                    // 放款账户信息
-                    TraverseDateFactory(FieldsetSerializeFactory('CreditBankInfo', 'text'), value, false);
-                }
-
-                // 车辆补充信息
-                TraverseDateFactory(FieldsetSerializeFactory('VehicleInfo', 'text'), value, false);
+            if (value.LoanPrincipal != 'Channel') {
+                // 放款账户信息
+                TraverseDateFactory(FieldsetSerializeFactory('CreditBankInfo', 'text'), value, false);
             }
 
             var result = {};
@@ -183,8 +177,7 @@
 
         // 运营初审
         function LoadData_Trial(data) {
-            if (data.FinancingItems != null)
-            {
+            if (data.FinancingItems != null) {
                 // 加载融资项
                 LoadFinancingItem(data.FinancingItems);
             }

@@ -6,8 +6,11 @@
 
     public class FinanceScriptAppService
     {
-        public FinanceScriptAppService()
+        private readonly FinanceAppService financeAppService;
+
+        public FinanceScriptAppService(FinanceAppService financeAppService)
         {
+            this.financeAppService = financeAppService;
         }
 
         /// <summary>
@@ -37,6 +40,17 @@
         /// </summary>
         public void FinanceAudit()
         {
+            // 获取数据
+            var finance = GetData<FinanceAuidtViewModel>("58DC5FCF-18A4-E611-80C5-507B9DE4A488");
+
+            // 创建或修改
+            financeAppService.EditFinanceAuidt(finance);
+
+            // 如果执行失败则抛出异常, 或用返回值表示结果.
+            if (false)
+            {
+                throw new Core.Exceptions.InvalidOperationAppException("保存失败.");
+            }
         }
 
         /// <summary>
@@ -44,6 +58,53 @@
         /// </summary>
         public void FinanceReaudit()
         {
+            // 获取数据
+            var finance = GetData<FinanceAuidtViewModel>("58DC5FCF-18A4-E611-80C5-507B9DE4A488");
+
+            // 创建或修改
+            financeAppService.EditFinanceAuidt(finance);
+
+            // 如果执行失败则抛出异常, 或用返回值表示结果.
+            if (false)
+            {
+                throw new Core.Exceptions.InvalidOperationAppException("保存失败.");
+            }
+        }
+
+        /// <summary>
+        /// 运营补充
+        /// </summary>
+        public void FinanceOperation()
+        {
+            // 获取数据
+            var finance = GetData<OperationViewModel>("5ADC5FCF-18A4-E611-80C5-507B9DE4A488");
+
+            // 创建或修改
+            financeAppService.EditOperation(finance);
+
+            // 如果执行失败则抛出异常, 或用返回值表示结果.
+            if (false)
+            {
+                throw new Core.Exceptions.InvalidOperationAppException("保存失败.");
+            }
+        }
+
+        /// <summary>
+        /// 客户补充
+        /// </summary>
+        public void FinanceCustomer()
+        {
+            // 获取数据
+            var finance = GetData<OperationViewModel>("5ADC5FCF-18A4-E611-80C5-507B9DE4A488");
+
+            // 创建或修改
+            financeAppService.EditOperation(finance);
+
+            // 如果执行失败则抛出异常, 或用返回值表示结果.
+            if (false)
+            {
+                throw new Core.Exceptions.InvalidOperationAppException("保存失败.");
+            }
         }
 
         public Instance Instance { get; set; }

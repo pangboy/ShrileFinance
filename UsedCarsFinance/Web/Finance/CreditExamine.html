@@ -18,10 +18,12 @@
 
         $(function () {
             // 获取参数
-            var query = $.extend(uc.GetParams(), parent.flow.InstanceData);
+            var query =$.extend(uc.GetParams(), parent.flow.InstanceData);
+            query.FinanceId = parent.flow.RootKey;
             debugger
             if (query.FinanceId == undefined || query.FinanceId.length == 0) {
                 query.FinanceId = "ED468191-9FAB-E611-80C5-507B9DE4A488";
+                query.state = 1;
             }
 
             // 初始化
@@ -55,6 +57,11 @@
                 statusCode: {
                     200: function (data) {
                         if (data) {
+                            if (data.IncomeSourceBusiness == "" && data.IncomeSourceWage=="")
+                            {
+                                data.IncomeSourceBusiness = 1;
+                            }
+                            
                             $("form[id=CreditExamineReportFrom]").form('load', data);
 
                             // 初始化radio
@@ -66,12 +73,15 @@
                             LoadAduitPerson(data);
                             
                             if (query.state == 0) {
+                                // 禁用所有
                                 Disabled($("fieldset"));
-
                                 $("fieldset input[type=radio]").next().attr("onclick", "");
                             }
                             else if (query.state == 1) {
-
+                                // 初审
+                            }
+                            else if (query.state == 2) {
+                                // 复审
                             }
                         }
                     }
@@ -467,17 +477,17 @@
                 <div class="row">
                     <div class="col-6">
                         <label>网核价格：</label>
-                        <input name="NetnuclearPrice" class="easyui-textbox" data-options="value:'000.00',validType:['Amount'],required:true" />
+                        <input name="NetnuclearPrice" class="easyui-textbox" data-options="value:'000.00',validType:['Money'],required:true" />
                     </div>
                     <div class="col-6">
                         <label>核批价格：</label>
-                        <input name="NuclearGroupPrice" class="easyui-textbox" data-options="value:'000.00',validType:['Amount'],required:true" />
+                        <input name="NuclearGroupPrice" class="easyui-textbox" data-options="value:'000.00',validType:['Money'],required:true" />
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-6">
                         <label>终审额度：</label>
-                        <input name="FinalLine" class="easyui-textbox" data-options="value:'000.00',validType:['Amount'],required:true" />
+                        <input name="FinalLine" class="easyui-textbox" data-options="value:'000.00',validType:['Money'],required:true" />
                     </div>
                 </div>
             </fieldset>
