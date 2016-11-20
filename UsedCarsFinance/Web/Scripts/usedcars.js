@@ -125,7 +125,7 @@ function UCForm(formId) {
 		return $(formId || "form");
 	}
 
-	//{ async, *url, params, onLoadSuccess }
+	//{ async, *url, params, onLoad, onLoadSuccess }
 	this.LoadForm = function (options) {
 		$.ajax({
 			async: options.async || false,
@@ -133,7 +133,7 @@ function UCForm(formId) {
 			type: "GET",
 			url: options.url,
 			statusCode: {
-				200: function (data) {
+				200: options.onLoad || function (data) {
 					if (options.onLoadSuccess)
 						data = options.onLoadSuccess(data) || data;
 

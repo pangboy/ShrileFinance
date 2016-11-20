@@ -1,5 +1,6 @@
 ﻿namespace Application
 {
+    using System;
     using Core.Entities;
     using Core.Entities.Other;
     using Core.Exceptions;
@@ -76,6 +77,7 @@
             if (draft != null)
             {
                 repository.Remove(draft);
+                repository.Commit();
             }
         }
     }

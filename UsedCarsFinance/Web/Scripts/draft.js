@@ -42,10 +42,10 @@ function Draft(onSave, onLoad) {
 			method: "GET",
 			url: "../api/Draft/Read",
 			statusCode: {
-				200: function (jsonData) {
-					var data = $.parseJSON(jsonData);
+				200: function (data) {
+					var json = $.parseJSON(data.PageData);
 
-					onLoad(data);
+					onLoad(json);
 				},
 				404: function () {
 					// console.log("draft not found, link: " + pageLink);
@@ -57,7 +57,7 @@ function Draft(onSave, onLoad) {
 	// 清除草稿
 	this.Clear = function () {
 		var searchData = {
-			pageLink: pageLink
+			PageLink: pageLink
 		};
 
 		$.ajax({
