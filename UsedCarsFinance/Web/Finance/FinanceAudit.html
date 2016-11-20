@@ -12,12 +12,15 @@
     <script src="../Scripts/easyui/locale/easyui-lang-zh_CN.js"></script>
     <script src="../BankInfo/JS/validType.js"></script>
     <script src="Content/FinanceJs.js"></script>
+    <script src="../Scripts/usedcars.js"></script>
 
     <script type="text/javascript">
+        uc.form = new UCForm(".container");
+
         $(function () {
             // 获取参数
-            var query = {} //$.extend(uc.GetParams(), parent.flow.InstanceData);
-
+            var query = $.extend(uc.GetParams(), parent.flow.InstanceData);
+            debugger
             if (query.FinanceId == undefined || query.FinanceId.length == 0) {
                 query.FinanceId = 'ED468191-9FAB-E611-80C5-507B9DE4A488';
             }
@@ -28,9 +31,6 @@
 
         // 初始化
         function Init(query) {
-            // 重置表单
-            $("form input[type=reset]").click();
-
             LoadData(query);
         }
 
@@ -51,14 +51,17 @@
                         if (data) {
                             $("fieldset[name=FinanceAudit]").form('load', data);
 
-                            // 当前用户
-                            //data.CurentUser
-
-                            // 是否为复审
-                            //$("fieldset[name=FinanceAudit]>input[name=IsReview]").val('');
-
                             // 加载融资项
                             LoadFinancingItem(data.FinancingItems);
+
+                            if (query.state == 0)
+                            {
+                                Disabled($("fieldset"));
+                            }
+                            else if (query.state == 2)
+                            {
+                                Review();
+                            }
                         }
                     }
                 }
@@ -185,7 +188,7 @@
                 return false;
             }
 
-            return true;
+            return true; 
         }
 
         //构建数据
@@ -214,39 +217,6 @@
             result["buildData"] = value;
 
             return result;
-        }
-
-        function Submit() {
-            if (!ValidData())
-            {
-                $.messager.show({ msg: "请填写完必填项!" });
-
-                return false;
-            }
-
-            $('a#save').linkbutton('disable');
-
-            var data = BuildData().buildData;
-            debugger
-            $.ajax({
-                async: false,
-                method: "POST",
-                data: data,
-                url: '../api/FinanceAuidt/EditFinanceAuidt',
-                statusCode: {
-                    200: function (data) {
-                        $.messager.show({ msg: "保存成功!" });
-                        $('a#save').linkbutton('enable');
-                    }
-                }
-            });
-        }
-
-        // 返回测试
-        function Cancel() {
-            if (!ValidData()) {
-                $.messager.show({ msg: "Error!" });
-            }
         }
     </script>
 </head>
@@ -319,12 +289,6 @@
                 </div>
             </div>
         </fieldset>
-
-        <div id="btn">
-            <a id="save" class="easyui-linkbutton" href="javascript:void(0)" data-options="iconCls:'icon-save',onClick:Submit">保存</a>
-            <a id="back" class="easyui-linkbutton" href="javascript:void(0)" data-options="iconCls:'icon-redo',onClick:Cancel">返回</a>
-            <input type="reset" style="display:none" />
-        </div>
     </form>
 </body>
 </html>
