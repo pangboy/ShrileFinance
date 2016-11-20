@@ -10,8 +10,10 @@
     <script src="../Scripts/easyui/jquery.easyui.js"></script>
     <script src="../Scripts/easyui/locale/easyui-lang-zh_CN.js"></script>
     <script src="../Scripts/usedcars.js"></script>
+    <script src="../Scripts/draft.js"></script>
     <script>
         uc.form = new UCForm("#credit_ff");
+        var draft = new Draft(Build, Load);
 
         $(function () {
             Init();
@@ -35,51 +37,61 @@
                 uc.form.LoadForm({
                     params: { creditId: query.creditId },
                     url: "../api/Credit/Get",
-                    onLoadSuccess: function (data) {
-                        $(data.Produces).each(function () {
-                            ProduceAdd(this.Code, this.Id);
-                        });
-
-                        $(data.Approvers).each(function () {
-                            var userId = this;
-
-                            $("select.approvers").each(function () {
-                                var users = $(this).combobox("getData");
-
-                                for (var i = 0; i < users.length; i++) {
-                                    if (users[i].value == userId) {
-                                        $(this).combobox("select", userId);
-
-                                        return false;
-                                    }
-                                }
-                            })
-                        });
-                    }
+                    onLoadSuccess: Load
                 });
             }
         }
 
-        function Submit() {
-            var value = $.extend({},
-                $("#credit_info").serializeJson(),
-                $("#partner_info").serializeJson(),
-                { Produces: [], Approvers: [] }
-                );
+        function Load(data) {
+            $(data.Produces).each(function () {
+                ProduceAdd(this.Code, this.Id);
+            });
+
+            $(data.Approvers).each(function () {
+                var userId = this;
+
+                $("select.approvers").each(function () {
+                    var users = $(this).combobox("getData");
+
+                    for (var i = 0; i < users.length; i++) {
+                        if (users[i].value == userId) {
+                            $(this).combobox("select", userId);
+
+                            return false;
+                        }
+                    }
+                })
+            });
+        }
+
+        function Build() {
+            var data = $.extend({},
+               $("#credit_info").serializeJson(),
+               $("#partner_info").serializeJson(),
+               { Produces: [], Approvers: [] }
+               );
 
             $("select[name=Produces] option").each(function () {
-                value.Produces.push({ Id: this.value });
+                data.Produces.push({ Id: this.value });
             });
 
             $("select.approvers").each(function () {
-                value.Approvers.push($(this).combobox("getValue"));
+                data.Approvers.push($(this).combobox("getValue"));
             });
+
+            return data;
+        }
+
+        function Submit() {
+            var data = Build();
 
             uc.form.Submit({
                 url: "../api/Credit",
                 method: "auto",
-                data: value
+                data: data
             });
+
+            draft.Clear();
         }
 
         function ProduceAdd(text, value) {
