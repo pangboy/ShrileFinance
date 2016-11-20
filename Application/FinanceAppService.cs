@@ -6,6 +6,7 @@
     using System.Data.SqlClient;
     using System.Linq;
     using System.Reflection;
+    using System.Transactions;
     using AutoMapper;
     using Core.Entities;
     using Core.Entities.Finance;
@@ -23,6 +24,7 @@
         private readonly AppUserManager userManager;
         private readonly AppRoleManager roleManager;
         private readonly IContractRepository contractRepository;
+        private readonly IPartnerRepository partnerRepository;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FinanceAppService" /> class.
@@ -31,12 +33,13 @@
         /// <param name="userManager">用户管理</param>
         /// <param name="roleManager">角色管理</param>
         /// <param name="contractRepository">合同</param>
-        public FinanceAppService(IFinanceRepository repository, AppUserManager userManager, AppRoleManager roleManager, IContractRepository contractRepository)
+        public FinanceAppService(IFinanceRepository repository, AppUserManager userManager, AppRoleManager roleManager, IContractRepository contractRepository ,IPartnerRepository partnerRepository)
         {
             this.repository = repository;
             this.userManager = userManager;
             this.roleManager = roleManager;
             this.contractRepository = contractRepository;
+            this.partnerRepository = partnerRepository;
         }
 
         public void Create(FinanceApplyViewModel value)
@@ -70,46 +73,68 @@
 
         public string CreateLeaseInfoPdf(Guid financeId)
         {
-            // 获取融资信息
-            SqlParameter[] sqlparams = new SqlParameter[1];
-            sqlparams[0] = new SqlParameter("FinanceId", financeId);
-            DataTable dt = repository.LeaseeContract(sqlparams);
-
-            // 合同参数
-            string contractParams = string.Empty;
-
-            // 保存的PDF名称(以合同编号命名)
-            string pdfName = string.Empty;
-
-            // 合同模板名称
-            string contractName = "FinancingLease.docx";
+           var finance = repository.Get(financeId);
             // 合同pdf地址
             string pdfPath = string.Empty;
-
-            CreatePdf pdf = new CreatePdf();
-
-            if (dt.Rows.Count > 0)
+            using (TransactionScope scope = new TransactionScope())
             {
-                contractParams = pdf.DataRowToParams(dt.Rows[0]);
-                pdfName = dt.Rows[0]["@融资租赁合同"].ToString();
-            }
+                var mainApplicant = finance.Applicant.Where(m => m.Type == Applicant.TypeEnum.主要申请人).FirstOrDefault();
+                if (mainApplicant != null)
+                {
+                    string hz = GetContractNum("HZ", financeId);//融资租赁合同编号代码
 
-            // 合同名称为空,表示该合同数据不存在不需要生成
-            if (!string.IsNullOrEmpty(pdfName))
-            {
-                pdfPath = pdf.TransformPdf(contractName, contractParams, pdfName);
-            }
+                    // 获取融资信息
+                    SqlParameter[] sqlparams = new SqlParameter[1];
+                    sqlparams[0] = new SqlParameter("FinanceId", financeId);
+                    DataTable dt = repository.LeaseeContract(sqlparams);
 
+                    // 合同参数
+                    string contractParams = string.Empty;
+
+                    // 保存的PDF名称(以合同编号命名)
+                    string pdfName = string.Empty;
+
+                    // 合同模板名称
+                    string contractName = "ServiceContract.docx";
+
+                    CreatePdf pdf = new CreatePdf();
+
+                    if (dt.Rows.Count > 0)
+                    {
+                        contractParams = pdf.DataRowToParams(dt.Rows[0]);
+                        dt.Rows[0]["@融资租赁合同"] = hz;
+                        pdfName = hz;
+                    }
+                    
+                    pdfPath = pdf.TransformPdf(contractName, contractParams, pdfName);
+
+                    if (pdfPath != null)
+                    {
+                        finance.Contact.Add(new Contract()
+                        {
+                            Date = DateTime.Now,
+                            Name = "融资租赁合同",
+                            Number = pdfName,
+                            Path = pdfPath
+
+                        });
+                        repository.Modify(finance);
+                        repository.Commit();
+                    }
+                }
+            }
             return pdfPath;
         }
 
-        public string GetContractNum(string type, Guid financeid, int applicantid)
+        public string GetContractNum(string type, Guid financeid)
         {
             string error = "";
-
             string AAAA = "";
             string CCCC = "";
             string DDD = "";
+
+            //合作商编码
+            var partnerCode = "01";
 
             //查询合作商ID
             Guid BB = FindByCreateOf(financeid, ref error);
@@ -117,41 +142,20 @@
             {
                 AAAA = GetCityCode(BB);
 
-                //合作商编码
-                var partnerCode = "01";
                 CCCC = GetYYMM();
 
-                DateTime Time = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-01 00:00:000"));
+                // 获取月初
+                DateTime Time =DateTime.Now.AddDays(1-DateTime.Now.Day);
 
-                string ddCountBymonth = contractRepository.GetAll(m => m.Date >= Time && m.Date <= DateTime.Now && m.Number.Contains(partnerCode)).ToList().Count.ToString();// contract.FindCount(Time, BB).ToString();//当月当渠道的流水号
+                int ddCountBymonth = contractRepository.GetAll(m => m.Date >= Time && m.Date <= DateTime.Now && m.Number.Contains(partnerCode)).ToList().Count;// contract.FindCount(Time, BB).ToString();//当月当渠道的流水号
 
-                int DDlength = ddCountBymonth.Length;
+                int DDlength = ddCountBymonth+1;
                 DDD = DDlength.ToString().PadLeft(3, '0');
 
             }
 
             //组成AAAABBCCCCDDD
-            string all = AAAA + BB + CCCC + DDD;
-
-            //同一个主合同号只能有一个，没有就增加一个
-            var finance = repository.Get(financeid);
-
-            if (finance.Contact != null)
-            {
-                all = finance.Contact.FirstOrDefault().Number;
-            }
-            else
-            {
-                finance.Contact.Add(new Contract()
-                {
-                    Number = type + all,
-                    Name = "融资租赁合同",
-                    Date = DateTime.Now
-                });
-                repository.Modify(finance);
-                repository.Commit();
-            }
-            return "";
+            return  AAAA + partnerCode + CCCC + DDD;
         }
 
         /// <summary>
@@ -164,7 +168,7 @@
             Guid varCreateOf = new Guid();
 
             var finance = repository.Get(financeid);
-            if (finance.CreateOf.ToString() == "")
+            if (finance.CreateOf==null)
             {
                 error = "未找到系统[渠道编码]";
             }
@@ -192,14 +196,11 @@
         /// <returns></returns>
         public string GetCityCode(Guid partnerId)
         {
-            DataTable dt = null;
-            var partner = repository.GetAll(m => m.Id == partnerId);
+            var partner = partnerRepository.Get(partnerId);
 
-            if (dt != null && dt.Rows.Count == 1)
-            {
-                return dt.Rows[0]["CityCode"].ToString();
-            }
-            return "";
+            //由于没有城市代码先手动赋值
+            //return partner.City;
+            return "1010";
         }
 
         /// <summary>

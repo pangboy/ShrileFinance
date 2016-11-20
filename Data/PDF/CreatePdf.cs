@@ -3,86 +3,134 @@ using System.Data;
 using System.IO;
 using System.Net;
 using System.Text;
+using System.Web;
+using PDFPrint;
 
 namespace Data.PDF
 {
     public class CreatePdf
     {
+
+     
+
+    //public string CreatePdf(string fileName,string param,string targetPdfName)
+    //    {
+    //        string url = "D:/Projects/UsedCarsFinance/trunk/Web/upload/PDF/";
+    //        url = url + fileName;
+    //        File.Copy(url+1, url);
+    //        WordHelper wdHelp = new WordHelper();
+    //        bool Is = wdHelp.OpenAndActive(url, false, false);
+    //        if (Is)
+    //        {
+    //            string path = @"~\upload\PDF\";
+    //            string fullpath = HttpContext.Current.Server.MapPath(path);
+
+    //            if (!Directory.Exists(fullpath))
+    //            {
+    //                Directory.CreateDirectory(fullpath);
+    //            }
+    //            // 保存pdf文件
+    //            wdHelp.SaveAsPDF(fullpath+url);
+    //            wdHelp.Close();
+    //        }
+    //    }
+
         /// <summary>
         /// 远程转Pdf,并返回pdf保存路径
-        /// wangpf  16.08.01
         /// </summary>
         /// <param name="fileName">合同模板名</param>
         /// <param name="param">参数</param>
         /// <param name="targetPdfName">需要生成的pdf的名字</param>
         public string TransformPdf( string fileName, string param, string targetPdfName)
         {
-            //string url = System.Web.Configuration.WebConfigurationManager.AppSettings["PrintUrl"].ToString();
-           string url = "D:/Projects/UsedCarsFinance/trunk/Web/upload/PDF/";
-            //url = url+"fileName=" + fileName;
-            url = url + fileName;
-           // string[] strs = File.ReadAllLines(url);
 
-            // 创建httpWebRequest对象
-            HttpWebRequest webRequest = (HttpWebRequest)WebRequest.Create(new Uri(url));
-            byte[] byteArray = Encoding.UTF8.GetBytes(param);
-            // 初始化HttpWebRequest对象
-            webRequest.ContentType = "application/x-www-form-urlencoded";
-            webRequest.Method = "POST";
-            webRequest.ContentLength = byteArray.Length;
-
-            // 附加要POST给服务器的数据到HttpWebRequest对象(附加POST数据的过程比较特殊，它并没有提供一个属性给用户存取，需要写入HttpWebRequest对象提供的一个stream里面。)
-            Stream newStream = webRequest.GetRequestStream();
-            newStream.Write(byteArray, 0, byteArray.Length);
-            newStream.Close();
-
-            // 读取服务器的返回信息
-            HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse();
-
-            Stream stream = webResponse.GetResponseStream();
-
-            // 请求下载的pdf地址
-            string pdfFile = System.Web.HttpContext.Current.Server.MapPath("~\\upload\\PDF\\" + targetPdfName + ".pdf");
-
-            FileStream fs = new FileStream(pdfFile, FileMode.Create);
-
-            int bufferSize = 2048;
-            byte[] bytes = new byte[bufferSize];
-            try
+            string url = "D:/Projects/UsedCarsFinance/trunk/Web/upload/PDF/" + fileName;
+            string url1 = "D:/Projects/upload/PDF/" + fileName.Substring(0,fileName.Length-5)+DateTime.Now.Millisecond+".docx";
+            File.Copy(url , url1);
+            WordHelper wdHelp = new WordHelper();
+            bool Is = wdHelp.OpenAndActive(url1, false, false);
+            if (Is)
             {
-                int length = stream.Read(bytes, 0, bufferSize);
-                while (length > 0)
-                {
-                    fs.Write(bytes, 0, length);
+                string path = @"~\upload\PDF\";
+                string fullpath = url;// HttpContent.Current.Server.MapPath(path);
 
-                    length = stream.Read(bytes, 0, bufferSize);
+                if (Directory.Exists(fullpath))
+                {
+                    Directory.CreateDirectory(fullpath);
                 }
 
-                stream.Close();
-                fs.Close();
-                webResponse.Close();
 
-                // 把生成的pdf写入文件流
-                FileStream fileStream = new FileStream(pdfFile, FileMode.Open);
-                byte[] file = new byte[fileStream.Length];
-                fileStream.Read(file, 0, file.Length);
-                fileStream.Close();
+                // 保存pdf文件
+                wdHelp.SaveAsPDF("D:/Projects/upload/PDF/" + targetPdfName + ".pdf");
+                wdHelp.Close();
 
-                // 强制下载
-                //HttpResponse response = System.Web.HttpContext.Current.Response;
-                //response.AddHeader("content-disposition", "attachment; filename=" + pdfFile);
-                //response.ContentType = "application/octet-stream";
-                //response.BinaryWrite(file);
-                //response.End();
+                //string url = System.Web.Configuration.WebConfigurationManager.AppSettings["PrintUrl"].ToString();
+                ////string url = "D:/Projects/UsedCarsFinance/trunk/Web/upload/PDF/";
+                ////url = url+"fileName=" + fileName;
+                ////url = url + fileName;
+                ////string[] strs = File.ReadAllLines(url);
+
+                //// 创建httpWebRequest对象
+                //HttpWebRequest webRequest = (HttpWebRequest)WebRequest.Create(new Uri(url));
+                //byte[] byteArray = Encoding.UTF8.GetBytes(param);
+                //// 初始化HttpWebRequest对象
+                //webRequest.ContentType = "application/x-www-form-urlencoded";
+                //webRequest.Method = "POST";
+                //webRequest.ContentLength = byteArray.Length;
+
+                //// 附加要POST给服务器的数据到HttpWebRequest对象(附加POST数据的过程比较特殊，它并没有提供一个属性给用户存取，需要写入HttpWebRequest对象提供的一个stream里面。)
+                //Stream newStream = webRequest.GetRequestStream();
+                //newStream.Write(byteArray, 0, byteArray.Length);
+                //newStream.Close();
+
+                //// 读取服务器的返回信息
+                //HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse();
+
+                //Stream stream = webResponse.GetResponseStream();
+
+                //// 请求下载的pdf地址
+                //string pdfFile = "D:/Projects/upload/PDF/" + targetPdfName + ".pdf";// System.Web.HttpContext.Current.Server.MapPath("~\\upload\\PDF\\" + targetPdfName + ".pdf");
+
+                //FileStream fs = new FileStream(pdfFile, FileMode.Create);
+
+                //int bufferSize = 2048;
+                //byte[] bytes = new byte[bufferSize];
+                //try
+                //{
+                //    int length = stream.Read(bytes, 0, bufferSize);
+                //    while (length > 0)
+                //    {
+                //        fs.Write(bytes, 0, length);
+
+                //        length = stream.Read(bytes, 0, bufferSize);
+                //    }
+
+                //    stream.Close();
+                //    fs.Close();
+                //    webResponse.Close();
+
+                //    // 把生成的pdf写入文件流
+                //    FileStream fileStream = new FileStream(pdfFile, FileMode.Open);
+                //    byte[] file = new byte[fileStream.Length];
+                //    fileStream.Read(file, 0, file.Length);
+                //    fileStream.Close();
+
+                //    // 强制下载
+                //    //HttpResponse response = System.Web.HttpContext.Current.Response;
+                //    //response.AddHeader("content-disposition", "attachment; filename=" + pdfFile);
+                //    //response.ContentType = "application/octet-stream";
+                //    //response.BinaryWrite(file);
+                //    //response.End();
+                //}
+                //catch (Exception)
+                //{
+                //    stream.Close();
+                //    fs.Close();
+                //    webResponse.Close();
+                //    pdfFile = string.Empty;
+                //}
             }
-            catch (Exception)
-            {
-                stream.Close();
-                fs.Close();
-                webResponse.Close();
-                pdfFile = string.Empty;
-            }
-            return pdfFile;
+            return null;
         }
 
         /// <summary>
