@@ -37,12 +37,14 @@
                 uc.form.LoadForm({
                     params: { creditId: query.creditId },
                     url: "../api/Credit/Get",
-                    onLoadSuccess: Load
+                    onLoad: Load
                 });
             }
         }
 
         function Load(data) {
+            $("#credit_ff").form("load", data);
+
             $(data.Produces).each(function () {
                 ProduceAdd(this.Code, this.Id);
             });

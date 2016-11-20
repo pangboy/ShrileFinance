@@ -1,13 +1,14 @@
 namespace Data.Migrations
 {
+    using System;
     using System.Data.Entity.Migrations;
-
+    
     public partial class DraftModel : DbMigration
     {
         public override void Up()
         {
             CreateTable(
-                "dbo.Draft",
+                "dbo.SYS_Draft",
                 c => new
                     {
                         Id = c.Guid(nullable: false, identity: true),
@@ -19,13 +20,14 @@ namespace Data.Migrations
                 .PrimaryKey(t => t.Id)
                 .ForeignKey("dbo.AspNetUsers", t => t.UserId, cascadeDelete: true)
                 .Index(t => t.UserId);
+            
         }
         
         public override void Down()
         {
-            DropForeignKey("dbo.Draft", "UserId", "dbo.AspNetUsers");
-            DropIndex("dbo.Draft", new[] { "UserId" });
-            DropTable("dbo.Draft");
+            DropForeignKey("dbo.SYS_Draft", "UserId", "dbo.AspNetUsers");
+            DropIndex("dbo.SYS_Draft", new[] { "UserId" });
+            DropTable("dbo.SYS_Draft");
         }
     }
 }

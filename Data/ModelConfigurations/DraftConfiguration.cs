@@ -18,6 +18,8 @@
             HasRequired(m => m.User).WithMany()
                 .HasForeignKey(m => m.UserId)
                 .WillCascadeOnDelete();
+
+            ToTable("SYS_Draft");
         }
     }
 }

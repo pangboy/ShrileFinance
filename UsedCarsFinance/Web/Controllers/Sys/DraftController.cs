@@ -40,9 +40,9 @@
         }
 
         [HttpDelete]
-        public IHttpActionResult Clear(string pageLink)
+        public IHttpActionResult Clear(DraftViewModel model)
         {
-            service.Clear(pageLink);
+            service.Clear(model.PageLink);
 
             return Ok();
         }
