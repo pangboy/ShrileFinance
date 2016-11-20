@@ -132,6 +132,10 @@
     <Compile Include="Migrations\201611181001478_Workflow_Log.Designer.cs">
       <DependentUpon>201611181001478_Workflow_Log.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201611200908369_DraftModel.cs" />
+    <Compile Include="Migrations\201611200908369_DraftModel.Designer.cs">
+      <DependentUpon>201611200908369_DraftModel.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs">
       <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
     </Compile>
@@ -142,6 +146,7 @@
     <Compile Include="ModelConfigurations\CashFlowConfiguration.cs" />
     <Compile Include="ModelConfigurations\ContactConfiguration.cs" />
     <Compile Include="ModelConfigurations\CreditExamineConfiguration.cs" />
+    <Compile Include="ModelConfigurations\DraftConfiguration.cs" />
     <Compile Include="ModelConfigurations\FinanceConfigration.cs" />
     <Compile Include="ModelConfigurations\FinanceExtensionConfiguration.cs" />
     <Compile Include="ModelConfigurations\FinanceProduceConfiguration.cs" />
@@ -281,6 +286,7 @@
     <Compile Include="Repositories\AppUserStore.cs" />
     <Compile Include="Repositories\BaseRepository.cs" />
     <Compile Include="Repositories\ContractRepository.cs" />
+    <Compile Include="Repositories\DraftRepository.cs" />
     <Compile Include="Repositories\FlowRepository.cs" />
     <Compile Include="Repositories\FormRepository.cs" />
     <Compile Include="Repositories\InstanceRepository.cs" />
@@ -351,6 +357,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201611181001478_Workflow_Log.resx">
       <DependentUpon>201611181001478_Workflow_Log.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611200908369_DraftModel.resx">
+      <DependentUpon>201611200908369_DraftModel.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

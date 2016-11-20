@@ -10,13 +10,19 @@
     <script src="../Scripts/easyui/jquery.easyui.js"></script>
     <script src="../Scripts/easyui/locale/easyui-lang-zh_CN.js"></script>
     <script src="../BankInfo/JS/validType.js"></script>
+    <script src="../Scripts/usedcars.js"></script>
     <script src="Content/FinanceJs.js"></script>
 
     <script type="text/javascript">
+        uc.form = new UCForm(".container");
+
         $(function () {
             // 获取参数
-            var query = {}; // $.extend(uc.GetParams(), parent.flow.InstanceData);
-            query.FinanceId = "ED468191-9FAB-E611-80C5-507B9DE4A488";
+            var query = $.extend(uc.GetParams(), parent.flow.InstanceData);
+            debugger
+            if (query.FinanceId == undefined || query.FinanceId.length == 0) {
+                query.FinanceId = "ED468191-9FAB-E611-80C5-507B9DE4A488";
+            }
 
             // 初始化
             Init(query);
@@ -25,8 +31,8 @@
         // 初始化
         function Init(query) {
             // 加载页面
-            $('body').append($('body>template').html());
-            $.parser.parse($('body>form'));
+            $('form').append($('form>template').html());
+            $.parser.parse($('form'));
 
             setTimeout(function () {
                 // 加载数据
@@ -50,7 +56,7 @@
                     200: function (data) {
                         if (data) {
                             $("form[id=CreditExamineReportFrom]").form('load', data);
-                            
+
                             // 初始化radio
                             f7_InitLiving(data);
                             f12_InitAgeRange(data);
@@ -58,6 +64,15 @@
 
                             // 加载审批者
                             LoadAduitPerson(data);
+                            
+                            if (query.state == 0) {
+                                Disabled($("fieldset"));
+
+                                $("fieldset input[type=radio]").next().attr("onclick", "");
+                            }
+                            else if (query.state == 1) {
+
+                            }
                         }
                     }
                 }
@@ -107,10 +122,9 @@
             var value = $("form[id=CreditExamineReportFrom]").serializeJson();
 
             // 保证金
-            if (value.Margin1 == undefined && value.Margin2 == undefined)
-            {
+            if (value.Margin1 == undefined && value.Margin2 == undefined) {
                 value.IncreaseMarginReson = "";
-                $("fieldset[id=f11] input[textboxname=IncreaseMarginReson]").textbox('setValue','');
+                $("fieldset[id=f11] input[textboxname=IncreaseMarginReson]").textbox('setValue', '');
             }
 
             var result = {};
@@ -119,42 +133,11 @@
 
             return result;
         }
-
-        // 提交测试
-        function Submit() {
-            if (!ValidData()) {
-                return false;
-            }
-
-            $('a#save').linkbutton('disable');
-            var data = BuildData().buildData;
-            debugger
-            $.ajax({
-                async: false,
-                method: "POST",
-                data: data,
-                url: '../api/CreditExamine/EditCreditExamine',
-                statusCode: {
-                    200: function (data) {
-                        $.messager.show({ msg: "保存成功!" });
-                    }
-                }
-            });
-
-            $('a#save').linkbutton('enable');
-        }
-
-        // 返回测试
-        function Cancel() {
-            if (!ValidData()) {
-                $.messager.show({ msg: "Error!" });
-            }
-        }
     </script>
 </head>
 <body>
-    <template>
-        <form id="CreditExamineReportFrom" class="container">
+    <form id="CreditExamineReportFrom" class="container">
+        <template>
             <h1 style="text-align:center">信审报告</h1>
 
             <input type="hidden" name="FinanceId" placeholder="融资标识" />
@@ -182,12 +165,12 @@
                 <legend>一：产品种类：</legend>
                 <div class="row">
                     <div class="col-12">
-                        <input name="ProductCategorie" class="" type="radio" value="0" disabled /><span onclick="$(this).prev().click()">新车交易贷</span>&nbsp;&nbsp;&nbsp;&nbsp;
-                        <input name="ProductCategorie" class="" type="radio" value="1" disabled /><span onclick="$(this).prev().click()">二手车交易贷</span>&nbsp;&nbsp;&nbsp;&nbsp;
-                        <input name="ProductCategorie" class="" type="radio" value="2" disabled /><span onclick="$(this).prev().click()">车抵贷</span>&nbsp;&nbsp;&nbsp;&nbsp;
-                        <input name="ProductCategorie" class="" type="radio" value="3" disabled /><span onclick="$(this).prev().click()">押车贷</span>&nbsp;&nbsp;&nbsp;&nbsp;
-                        <input name="ProductCategorie" class="" type="radio" value="4" disabled /><span onclick="$(this).prev().click()">快速贷</span>&nbsp;&nbsp;&nbsp;&nbsp;
-                        <input name="ProductCategorie" class="" type="radio" value="5" disabled /><span onclick="$(this).prev().click()">以租代购</span>
+                        <input name="ProductCategorie" class="" type="radio" value="新车交易贷" disabled /><span onclick="$(this).prev().click()">新车交易贷</span>&nbsp;&nbsp;&nbsp;&nbsp;
+                        <input name="ProductCategorie" class="" type="radio" value="二手车交易贷" disabled /><span onclick="$(this).prev().click()">二手车交易贷</span>&nbsp;&nbsp;&nbsp;&nbsp;
+                        <input name="ProductCategorie" class="" type="radio" value="车抵贷" disabled /><span onclick="$(this).prev().click()">车抵贷</span>&nbsp;&nbsp;&nbsp;&nbsp;
+                        <input name="ProductCategorie" class="" type="radio" value="押车贷" disabled /><span onclick="$(this).prev().click()">押车贷</span>&nbsp;&nbsp;&nbsp;&nbsp;
+                        <input name="ProductCategorie" class="" type="radio" value="快速贷" disabled /><span onclick="$(this).prev().click()">快速贷</span>&nbsp;&nbsp;&nbsp;&nbsp;
+                        <input name="ProductCategorie" class="" type="radio" value="以租代购" disabled /><span onclick="$(this).prev().click()">以租代购</span>
                     </div>
                 </div>
             </fieldset>
@@ -308,135 +291,130 @@
                     </div>
                 </div>
                 <script type="text/javascript">
-                // 由户籍所在地级联加载居住情况
-                function F7check1() {
-                    // 获取户籍所在地
-                    var CensusText = $("fieldset[id=f7]").find("select[comboname = CensusRegisterSeat]").combobox('getText');
+                    // 由户籍所在地级联加载居住情况
+                    function F7check1() {
+                        // 获取户籍所在地
+                        var CensusText = $("fieldset[id=f7]").find("select[comboname = CensusRegisterSeat]").combobox('getText');
 
-                    // 加载居住情况
-                    if (CensusText == '本地户籍') {
-                        $("fieldset[id=f7]").find("input[comboname = LivingSituation]").combobox({
-                            value: '',
-                            editable: false,
-                            required: true,
-                            onSelect: F7check2,
-                            valueField: 'text',
-                            textField: 'value',
-                            data: [{
-                                text: '本地居住',
-                                value: '本地居住'
-                            }, {
-                                text: '本地房产',
-                                value: '本地房产'
-                            }]
-                        });
-                    }
-                    else if (CensusText == '异地户籍') {
-                        $("fieldset[id=f7]").find("input[comboname = LivingSituation]").combobox({
-                            value: '',
-                            editable: false,
-                            required: true,
-                            onSelect: F7check2,
-                            valueField: 'text',
-                            textField: 'value',
-                            data: [{
-                                text: '本地房产满一年',
-                                value: '本地房产满一年'
-                            }, {
-                                text: '本地居住',
-                                value: '本地居住'
-                            }]
-                        });
-                    }
-                }
-
-                // 由居住情况级联加载工作情况
-                function F7check2() {
-                    // 获取户籍所在地
-                    var CensusText = $("fieldset[id=f7]").find("select[comboname = CensusRegisterSeat]").combobox('getText');
-
-                    // 获取居住情况
-                    var LiveText = $("fieldset[id=f7]").find("input[comboname = LivingSituation]").combobox('getText');
-
-                    // 加载工作情况
-                    if (CensusText == '本地户籍') {
-                        if (LiveText == '本地居住' || LiveText == '本地房产') {
-                            $("fieldset[id=f7]").find("input[comboname = WorkingCondition]").combobox({
+                        // 加载居住情况
+                        if (CensusText == '本地户籍') {
+                            $("fieldset[id=f7]").find("input[comboname = LivingSituation]").combobox({
                                 value: '',
                                 editable: false,
                                 required: true,
+                                onSelect: F7check2,
                                 valueField: 'text',
                                 textField: 'value',
                                 data: [{
-                                    text: '本地工作',
-                                    value: '本地工作'
-                                }]
-                            });
-                        }
-                    }
-                    else if (CensusText == '异地户籍') {
-                        if (LiveText == '本地房产满一年') {
-                            $("fieldset[id=f7]").find("input[comboname = WorkingCondition]").combobox({
-                                value: '',
-                                editable: false,
-                                required: true,
-                                valueField: 'text',
-                                textField: 'value',
-                                data: [{
-                                    text: '本地工作',
-                                    value: '本地工作'
-                                }]
-                            });
-                        }
-                        else if (LiveText == '本地居住') {
-                            $("fieldset[id=f7]").find("input[comboname = WorkingCondition]").combobox({
-                                value: '',
-                                editable: false,
-                                required: true,
-                                valueField: 'text',
-                                textField: 'value',
-                                data: [{
-                                    text: '本地社保或本地工资流水满一年',
-                                    value: '本地社保或本地工资流水满一年'
+                                    text: '本地居住',
+                                    value: '本地居住'
                                 }, {
-                                    text: '本地注册公司满一年或持股满半年',
-                                    value: '本地注册公司满一年或持股满半年'
+                                    text: '本地房产',
+                                    value: '本地房产'
+                                }]
+                            });
+                        }
+                        else if (CensusText == '异地户籍') {
+                            $("fieldset[id=f7]").find("input[comboname = LivingSituation]").combobox({
+                                value: '',
+                                editable: false,
+                                required: true,
+                                onSelect: F7check2,
+                                valueField: 'text',
+                                textField: 'value',
+                                data: [{
+                                    text: '本地房产满一年',
+                                    value: '本地房产满一年'
+                                }, {
+                                    text: '本地居住',
+                                    value: '本地居住'
                                 }]
                             });
                         }
                     }
-                }
 
-                // 初始化级联加载
-                function f7_InitLiving(data)
-                {
-                    if (data == undefined)
-                    {
-                        return;
-                    }
+                    // 由居住情况级联加载工作情况
+                    function F7check2() {
+                        // 获取户籍所在地
+                        var CensusText = $("fieldset[id=f7]").find("select[comboname = CensusRegisterSeat]").combobox('getText');
 
-                    // 户籍所在地
-                    var CensusRegisterSeat = $("form>fieldset#f7 select[textboxname=CensusRegisterSeat]");
+                        // 获取居住情况
+                        var LiveText = $("fieldset[id=f7]").find("input[comboname = LivingSituation]").combobox('getText');
 
-                    if (data.CensusRegisterSeat!=undefined)
-                    {
-                        CensusRegisterSeat.combobox('unselect', data.CensusRegisterSeat).combobox('select', data.CensusRegisterSeat);
-
-                        // 居住情况
-                        var LivingSituation = $("form>fieldset#f7 input[textboxname=LivingSituation]");
-                        if (data.LivingSituation!=undefined && data.LivingSituation.length > 0)
-                        {
-                            LivingSituation.combobox('unselect', data.LivingSituation).combobox('select', data.LivingSituation);
-
-                            // 工作情况
-                            var WorkingCondition = $("form>fieldset#f7 input[textboxname=WorkingCondition]");
-                            if (data.WorkingCondition!=undefined && data.WorkingCondition.length > 0)
-                            {
-                                WorkingCondition.combobox('unselect', data.WorkingCondition).combobox('select', data.WorkingCondition);
+                        // 加载工作情况
+                        if (CensusText == '本地户籍') {
+                            if (LiveText == '本地居住' || LiveText == '本地房产') {
+                                $("fieldset[id=f7]").find("input[comboname = WorkingCondition]").combobox({
+                                    value: '',
+                                    editable: false,
+                                    required: true,
+                                    valueField: 'text',
+                                    textField: 'value',
+                                    data: [{
+                                        text: '本地工作',
+                                        value: '本地工作'
+                                    }]
+                                });
+                            }
+                        }
+                        else if (CensusText == '异地户籍') {
+                            if (LiveText == '本地房产满一年') {
+                                $("fieldset[id=f7]").find("input[comboname = WorkingCondition]").combobox({
+                                    value: '',
+                                    editable: false,
+                                    required: true,
+                                    valueField: 'text',
+                                    textField: 'value',
+                                    data: [{
+                                        text: '本地工作',
+                                        value: '本地工作'
+                                    }]
+                                });
+                            }
+                            else if (LiveText == '本地居住') {
+                                $("fieldset[id=f7]").find("input[comboname = WorkingCondition]").combobox({
+                                    value: '',
+                                    editable: false,
+                                    required: true,
+                                    valueField: 'text',
+                                    textField: 'value',
+                                    data: [{
+                                        text: '本地社保或本地工资流水满一年',
+                                        value: '本地社保或本地工资流水满一年'
+                                    }, {
+                                        text: '本地注册公司满一年或持股满半年',
+                                        value: '本地注册公司满一年或持股满半年'
+                                    }]
+                                });
                             }
                         }
                     }
-                }
+
+                    // 初始化级联加载
+                    function f7_InitLiving(data) {
+                        if (data == undefined) {
+                            return;
+                        }
+
+                        // 户籍所在地
+                        var CensusRegisterSeat = $("form>fieldset#f7 select[textboxname=CensusRegisterSeat]");
+
+                        if (data.CensusRegisterSeat != undefined) {
+                            CensusRegisterSeat.combobox('unselect', data.CensusRegisterSeat).combobox('select', data.CensusRegisterSeat);
+
+                            // 居住情况
+                            var LivingSituation = $("form>fieldset#f7 input[textboxname=LivingSituation]");
+                            if (data.LivingSituation != undefined && data.LivingSituation.length > 0) {
+                                LivingSituation.combobox('unselect', data.LivingSituation).combobox('select', data.LivingSituation);
+
+                                // 工作情况
+                                var WorkingCondition = $("form>fieldset#f7 input[textboxname=WorkingCondition]");
+                                if (data.WorkingCondition != undefined && data.WorkingCondition.length > 0) {
+                                    WorkingCondition.combobox('unselect', data.WorkingCondition).combobox('select', data.WorkingCondition);
+                                }
+                            }
+                        }
+                    }
                 </script>
             </fieldset>
 
@@ -461,26 +439,26 @@
                     </div>
                 </div>
                 <script type="text/javascript">
-                // 收入来源类型至少选择一种
-                function f8input(Obj) {
-                    if (Obj.checked == false) {
-                        // 另一个复选框
-                        var OtherObj;
+                    // 收入来源类型至少选择一种
+                    function f8input(Obj) {
+                        if (Obj.checked == false) {
+                            // 另一个复选框
+                            var OtherObj;
 
-                        // 经营
-                        if (Obj.id == 'IncomeSourceBusiness') {
-                            OtherObj = $("fieldset[id=f8]").find("input[id=IncomeSourceWage]");
-                        }
-                            // 工资
-                        else if (Obj.id == 'IncomeSourceWage') {
-                            OtherObj = $("fieldset[id=f8]").find("input[id=IncomeSourceBusiness]");
-                        }
+                            // 经营
+                            if (Obj.id == 'IncomeSourceBusiness') {
+                                OtherObj = $("fieldset[id=f8]").find("input[id=IncomeSourceWage]");
+                            }
+                                // 工资
+                            else if (Obj.id == 'IncomeSourceWage') {
+                                OtherObj = $("fieldset[id=f8]").find("input[id=IncomeSourceBusiness]");
+                            }
 
-                        if (OtherObj[0] != undefined && OtherObj[0].checked == false) {
-                            OtherObj.click();
+                            if (OtherObj[0] != undefined && OtherObj[0].checked == false) {
+                                OtherObj.click();
+                            }
                         }
                     }
-                }
                 </script>
             </fieldset>
 
@@ -539,28 +517,28 @@
                     </div>
                 </div>
                 <script type="text/javascript">
-                function f11MarginClick(Obj) {
-                    var inputs = $("fieldset[id=f11]").find("input[name*=Margin]");
+                    function f11MarginClick(Obj) {
+                        var inputs = $("fieldset[id=f11]").find("input[name*=Margin]");
 
-                    if (inputs[0].checked == false && inputs[1].checked == false) {
-                        $("fieldset[id=f11]").find("input[textboxname=IncreaseMarginReson]").textbox({
-                            validType: ['ANC', 'length[0,400]'],
-                            required: false,
-                            multiline: true,
-                            readonly:true,
-                            height: 100
-                        });
+                        if (inputs[0].checked == false && inputs[1].checked == false) {
+                            $("fieldset[id=f11]").find("input[textboxname=IncreaseMarginReson]").textbox({
+                                validType: ['ANC', 'length[0,400]'],
+                                required: false,
+                                multiline: true,
+                                readonly: true,
+                                height: 100
+                            });
+                        }
+                        else {
+                            $("fieldset[id=f11]").find("input[textboxname=IncreaseMarginReson]").textbox({
+                                validType: ['ANC', 'length[0,400]'],
+                                required: true,
+                                multiline: true,
+                                readonly: false,
+                                height: 100
+                            });
+                        }
                     }
-                    else {
-                        $("fieldset[id=f11]").find("input[textboxname=IncreaseMarginReson]").textbox({
-                            validType: ['ANC', 'length[0,400]'],
-                            required: true,
-                            multiline: true,
-                            readonly:false,
-                            height: 100
-                        });
-                    }
-                }
                 </script>
             </fieldset>
 
@@ -574,40 +552,39 @@
                         <span style="margin-left:40px;"></span>
                         <input name="AgeRange" class="" type="radio" onclick="f12Rd(this)" value="55-65岁" /><span onclick="$(this).prev().click()">55-65岁</span>
                         <span style="margin-left:40px;"></span>
-                        <input name="AgeRange" class="" type="radio" onclick="f12RdOther()" checked value="其他" /><span onclick="$(this).prev().click()">其他</span>
+                        <input name="AgeRange" class="" type="radio" onclick="f12RdOther(this)" checked value="其他" /><span onclick="$(this).prev().click()">其他</span>
 
                         <input name="AgeRangeOther" class="easyui-textbox col-2" style="width:100px" data-options="validType:['PositiveInteger','length[1,20]'],required:true" />
                     </div>
                 </div>
                 <script>
-                function f12Rd(obj) {
-                    // 禁用“其他”输入框
-                    $("fieldset[id=f12]").find("input[textboxname=AgeRangeOther]").textbox({
-                        readonly: true,
-                        required: false,
-                        value: ''
-                    });
-                }
-
-                // 其他
-                function f12RdOther() {
-                    // 取消“其他”输入框的禁用
-                    $("fieldset[id=f12]").find("input[textboxname=AgeRangeOther]").textbox({
-                        readonly: false,
-                        required: true,
-                    });
-                }
-
-                function f12_InitAgeRange(data) {
-                    if (data != undefined && data.AgeRange != undefined) {
-                        $("form fieldset[id=f12] input[name=AgeRange]").each(function (i, e) {
-                            if ($(e).val() == data.AgeRange)
-                            {
-                                e.click();
-                            }
+                    function f12Rd(obj) {
+                        // 禁用“其他”输入框
+                        $("fieldset[id=f12]").find("input[textboxname=AgeRangeOther]").textbox({
+                            readonly: true,
+                            required: false,
+                            value: ''
                         });
                     }
-                }
+
+                    // 其他
+                    function f12RdOther(Obj) {
+                        // 取消“其他”输入框的禁用
+                        $("fieldset[id=f12]").find("input[textboxname=AgeRangeOther]").textbox({
+                            readonly: false,
+                            required: true,
+                        });
+                    }
+
+                    function f12_InitAgeRange(data) {
+                        if (data != undefined && data.AgeRange != undefined) {
+                            $("form fieldset[id=f12] input[name=AgeRange]").each(function (i, e) {
+                                if ($(e).val() == data.AgeRange) {
+                                    e.click();
+                                }
+                            });
+                        }
+                    }
                 </script>
             </fieldset>
 
@@ -722,37 +699,37 @@
                         <input name="SurveyOpinion" class="" type="radio" onclick="f21Rd(this)" value="2" /><span onclick="$(this).prev().click()">例外通过</span>
                         <span style="margin-left:30px;"></span>
 
-                        <input name="SurveyOpinion" class="" type="radio" onclick="f21RdOther()" value="3" checked /><span onclick="$(this).prev().click()">拒单</span>&nbsp;&nbsp;&nbsp;
+                        <input name="SurveyOpinion" class="" type="radio" onclick="f21RdOther(this)" value="3" checked /><span onclick="$(this).prev().click()">拒单</span>&nbsp;&nbsp;&nbsp;
                         <span>原因</span><input name="SurveyOpinionReson" class="easyui-textbox col-2" style="width:530px" data-options="validType:['ANC','length[1,20]'],required:true" />
                     </div>
                 </div>
                 <script>
-                function f21Rd(obj) {
-                    // 禁用“拒单”输入框
-                    $("form fieldset[id=f21]").find("input[textboxname=SurveyOpinionReson]").textbox({
-                        readonly: true,
-                        required: false,
-                        value: ''
-                    });
-                }
-
-                function f21RdOther() {
-                    var RdOtherValue = $("form fieldset[id=f21] input[textboxname=SurveyOpinionReson]").textbox('getValue');
-                    // 取消“拒单”输入框的禁用
-                    $("form fieldset[id=f21]").find("input[textboxname=SurveyOpinionReson]").textbox({
-                        readonly: false,
-                        required: true,
-                        value: ''
-                    });
-
-                    $("form fieldset[id=f21] input[textboxname=SurveyOpinionReson]").textbox('setValue',RdOtherValue)
-                }
-
-                function f21_InitSurvey(data) {
-                    if (data!=undefined && data.SurveyOpinion!=undefined) {
-                        $("form fieldset[id=f21] input[name=SurveyOpinion]").eq(data.SurveyOpinion).click();
+                    function f21Rd(Obj) {
+                        // 禁用“拒单”输入框
+                        $("form fieldset[id=f21]").find("input[textboxname=SurveyOpinionReson]").textbox({
+                            readonly: true,
+                            required: false,
+                            value: ''
+                        });
                     }
-                }
+
+                    function f21RdOther(Obj) {
+                        var RdOtherValue = $("form fieldset[id=f21] input[textboxname=SurveyOpinionReson]").textbox('getValue');
+                        // 取消“拒单”输入框的禁用
+                        $("form fieldset[id=f21]").find("input[textboxname=SurveyOpinionReson]").textbox({
+                            readonly: false,
+                            required: true,
+                            value: ''
+                        });
+
+                        $("form fieldset[id=f21] input[textboxname=SurveyOpinionReson]").textbox('setValue', RdOtherValue)
+                    }
+
+                    function f21_InitSurvey(data) {
+                        if (data != undefined && data.SurveyOpinion != undefined) {
+                            $("form fieldset[id=f21] input[name=SurveyOpinion]").eq(data.SurveyOpinion).click();
+                        }
+                    }
                 </script>
             </fieldset>
 
@@ -784,14 +761,7 @@
                     </div>
                 </div>
             </fieldset>
-
-            <div id="btn">
-                <a id="save" class="easyui-linkbutton" href="javascript:void(0)" data-options="iconCls:'icon-save',onClick:Submit">提交</a>
-                <a id="back" class="easyui-linkbutton" href="javascript:void(0)" data-options="iconCls:'icon-redo',onClick:Cancel">返回</a>
-                <input type="reset" style="display:none" />
-            </div>
-
-        </form>
-    </template>
+        </template>
+    </form>
 </body>
 </html>

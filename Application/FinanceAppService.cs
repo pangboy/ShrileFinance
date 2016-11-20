@@ -400,7 +400,7 @@
 
             // 部分映射
             var array = new string[] { "AdviceMoney", "AdviceRatio", "ApprovalMoney", "ApprovalRatio", "Payment", "Cost" };
-            financeAuditViewModel = PartialMapper(financeId, financeAuditViewModel, array);
+            financeAuditViewModel = PartialMapper(finance, financeAuditViewModel, array);
 
             return financeAuditViewModel;
         }
@@ -526,9 +526,6 @@
             }
             else
             {
-                // 选择还款日
-                finance.RepaymentDate = value.RepaymentDate;
-
                 // 选择还款日、首次租金支付日期、保证金、先付月供、一次性付息、实际用款额、放款主体、放款账户、放款账户开户行、放款账户卡号、合同Json
                 var operationArray = new string[] { "RepaymentDate", "RepayRentDate", "Bail", "PayMonthly", "OnePayInterest", "ActualAmount", "LoanPrincipal", "CreditAccountName", "CreditBankName", "CreditBankCard", "ContactJson" };
                 if (!value.LoanPrincipal.Equals("Channel"))

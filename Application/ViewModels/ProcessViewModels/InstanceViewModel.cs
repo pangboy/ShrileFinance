@@ -29,5 +29,7 @@
 
         [JsonConverter(typeof(StringEnumConverter))]
         public InstanceStatusEnum Status { get; set; }
+
+        public Guid? RootKey { get; set; }
     }
 }

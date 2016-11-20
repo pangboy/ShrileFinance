@@ -153,6 +153,7 @@
     <Content Include="Account\PasswordEdit.html" />
     <Content Include="Account\UserEdit.html" />
     <Content Include="Account\UserInfo.html" />
+    <Content Include="Finance\FinanceCustomer.html" />
     <Content Include="Finance\images\add.png" />
     <Content Include="BankInfo\BorrowerProfile.html" />
     <Content Include="BankInfo\InfoImg.png" />
@@ -192,7 +193,7 @@
     <Content Include="Finance\FinanceAudit.html" />
     <Content Include="Finance\CreditExamine.html" />
     <Content Include="Finance\FinanceOperation.html" />
-    <Content Include="Finance\InfoAdditional.html" />
+    <Content Include="Finance\Unused\InfoAdditional.html" />
     <Content Include="Finance\Loan.html" />
     <Content Include="Finance\NewFinanceEdit.html" />
     <Content Include="Finance\Unused\Operation.html" />
@@ -524,6 +525,7 @@
     <Content Include="Flow\FrameView.html" />
     <Content Include="BankInfo\DictionaryType\DictionaryTypeEdit.html" />
     <Content Include="BankInfo\DictionaryType\DictionaryTypeList.html" />
+    <Content Include="Scripts\draft.js" />
     <Content Include="Scripts\easyui\themes\black\accordion.css" />
     <Content Include="Scripts\easyui\themes\black\calendar.css" />
     <Content Include="Scripts\easyui\themes\black\combo.css" />
@@ -930,6 +932,7 @@
     <Compile Include="Controllers\Notice\NoticeController.cs" />
     <Compile Include="Controllers\Produce\FinancingProjectController.cs" />
     <Compile Include="Controllers\Produce\ProduceController.cs" />
+    <Compile Include="Controllers\Sys\DraftController.cs" />
     <Compile Include="Controllers\Sys\FileController.cs" />
     <Compile Include="Controllers\TestController.cs" />
     <Compile Include="Controllers\Unused\ActionController.cs" />

@@ -17,6 +17,7 @@
     <script>
         var flow = {
             InstanceId: "",
+            RootKey: "",
             Forms: []
         };
 
@@ -36,6 +37,8 @@
                 url: "../api/Instance/GetFrame",
                 statusCode: {
                     200: function (data) {
+                        flow.RootKey = data.RootKey;
+
                         RanderTabs(data.Forms);
                         RanderButtons(data.Actions);
 
@@ -160,7 +163,7 @@
                     data[form.Id] = frame.BuildData();
                 });
 
-                Transfer(data);
+                Transfer.call(this, data);
             }
         }
     </script>
