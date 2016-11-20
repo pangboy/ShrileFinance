@@ -36,7 +36,8 @@
                     StartUser = s.StartUser.Name,
                     StartTime = s.StartTime,
                     EndTime = s.EndTime,
-                    Status = s.Status
+                    Status = s.Status,
+                    RootKey = s.RootKey
                 });
             CreateMap<FAction, ViewModels.ProcessViewModels.ActionViewModel>();
 
