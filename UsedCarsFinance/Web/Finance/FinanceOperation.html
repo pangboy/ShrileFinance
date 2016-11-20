@@ -17,8 +17,8 @@
     <script type="text/javascript">
         $(function () {
             // 获取参数
-            var query = {} //$.extend(uc.GetParams(), parent.flow.InstanceData);
-
+            var query = $.extend(uc.GetParams(), parent.flow.InstanceData);
+            debugger
             if (query.FinanceId == undefined || query.FinanceId.length == 0) {
                 query.FinanceId = 'ED468191-9FAB-E611-80C5-507B9DE4A488';
             }
@@ -129,7 +129,6 @@
         function LoadOperationPage() {
             // 显示运营页面
             $('form[name=FinanceOperation]').append($('form[name=FinanceOperation] template#Operation').html());
-            $('form[name=FinanceOperation]').append($('form[name=FinanceOperation] template#btn').html());
             $.parser.parse($('form[name=FinanceOperation]'));
         }
 
@@ -146,7 +145,7 @@
             LoadDataBase(data);
 
             // 运营初审
-            LoadData_Trial(data);
+            //LoadData_Trial(data);
 
             // 运营复审
             //LoadData_Review(data);
@@ -184,8 +183,11 @@
 
         // 运营初审
         function LoadData_Trial(data) {
-            // 加载融资项
-            LoadFinancingItem(data.FinancingItems);
+            if (data.FinancingItems != null)
+            {
+                // 加载融资项
+                LoadFinancingItem(data.FinancingItems);
+            }
         }
 
         // 运营复审
@@ -194,6 +196,7 @@
             Disabled($('fieldset[name=Operation]'));
 
             // 禁用合同
+            ContactCheck = false;
             $('fieldset[name=Contact] div[id=Contact_tb]').hide();
             Disabled($('fieldset[name=Contact]'));
         }
@@ -603,43 +606,6 @@
                     }
                 </script>
             </fieldset>
-
-        </template>
-
-        <template id="btn">
-            <div id="btn">
-                <a id="save" class="easyui-linkbutton" href="javascript:void(0)" data-options="iconCls:'icon-ok',onClick:Submit">提交</a>
-                <a id="back" class="easyui-linkbutton" href="javascript:void(0)" data-options="iconCls:'icon-redo',onClick:Cancel">返回</a>
-            </div>
-            <script type="text/javascript">
-                function Submit() {
-                    if (ValidData()) {
-                        var data = BuildData().buildData;
-
-                        $.ajax({
-                            async: false,
-                            method: "POST",
-                            data: data,
-                            url: '../api/Operation/EditOperation',
-                            statusCode: {
-                                200: function (data) {
-                                    $.messager.show({ msg: '处理成功！' });
-
-                                    return true;
-                                }
-                            }
-                        });
-                        return true;
-                    }
-
-                    return false;
-                }
-
-                function Cancel() {
-                    // 重置表单
-                    ResetForm();
-                }
-            </script>
         </template>
     </form>
 </body>
