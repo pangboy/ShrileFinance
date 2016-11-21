@@ -19,12 +19,12 @@
             Property(m => m.RepaymentDate);
             Property(m => m.RepaymentScheme);
             Property(m => m.Bail);
-            Property(m => m.Cost);
             Property(m => m.State);
             Property(m => m.OnePayInterest);
             Property(m => m.DateEffective);
             Property(m => m.DateCreated);
-            Property(m => m.IntentionPrincipal);
+            Property(m => m.Financing);
+            Property(m => m.Poundage);
             Property(m => m.OncePayMonths);
             Property(m => m.AdviceMoney);
             Property(m => m.AdviceRatio);
@@ -52,10 +52,10 @@
             HasOptional(m => m.FinanceExtension).WithOptionalPrincipal().Map(m => m.MapKey("FinanceId")).WillCascadeOnDelete();
 
             ////合作商
-            //HasOptional(m => m.CreateOf).WithOptionalPrincipal().Map(m => m.MapKey("FinanceId")).WillCascadeOnDelete();
+           ////HasOptional(m => m.CreateOf).WithOptionalPrincipal().Map(m => m.MapKey("FinanceId")).WillCascadeOnDelete();
 
             ////用户
-            //HasOptional(m => m.CreateBy).WithOptionalPrincipal().Map(m => m.MapKey("FinanceId")).WillCascadeOnDelete();
+            ////HasOptional(m => m.CreateBy).WithOptionalPrincipal().Map(m => m.MapKey("FinanceId")).WillCascadeOnDelete();
 
             ToTable("FANC_Finance");
         }

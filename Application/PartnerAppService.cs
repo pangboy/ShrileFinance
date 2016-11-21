@@ -8,8 +8,10 @@
     using Core.Entities.Partner;
     using Core.Interfaces.Repositories;
     using Microsoft.AspNet.Identity;
+    using ViewModels;
     using ViewModels.AccountViewModels;
     using ViewModels.PartnerViewModels;
+    using ViewModels.ProduceViewModel;
     using X.PagedList;
 
     public class PartnerAppService
@@ -113,6 +115,22 @@
             var list = partners.ToPagedList(page, size);
 
             var models = Mapper.Map<IPagedList<PartnerViewModel>>(list);
+
+            return models;
+        }
+
+        public IPagedList<ProduceListViewModel> GetPageListByPartner(string serach, int pageNumber, int pageSize)
+        {
+            var partner = repository.GetByUser(userManager.CurrentUser());
+
+            var produces = partner.Produces;
+
+            if (!string.IsNullOrEmpty(serach))
+            {
+                produces = produces.Where(m => m.Name.Contains(serach) || m.Code.Contains(serach)).ToList();
+            }
+
+            var models = Mapper.Map<PagedList<ProduceListViewModel>>(produces);
 
             return models;
         }

@@ -49,7 +49,6 @@
         /// </summary>
         public double? InterestRate { get; set; }
 
-
         /// <summary>
         /// 融资期限 (月)
         /// </summary>
@@ -76,11 +75,6 @@
         public decimal? Bail { get; set; }
 
         /// <summary>
-        /// 手续费
-        /// </summary>
-        public decimal? Cost { get; set; }
-
-        /// <summary>
         /// 一次性付息
         /// </summary>
         public decimal? OnePayInterest { get; set; }
@@ -88,7 +82,7 @@
         /// <summary>
         /// 状态
         /// </summary>
-        public  FinanceStateEnum State { get; set; }
+        public FinanceStateEnum State { get; set; }
 
         /// <summary>
         /// 放款日期
@@ -101,9 +95,14 @@
         public DateTime DateCreated { get; set; }
 
         /// <summary>
-        /// 意向融资金额
+        /// 融资金额
         /// </summary>
-        public decimal? IntentionPrincipal { get; set; }
+        public decimal? Financing { get; set; }
+
+        /// <summary>
+        /// 手续费
+        /// </summary>
+        public decimal? Poundage { get; set; }
 
         /// <summary>
         /// 月供先付期数

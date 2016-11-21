@@ -48,7 +48,7 @@
             CreateMap<InstitutionLiabilitiesViewModel, InstitutionLiabilities>();
 
             CreateMap<ViewModels.ProduceViewModel.ProduceViewModel, Produce>()
-                .ForMember(d=>d.FinancingItems, opt => opt.Ignore());
+                .ForMember(d => d.FinancingItems, opt => opt.Ignore());
             CreateMap<FinancingItemViewModel, FinancingItem>();
             CreateMap<FinancingProjectViewModel, FinancingProject>();
 

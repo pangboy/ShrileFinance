@@ -67,7 +67,6 @@
   <ItemGroup>
     <Compile Include="Entities\Other\Draft.cs" />
     <Compile Include="Entities\Finance\FinanceProduce.cs" />
-    <Compile Include="Entities\Finance\LeaseeContract.cs" />
     <Compile Include="Entities\Flow\Action.cs" />
     <Compile Include="Entities\Flow\ActionAllocationEnum.cs" />
     <Compile Include="Entities\Flow\ActionTypeEnum.cs" />
