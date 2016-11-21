@@ -24,6 +24,16 @@
         public decimal? ManufacturerGuidePrice { get; set; }
 
         /// <summary>
+        /// 最小融资比例
+        /// </summary>
+        public decimal MinFinancingRatio { get; set; }
+
+        /// <summary>
+        /// 最大融资比例
+        /// </summary>
+        public decimal MaxFinancingRatio { get; set; }
+
+        /// <summary>
         /// 建议融资金额
         /// </summary>
         public decimal? AdviceMoney { get; set; }

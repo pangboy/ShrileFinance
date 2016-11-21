@@ -20,7 +20,7 @@
 
         $(function () {
             // 获取参数
-            query =$.extend(uc.GetParams(), parent.flow.InstanceData);
+            query = $.extend(uc.GetParams(), parent.flow.InstanceData);
             query.FinanceId = parent.flow.RootKey;
             debugger
             if (query.FinanceId == undefined || query.FinanceId.length == 0) {
@@ -71,11 +71,11 @@
 
             // 序列化放款信息
             if (value.LoanPrincipal == "Channel") {
-                TraverseDateFactory(FieldsetSerializeFactory('CreditBankInfo', 'text'), value, false);
+                TraverseDateFactory(FieldsetSerializeFactory('CreditBankInfo', 'text'), value, false, null);
             }
 
             // 序列化放款信息
-            TraverseDateFactory(FieldsetSerializeFactory('CreditBankInfo', 'text'), value, false);
+            TraverseDateFactory(FieldsetSerializeFactory('CreditBankInfo', 'text'), value, false, null);
 
             // 序列化合同信息
             var array = [];
@@ -93,11 +93,7 @@
                 TraverseDateFactory(FieldsetSerializeFactory('CreditBankInfo', 'text'), value, false);
             }
 
-            var result = {};
-            result["formName"] = "审批信息";
-            result["buildData"] = value;
-
-            return result;
+            return value;
         }
     </script>
 

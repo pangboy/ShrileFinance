@@ -36,7 +36,40 @@
         function LoadData(data)
         {
             if (data) {
-                $("fieldset[name=FinanceAudit]").form('load', data);
+                // 融资比例限制
+                var radio = [];
+                if (data.MinFinancingRatio == undefined)
+                {
+                    data.MinFinancingRatio = 0;
+                }
+                if (data.MaxFinancingRatio == undefined) {
+                    data.MaxFinancingRatio = 0;
+                }
+                radio.push(data.MinFinancingRatio);
+                radio.push(data.MaxFinancingRatio);
+                // 验证扩展(融资比例限制)
+                $.extend($.fn.validatebox.defaults.rules, {
+                    AratioLimit: {
+                        validator: function (value, param) {
+                            return parseFloat(value) >= param[0] && parseFloat(value) <= param[1];
+                        },
+                        message: '融资比例介于' + data.MinFinancingRatio + '%至' + data.MaxFinancingRatio + '%之间，请修改建议融资金额或裸车价'
+                    },
+                    FratioLimit: {
+                        validator: function (value, param) {
+                            return parseFloat(value) >= param[0] && parseFloat(value) <= param[1];
+                        },
+                        message: '融资比例介于' + data.MinFinancingRatio + '%至' + data.MaxFinancingRatio + '%之间，请修改审批融资金额或裸车价'
+                    }
+                });
+
+                // 建议融资比例添加验证
+                $("input[textboxname = 'AdviceRatio']").textbox({ validType: ["AratioLimit[" + radio + "]"] });
+
+                // 审批融资比例添加验证
+                $("input[textboxname = 'ApprovalRatio']").textbox({ validType: ["FratioLimit[" + radio + "]"] });
+
+                FieldsetLoadDateFactory("FinanceAudit",'text',data)
 
                 // 加载融资项
                 LoadFinancingItem(data.FinancingItems);
@@ -67,7 +100,7 @@
             return true; 
         }
 
-        //构建数据
+        //构建数据BuildData
         function BuildData() {
             // 序列化融资审核
             var value = $("fieldset[name=FinanceAudit]").serializeJson();
@@ -88,11 +121,7 @@
                 value.FinancingItems.push(FinancingItem);
             });
 
-            var result = {};
-            result["formName"] = "审批信息";
-            result["buildData"] = value;
-
-            return result;
+            return value;
         }
     </script>
 

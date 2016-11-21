@@ -34,7 +34,7 @@
         // LoadData方法
         function LoadData(data)
         {
-            if (data) {debugger
+            if (data) {
                 if (data.IncomeSourceBusiness == "" && data.IncomeSourceWage == "") {
                     data.IncomeSourceBusiness = 1;
                 }
@@ -51,7 +51,8 @@
                                 $("form[id=CreditExamineReportFrom] fieldset#f5>div.row").append($("form[id=CreditExamineReportFrom] fieldset#f5 template#Guarantor").html());
                                 $.parser.parse($("form[id=CreditExamineReportFrom] fieldset#f5>div.row>div.col-6:last"));
                             }
-                            $("form[id=CreditExamineReportFrom] fieldset#f5>div.row>div.col-6:last>lable").text("保证人" + i + "姓名：");
+
+                            $("form[id=CreditExamineReportFrom] fieldset#f5>div.row>div.col-6:last>label").text("保证人" + i + "姓名：");
                             $("form[id=CreditExamineReportFrom] fieldset#f5>div.row>div.col-6:last>input[textboxname=Guarantor]").textbox('setValue', data.Guarantor[i]);
                         }
 
@@ -63,6 +64,7 @@
 
                 // 初始化radio
                 f7_InitLiving(data);
+                f11_InitLiving();
                 f12_InitAgeRange(data);
                 f21_InitSurvey(data);
 
@@ -85,6 +87,7 @@
 
         // 验证数据
         function ValidData() {
+            debugger
             if (!$("#CreditExamineReportFrom").form("validate")) {
                 return false;
             }
@@ -101,11 +104,7 @@
                 $("fieldset[id=f11] input[textboxname=IncreaseMarginReson]").textbox('setValue', '');
             }
 
-            var result = {};
-            result["formName"] = "信审报告";
-            result["buildData"] = value;
-
-            return result;
+            return value;
         }
     </script>
 
@@ -265,8 +264,6 @@
                         </div>
                     </template>
                 </div>
-
-                
             </fieldset>
 
             <fieldset id="f6">
@@ -484,17 +481,17 @@
                 <div class="row">
                     <div class="col-6">
                         <label>网核价格：</label>
-                        <input name="NetnuclearPrice" class="easyui-textbox" data-options="value:'000.00',validType:['Money'],required:true" />
+                        <input name="NetnuclearPrice" class="easyui-textbox" data-options="value:'0.00',validType:['Money'],required:true" />
                     </div>
                     <div class="col-6">
                         <label>核批价格：</label>
-                        <input name="NuclearGroupPrice" class="easyui-textbox" data-options="value:'000.00',validType:['Money'],required:true" />
+                        <input name="NuclearGroupPrice" class="easyui-textbox" data-options="value:'0.00',validType:['Money'],required:true" />
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-6">
                         <label>终审额度：</label>
-                        <input name="FinalLine" class="easyui-textbox" data-options="value:'000.00',validType:['Money'],required:true" />
+                        <input name="FinalLine" class="easyui-textbox" data-options="value:'0.00',validType:['Money'],required:true" />
                     </div>
                 </div>
             </fieldset>
@@ -534,6 +531,11 @@
                     </div>
                 </div>
                 <script type="text/javascript">
+                    function f11_InitLiving()
+                    {
+                        $("fieldset[id=f11] input[type=checkbox]").eq(0).click().click();
+                    }
+
                     function f11MarginClick(Obj) {
                         var inputs = $("fieldset[id=f11]").find("input[name*=Margin]");
 

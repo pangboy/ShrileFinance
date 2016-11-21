@@ -313,26 +313,27 @@
                 var approveUser = finance.CreditExamine.ApproveUser ?? new AppUser();
                 var finalUser = finance.CreditExamine.FinalUser ?? new AppUser();
 
-                creditExamineReportViewModel.TrialPerson = new KeyValuePair<string, string>(trialUser.Id, trialUser.UserName);
-                creditExamineReportViewModel.ReviewPerson = new KeyValuePair<string, string>(reviewUser.Id, reviewUser.Name);
-                creditExamineReportViewModel.ApprovePerson = new KeyValuePair<string, string>(approveUser.Id, approveUser.Name);
-                creditExamineReportViewModel.FinalPerson = new KeyValuePair<string, string>(finalUser.Id, finalUser.Name);
-
                 if (curentRole.Name.Equals("初审员"))
                 {
-                    creditExamineReportViewModel.TrialPerson = new KeyValuePair<string, string>(trialUser.Id, trialUser.UserName);
+                    creditExamineReportViewModel.TrialPerson = new KeyValuePair<string, string>(curentUser.Id, curentUser.Name);
                 }
                 else if (curentRole.Name.Equals("复审员"))
                 {
-                    creditExamineReportViewModel.ReviewPerson = new KeyValuePair<string, string>(reviewUser.Id, reviewUser.Name);
+                    creditExamineReportViewModel.ReviewPerson = new KeyValuePair<string, string>(curentUser.Id, curentUser.Name);
+                    creditExamineReportViewModel.TrialPerson = new KeyValuePair<string, string>(trialUser.Id, trialUser.Name);
                 }
                 else if (curentRole.Name.Equals("审批员"))
                 {
-                    creditExamineReportViewModel.ApprovePerson = new KeyValuePair<string, string>(approveUser.Id, approveUser.Name);
+                    creditExamineReportViewModel.ApprovePerson = new KeyValuePair<string, string>(curentUser.Id, curentUser.Name);
+                    creditExamineReportViewModel.TrialPerson = new KeyValuePair<string, string>(trialUser.Id, trialUser.Name);
+                    creditExamineReportViewModel.ReviewPerson = new KeyValuePair<string, string>(reviewUser.Id, reviewUser.Name);
                 }
                 else if (curentRole.Name.Equals("终审员"))
                 {
-                    creditExamineReportViewModel.FinalPerson = new KeyValuePair<string, string>(finalUser.Id, finalUser.Name);
+                    creditExamineReportViewModel.FinalPerson = new KeyValuePair<string, string>(curentUser.Id, curentUser.Name);
+                    creditExamineReportViewModel.TrialPerson = new KeyValuePair<string, string>(trialUser.Id, trialUser.Name);
+                    creditExamineReportViewModel.ReviewPerson = new KeyValuePair<string, string>(reviewUser.Id, reviewUser.Name);
+                    creditExamineReportViewModel.ApprovePerson = new KeyValuePair<string, string>(approveUser.Id, approveUser.Name);
                 }
             }
 
@@ -380,14 +381,23 @@
             if (curentRole.Name.Equals("初审员"))
             {
                 finance.CreditExamine.TrialUser = curentUser;
+
+                finance.CreditExamine.ReviewUser = null;
+                finance.CreditExamine.ApproveUser = null;
+                finance.CreditExamine.FinalUser = null;
             }
             else if (curentRole.Name.Equals("复审员"))
             {
                 finance.CreditExamine.ReviewUser = curentUser;
+
+                finance.CreditExamine.ApproveUser = null;
+                finance.CreditExamine.FinalUser = null;
             }
             else if (curentRole.Name.Equals("审批员"))
             {
                 finance.CreditExamine.ReviewUser = curentUser;
+
+                finance.CreditExamine.FinalUser = null;
             }
             else if (curentRole.Name.Equals("终审员"))
             {
@@ -433,9 +443,12 @@
                 FinancingItems = GetFinancingItems(finance)
             };
 
-            // 部分映射
+            // 部分映射 
             var array = new string[] { "AdviceMoney", "AdviceRatio", "ApprovalMoney", "ApprovalRatio", "Payment", "Cost" };
             financeAuditViewModel = PartialMapper(finance, financeAuditViewModel, array);
+
+            // 映射 融资比例区间
+            financeAuditViewModel = PartialMapper(finance.Produce,financeAuditViewModel,new string[]{ "MinFinancingRatio", "MaxFinancingRatio" });
 
             return financeAuditViewModel;
         }

@@ -20,7 +20,7 @@
 
         $(function () {
             // 获取参数
-            query =$.extend(uc.GetParams(), parent.flow.InstanceData);
+            query = $.extend(uc.GetParams(), parent.flow.InstanceData);
             query.FinanceId = parent.flow.RootKey;
             debugger
             if (query.FinanceId == undefined || query.FinanceId.length == 0) {
@@ -33,8 +33,7 @@
         });
 
         // LoadData方法
-        function LoadData(data)
-        {
+        function LoadData(data) {
             if (data) {
                 // 客户数据加载
                 LoadCustomer(data);
@@ -77,24 +76,20 @@
             var value = FieldsetSerializeFactory('Customer', 'text');
 
             // 序列化还款账户信息
-            TraverseDateFactory(FieldsetSerializeFactory('CustomerBankInfo', 'text'), value, false);
+            TraverseDateFactory(FieldsetSerializeFactory('CustomerBankInfo', 'text'), value, false, null);
 
             // 序列化放款信息
             if (value.LoanPrincipal != "Channel") {
-                TraverseDateFactory(FieldsetSerializeFactory('CreditBankInfo', 'text'), value, false);
+                TraverseDateFactory(FieldsetSerializeFactory('CreditBankInfo', 'text'), value, false, null);
             }
 
             // 序列化节点类型
             value.NodeType = $('form[name=FinanceCustomer]>input[name=NodeType]').val();
 
             // 序列化车辆补充信息
-            TraverseDateFactory(FieldsetSerializeFactory('VehicleInfo', 'text'), value, false);
+            TraverseDateFactory(FieldsetSerializeFactory('VehicleInfo', 'text'), value, false, null);
 
-            var result = {};
-            result["formName"] = "审批信息";
-            result["buildData"] = value;
-
-            return result;
+            return value;
         }
     </script>
 
@@ -235,11 +230,11 @@
                     <div class="col-6">
                         <label>还款账户:</label>
                         <!--<input name="CustomerAccountName" class="easyui-combobox" data-options="
-                        method:'GET',
-                        url:'../api/Credit/Option',
-                        editable:false,
-                        required:true,
-                " />-->
+                                method:'GET',
+                                url:'../api/Credit/Option',
+                                editable:false,
+                                required:true,
+                        " />-->
                         <input name="CustomerAccountName" class="easyui-textbox" data-options="required:true,validType:'',value:''" />
                     </div>
                     <div class="col-6">
