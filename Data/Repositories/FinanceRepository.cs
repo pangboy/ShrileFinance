@@ -20,9 +20,9 @@
         /// <summary>
         /// 融资租赁合同
         /// </summary>
-        /// <param name="parameters"></param>
+        /// <param name="parameters">参数</param>
         /// <returns></returns>
-        public  DataTable LeaseeContract(SqlParameter[] parameters)
+        public DataTable LeaseeContract(SqlParameter[] parameters)
         {
             string sql = @"SELECT rz.Number AS '[融资租赁合同]', rz.Number AS '[担保合同]',  
                  ma.Name AS '[乙方姓名]', ma.[Identity] AS '[乙方证件号码]',
@@ -67,6 +67,7 @@
             {
                 conn.Open();
             }
+
             SqlCommand cmd = new SqlCommand();
             cmd.Connection = conn;
             cmd.CommandText = sql;
@@ -78,23 +79,23 @@
                     cmd.Parameters.Add(item);
                 }
             }
+
             SqlDataAdapter adapter = new SqlDataAdapter(cmd);
             DataTable dt = new DataTable();
             MoneyToUpper moneyToUpper = new MoneyToUpper();
-            // 金额转大写
-          
+
             adapter.Fill(dt);
             foreach (DataRow dr in dt.Rows)
             {
-                string approvalPrincipal = String.IsNullOrEmpty(dr["[融资额]"].ToString()) ? "0" : dr["[融资额]"].ToString();
+                string approvalPrincipal = string.IsNullOrEmpty(dr["[融资额]"].ToString()) ? "0" : dr["[融资额]"].ToString();
                 dr["[融资额大写]"] = moneyToUpper.RMBToUpper(Convert.ToDecimal(approvalPrincipal) * 10000, 2);
                 dr["[融资额]"] = Math.Round(Convert.ToDecimal(approvalPrincipal) * 10000, 2);
 
-                string customerPoundage = String.IsNullOrEmpty(dr["[手续费]"].ToString()) ? "0" : dr["[手续费]"].ToString();
+                string customerPoundage = string.IsNullOrEmpty(dr["[手续费]"].ToString()) ? "0" : dr["[手续费]"].ToString();
                 dr["[手续费大写]"] = moneyToUpper.RMBToUpper(customerPoundage, 2);
                 dr["[手续费]"] = Math.Round(Convert.ToDecimal(customerPoundage), 2);
 
-                string ensurePrice = String.IsNullOrEmpty(dr["[保证金]"].ToString()) ? "0" : dr["[保证金]"].ToString();
+                string ensurePrice = string.IsNullOrEmpty(dr["[保证金]"].ToString()) ? "0" : dr["[保证金]"].ToString();
                 dr["[保证金大写]"] = moneyToUpper.RMBToUpper(Convert.ToDecimal(ensurePrice) * 100, 2);
                 dr["[保证金]"] = Math.Round(Convert.ToDecimal(ensurePrice) * 100, 2);
             }

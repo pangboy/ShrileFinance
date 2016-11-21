@@ -119,35 +119,20 @@
             return models;
         }
 
-        public PagedListViewModel<ProduceListViewModel> GetPageListByPartner(string Serach, int pageNumber, int pageSize)
+        public IPagedList<ProduceListViewModel> GetPageListByPartner(string serach, int pageNumber, int pageSize)
         {
-            if (Serach == null)
+            var partner = repository.GetByUser(userManager.CurrentUser());
+
+            var produces = partner.Produces;
+
+            if (!string.IsNullOrEmpty(serach))
             {
-                Serach = "";
+                produces = produces.Where(m => m.Name.Contains(serach) || m.Code.Contains(serach)).ToList();
             }
-            var CreateOf = repository.GetByUser(userManager.CurrentUser());
-            var pagedlist =
-                repository
-                .PagedList(m => m.Id == CreateOf.Id && m.Produces.Any(t => t.Name.Contains(Serach) || t.Code.Contains(Serach)), pageNumber, pageSize);
 
-            var list = pagedlist.SelectMany(m => m.Produces.Select(t => new ProduceListViewModel
-            {
-                Id = t.Id,
-                Code = t.Code,
-                FinancingPeriods = t.FinancingPeriods,
-                CreatedDate = t.CreatedDate,
-                Name = m.Name,
-                RepaymentMethod = t.RepaymentMethod,
-                RepaymentMethodDesc = t.RepaymentMethod.ToString(),
-                MaxFinancingRatio = t.MaxFinancingRatio,
-                MinFinancingRatio = t.MinFinancingRatio,
-                CostRate = t.CostRate,
-                FinalRatio = t.FinalRatio,
-                InterestRate = t.InterestRate,
-                CustomerBailRatio = t.CustomerBailRatio
-            }));
+            var models = Mapper.Map<PagedList<ProduceListViewModel>>(produces);
 
-            return new PagedListViewModel<ProduceListViewModel>(new PagedList<ProduceListViewModel>(pagedlist.GetMetaData(), list));
+            return models;
         }
     }
 }

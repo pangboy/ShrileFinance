@@ -177,9 +177,8 @@ namespace PDFPrint
                 _wordDocument.SaveAs(ref objFileName, ref objWdPdf, ref missing, ref missing, ref missing, ref missing, ref missing,
                ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing);
             }
-            catch (Exception ex)
+            catch
             {
-
                 throw;
             }
            
@@ -950,7 +949,7 @@ namespace PDFPrint
                 }
                 return true;
             }
-            catch (Exception ex)
+            catch
             {
                 return false;
             } 

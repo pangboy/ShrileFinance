@@ -49,7 +49,6 @@
         /// </summary>
         public double? InterestRate { get; set; }
 
-
         /// <summary>
         /// 融资期限 (月)
         /// </summary>
@@ -83,7 +82,7 @@
         /// <summary>
         /// 状态
         /// </summary>
-        public  FinanceStateEnum State { get; set; }
+        public FinanceStateEnum State { get; set; }
 
         /// <summary>
         /// 放款日期

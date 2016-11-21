@@ -1,12 +1,12 @@
 ﻿namespace Application
 {
     using System;
+    using System.Linq;
     using AutoMapper;
     using Core.Interfaces.Repositories;
-    using X.PagedList;
-    using ViewModels.OrganizationViewModels;
     using ViewModels;
-    using System.Linq;
+    using ViewModels.OrganizationViewModels;
+    using X.PagedList;
 
     public class OrganizationAppService
     {
@@ -31,19 +31,8 @@
             var customer = Mapper.Map<Core.Entities.Customers.Enterprise.Organization>(model.Base);
             customer = Mapper.Map(model, customer);
 
-            //var organizate = repository.Get(model.Base.Id);
-            //// organizate.Managers.RemoveRange(0, organizate.Managers.Count);
-            // organizate.Managers.Clear();
-            // organizate.Shareholders.Clear();
-            // organizate.BigEvent.Clear();
-            // organizate.Litigation.Clear();
-            // organizate.AssociatedEnterprises.Clear();
-            // organizate = Mapper.Map(model, organizate);
-            // organizate.Managers.RemoveAt(0);
             repository.Modify(customer);
-
             repository.Commit();
-          
         }
 
         public OrganizationViewModel Get(Guid id)
@@ -60,20 +49,20 @@
         /// 带分页查询
         /// </summary>
         /// yand    16.10.30
-        /// <param name="Serach">查询条件</param>
+        /// <param name="serach">查询条件</param>
         /// <param name="pageNumber">页码</param>
         /// <param name="pageSize">每页显示行数</param>
         /// <returns></returns>
-        public PagedListViewModel<OragnizateListItemViewModel> GetPageList(string Serach, int pageNumber, int pageSize)
+        public PagedListViewModel<OragnizateListItemViewModel> GetPageList(string serach, int pageNumber, int pageSize)
         {
             var pagedlist =
                 repository
-                .PagedList(m => m.Property.InstitutionChName == Serach, pageNumber, pageSize);
+                .PagedList(m => m.Property.InstitutionChName == serach, pageNumber, pageSize);
 
             var list = pagedlist.Select(m =>
                 new OragnizateListItemViewModel
                 {
-                    Id=m.Id,
+                    Id = m.Id,
                     CustomerNumber = m.CustomerNumber,
                     InstitutionChName = m.Property.InstitutionChName,
                     InstitutionCreditCode = m.InstitutionCreditCode,

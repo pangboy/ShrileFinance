@@ -1,17 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Application.ViewModels;
-using Application.ViewModels.ProduceViewModel;
-using AutoMapper;
-using Core.Entities;
-using Core.Entities.Identity;
-using Core.Entities.Produce;
-using Core.Interfaces.Repositories;
-using X.PagedList;
-
-namespace Application
+﻿namespace Application
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using AutoMapper;
+    using Core.Entities;
+    using Core.Entities.Produce;
+    using Core.Interfaces.Repositories;
+    using ViewModels;
+    using ViewModels.ProduceViewModel;
+    using X.PagedList;
+
     public class ProduceAppService
     {
         private readonly IProduceRepository repository;
@@ -44,7 +43,7 @@ namespace Application
                 foreach (var item in value.Poundage)
                 {
                     var financingItem = Mapper.Map<FinancingItem>(item);
-                  
+
                     produce.FinancingItems.Add(financingItem);
                 }
             }
@@ -57,7 +56,6 @@ namespace Application
         {
             var produce = repository.Get(model.Id);
             Mapper.Map(model, produce);
-            //var produce = Mapper.Map<Produce>(value);
             if (model.Poundage != null)
             {
                 foreach (var item in model.Poundage)
@@ -89,6 +87,7 @@ namespace Application
                     producelist.Add(produceViewModel);
                 }
             }
+
             return producelist;
         }
 
@@ -96,7 +95,7 @@ namespace Application
         {
             var produce = repository.GetAll().FirstOrDefault(m => m.Code == code);
             var produceViewModel = new ProduceViewModel();
-            List<FinancingProjectListViewModel> List = new List<FinancingProjectListViewModel>();
+            List<FinancingProjectListViewModel> list = new List<FinancingProjectListViewModel>();
 
             produceViewModel = Mapper.Map<ProduceViewModel>(produce);
 
@@ -137,36 +136,13 @@ namespace Application
             return produceViewModel;
         }
 
-        public PagedListViewModel<ProduceListViewModel> GetPageList(string Serach, int pageNumber, int pageSize)
+        public IPagedList<ProduceListViewModel> GetPageList(string serach, int pageNumber, int pageSize)
         {
-            if (Serach == null)
-            {
-                Serach = "";
-            }
-            var pagedlist =
-                repository
-                .PagedList(m => m.Name.Contains(Serach) || m.Code.Contains(Serach), pageNumber, pageSize);
+            var produces  = repository.List(serach, pageNumber, pageSize);
 
-            var list = pagedlist.Select(m =>
-                new ProduceListViewModel
-                {
-                    Id = m.Id,
-                    Code = m.Code,
-                    FinancingPeriods = m.FinancingPeriods,
-                    CreatedDate = m.CreatedDate,
-                    Name = m.Name,
-                    RepaymentMethod = m.RepaymentMethod,
-                    RepaymentMethodDesc = m.RepaymentMethod.ToString(),
-                    MaxFinancingRatio = m.MaxFinancingRatio,
-                    MinFinancingRatio = m.MinFinancingRatio,
-                    CostRate = m.CostRate,
-                    FinalRatio = m.FinalRatio,
-                    InterestRate = m.InterestRate,
-                    CustomerBailRatio = m.CustomerBailRatio
-                });
+            var models = Mapper.Map<PagedList<ProduceListViewModel>>(produces);
 
-            return new PagedListViewModel<ProduceListViewModel>(new PagedList<ProduceListViewModel>(pagedlist.GetMetaData(), list));
+            return models;
         }
-
     }
 }

@@ -15,6 +15,10 @@
             this.financeAppService = financeAppService;
         }
 
+        public Instance Instance { get; set; }
+
+        public JObject Data { get; set; }
+
         /// <summary>
         /// 融资申请
         /// </summary>
@@ -22,6 +26,7 @@
         {
             // 获取数据
             var finance = GetData<FinanceApplyViewModel>("57DC5FCF-18A4-E611-80C5-507B9DE4A488");
+
             // 创建或修改
             if (finance.Id.HasValue)
             {
@@ -115,10 +120,6 @@
                 throw new Core.Exceptions.InvalidOperationAppException("保存失败.");
             }
         }
-
-        public Instance Instance { get; set; }
-
-        public JObject Data { get; set; }
 
         private T GetData<T>(string formId) where T : class, new()
         {

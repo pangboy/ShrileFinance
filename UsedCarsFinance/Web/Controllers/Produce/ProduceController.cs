@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Web.Http;
     using Application;
+    using Application.ViewModels;
     using Application.ViewModels.ProduceViewModel;
 
     public class ProduceController : ApiController
@@ -56,7 +57,7 @@
         {
             var list = produceAppService.GetPageList(Search, page, rows);
 
-            return Ok(list);
+            return Ok(new PagedListViewModel<ProduceListViewModel>(list));
         }
     }
 }

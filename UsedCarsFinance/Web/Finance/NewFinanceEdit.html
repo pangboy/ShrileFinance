@@ -113,12 +113,14 @@
         uc.form = new UCForm(".container");
 
         $(function () {
-            $($(".ac-1")[0]).attr("checked", true)
             Init();
           
         });
         function Init() {
             LoadBrand();
+            if (uc.GetParams().state == 0) {
+                uc.form.DisableForm();
+            }
             if (parent.flow.RootKey != undefined) {
                 GetByFinanceId();
             }
@@ -152,21 +154,28 @@
                 }
             });
         }
-        function LoadData(data){
+        function LoadData(data) {
             if (data != null) {
                 $("#financeId").val(data.Id);
                 $("#produce").form("load", data);
                 $("#produce").form("load", data.Produce);
                 CheckProduce();
                 FinanceProduce(data.FinanceProduce);
-                $("#Phone").textbox("setValue", data.CreateBy.Phone)
-                $("#UserName").textbox("setValue", data.CreateBy.Username)
-                $("#PartnerName").textbox("setValue", data.CreateOf.Name)
-
+                if (data.CreateBy != undefined && data.CreateBy != undefined) {
+                    $("#Phone").textbox("setValue", data.CreateBy.Phone)
+                    $("#UserName").textbox("setValue", data.CreateBy.Username)
+                    $("#PartnerName").textbox("setValue", data.CreateOf.Name)
+                }
                 $("#Vehicle").form("load", data.Vehicle);
-                $("select[comboname='MakeCode']").combobox("unselect", data.Vehicle.MakeCode).combobox("select", data.Vehicle.MakeCode);
-                $("select[comboname='FamilyCode']").combobox("select", data.Vehicle.FamilyCode);
-                $("select[comboname='VehicleKey']").combobox("select", data.Vehicle.VehicleKey);
+                if (data.Vehicle.MakeCode != "") {
+                    $("select[comboname='MakeCode']").combobox("unselect", data.Vehicle.MakeCode).combobox("select", data.Vehicle.MakeCode);
+                }
+                if (data.Vehicle.FamilyCode!="") {
+                    $("select[comboname='FamilyCode']").combobox("select", data.Vehicle.FamilyCode);
+                }
+                if (data.Vehicle.FamilyCode != "") {
+                    $("select[comboname='VehicleKey']").combobox("select", data.Vehicle.VehicleKey);
+                }
                 $("#ManufacturerGuidePrice").textbox("setValue", data.Vehicle.ManufacturerGuidePrice);
                 //加载联系人
                 LoadApplicant(data);
@@ -217,10 +226,10 @@
                     Financing.push(produce[i])
                 }
             }
-            $("#Poundage").datagrid("loadData", Poundage);
-            $("#Financing").datagrid("loadData", Financing);
-            CostCount("Poundage");
-            CostCount("Financing");//这两句代码是计算金额求和
+            $("#Poundagedg").datagrid("loadData", Poundage);
+            $("#Financingdg").datagrid("loadData", Financing);
+            CostCount("Poundagedg");
+            CostCount("Financingdg");//这两句代码是计算金额求和
         }
 
         function CheckProduce() {
@@ -236,17 +245,17 @@
                             $("#ProduceId").val(data.Id);
                             $("#Id").val(data.Id);//ProduceId、ID都表示产品ID
                             $("#produce").form("load", data);
-                            $("#Poundage").datagrid("loadData", data.PoundageList);
-                            $("#Financing").datagrid("loadData", data.FinancingItemsList);
-                            CostCount("Poundage");
-                            CostCount("Financing");//这两句代码是计算金额求和
+                            $("#Poundagedg").datagrid("loadData", data.PoundageList);
+                            $("#Financingdg").datagrid("loadData", data.FinancingItemsList);
+                            CostCount("Poundagedg");
+                            CostCount("Financingdg");//这两句代码是计算金额求和
                         }
                         else {
                             $("#ProduceId").val("");
                             $("#Id").val("");//ProduceId、ID都表示产品ID
                             $("#produce").form("clear");
-                            $("#Poundage").datagrid("loadData", []);
-                            $("#Financing").datagrid("loadData", []);
+                            $("#Poundagedg").datagrid("loadData", []);
+                            $("#Financingdg").datagrid("loadData", []);
                             top.$.messager.show({ msg: "该编号对应的产品不存在" });
                         }
                     }
@@ -271,6 +280,7 @@
             $("select[comboname='VehicleKey']").combobox("clear");
             $("input[textboxname='ManufacturerGuidePrice']").textbox("clear");
             $("input[textboxname='Displacement']").textbox("clear");
+            debugger
             $.ajax({
                 async: false,
                 data: { brandCode: record.value },
@@ -309,8 +319,8 @@
         }
         //双击编辑行
         function onEditor(index, field, value) {
-            $('#Poundage').datagrid('getEditingRowIndexs');
-            $('#Financing').datagrid('getEditingRowIndexs');
+            $('#Poundagedg').datagrid('getEditingRowIndexs');
+            $('#Financingdg').datagrid('getEditingRowIndexs');
             if (editIndex != index) {
                 var row = $('#' + this.id).datagrid("getSelected");
                 //不可编辑状态
@@ -363,9 +373,9 @@
             for (var i = 0; i < rows.length; i++) {
                 count += parseInt($('#' + id).datagrid('getRows')[i]['Money']);
             }
-            if (id == "Financing") {
+            if (id == "Financingdg") {
                 $("#FinancingCount").text(count);
-                $("#IntentionPrincipal").textbox("setValue", count)
+                $("#Financing").textbox("setValue", count)
             }
             else {
                 $("#PoundageCount").text(count);
@@ -502,8 +512,8 @@
         function BuildData() {
             var result = {};
             // 保存datagrid处在编辑状态时候的数据
-            $('#Poundage').datagrid('getEditingRowIndexs');
-            $('#Financing').datagrid('getEditingRowIndexs');
+            $('#Poundagedg').datagrid('getEditingRowIndexs');
+            $('#Financingdg').datagrid('getEditingRowIndexs');
 
             var data = {};
             var ff = $(".container").find("article")
@@ -530,16 +540,15 @@
             //将主要申请人信息存放到数组中
             data["Applicant"] = app;
             data["ProduceId"] = $("#ProduceId").val();;
-            data["IntentionPrincipal"] = $("#IntentionPrincipal").textbox("getValue");
+            data["Financing"] = $("#Financing").textbox("getValue");
             data["OncePayMonths"] = $("#OncePayMonths").textbox("getValue");
             data["FinanceProduce"] = new Array();
-            for (var i = 0; i < $('#Financing').datagrid('getRows').length; i++) {
-                data["FinanceProduce"].push($('#Financing').datagrid('getRows')[i])
+            for (var i = 0; i < $('#Financingdg').datagrid('getRows').length; i++) {
+                data["FinanceProduce"].push($('#Financingdg').datagrid('getRows')[i])
             }
-
             data["Id"] = $("#financeId").val();
-            for (var i = 0; i < $('#Poundage').datagrid('getRows').length; i++) {
-                data["FinanceProduce"].push($('#Poundage').datagrid('getRows')[i])
+            for (var i = 0; i < $('#Poundagedg').datagrid('getRows').length; i++) {
+                data["FinanceProduce"].push($('#Poundagedg').datagrid('getRows')[i])
             }
             return data;
         }
@@ -578,7 +587,7 @@
 
         function BindColor(index, row) {
             if (row.IsEdit==false) {
-                return 'background-color:aquamarine;color:blue;font-weight:bold;';
+                return 'background-color:#f5fffa;color:blue;font-weight:bold;';
             }
         }
     </script>
@@ -620,19 +629,19 @@
                     <div class="row">
                         <div class="col-6">
                             <label>车辆品牌:</label>
-                            <select name="MakeCode" class="easyui-combobox" data-options="onSelect:SelectModel,required:true,editable:false"></select>
+                            <select name="MakeCode" id="MakeCode" class="easyui-combobox" data-options="onSelect:SelectModel,required:true,editable:false"></select>
                         </div>
 
                         <div class="col-6">
                             <label>车辆系列:</label>
-                            <select name="FamilyCode" class="easyui-combobox" data-options="onSelect:SelectCarConfigure,required:true,editable:false"></select>
+                            <select name="FamilyCode" id="FamilyCode" class="easyui-combobox" data-options="onSelect:SelectCarConfigure,required:true,editable:false"></select>
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="col-12">
                             <label>车辆车型:</label>
-                            <select name="VehicleKey" class="easyui-combobox" data-options="required:true,editable:false,onSelect:LoadVehiclePrice"></select>
+                            <select name="VehicleKey" id="VehicleKey" class="easyui-combobox" data-options="required:true,editable:false,onSelect:LoadVehiclePrice"></select>
                         </div>
                     </div>
 
@@ -802,7 +811,7 @@
                     <div class="row">
                         <div class="col-6">
                             <label>融资项:</label>
-                            <table id="Financing" class="easyui-datagrid" data-options="height: 230,width:400,rownumbers: true,  loadMsg: '正在加载，请稍候...',
+                            <table id="Financingdg" class="easyui-datagrid" data-options="height: 230,width:400,rownumbers: true,  loadMsg: '正在加载，请稍候...',
                                onDblClickCell:onEditor,
                                singleSelect:true,
                                striped:true,
@@ -812,7 +821,7 @@
                                     <tr>
                                         <th data-options="field:'FinancingProjectId',hidden:true">Id</th>
                                         <th data-options="field:'Name',width:185,align:'center'">名称</th>
-                                        <th data-options="field:'Money',width:180,align:'center',editor:{type:'text',options:{required:true}}">价格</th>
+                                        <th data-options="field:'Money',width:180,align:'center',editor:{type:'validatebox',options:{required:true,validType:'Numerical'}}">价格</th>
                                         <th data-options="field:'IsFinancing',width:120,align:'center',hidden:true">是否是融资项</th>
                                         <th data-options="field:'IsEdit',width:120,align:'center',hidden:true">是否可编辑</th>
                                     </tr>
@@ -825,7 +834,7 @@
 
                         <div class="col-6">
                             <label>客户手续费:</label>
-                            <table id="Poundage" class="easyui-datagrid" data-options="height: 230,width:400,rownumbers: true,
+                            <table id="Poundagedg" class="easyui-datagrid" data-options="height: 230,width:400,rownumbers: true,
                                 loadMsg: '正在加载，请稍候...',
                                 onDblClickCell:onEditor,
                                 singleSelect:true,
@@ -836,7 +845,7 @@
                                     <tr>
                                         <th data-options="field:'FinancingProjectId',hidden:true">Id</th>
                                         <th data-options="field:'Name',width:185,align:'center'">名称</th>
-                                        <th data-options="field:'Money',width:180,align:'center',editor:{type:'text',options:{required:true}}">价格</th>
+                                        <th data-options="field:'Money',width:180,align:'center',editor:{type:'validatebox',options:{required:true,validType:'Numerical'}}">价格</th>
                                         <th data-options="field:'IsFinancing',width:120,align:'center',hidden:true">是否是融资项</th>
                                         <th data-options="field:'IsEdit',width:120,align:'center',hidden:true">是否可编辑</th>
                                     </tr>
@@ -856,7 +865,7 @@
                         </div>
                         <div class="col-6" id="OncePayMonthsDiv">
                             <label>月供先付期数:</label>
-                            <input name="OncePayMonths" id="OncePayMonths" class="easyui-textbox" data-options="validType:'Integer'"/>
+                            <input name="OncePayMonths" id="OncePayMonths" class="easyui-textbox" data-options="validType:'Integer'" value="0"/>
                             <span class="unit">期</span>
                         </div>
                     </div>
