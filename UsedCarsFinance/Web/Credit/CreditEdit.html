@@ -13,7 +13,6 @@
     <script src="../Scripts/draft.js"></script>
     <script>
         uc.form = new UCForm("#credit_ff");
-        var draft = new Draft(Build, Load);
 
         $(function () {
             Init();
@@ -92,8 +91,6 @@
                 method: "auto",
                 data: data
             });
-
-            draft.Clear();
         }
 
         function ProduceAdd(text, value) {
