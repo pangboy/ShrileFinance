@@ -24,6 +24,18 @@ namespace Web.Infrastructure
         public override void OnException(HttpActionExecutedContext context)
         {
             var exception = context.Exception;
+
+            while (exception.InnerException != null)
+            {
+                exception = exception.InnerException;
+            }
+
+            if (exception is Core.Exceptions.AppException)
+            {
+                context.Response = context.Request.CreateErrorResponse(System.Net.HttpStatusCode.BadRequest, exception.Message);
+            }
+
+
             var parameters = new Dictionary<String, Object>();
 
             // 添加路由参数

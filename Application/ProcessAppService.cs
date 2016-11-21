@@ -124,7 +124,7 @@
                     user = partner.Approvers.Single(m => m.RoleId == action.Transfer.RoleId);
                     break;
                 case ActionAllocationEnum.记录:
-                    user = instance.Logs.Last(m => m.ActionId == action.TransferId).ProcessUser;
+                    user = instance.Logs.Last(m => m.NodeId == action.TransferId).ProcessUser;
                     break;
                 case ActionAllocationEnum.发起者:
                     user = instance.StartUser;

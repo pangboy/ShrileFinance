@@ -54,16 +54,35 @@ function Login() {
 					location.href = "Index.html";
 				},
 				400: function (xhr) {
-					var message = "";
-					var modelState = xhr.responseJSON.ModelState;
+					var message;
 
-					for (item in modelState) {
-						$(modelState[item]).each(function () {
-							message += this + '\n';
-						});
+					if (xhr.responseJSON) {
+						message = xhr.responseJSON.Message + "<br />";
+
+						if (xhr.responseJSON.ModelState) {
+							var modelState = xhr.responseJSON.ModelState;
+
+							for (item in modelState) {
+								$(modelState[item]).each(function (i, errMsg) {
+									message += errMsg + "<br />";
+								});
+							}
+						}
+					} else {
+						message = "请求失败!";
 					}
 
-					$.messager.alert("登录失败!", message, "info");
+					$.messager.alert("请求失败", message, "error");
+					//var message = "";
+					//var modelState = xhr.responseJSON.ModelState;
+
+					//for (item in modelState) {
+					//	$(modelState[item]).each(function () {
+					//		message += this + '\n';
+					//	});
+					//}
+
+					//$.messager.alert("登录失败!", message, "info");
 				}
 			}
 		});
