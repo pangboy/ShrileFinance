@@ -22,7 +22,7 @@
         /// </summary>
         public Produce.RepaymentMethodEnum RepaymentMethod { get; set; }
 
-        public string RepaymentMethodDesc { get; set; }
+        public string RepaymentMethodDesc { get { return RepaymentMethod.ToString(); } }
 
         /// <summary>
         /// 融资期限
