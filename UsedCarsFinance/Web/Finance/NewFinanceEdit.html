@@ -102,8 +102,6 @@
             height: auto;
         }
     </style>
-
-
     <script>
         // 判断datagrid中行是否可编辑
         var editIndex = undefined;
@@ -115,18 +113,14 @@
         uc.form = new UCForm(".container");
 
         $(function () {
-            $(".ac-1").attr("checked",true)
+            $($(".ac-1")[0]).attr("checked", true)
             Init();
+          
         });
-
         function Init() {
             LoadBrand();
             if (parent.flow.RootKey != undefined) {
                 GetByFinanceId();
-            }
-            debugger
-            if(1=1){
-                uc.form.DisableForm();
             }
             else {
                 $.ajax({
@@ -570,16 +564,21 @@
                 $("#wife").hide();
             }
         }
-
+        //设置当选中为夫妻时候自动加载信息
         function RelationWithMaster() {
             if ($(this).combobox("getValue") == "夫妻") {
-                debugger
                 $("#" + $(this).parents("fieldset")[0].id).find("div").find("#Name").textbox("setValue", $("#WifeName").textbox("getValue"));
                 $("#" + $(this).parents("fieldset")[0].id).find("div").find("#Mobile").textbox("setValue", $("#WifePhone").textbox("getValue"));
                 if ($(this).parents("fieldset")[1].id == "Guarantee" || $(this).parents("fieldset")[1].id == "joint") {
                     $("#" + $(this).parents("fieldset")[0].id).find("div").find("#OfficeName").textbox("setValue", $("#WifeOfficeName").textbox("getValue"));
                     $("#" + $(this).parents("fieldset")[0].id).find("div").find("#OfficeAddress").textbox("setValue", $("#WifeOfficeAddress").textbox("getValue"));
                 }
+            }
+        }
+
+        function BindColor(index, row) {
+            if (row.IsEdit==false) {
+                return 'background-color:aquamarine;color:blue;font-weight:bold;';
             }
         }
     </script>
@@ -593,7 +592,7 @@
 
         </div>
         <div>
-            <input id="ac-1" class="ac-1" name="accordion-1" type="checkbox" />
+            <input id="ac-1" class="ac-1" name="accordion-1" type="radio" checked/>
             <label for="ac-1" class="ac">基本信息</label>
             <article class="Vehicle">
                 <fieldset id="Vehicle" style="margin-bottom:0px;padding-left:20px">
@@ -726,7 +725,7 @@
             </article>
         </div>
         <div>
-            <input id="ac-2" class="ac-1" name="accordion-1" type="checkbox" />
+            <input id="ac-2" class="ac-1" name="accordion-1" type="radio"/>
             <label for="ac-2" class="ac">租赁信息</label>
             <article class="produce">
                 <fieldset id="produce" style="margin-bottom:0px;padding:0 20px">
@@ -806,6 +805,8 @@
                             <table id="Financing" class="easyui-datagrid" data-options="height: 230,width:400,rownumbers: true,  loadMsg: '正在加载，请稍候...',
                                onDblClickCell:onEditor,
                                singleSelect:true,
+                               striped:true,
+                               rowStyler:BindColor,
                                ">
                                 <thead>
                                     <tr>
@@ -828,6 +829,8 @@
                                 loadMsg: '正在加载，请稍候...',
                                 onDblClickCell:onEditor,
                                 singleSelect:true,
+                                striped:true,
+                                rowStyler:BindColor,
                                 ">
                                 <thead>
                                     <tr>
@@ -853,7 +856,7 @@
                         </div>
                         <div class="col-6" id="OncePayMonthsDiv">
                             <label>月供先付期数:</label>
-                            <input name="OncePayMonths" id="OncePayMonths" class="easyui-textbox" data-options="validType:'Integer',required:true" />
+                            <input name="OncePayMonths" id="OncePayMonths" class="easyui-textbox" data-options="validType:'Integer'"/>
                             <span class="unit">期</span>
                         </div>
                     </div>
@@ -862,7 +865,7 @@
             </article>
         </div>
         <div>
-            <input id="ac-3" class="ac-1" name="accordion-1" type="checkbox" />
+            <input id="ac-3" class="ac-1" name="accordion-1" type="radio" />
             <label for="ac-3" class="ac">申请人信息</label>
             <article class="people">
                 <fieldset id="mainapplicant" class="applicant" style="margin-bottom:0px;padding-left:20px;padding-top:0px;">
@@ -1201,19 +1204,6 @@
 
                         <div class="row">
                             <div class="col-6">
-                                <label>学历:</label>
-                                <select id="Degree" name="Degree" class="easyui-combobox" data-options="editable:false">
-                                    <option value="硕士及以上">硕士及以上</option>
-                                    <option value="本科">本科</option>
-                                    <option value="大专">大专</option>
-                                    <option value="高中">高中</option>
-                                    <option value="初中及以下">初中及以下</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-6">
                                 <label>证件类型:</label>
                                 <select id="IdentityType" name="IdentityType" class="easyui-combobox" data-options="editable:false">
                                     <option value="身份证">身份证</option>
@@ -1229,6 +1219,19 @@
                             <div class="col-6">
                                 <label>证件号码:</label>
                                 <input id="Identity" name="Identity" class="easyui-textbox" data-options="required:true" />
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-6">
+                                <label>学历:</label>
+                                <select id="Degree" name="Degree" class="easyui-combobox" data-options="editable:false">
+                                    <option value="硕士及以上">硕士及以上</option>
+                                    <option value="本科">本科</option>
+                                    <option value="大专">大专</option>
+                                    <option value="高中">高中</option>
+                                    <option value="初中及以下">初中及以下</option>
+                                </select>
                             </div>
                         </div>
 
@@ -1311,8 +1314,6 @@
                                 <label>姓名:</label>
                                 <input id="Name" name="Name" class="easyui-textbox" data-options="required:true" />
                             </div>
-
-                        
                         </div>
 
                         <div class="row">
@@ -1329,20 +1330,7 @@
                                 <input id="Mobile" name="Mobile" class="easyui-textbox" data-options="validType:'Mobile',required:true" />
                             </div>
                         </div>
-
-                        <div class="row">
-                            <div class="col-6">
-                                <label>学历:</label>
-                                <select id="Degree" name="Degree" class="easyui-combobox" data-options="editable:false">
-                                    <option value="硕士及以上">硕士及以上</option>
-                                    <option value="本科">本科</option>
-                                    <option value="大专">大专</option>
-                                    <option value="高中">高中</option>
-                                    <option value="初中及以下">初中及以下</option>
-                                </select>
-                            </div>
-                        </div>
-
+                       
                         <div class="row">
                             <div class="col-6">
                                 <label>证件类型:</label>
@@ -1362,6 +1350,20 @@
                                 <input id="Identity" name="Identity" class="easyui-textbox" data-options="required:true" />
                             </div>
                         </div>
+
+                        <div class="row">
+                            <div class="col-6">
+                                <label>学历:</label>
+                                <select id="Degree" name="Degree" class="easyui-combobox" data-options="editable:false">
+                                    <option value="硕士及以上">硕士及以上</option>
+                                    <option value="本科">本科</option>
+                                    <option value="大专">大专</option>
+                                    <option value="高中">高中</option>
+                                    <option value="初中及以下">初中及以下</option>
+                                </select>
+                            </div>
+                        </div>
+
 
                         <div class="row">
                             <div class="col-6">

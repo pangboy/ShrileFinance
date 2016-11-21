@@ -21,7 +21,6 @@
             // 获取参数
             query =$.extend(uc.GetParams(), parent.flow.InstanceData);
             query.FinanceId = parent.flow.RootKey;
-            debugger
             if (query.FinanceId == undefined || query.FinanceId.length == 0) {
                 query.FinanceId = "ED468191-9FAB-E611-80C5-507B9DE4A488";
                 query.state = 1;
@@ -34,7 +33,7 @@
         // LoadData方法
         function LoadData(data)
         {
-            if (data) {debugger
+            if (data) {
                 if (data.IncomeSourceBusiness == "" && data.IncomeSourceWage == "") {
                     data.IncomeSourceBusiness = 1;
                 }
