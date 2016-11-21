@@ -123,14 +123,16 @@
         {
             var partner = repository.GetByUser(userManager.CurrentUser());
 
-            var produces = partner.Produces;
+            var produces = partner.Produces.AsEnumerable();
 
             if (!string.IsNullOrEmpty(serach))
             {
-                produces = produces.Where(m => m.Name.Contains(serach) || m.Code.Contains(serach)).ToList();
+                produces = produces.Where(m => m.Name.Contains(serach) || m.Code.Contains(serach));
             }
 
-            var models = Mapper.Map<PagedList<ProduceListViewModel>>(produces);
+            var pagedList = produces.ToPagedList(pageNumber, pageSize);
+
+            var models = Mapper.Map<IPagedList<ProduceListViewModel>>(pagedList);
 
             return models;
         }
