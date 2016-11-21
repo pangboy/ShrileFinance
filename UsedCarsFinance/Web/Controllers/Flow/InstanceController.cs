@@ -59,6 +59,11 @@
             return Ok(instanceId);
         }
 
+        /// <summary>
+        /// 流程流转
+        /// </summary>
+        /// <param name="model">视图模型</param>
+        /// <returns></returns>
         [HttpPost]
         public IHttpActionResult Transfer(ProcessPostedViewModel model)
         {
@@ -94,10 +99,28 @@
             }
         }
 
+        /// <summary>
+        /// 获取框架页
+        /// </summary>
+        /// <param name="instanceId">实例标识</param>
+        /// <returns></returns>
         [HttpGet]
         public IHttpActionResult GetFrame(Guid instanceId)
         {
             var frame = service.GetFrame(instanceId);
+
+            return Ok(frame);
+        }
+
+        /// <summary>
+        /// 获取查看框架页
+        /// </summary>
+        /// <param name="instanceId">实例标识</param>
+        /// <returns></returns>
+        [HttpGet]
+        public IHttpActionResult GetFrameView(Guid instanceId)
+        {
+            var frame = service.GetFrameView(instanceId);
 
             return Ok(frame);
         }
