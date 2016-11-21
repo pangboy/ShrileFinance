@@ -14,15 +14,15 @@
 
         function SetFilters(params) {
             params.searchString = $("#SearchString").textbox("getValue");
-            params.CurrentNode = $("#CurrentNode").combobox("getValue");
+            params.currentNode = $("#CurrentNode").combobox("getValue");
 
             if ($("#BeginTime").datebox("isValid")) {
-                params.BeginTime = $("#BeginTime").datebox("getValue");
+                params.beginTime = $("#BeginTime").datebox("getValue");
             }
             if ($("#EndTime").datebox("isValid")) {
-                params.EndTime = $("#EndTime").datebox("getValue");
+                params.endTime = $("#EndTime").datebox("getValue");
             }
-            params.Status = $("#Status").combobox("getValue");
+            params.status = $("#Status").combobox("getValue");
 
             for (var p in params) {
                 if (params[p] == "") {

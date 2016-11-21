@@ -223,9 +223,9 @@
         /// <param name="page">页码</param>
         /// <param name="size">尺寸</param>
         /// <returns></returns>
-        public IPagedList<InstanceViewModel> DoingPagedList(string searchString, int page, int size)
+        public IPagedList<InstanceViewModel> DoingPagedList(string searchString, int page, int size, Guid? currentNode = null, DateTime? beginTime = null, DateTime? endTime = null)
         {
-            var instances = instanceReopsitory.DoingPagedList(CurrentUser, searchString, page, size);
+            var instances = instanceReopsitory.DoingPagedList(CurrentUser, searchString, page, size, currentNodeId: currentNode, beginTime: beginTime, endTime: endTime);
 
             var instanceViewModels = Mapper.Map<IPagedList<InstanceViewModel>>(instances);
 
@@ -239,9 +239,9 @@
         /// <param name="page">页码</param>
         /// <param name="size">尺寸</param>
         /// <returns></returns>
-        public IPagedList<InstanceViewModel> DonePagedList(string searchString, int page, int size)
+        public IPagedList<InstanceViewModel> DonePagedList(string searchString, int page, int size, Guid? currentNode = null, DateTime? beginTime = null, DateTime? endTime = null, InstanceStatusEnum? status = null)
         {
-            var instances = instanceReopsitory.DonePagedList(CurrentUser, searchString, page, size);
+            var instances = instanceReopsitory.DonePagedList(CurrentUser, searchString, page, size, currentNodeId: currentNode, beginTime: beginTime, endTime: endTime, status: status);
 
             var instanceViewModels = Mapper.Map<IPagedList<InstanceViewModel>>(instances);
 

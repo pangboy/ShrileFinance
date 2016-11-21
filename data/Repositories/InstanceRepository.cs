@@ -13,7 +13,7 @@
         {
         }
 
-        public IPagedList<Instance> DoingPagedList(AppUser currentUser, string searchString, int page, int size, Flow flow = null, Node currentNode = null, DateTime? beginTime = null, DateTime? endTime = null)
+        public IPagedList<Instance> DoingPagedList(AppUser currentUser, string searchString, int page, int size, Guid? flowId = null, Guid? currentNodeId = null, DateTime? beginTime = null, DateTime? endTime = null)
         {
             // 筛选 1.状态为正常
             //      2.当前用户的角色可处理的节点
@@ -30,15 +30,15 @@
             }
 
             // 流程筛选
-            if (flow != null)
+            if (flowId.HasValue)
             {
-                instances = instances.Where(m => m.FlowId == flow.Id);
+                instances = instances.Where(m => m.FlowId == flowId);
             }
 
             // 节点筛选
-            if (currentNode != null)
-            {
-                instances = instances.Where(m => m.CurrentNodeId == currentNode.Id);
+            if (currentNodeId.HasValue)
+                {
+                instances = instances.Where(m => m.CurrentNodeId == currentNodeId);
             }
 
             // 开始时间筛选
@@ -53,11 +53,14 @@
                 instances = instances.Where(m => m.StartTime < endTime);
             }
 
+            // 排序
+            instances = instances.OrderByDescending(m => m.Id);
+
             // 分页查询
             return instances.ToPagedList(page, size);
         }
 
-        public IPagedList<Instance> DonePagedList(AppUser currentUser, string searchString, int page, int size, Flow flow = null, Node currentNode = null, DateTime? beginTime = null, DateTime? endTime = null, InstanceStatusEnum? status = null)
+        public IPagedList<Instance> DonePagedList(AppUser currentUser, string searchString, int page, int size, Guid? flowId = null, Guid? currentNodeId = null, DateTime? beginTime = null, DateTime? endTime = null, InstanceStatusEnum? status = null)
         {
             // 筛选 1.获取当前用户处理过的流程
             var instances = GetAll(m =>
@@ -70,15 +73,15 @@
             }
 
             // 流程筛选
-            if (flow != null)
+            if (flowId.HasValue)
             {
-                instances = instances.Where(m => m.FlowId == flow.Id);
+                instances = instances.Where(m => m.FlowId == flowId);
             }
 
             // 节点筛选
-            if (currentNode != null)
+            if (currentNodeId.HasValue)
             {
-                instances = instances.Where(m => m.CurrentNodeId == currentNode.Id);
+                instances = instances.Where(m => m.CurrentNodeId == currentNodeId);
             }
 
             // 开始时间筛选
@@ -98,6 +101,9 @@
             {
                 instances = instances.Where(m => m.Status == status);
             }
+
+            // 排序
+            instances = instances.OrderByDescending(m => m.Id);
 
             // 分页查询
             return instances.ToPagedList(page, size);
