@@ -9,14 +9,16 @@
     public class FinanceAuidtController : ApiController
     {
         private readonly FinanceAppService financeAppService;
+        private readonly PartnerAppService partnerAppService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FinanceAuidtController" /> class.
         /// </summary>
         /// <param name="financeAppService">融资仓储</param>
-        public FinanceAuidtController(FinanceAppService financeAppService)
+        public FinanceAuidtController(FinanceAppService financeAppService ,PartnerAppService partnerAppService)
         {
             this.financeAppService = financeAppService;
+            this.partnerAppService = partnerAppService;
         }
 
         /// <summary>
@@ -53,6 +55,14 @@
             financeAppService.EditFinanceAuidt(value: value);
 
             return Ok();
+        }
+
+        [HttpGet]
+        public IHttpActionResult GetPageList(int page, int rows, string Search)
+        {
+            var list = partnerAppService.GetPageListByPartner(Search, page, rows);
+
+            return Ok(list);
         }
 
         public IHttpActionResult Create(FinanceApplyViewModel value)

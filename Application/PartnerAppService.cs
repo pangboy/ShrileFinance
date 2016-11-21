@@ -8,8 +8,10 @@
     using Core.Entities.Partner;
     using Core.Interfaces.Repositories;
     using Microsoft.AspNet.Identity;
+    using ViewModels;
     using ViewModels.AccountViewModels;
     using ViewModels.PartnerViewModels;
+    using ViewModels.ProduceViewModel;
     using X.PagedList;
 
     public class PartnerAppService
@@ -115,6 +117,37 @@
             var models = Mapper.Map<IPagedList<PartnerViewModel>>(list);
 
             return models;
+        }
+
+        public PagedListViewModel<ProduceListViewModel> GetPageListByPartner(string Serach, int pageNumber, int pageSize)
+        {
+            if (Serach == null)
+            {
+                Serach = "";
+            }
+            var CreateOf = repository.GetByUser(userManager.CurrentUser());
+            var pagedlist =
+                repository
+                .PagedList(m => m.Id == CreateOf.Id && m.Produces.Any(t => t.Name.Contains(Serach) || t.Code.Contains(Serach)), pageNumber, pageSize);
+
+            var list = pagedlist.SelectMany(m => m.Produces.Select(t => new ProduceListViewModel
+            {
+                Id = t.Id,
+                Code = t.Code,
+                FinancingPeriods = t.FinancingPeriods,
+                CreatedDate = t.CreatedDate,
+                Name = m.Name,
+                RepaymentMethod = t.RepaymentMethod,
+                RepaymentMethodDesc = t.RepaymentMethod.ToString(),
+                MaxFinancingRatio = t.MaxFinancingRatio,
+                MinFinancingRatio = t.MinFinancingRatio,
+                CostRate = t.CostRate,
+                FinalRatio = t.FinalRatio,
+                InterestRate = t.InterestRate,
+                CustomerBailRatio = t.CustomerBailRatio
+            }));
+
+            return new PagedListViewModel<ProduceListViewModel>(new PagedList<ProduceListViewModel>(pagedlist.GetMetaData(), list));
         }
     }
 }

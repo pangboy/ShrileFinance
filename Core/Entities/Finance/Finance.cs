@@ -76,11 +76,6 @@
         public decimal? Bail { get; set; }
 
         /// <summary>
-        /// 手续费
-        /// </summary>
-        public decimal? Cost { get; set; }
-
-        /// <summary>
         /// 一次性付息
         /// </summary>
         public decimal? OnePayInterest { get; set; }
@@ -101,9 +96,14 @@
         public DateTime DateCreated { get; set; }
 
         /// <summary>
-        /// 意向融资金额
+        /// 融资金额
         /// </summary>
-        public decimal? IntentionPrincipal { get; set; }
+        public decimal? Financing { get; set; }
+
+        /// <summary>
+        /// 手续费
+        /// </summary>
+        public decimal? Poundage { get; set; }
 
         /// <summary>
         /// 月供先付期数
