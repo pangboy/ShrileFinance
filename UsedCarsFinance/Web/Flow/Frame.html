@@ -151,7 +151,7 @@
             $(flow.Forms).each(function (i, form) {
                 var frame = frames[form.Id];
 
-                if (frame) {
+                if (frame.ValidData) {
                     isValid &= frame.ValidData();
 
                     if (!isValid) {
