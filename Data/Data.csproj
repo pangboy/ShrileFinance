@@ -281,9 +281,15 @@
       <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
     </Compile>
     <Compile Include="MyContext.cs" />
-    <Compile Include="PDF\CreatePdf.cs" />
-    <Compile Include="PDF\MoneyToUpper.cs" />
-    <Compile Include="PDF\WordHelper.cs" />
+    <Compile Include="PDF\CreatePdf.cs">
+      <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="PDF\MoneyToUpper.cs">
+      <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="PDF\WordHelper.cs">
+      <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs">
       <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
     </Compile>

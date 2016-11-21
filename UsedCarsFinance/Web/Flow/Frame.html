@@ -135,6 +135,7 @@
                     200: function (data) {
                         $.messager.show({ msg: "执行流程成功！" });
 
+                        draft.Clear();
                         uc.CloseWindow();
                     },
                     400: uc.E400
