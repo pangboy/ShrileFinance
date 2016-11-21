@@ -272,6 +272,8 @@ function UCGrid(datagridId) {
 	this.Reset = function () {
 		$(".datagrid-toolbar div:first .textbox-f").textbox("reset");
 		$(".datagrid-toolbar div:first .combobox-f").combobox("reset");
+		$(".datagrid-toolbar form .textbox-f").textbox("reset");
+		$(".datagrid-toolbar form .combobox-f").combobox("reset");
 
 		uc.grid.Reload();
 	}
