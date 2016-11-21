@@ -15,11 +15,12 @@
 
     <script type="text/javascript">
         uc.form = new UCForm(".container");
+        var query = {};
 
         $(function () {
             // 获取参数
-            var query =$.extend(uc.GetParams(), parent.flow.InstanceData);
-            query.FinanceId = parent.flow.RootKey;
+            //query =$.extend(uc.GetParams(), parent.flow.InstanceData);
+            //query.FinanceId = parent.flow.RootKey;
             debugger
             if (query.FinanceId == undefined || query.FinanceId.length == 0) {
                 query.FinanceId = "ED468191-9FAB-E611-80C5-507B9DE4A488";
@@ -30,20 +31,75 @@
             Init(query);
         });
 
+        // LoadData方法
+        function LoadData(data)
+        {
+            if (data) {debugger
+                if (data.IncomeSourceBusiness == "" && data.IncomeSourceWage == "") {
+                    data.IncomeSourceBusiness = 1;
+                }
+
+                $("form[id=CreditExamineReportFrom]>input[type=hidden]").form('load', data);
+                $("form[id=CreditExamineReportFrom] fieldset[id*=f]").each(function (i, e) {
+                    $(e).form('load',data);
+                });
+
+                // 初始化radio
+                f7_InitLiving(data);
+                f12_InitAgeRange(data);
+                f21_InitSurvey(data);
+
+                // 加载审批者
+                LoadAduitPerson(data);
+
+                if (query.state == 0) {
+                    // 禁用所有
+                    Disabled($("fieldset"));
+                    $("fieldset input[type=radio]").next().attr("onclick", "");
+                }
+                else if (query.state == 1) {
+                    // 初审
+                }
+                else if (query.state == 2) {
+                    // 复审
+                }
+            }
+        }
+
+        // 验证数据
+        function ValidData() {
+            if (!$("#CreditExamineReportFrom").form("validate")) {
+                return false;
+            }
+            return true;
+        }
+
+        // 构建数据
+        function BuildData() {
+            var value = $("form[id=CreditExamineReportFrom]").serializeJson();
+
+            // 保证金
+            if (value.Margin1 == undefined && value.Margin2 == undefined) {
+                value.IncreaseMarginReson = "";
+                $("fieldset[id=f11] input[textboxname=IncreaseMarginReson]").textbox('setValue', '');
+            }
+
+            var result = {};
+            result["formName"] = "信审报告";
+            result["buildData"] = value;
+
+            return result;
+        }
+    </script>
+
+    <script type="text/javascript">
         // 初始化
         function Init(query) {
             // 加载页面
             $('form').append($('form>template').html());
             $.parser.parse($('form'));
 
-            setTimeout(function () {
-                // 加载数据
-                LoadData(query);
-            }, 200);
-        }
-
-        // 加载数据
-        function LoadData(query) {
+            // 加载远程数据
             if (query == undefined || query.FinanceId == undefined) {
                 return;
             }
@@ -56,39 +112,12 @@
                 url: '../api/CreditExamine/GetCreditExamine',
                 statusCode: {
                     200: function (data) {
-                        if (data) {
-                            if (data.IncomeSourceBusiness == "" && data.IncomeSourceWage=="")
-                            {
-                                data.IncomeSourceBusiness = 1;
-                            }
-                            
-                            $("form[id=CreditExamineReportFrom]").form('load', data);
-
-                            // 初始化radio
-                            f7_InitLiving(data);
-                            f12_InitAgeRange(data);
-                            f21_InitSurvey(data);
-
-                            // 加载审批者
-                            LoadAduitPerson(data);
-                            
-                            if (query.state == 0) {
-                                // 禁用所有
-                                Disabled($("fieldset"));
-                                $("fieldset input[type=radio]").next().attr("onclick", "");
-                            }
-                            else if (query.state == 1) {
-                                // 初审
-                            }
-                            else if (query.state == 2) {
-                                // 复审
-                            }
-                        }
+                        LoadData(data);
                     }
                 }
             });
         }
-
+        
         // 加载审批者
         function LoadAduitPerson(data) {
             var TrialPerson = $("form>fieldset#f22 div[name=TrialPerson]");
@@ -106,42 +135,6 @@
                     e.find("input[name=PersonId]:hidden").val(data[e.attr('name')].Key);
                 }
             });
-        }
-
-        // 加载临时数据
-        function LoadTempData() {
-            if (parent.flow.InstanceTempData != undefined) {
-                var data = parent.flow.InstanceTempData.D3;
-
-                if (data) {
-                    uc.form.Load(data.CreditExamineReportInfo, "#CreditExamineReportFrom");
-                }
-            }
-        }
-
-        //验证数据
-        function ValidData() {
-            if (!$("#CreditExamineReportFrom").form("validate")) {
-                return false;
-            }
-            return true;
-        }
-
-        //构建数据
-        function BuildData() {
-            var value = $("form[id=CreditExamineReportFrom]").serializeJson();
-
-            // 保证金
-            if (value.Margin1 == undefined && value.Margin2 == undefined) {
-                value.IncreaseMarginReson = "";
-                $("fieldset[id=f11] input[textboxname=IncreaseMarginReson]").textbox('setValue', '');
-            }
-
-            var result = {};
-            result["formName"] = "信审报告";
-            result["buildData"] = value;
-
-            return result;
         }
     </script>
 </head>
@@ -224,7 +217,7 @@
                 <legend>四、共借人信息：</legend>
                 <div class="row">
                     <div class="col-6">
-                        <label>共借人① 姓名:</label>
+                        <label><!--共借人① 姓名-->共借人姓名:</label>
                         <input name="CommonBorrwerName1" class="easyui-textbox" data-options="validType:['ANC','length[1,20]'],required:false,readonly:true" />
                     </div>
                     <div class="col-6" style="display:none">
@@ -245,7 +238,7 @@
                 <legend>五、保证人信息（除渠道外的保证人）：</legend>
                 <div class="row">
                     <div class="col-6">
-                        <label>保证人① 姓名:</label>
+                        <label><!--保证人① 姓名-->保证人姓名:</label>
                         <input name="Guarantor1" class="easyui-textbox" data-options="validType:['ANC','length[1,20]'],required:false,readonly:true" />
                     </div>
                     <div class="col-6" style="display:none">

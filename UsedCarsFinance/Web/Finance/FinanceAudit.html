@@ -16,176 +16,46 @@
 
     <script type="text/javascript">
         uc.form = new UCForm(".container");
+        var query = {};
 
         $(function () {
             // 获取参数
-            var query = $.extend(uc.GetParams(), parent.flow.InstanceData);
-            query.FinanceId = parent.flow.RootKey;
+            //query =$.extend(uc.GetParams(), parent.flow.InstanceData);
+            //query.FinanceId = parent.flow.RootKey;
             debugger
             if (query.FinanceId == undefined || query.FinanceId.length == 0) {
-                query.FinanceId = 'ED468191-9FAB-E611-80C5-507B9DE4A488';
+                query.FinanceId = "ED468191-9FAB-E611-80C5-507B9DE4A488";
+                query.state = 1;
             }
 
             // 初始化
             Init(query);
         });
 
-        // 初始化
-        function Init(query) {
-            LoadData(query);
-        }
-
-        // 加载数据
-        function LoadData(query) {
-            if (query == undefined || query.FinanceId == undefined) {
-                return;
-            }
-
-            // 加载融资审核
-            $.ajax({
-                async: false,
-                method: "GET",
-                data: { financeId: query.FinanceId },
-                url: '../api/FinanceAuidt/GetFinanceAuidt',
-                statusCode: {
-                    200: function (data) {
-                        if (data) {
-                            $("fieldset[name=FinanceAudit]").form('load', data);
-
-                            // 加载融资项
-                            LoadFinancingItem(data.FinancingItems);
-
-                            if (query.state == 0)
-                            {
-                                // 禁用所有
-                                Disabled($("fieldset"));
-                            }
-                            else if (query.state == 1) {
-                                // 初审
-                            }
-                            else if (query.state == 2)
-                            {
-                                // 复审
-                                Review();
-                            }
-                        }
-                    }
-                }
-            });
-        }
-
-        // 加载临时数据
-        function LoadTempData() {
-            if (parent.flow.InstanceTempData != undefined) {
-                var data = parent.flow.InstanceTempData.D4;
-
-                if (data != undefined) {
-                    // 加载初复审信息
-                    if (data.ReviewInfo != null) {
-                        uc.form.Load(data.ReviewInfo, "#review_info");
-
-                        var produceCost = $("input[textboxname=ProduceCost]").textbox("getValue");
-
-                        if (produceCost == "") {
-                            produceCost = "0";
-                            $("input[textboxname=ProduceCost]").textbox("setValue", produceCost);
-                        }
-                    }
-                }
-            }
-        }
-
-        // 加载融资项
-        function LoadFinancingItem(dataKV){
-            if (dataKV == null) {
-                return;
-            }
-
-            // 显示融资项
-            $("fieldset[name=FinancingItems]").show();
-
-            // 从模版中获取控件及拼装
-            $(dataKV).each(function (i, e) {
-                var context = $("fieldset[name=FinancingItems]>template[name=templateUnit]").html();
-                if (context) {
-                    $("fieldset[name=FinancingItems]>div.row").append(context);
-
-                    var div = $("fieldset[name=FinancingItems]>div.row>div:last");
-                    div.addClass('col-6');
-
-                    // 解析控件
-                    $.parser.parse(div);
-
-                    // 设置属性
-                    div.find("label").text(e.Value.Key);
-                    div.find("input[name=Id]").val(e.Key);
-                    div.find("input[textboxname=Money]").textbox({
-                        readonly: false,
-                        required: true,
-                        validType: ['Money']
-                    });
-
-                    // 裸车价
-                    if ($.inArray(e.Value.Key, ["裸车价"])!=-1)
-                    {
-                        div.attr("name","NakedCar")
-                        div.find("span[name=unit]").text("万元");
-                        div.find("input[textboxname=Money]").textbox({
-                            readonly: false,
-                            required: true,
-                            validType: ['Money'],
-                            onChange: SetRatio
-                        });
-                    }
-
-                    // 金额赋值
-                    div.find("input[textboxname=Money]").textbox('setValue',e.Value.Value);
-                }
-            });
-        }
-
-        // 设置融资比例
-        function SetRatio() {
-            if ($("fieldset[name=FinancingItems] div[name=NakedCar]>input")[1] == undefined) {
-                return
-            }
-
-            // 获取裸车价
-            var NakedCarPrice = $("fieldset[name=FinancingItems] div[name=NakedCar]>input[textboxname=Money]").textbox('getValue');
-
-            if (NakedCarPrice == undefined || NakedCarPrice.length == 0 || isNaN(NakedCarPrice) || NakedCarPrice <= 0) {
-                // 融资比例赋值
-                $("fieldset[name=FinanceAudit] input[textboxname*=Ratio]").textbox("setValue", '');
-
-                return;
-            }
-
-            // 获取建议融资金额
-            var AdviceMoney = $("fieldset[name=FinanceAudit] input[textboxname=AdviceMoney]").textbox("getValue");
-
-            if (AdviceMoney != undefined && AdviceMoney.length > 0) {
-
-                // 建议融资比例赋值
-                $("fieldset[name=FinanceAudit] input[textboxname=AdviceRatio]").textbox("setValue", parseInt(100 * parseFloat(AdviceMoney) / parseFloat(NakedCarPrice)));
-            }
-
-            // 获取审批融资金额
-            var ApprovalMoney = $("fieldset[name=FinanceAudit] input[textboxname=ApprovalMoney]").textbox("getValue");
-
-            if (ApprovalMoney != undefined && ApprovalMoney.length > 0) {
-                // 审批融资比例赋值
-                $("fieldset[name=FinanceAudit] input[textboxname=ApprovalRatio]").textbox("setValue", parseInt(100 * parseFloat(ApprovalMoney) / NakedCarPrice));
-            }
-        }
-
-        // 复审 
-        function Review()
+        // LoadData方法
+        function LoadData(data)
         {
-            // 禁用融资项
-            Disabled($("fieldset[name=FinancingItems]"));
+            if (data) {
+                $("fieldset[name=FinanceAudit]").form('load', data);
 
-            // 设置复审标签
-            $("fieldset[name=FinanceAudit]>input[name=IsReview]").val('false');
+                // 加载融资项
+                LoadFinancingItem(data.FinancingItems);
+
+                if (query.state == 0) {
+                    // 禁用所有
+                    Disabled($("fieldset"));
+                }
+                else if (query.state == 1) {
+                    // 初审
+                }
+                else if (query.state == 2) {
+                    // 复审
+
+                    // 禁用融资项及设置复审标签
+                    Disabled($("fieldset[name=FinancingItems]"));
+                    $("fieldset[name=FinanceAudit]>input[name=IsReview]").val('false');
+                }
+            }
         }
 
         //验证数据
@@ -223,6 +93,111 @@
             result["buildData"] = value;
 
             return result;
+        }
+    </script>
+
+    <script type="text/javascript">
+        // 初始化
+        function Init(query) {
+            // 加载远程数据
+            if (query == undefined || query.FinanceId == undefined) {
+                return;
+            }
+
+            // 加载融资审核
+            $.ajax({
+                async: false,
+                method: "GET",
+                data: { financeId: query.FinanceId },
+                url: '../api/FinanceAuidt/GetFinanceAuidt',
+                statusCode: {
+                    200: function (data) {
+                        LoadData(data);
+                    }
+                }
+            });
+        }
+
+        // 加载融资项
+        function LoadFinancingItem(dataKV) {
+            if (dataKV == null) {
+                return;
+            }
+
+            // 显示融资项
+            $("fieldset[name=FinancingItems]").show();
+
+            // 从模版中获取控件及拼装
+            $(dataKV).each(function (i, e) {
+                var context = $("fieldset[name=FinancingItems]>template[name=templateUnit]").html();
+                if (context) {
+                    $("fieldset[name=FinancingItems]>div.row").append(context);
+
+                    var div = $("fieldset[name=FinancingItems]>div.row>div:last");
+                    div.addClass('col-6');
+
+                    // 解析控件
+                    $.parser.parse(div);
+
+                    // 设置属性
+                    div.find("label").text(e.Value.Key);
+                    div.find("input[name=Id]").val(e.Key);
+                    div.find("input[textboxname=Money]").textbox({
+                        readonly: false,
+                        required: true,
+                        validType: ['Money']
+                    });
+
+                    // 裸车价
+                    if ($.inArray(e.Value.Key, ["裸车价"]) != -1) {
+                        div.attr("name", "NakedCar")
+                        div.find("span[name=unit]").text("万元");
+                        div.find("input[textboxname=Money]").textbox({
+                            readonly: false,
+                            required: true,
+                            validType: ['Money'],
+                            onChange: SetRatio
+                        });
+                    }
+
+                    // 金额赋值
+                    div.find("input[textboxname=Money]").textbox('setValue', e.Value.Value);
+                }
+            });
+        }
+
+        // 设置融资比例
+        function SetRatio() {
+            if ($("fieldset[name=FinancingItems] div[name=NakedCar]>input")[1] == undefined) {
+                return
+            }
+
+            // 获取裸车价
+            var NakedCarPrice = $("fieldset[name=FinancingItems] div[name=NakedCar]>input[textboxname=Money]").textbox('getValue');
+
+            if (NakedCarPrice == undefined || NakedCarPrice.length == 0 || isNaN(NakedCarPrice) || NakedCarPrice <= 0) {
+                // 融资比例赋值
+                $("fieldset[name=FinanceAudit] input[textboxname*=Ratio]").textbox("setValue", '');
+
+                return;
+            }
+
+            // 获取建议融资金额
+            var AdviceMoney = $("fieldset[name=FinanceAudit] input[textboxname=AdviceMoney]").textbox("getValue");
+
+            if (AdviceMoney != undefined && AdviceMoney.length > 0) {
+
+                // 建议融资比例赋值
+                $("fieldset[name=FinanceAudit] input[textboxname=AdviceRatio]").textbox("setValue", parseInt(100 * parseFloat(AdviceMoney) / parseFloat(NakedCarPrice)));
+            }
+
+            // 获取审批融资金额
+            var ApprovalMoney = $("fieldset[name=FinanceAudit] input[textboxname=ApprovalMoney]").textbox("getValue");
+
+            if (ApprovalMoney != undefined && ApprovalMoney.length > 0) {
+                // 审批融资比例赋值
+                $("fieldset[name=FinanceAudit] input[textboxname=ApprovalRatio]").textbox("setValue", parseInt(100 * parseFloat(ApprovalMoney) / NakedCarPrice));
+            }
         }
     </script>
 </head>

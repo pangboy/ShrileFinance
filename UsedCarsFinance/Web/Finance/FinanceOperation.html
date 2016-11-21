@@ -15,60 +15,44 @@
     <script src="../BankInfo/JS/validType.js"></script>
 
     <script type="text/javascript">
+        uc.form = new UCForm(".container");
+        var query = {};
+
         $(function () {
             // 获取参数
-            var query = $.extend(uc.GetParams(), parent.flow.InstanceData);
-            query.FinanceId = parent.flow.RootKey;
+            //query =$.extend(uc.GetParams(), parent.flow.InstanceData);
+            //query.FinanceId = parent.flow.RootKey;
             debugger
             if (query.FinanceId == undefined || query.FinanceId.length == 0) {
-                query.FinanceId = 'ED468191-9FAB-E611-80C5-507B9DE4A488';
+                query.FinanceId = "ED468191-9FAB-E611-80C5-507B9DE4A488";
+                query.state = 1;
             }
 
             // 初始化
             Init(query);
         });
 
-        // 初始化
-        function Init(query) {
-            // 运营页面加载
-            LoadOperationPage();
+        // LoadData方法
+        function LoadData(data) {
+            if (data) {
+                // 记录节点类型
+                $('form[name=FinanceOperation]>input[name=NodeType]').val("Operation");
+                // 运营数据加载
+                LoadDataBase(data);
 
-            // 加载数据
-            LoadData(query);
-        }
-
-        // 加载数据
-        function LoadData(query) {
-            if (query == undefined || query.FinanceId == undefined) {
-                return;
-            }
-
-            // 加载运营
-            $.ajax({
-                async: false,
-                method: "GET",
-                data: { financeId: query.FinanceId },
-                url: '../api/Operation/GetOperation',
-                statusCode: {
-                    200: function (data) {
-                        if (data) {
-                            // 运营数据加载
-                            LoadOperationData(data);
-
-                            if (query.state == 0) {
-                                // 禁用所有
-                                Disabled($("fieldset"));
-                            }
-                            else if (query.state == 1) {
-                                // 初审
-                            }
-                            else if (query.state == 2) {
-                                // 复审
-                            }
-                        }
-                    }
+                if (query.state == 0) {
+                    // 禁用所有
+                    Disabled($("fieldset"));
                 }
-            });
+                else if (query.state == 1) {
+                    // 初审
+                    LoadData_Trial(data);
+                }
+                else if (query.state == 2) {
+                    // 复审
+                    LoadData_Review(data);
+                }
+            }
         }
 
         //验证数据
@@ -117,35 +101,34 @@
         }
     </script>
 
-    <!--运营-->
     <script type="text/javascript">
-        // 运营页面加载
-        function LoadOperationPage() {
+        // 初始化
+        function Init(query) {
             // 显示运营页面
             $('form[name=FinanceOperation]').append($('form[name=FinanceOperation] template#Operation').html());
             $.parser.parse($('form[name=FinanceOperation]'));
-        }
 
-        // 运营数据加载
-        function LoadOperationData(data) {
-            if (data == null) {
+
+            // 加载远程数据
+            if (query == undefined || query.FinanceId == undefined) {
                 return;
             }
 
-            // 记录节点类型
-            $('form[name=FinanceOperation]>input[name=NodeType]').val("Operation");
-
-            // 运营
-            LoadDataBase(data);
-
-            // 运营初审
-            //LoadData_Trial(data);
-
-            // 运营复审
-            //LoadData_Review(data);
+            // 加载运营
+            $.ajax({
+                async: false,
+                method: "GET",
+                data: { financeId: query.FinanceId },
+                url: '../api/Operation/GetOperation',
+                statusCode: {
+                    200: function (data) {
+                        LoadData(data);
+                    }
+                }
+            });
         }
 
-        // 运营
+        // 运营基础信息加载
         function LoadDataBase(data) {
             if (data) {
                 // 加载放款信息
