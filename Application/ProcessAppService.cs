@@ -142,7 +142,6 @@
 
             instance.CurrentNode = action.Transfer;
             instance.CurrentUserId = user?.Id;
-            //instance.CurrentUser = user;
 
             if (action.Type == ActionTypeEnum.完成)
             {
@@ -222,6 +221,9 @@
         /// <param name="searchString">标题、用户</param>
         /// <param name="page">页码</param>
         /// <param name="size">尺寸</param>
+        /// <param name="currentNode">当前节点</param>
+        /// <param name="beginTime">开始发起时间</param>
+        /// <param name="endTime">结束发起时间</param>
         /// <returns></returns>
         public IPagedList<InstanceViewModel> DoingPagedList(string searchString, int page, int size, Guid? currentNode = null, DateTime? beginTime = null, DateTime? endTime = null)
         {
@@ -238,6 +240,10 @@
         /// <param name="searchString">标题、用户</param>
         /// <param name="page">页码</param>
         /// <param name="size">尺寸</param>
+        /// <param name="currentNode">当前节点</param>
+        /// <param name="beginTime">开始发起时间</param>
+        /// <param name="endTime">结束发起时间</param>
+        /// <param name="status">流程状态</param>
         /// <returns></returns>
         public IPagedList<InstanceViewModel> DonePagedList(string searchString, int page, int size, Guid? currentNode = null, DateTime? beginTime = null, DateTime? endTime = null, InstanceStatusEnum? status = null)
         {

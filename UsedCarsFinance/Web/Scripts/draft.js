@@ -41,7 +41,7 @@ function Draft(onSave, onLoad) {
 		var searchData = {
 			pageLink: pageLink
 		};
-		debugger;
+
 		$.ajax({
 			async: true,
 			data: searchData,

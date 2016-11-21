@@ -269,19 +269,24 @@
         public string CommonBorrwerName3 { get; set; }
 
         /// <summary>
-        /// 保证人① 姓名
+        /// 保证人姓名
         /// </summary>
-        public string Guarantor1 { get; set; }
+        public IEnumerable<string> Guarantor { get; set; }
 
-        /// <summary>
-        /// 保证人②姓名
-        /// </summary>
-        public string Guarantor2 { get; set; }
+        /////// <summary>
+        /////// 保证人① 姓名
+        /////// </summary>
+        ////public string Guarantor1 { get; set; }
 
-        /// <summary>
-        /// 保证人③姓名
-        /// </summary>
-        public string Guarantor3 { get; set; }
+        /////// <summary>
+        /////// 保证人②姓名
+        /////// </summary>
+        ////public string Guarantor2 { get; set; }
+
+        /////// <summary>
+        /////// 保证人③姓名
+        /////// </summary>
+        ////public string Guarantor3 { get; set; }
 
         /// <summary>
         /// 客户类别

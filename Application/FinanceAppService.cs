@@ -34,7 +34,7 @@
         /// <param name="userManager">用户管理</param>
         /// <param name="roleManager">角色管理</param>
         /// <param name="contractRepository">合同</param>
-        public FinanceAppService(IFinanceRepository repository, AppUserManager userManager, AppRoleManager roleManager, IContractRepository contractRepository ,IPartnerRepository partnerRepository)
+        public FinanceAppService(IFinanceRepository repository, AppUserManager userManager, AppRoleManager roleManager, IContractRepository contractRepository, IPartnerRepository partnerRepository)
         {
             this.repository = repository;
             this.userManager = userManager;
@@ -106,7 +106,7 @@
 
         public string CreateLeaseInfoPdf(Guid financeId)
         {
-           var finance = repository.Get(financeId);
+            var finance = repository.Get(financeId);
             // 合同pdf地址
             string pdfPath = string.Empty;
             using (TransactionScope scope = new TransactionScope())
@@ -138,7 +138,7 @@
                         dt.Rows[0]["[融资租赁合同]"] = hz;
                         pdfName = hz;
                     }
-                    
+
                     pdfPath = pdf.TransformPdf(contractName, contractParams, pdfName);
 
                     if (pdfPath != null)
@@ -178,17 +178,17 @@
                 CCCC = GetYYMM();
 
                 // 获取月初
-                DateTime Time =DateTime.Now.AddDays(1-DateTime.Now.Day);
+                DateTime Time = DateTime.Now.AddDays(1 - DateTime.Now.Day);
 
                 int ddCountBymonth = contractRepository.GetAll(m => m.Date >= Time && m.Date <= DateTime.Now && m.Number.Contains(partnerCode)).ToList().Count;// contract.FindCount(Time, BB).ToString();//当月当渠道的流水号
 
-                int DDlength = ddCountBymonth+1;
+                int DDlength = ddCountBymonth + 1;
                 DDD = DDlength.ToString().PadLeft(3, '0');
 
             }
 
             //组成AAAABBCCCCDDD
-            return  AAAA + partnerCode + CCCC + DDD;
+            return AAAA + partnerCode + CCCC + DDD;
         }
 
         /// <summary>
@@ -201,7 +201,7 @@
             Guid varCreateOf = new Guid();
 
             var finance = repository.Get(financeid);
-            if (finance.CreateOf==null)
+            if (finance.CreateOf == null)
             {
                 error = "未找到系统[渠道编码]";
             }
@@ -295,11 +295,13 @@
             creditExamineReportViewModel.LesseeIdCard = lessee.IdentityType.Equals("身份证") ? lessee.Identity : null;
             creditExamineReportViewModel.LesseeMobile = lessee.Mobile;
 
-            // 共借人
+            // 共借人(最多一个)
             creditExamineReportViewModel.CommonBorrwerName1 = finance.Applicant.ToList().Find(m => m.Type == Applicant.TypeEnum.共同申请人).Name;
 
             // 保证人
-            creditExamineReportViewModel.Guarantor1 = finance.Applicant.ToList().Find(m => m.Type == Applicant.TypeEnum.担保人).Name;
+            creditExamineReportViewModel.Guarantor = from applicant
+                                                     in finance.Applicant.ToList().FindAll(m => m.Type == Applicant.TypeEnum.担保人)
+                                                     select applicant.Name;
 
             // 当前角色
             var curentRole = roleManager.FindByIdAsync(curentUser.RoleId).Result;
