@@ -37,37 +37,33 @@
         {
             if (data) {
                 // 融资比例限制
-                var radio = [];
-                if (data.MinFinancingRatio == undefined)
+                if (data.MinFinancingRatio != undefined && data.MaxFinancingRatio !=undefined)
                 {
-                    data.MinFinancingRatio = 0;
-                }
-                if (data.MaxFinancingRatio == undefined) {
-                    data.MaxFinancingRatio = 0;
-                }
-                radio.push(data.MinFinancingRatio);
-                radio.push(data.MaxFinancingRatio);
-                // 验证扩展(融资比例限制)
-                $.extend($.fn.validatebox.defaults.rules, {
-                    AratioLimit: {
-                        validator: function (value, param) {
-                            return parseFloat(value) >= param[0] && parseFloat(value) <= param[1];
+                    var radio = [];
+                    radio.push(data.MinFinancingRatio);
+                    radio.push(data.MaxFinancingRatio);
+                    // 验证扩展(融资比例限制)
+                    $.extend($.fn.validatebox.defaults.rules, {
+                        AratioLimit: {
+                            validator: function (value, param) {
+                                return parseFloat(value) >= param[0] && parseFloat(value) <= param[1];
+                            },
+                            message: '融资比例介于' + data.MinFinancingRatio + '%至' + data.MaxFinancingRatio + '%之间，请修改建议融资金额或裸车价'
                         },
-                        message: '融资比例介于' + data.MinFinancingRatio + '%至' + data.MaxFinancingRatio + '%之间，请修改建议融资金额或裸车价'
-                    },
-                    FratioLimit: {
-                        validator: function (value, param) {
-                            return parseFloat(value) >= param[0] && parseFloat(value) <= param[1];
-                        },
-                        message: '融资比例介于' + data.MinFinancingRatio + '%至' + data.MaxFinancingRatio + '%之间，请修改审批融资金额或裸车价'
-                    }
-                });
+                        FratioLimit: {
+                            validator: function (value, param) {
+                                return parseFloat(value) >= param[0] && parseFloat(value) <= param[1];
+                            },
+                            message: '融资比例介于' + data.MinFinancingRatio + '%至' + data.MaxFinancingRatio + '%之间，请修改审批融资金额或裸车价'
+                        }
+                    });
 
-                // 建议融资比例添加验证
-                $("input[textboxname = 'AdviceRatio']").textbox({ validType: ["AratioLimit[" + radio + "]"] });
+                    // 建议融资比例添加验证
+                    $("input[textboxname = 'AdviceRatio']").textbox({ validType: ["AratioLimit[" + radio + "]"] });
 
-                // 审批融资比例添加验证
-                $("input[textboxname = 'ApprovalRatio']").textbox({ validType: ["FratioLimit[" + radio + "]"] });
+                    // 审批融资比例添加验证
+                    $("input[textboxname = 'ApprovalRatio']").textbox({ validType: ["FratioLimit[" + radio + "]"] });
+                }
 
                 FieldsetLoadDateFactory("FinanceAudit",'text',data)
 
@@ -80,13 +76,14 @@
                 }
                 else if (query.state == 1) {
                     // 初审
+                    $("fieldset[name=FinanceAudit]>input[name=IsReview]").val('false');
                 }
                 else if (query.state == 2) {
                     // 复审
 
                     // 禁用融资项及设置复审标签
                     Disabled($("fieldset[name=FinancingItems]"));
-                    $("fieldset[name=FinanceAudit]>input[name=IsReview]").val('false');
+                    $("fieldset[name=FinanceAudit]>input[name=IsReview]").val('true');
                 }
             }
         }
@@ -294,7 +291,7 @@
 
                 <div class="col-6">
                     <label>手续费：</label>
-                    <input name="Cost" class="easyui-textbox" data-options="readonly:false,required:true,validType:'Money'" />
+                    <input name="Poundage" class="easyui-textbox" data-options="readonly:false,required:true,validType:'Money'" />
                     <span>元</span>
                 </div>
             </div>

@@ -61,6 +61,9 @@
             // 创建信审
             financeAppService.EditCreditExamine(financeCreditExmine);
 
+            // 修改信审审核人
+            financeAppService.SetApprover(financeAudit.FinanceId);
+
             // 如果执行失败则抛出异常, 或用返回值表示结果.
             if (false)
             {
@@ -73,11 +76,14 @@
         /// </summary>
         public void FinanceReaudit()
         {
-            // 获取数据
-            var finance = GetData<FinanceAuidtViewModel>("58DC5FCF-18A4-E611-80C5-507B9DE4A488");
+            // 获取融资审核数据
+            var financeAudit = GetData<FinanceAuidtViewModel>("58DC5FCF-18A4-E611-80C5-507B9DE4A488");
 
-            // 创建或修改
-            financeAppService.EditFinanceAuidt(finance);
+            // 修改融资审核
+            financeAppService.EditFinanceAuidt(financeAudit);
+
+            // 修改信审审核人
+            financeAppService.SetApprover(financeAudit.FinanceId);
 
             // 如果执行失败则抛出异常, 或用返回值表示结果.
             if (false)

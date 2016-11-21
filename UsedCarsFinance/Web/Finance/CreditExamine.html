@@ -21,6 +21,7 @@
             // 获取参数
             query =$.extend(uc.GetParams(), parent.flow.InstanceData);
             query.FinanceId = parent.flow.RootKey;
+
             if (query.FinanceId == undefined || query.FinanceId.length == 0) {
                 query.FinanceId = "ED468191-9FAB-E611-80C5-507B9DE4A488";
                 query.state = 1;
@@ -43,10 +44,9 @@
                     data.FinanceId = query.FinanceId;
                 }
 
-
                 $("form[id=CreditExamineReportFrom]>input[name=FinanceId]").val(data.FinanceId);
                 $("form[id=CreditExamineReportFrom]>input[name=Id]").val(data.Id);
-                debugger
+                
                 $("form[id=CreditExamineReportFrom] fieldset[id*=f]").each(function (i, e) {
                     if ($(e).attr("id") != "f5") {
                         $(e).form('load', data);

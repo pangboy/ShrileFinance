@@ -57,7 +57,7 @@
                 repository.Commit();
                 value.Id = finance.Id;
             }
-            catch 
+            catch
             {
                 throw new Core.Exceptions.InvalidOperationAppException("保存失败.");
             }
@@ -65,7 +65,7 @@
 
         public PartnerAndUser GetPartnerAndUser()
         {
-           AppUser user = userManager.CurrentUser();
+            AppUser user = userManager.CurrentUser();
             Partner partner = partnerRepository.GetByUser(userManager.CurrentUser());
             return new PartnerAndUser()
             {
@@ -73,7 +73,7 @@
                 UserName = user.Name,
                 Phone = user.PhoneNumber,
             };
-                 
+
         }
         public void Modify(FinanceApplyViewModel model)
         {
@@ -93,7 +93,7 @@
                 throw new Core.Exceptions.InvalidOperationAppException("修改失败.");
             }
 
-         
+
         }
 
         public FinanceApplyViewModel Get(Guid id)
@@ -313,27 +313,23 @@
                 var approveUser = finance.CreditExamine.ApproveUser ?? new AppUser();
                 var finalUser = finance.CreditExamine.FinalUser ?? new AppUser();
 
+                creditExamineReportViewModel.TrialPerson = new KeyValuePair<string, string>(trialUser.Id, trialUser.Name);
+                creditExamineReportViewModel.ReviewPerson = new KeyValuePair<string, string>(reviewUser.Id, reviewUser.Name);
+                creditExamineReportViewModel.ApprovePerson = new KeyValuePair<string, string>(approveUser.Id, approveUser.Name);
+                creditExamineReportViewModel.FinalPerson = new KeyValuePair<string, string>(finalUser.Id, finalUser.Name);
+
                 if (curentRole.Name.Equals("初审员"))
                 {
                     creditExamineReportViewModel.TrialPerson = new KeyValuePair<string, string>(curentUser.Id, curentUser.Name);
                 }
-                else if (curentRole.Name.Equals("复审员"))
+                if (curentRole.Name.Equals("复审员"))
                 {
                     creditExamineReportViewModel.ReviewPerson = new KeyValuePair<string, string>(curentUser.Id, curentUser.Name);
-                    creditExamineReportViewModel.TrialPerson = new KeyValuePair<string, string>(trialUser.Id, trialUser.Name);
                 }
-                else if (curentRole.Name.Equals("审批员"))
+                if (curentRole.Name.Equals("总经理"))
                 {
-                    creditExamineReportViewModel.ApprovePerson = new KeyValuePair<string, string>(curentUser.Id, curentUser.Name);
-                    creditExamineReportViewModel.TrialPerson = new KeyValuePair<string, string>(trialUser.Id, trialUser.Name);
-                    creditExamineReportViewModel.ReviewPerson = new KeyValuePair<string, string>(reviewUser.Id, reviewUser.Name);
-                }
-                else if (curentRole.Name.Equals("终审员"))
-                {
+                    creditExamineReportViewModel.ApprovePerson= new KeyValuePair<string, string>(curentUser.Id, curentUser.Name);
                     creditExamineReportViewModel.FinalPerson = new KeyValuePair<string, string>(curentUser.Id, curentUser.Name);
-                    creditExamineReportViewModel.TrialPerson = new KeyValuePair<string, string>(trialUser.Id, trialUser.Name);
-                    creditExamineReportViewModel.ReviewPerson = new KeyValuePair<string, string>(reviewUser.Id, reviewUser.Name);
-                    creditExamineReportViewModel.ApprovePerson = new KeyValuePair<string, string>(approveUser.Id, approveUser.Name);
                 }
             }
 
@@ -359,14 +355,6 @@
                 return;
             }
 
-            // 当前用户
-            var curentUser = userManager.CurrentUser();
-
-            if (curentUser == null)
-            {
-                return;
-            }
-
             finance.CreditExamine = finance.CreditExamine ?? new CreditExamine();
 
             // 信审ViewModel转信审实体，更新信审
@@ -375,39 +363,36 @@
             // 保证金
             finance.CreditExamine.Margin = value.Margin1 + "-" + value.Margin2;
 
-            // 当前角色
-            var curentRole = roleManager.FindByIdAsync(curentUser.RoleId).Result;
-
-            if (curentRole.Name.Equals("初审员"))
-            {
-                finance.CreditExamine.TrialUser = curentUser;
-
-                finance.CreditExamine.ReviewUser = null;
-                finance.CreditExamine.ApproveUser = null;
-                finance.CreditExamine.FinalUser = null;
-            }
-            else if (curentRole.Name.Equals("复审员"))
-            {
-                finance.CreditExamine.ReviewUser = curentUser;
-
-                finance.CreditExamine.ApproveUser = null;
-                finance.CreditExamine.FinalUser = null;
-            }
-            else if (curentRole.Name.Equals("审批员"))
-            {
-                finance.CreditExamine.ReviewUser = curentUser;
-
-                finance.CreditExamine.FinalUser = null;
-            }
-            else if (curentRole.Name.Equals("终审员"))
-            {
-                finance.CreditExamine.ReviewUser = curentUser;
-            }
-
             repository.Modify(finance);
 
             // 执行修改
             repository.Commit();
+        }
+
+        /// <summary>
+        /// 信审报告设置审批人
+        /// </summary>
+        /// <param name="financeId">融资标识</param>
+        public void SetApprover(Guid financeId)
+        {
+            var currentUser = userManager.CurrentUser();
+            var finance = repository.Get(financeId);
+
+            switch (currentUser.RoleId)
+            {
+                case "BD42BEE1-05A4-E611-80C5-507B9DE4A488":
+                    finance.CreditExamine.TrialUser = currentUser;
+                    break;
+                case "BE42BEE1-05A4-E611-80C5-507B9DE4A488":
+                    finance.CreditExamine.ReviewUser = currentUser;
+                    break;
+                case "C242BEE1-05A4-E611-80C5-507B9DE4A488":
+                    finance.CreditExamine.ApproveUser = currentUser;
+                    finance.CreditExamine.FinalUser = currentUser;
+                    break;
+                default:
+                    break;
+            }
         }
 
         /// <summary>
@@ -444,11 +429,11 @@
             };
 
             // 部分映射 
-            var array = new string[] { "AdviceMoney", "AdviceRatio", "ApprovalMoney", "ApprovalRatio", "Payment", "Cost" };
+            var array = new string[] { "AdviceMoney", "AdviceRatio", "ApprovalMoney", "ApprovalRatio", "Payment", "Poundage" };
             financeAuditViewModel = PartialMapper(finance, financeAuditViewModel, array);
 
             // 映射 融资比例区间
-            financeAuditViewModel = PartialMapper(finance.Produce,financeAuditViewModel,new string[]{ "MinFinancingRatio", "MaxFinancingRatio" });
+            financeAuditViewModel = PartialMapper(finance.Produce, financeAuditViewModel, new string[] { "MinFinancingRatio", "MaxFinancingRatio" });
 
             return financeAuditViewModel;
         }
@@ -473,7 +458,7 @@
             }
 
             // 建议融资金额、建议融资比例、审批融资金额、审批融资比例、月供额度、手续费
-            var array = new string[] { "AdviceMoney", "AdviceRatio", "ApprovalMoney", "ApprovalRatio", "Payment", "Cost" };
+            var array = new string[] { "AdviceMoney", "AdviceRatio", "ApprovalMoney", "ApprovalRatio", "Payment", "Poundage" };
             finance = PartialMapper(value, finance, array);
 
             // 初审 修改融资项各金额
@@ -520,7 +505,7 @@
             // 实际用款额
             operationReportViewModel.ActualAmount = finance.Principal;
 
-            // 选择还款日、首次租金支付日期、保证金、一次性付息、、
+            // 选择还款日、首次租金支付日期、保证金、一次性付息、
             var array = new string[] { "RepaymentDate", "Bail", "RepayRentDate", "OnePayInterest" };
             operationReportViewModel = PartialMapper(finance, operationReportViewModel, array);
 
@@ -600,7 +585,7 @@
             var financingItems = new List<KeyValuePair<Guid, KeyValuePair<string, decimal?>>>();
 
             // 提取融资项
-            finance.FinanceProduce.ToList().ForEach(delegate(FinanceProduce item)
+            finance.FinanceProduce.ToList().ForEach(item =>
             {
                 financingItems.Add(new KeyValuePair<Guid, KeyValuePair<string, decimal?>>(item.Id, new KeyValuePair<string, decimal?>(item.Name, item.Money)));
             });
@@ -619,7 +604,7 @@
             var financingItemList = financingItems.ToList();
 
             // 更新融资项各金额
-            financingItemList.ForEach(delegate(FinanceProduce financingItem)
+            financingItemList.ForEach(financingItem =>
             {
                 // 获取融资项标识
                 var key = financingItem.Id;

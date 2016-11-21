@@ -835,7 +835,7 @@
     <Content Include="Finance\Content\Webppt\image\left-arrow.png" />
     <Content Include="Finance\Content\Webppt\image\right-arrow.png" />
     <Content Include="Finance\Unused\CreditExamineReport.html" />
-    <Content Include="Finance\FinanceEdit.html" />
+    <Content Include="Finance\Unused\FinanceEdit.html" />
     <Content Include="Finance\UploadImages.html" />
     <Content Include="Scripts\bootstrap\bootstrap.js" />
     <Content Include="Scripts\bootstrap\bootstrap.min.js" />

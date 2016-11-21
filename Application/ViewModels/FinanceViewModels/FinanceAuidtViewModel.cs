@@ -61,7 +61,7 @@
         /// <summary>
         /// 手续费
         /// </summary>
-        public decimal? Cost { get; set; }
+        public decimal? Poundage { get; set; }
 
         /// <summary>
         /// 是否为复审
