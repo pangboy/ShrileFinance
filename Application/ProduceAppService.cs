@@ -4,6 +4,8 @@ using System.Linq;
 using Application.ViewModels;
 using Application.ViewModels.ProduceViewModel;
 using AutoMapper;
+using Core.Entities;
+using Core.Entities.Identity;
 using Core.Entities.Produce;
 using Core.Interfaces.Repositories;
 using X.PagedList;
@@ -14,12 +16,17 @@ namespace Application
     {
         private readonly IProduceRepository repository;
         private readonly IFinancingProjectRepository projectRepository;
+        private readonly AppUserManager userManager;
+        private readonly IPartnerRepository partnerRepository;
 
-        public ProduceAppService(IProduceRepository repository, IFinancingProjectRepository projectRepository)
+        public ProduceAppService(IProduceRepository repository, IFinancingProjectRepository projectRepository, AppUserManager userManager, IPartnerRepository partnerRepository)
         {
             this.repository = repository;
             this.projectRepository = projectRepository;
+            this.userManager = userManager;
+            this.partnerRepository = partnerRepository;
         }
+
         public ProduceViewModel Get(Guid id)
         {
             Produce produce = repository.Get(id);
@@ -31,6 +38,7 @@ namespace Application
         public void Create(ProduceViewModel value)
         {
             var produce = Mapper.Map<Produce>(value);
+            produce.FinancingItems = Mapper.Map<ICollection<FinancingItem>>(value.FinancingItems);
             if (value.Poundage != null)
             {
                 foreach (var item in value.Poundage)
@@ -159,5 +167,6 @@ namespace Application
 
             return new PagedListViewModel<ProduceListViewModel>(new PagedList<ProduceListViewModel>(pagedlist.GetMetaData(), list));
         }
+
     }
 }

@@ -1,5 +1,6 @@
 ﻿namespace Application
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using AutoMapper;
@@ -24,7 +25,7 @@
                 else
                 {
                     entity = Mapper.Map<TEntity>(model);
-
+                    
                     entities.Add(entity);
                 }
             }

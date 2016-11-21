@@ -47,7 +47,8 @@
             CreateMap<InstitutionIncomeExpenditureViewModel, InstitutionIncomeExpenditure>();
             CreateMap<InstitutionLiabilitiesViewModel, InstitutionLiabilities>();
 
-            CreateMap<ViewModels.ProduceViewModel.ProduceViewModel, Produce>();
+            CreateMap<ViewModels.ProduceViewModel.ProduceViewModel, Produce>()
+                .ForMember(d=>d.FinancingItems, opt => opt.Ignore());
             CreateMap<FinancingItemViewModel, FinancingItem>();
             CreateMap<FinancingProjectViewModel, FinancingProject>();
 
@@ -58,7 +59,8 @@
             CreateMap<ApplicationViewModel, Applicant>();
             CreateMap<VehicleViewModel, Vehicle>();
             CreateMap<FinanceApplyViewModel, Finance>()
-            /*   .ForMember(d => d.FinanceProduce, opt => opt.Ignore()).ForMember(d => d.Applicant, opt => opt.Ignore())*/;
+             .ForMember(d => d.FinanceProduce, opt => opt.Ignore())
+             .ForMember(d => d.Applicant, opt => opt.Ignore());
             CreateMap<FinanceProduceViewModel, FinanceProduce>();
         }
     }
