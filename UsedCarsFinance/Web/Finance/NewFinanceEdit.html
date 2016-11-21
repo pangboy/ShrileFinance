@@ -115,62 +115,50 @@
         uc.form = new UCForm(".container");
 
         $(function () {
+            $(".ac-1").attr("checked",true)
             Init();
         });
 
         function Init() {
-            //var query;
-            //// 首次进行融资申请时,不存在InstanceData
-            //if (typeof (parent.flow.InstanceData) == "undefined") {
-            //    query = uc.GetParams();
-            //}
-            //// 合并URL参数和流程参数
-            //else {
-            //    query = $.extend(uc.GetParams(), parent.flow.InstanceData);
-            //}
-
             LoadBrand();
-            //if (query.Status == "1") {
-
-            //} else {
-            //}
-
-            //if (query.FinanceId) {
-            //    LoadData(query.FinanceId);
-            //}
-
-            //$("#InstanceId").val(parent.flow.InstanceId);
-            //$("#OncePayMonthsDiv").hide();
-            //$("#OncePayMonths").textbox({ required: false });
-            LoadFinance();
+            if (parent.flow.RootKey != undefined) {
+                GetByFinanceId();
+            }
         }
         //加载融资信息
-        function LoadFinance() {
-            var Id = "AFFEA390-C7AB-E611-80C6-507B9DE4A488";
+        function GetByFinanceId() {
             $.ajax({
                 async: false,
-                data: { Id: Id },
+                data: { Id: parent.flow.RootKey },
                 type: "GET",
                 url: "../api/FinanceAuidt/Get",
                 statusCode: {
                     200: function (data) {
-                        if (data != null) {
-                            $("#financeId").val(data.Id);
-                            $("#produce").form("load", data);
-                            $("#produce").form("load", data.Produce);
-                            CheckProduce();
-                            FinanceProduce(data.FinanceProduce);
-                            $("#Vehicle").form("load", data.Vehicle);
-                            $("select[comboname='MakeCode']").combobox("unselect", data.Vehicle.MakeCode).combobox("select", data.Vehicle.MakeCode);
-                            $("select[comboname='FamilyCode']").combobox("select", data.Vehicle.FamilyCode);
-                            $("select[comboname='VehicleKey']").combobox("select", data.Vehicle.VehicleKey);
-                            //加载联系人
-                            LoadApplicant(data);
-                        }
+                        LoadData(data);
                     }
                 }
             });
         }
+        function LoadData(data){
+            if (data != null) {
+                $("#financeId").val(data.Id);
+                $("#produce").form("load", data);
+                $("#produce").form("load", data.Produce);
+                CheckProduce();
+                FinanceProduce(data.FinanceProduce);
+                $("#Phone").textbox("setValue", data.CreateBy.Phone)
+                $("#Name").textbox("setValue", data.CreateBy.Username)
+                $("#ProxyArea").textbox("setValue", data.CreateOf.ProxyArea)
+
+                $("#Vehicle").form("load", data.Vehicle);
+                $("select[comboname='MakeCode']").combobox("unselect", data.Vehicle.MakeCode).combobox("select", data.Vehicle.MakeCode);
+                $("select[comboname='FamilyCode']").combobox("select", data.Vehicle.FamilyCode);
+                $("select[comboname='VehicleKey']").combobox("select", data.Vehicle.VehicleKey);
+                //加载联系人
+                LoadApplicant(data);
+            }
+        }
+
         //加载联系人信息
         function LoadApplicant(data) {
             for (var i = 0; i < data.Applicant.length; i++) {
@@ -193,7 +181,7 @@
                     //担保人
                 else if (data.Applicant[i].Type == "3") {
                     AddGuarantee()
-                    $("#Guarantee"+guarantees).form("load", data.Applicant[i]);
+                    $("#guarantee" + guarantees).form("load", data.Applicant[i]);
                 }
                     //联系人
                 else {
@@ -426,7 +414,7 @@
             guarantees++;
             var template = document.querySelector("#GuaranteeTemplate");
             var clone = document.importNode(template.content, true);
-            $('<fieldset>').attr({ "id": "guarantee" + guarantees, "class": "applicant", "style": "margin:20px 0" }).append(clone).appendTo("#GuaranteeContent")
+            $('<fieldset>').attr({ "id": "guarantee" + guarantees, "class": "applicant", "style": "margin-left:20px" }).append(clone).appendTo("#GuaranteeContent")
             $.parser.parse('#guarantee' + guarantees);
         }
 
@@ -435,7 +423,7 @@
             contents++;
             var template = document.querySelector("#contactTemplate");
             var clone = document.importNode(template.content, true);
-            $('<fieldset>').attr({ "id": "contact" + contents, "class": "applicant", "style": "margin:20px 0" }).append(clone).appendTo("#ContactContent")
+            $('<fieldset>').attr({ "id": "contact" + contents, "class": "applicant", "style": "margin-left:20px" }).append(clone).appendTo("#ContactContent")
             $.parser.parse('#contact' + contents);
         }
         //增加共同申请人
@@ -444,7 +432,7 @@
                 joints++;
                 var template = document.querySelector("#jointTemplate");
                 var clone = document.importNode(template.content, true);
-                $('<fieldset>').attr({ "id": "joint" + joints, "class": "applicant", "style": "margin:20px 0" }).append(clone).appendTo("#JointContent")
+                $('<fieldset>').attr({ "id": "joint" + joints, "class": "applicant", "style": "margin-left:20px" }).append(clone).appendTo("#JointContent")
                 $.parser.parse('#joint' + joints);
             }
             else {
@@ -477,52 +465,6 @@
             $("#Code").textbox("setValue", row["Code"]);
             $("#dd").dialog('close');
         }
-
-        function Submit() {
-            //调用getEditingRowIndexs当点击保存时候保存手续费和融资项中的值到datagrid
-            $('#Poundage').datagrid('getEditingRowIndexs');
-            $('#Financing').datagrid('getEditingRowIndexs');
-
-            var data = {};
-            var ff = $(".container").find("article")
-            for (var i = 0; i < ff.length - 1; i++) {
-                temp = $(ff[i]).attr("class");
-                var fs = new Array();
-                var fieldset = $(ff[i]).children("fieldset");
-                data[temp] = $(fieldset[0]).serializeJson();
-            }
-            //申请人中由于包括自有住房和联系人部分嵌套的fieldset所以单独处理
-            var app = [];//用于存放联系人信息
-            var house = [];//用于存放自有住房信息
-            for (var i = 0; i < $(ff[ff.length - 1]).find("fieldset").length; i++) {
-                var findclass = $($(ff[ff.length - 1]).find("fieldset")[i]).attr("class");
-                if (findclass == "applicant") {
-                    app.push($($(ff[ff.length - 1]).find("fieldset")[i]).serializeJson());
-                }
-                else if (findclass == "house") {
-                    house.push($($(ff[ff.length - 1]).find("fieldset")[i]).serializeJson());
-                }
-            }
-
-            //将自有住房添加到主要申请人中
-            app[0]["OwnHouse"] = JSON.stringify(house);
-            //将主要申请人信息存放到数组中
-            data["Applicant"] = app;
-            data["ProduceId"] = $("#ProduceId").val();;
-            data["IntentionPrincipal"] = $("#IntentionPrincipal").textbox("getValue");
-            data["OncePayMonths"] = $("#OncePayMonths").textbox("getValue");
-            data["FinanceProduce"] = $('#Financing').datagrid('getRows');
-            data["Id"] =$("#financeId").val();
-            for (var i = 0; i < $('#Poundage').datagrid('getRows').length; i++) {
-                data["FinanceProduce"].push($('#Poundage').datagrid('getRows')[i])
-            }
-            uc.form.Submit({
-                method: "POST",
-                url: "../api/FinanceAuidt/Modify",
-                data: data
-            });
-        }
-
 
         //验证数据
         function ValidData() {
@@ -611,24 +553,24 @@
             <input id="ac-1" class="ac-1" name="accordion-1" type="checkbox" />
             <label for="ac-1" class="ac">基本信息</label>
             <article class="Vehicle">
-                <fieldset id="Vehicle" style="margin-bottom:0px">
+                <fieldset id="Vehicle" style="margin-bottom:0px;padding-left:20px">
                     <input name="Id" id="Id" type="hidden" />
                     <legend>联系人信息</legend>
                     <div class="row">
                         <div class="col-6">
                             <label>渠道名称:</label>
-                            <input name="ProxyArea" class="easyui-textbox" readonly />
+                            <input name="ProxyArea" id="ProxyArea" class="easyui-textbox" readonly />
                         </div>
 
                         <div class="col-6">
                             <label>联系人:</label>
-                            <input name="Name" class="easyui-textbox" readonly />
+                            <input name="Name" id="Name" class="easyui-textbox" readonly />
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-6">
                             <label>电话:</label>
-                            <input name="Phone" class="easyui-textbox" readonly />
+                            <input name="Phone" id="Phone" class="easyui-textbox" readonly />
                         </div>
                     </div>
 
@@ -717,7 +659,7 @@
             <input id="ac-2" class="ac-1" name="accordion-1" type="checkbox" />
             <label for="ac-2" class="ac">租赁信息</label>
             <article class="produce">
-                <fieldset id="produce">
+                <fieldset id="produce" style="margin-bottom:0px;padding:0 20px">
                     <legend>租赁信息</legend>
                     <input name="Id" id="Id" type="hidden" />
 
@@ -854,7 +796,7 @@
             <input id="ac-3" class="ac-1" name="accordion-1" type="checkbox" />
             <label for="ac-3" class="ac">申请人信息</label>
             <article class="people">
-                <fieldset id="mainapplicant" class="applicant">
+                <fieldset id="mainapplicant" class="applicant" style="margin-bottom:0px;padding-left:20px;padding-top:0px;">
                     <div class="hidden">
                         <input name="Type" type="hidden" value="1" />
                         <input name="Id" type="hidden" />
@@ -1132,7 +1074,7 @@
                     </template>
                 </fieldset>
 
-                <fieldset id="joint" class="applicant">
+                <fieldset id="joint">
                     <legend>共同申请人
                         <a class="add" onclick="AddJoint()">
                             <img src="images/add.png" />
@@ -1261,7 +1203,7 @@
                    
                 </fieldset>
 
-                <fieldset id="Guarantee" class="applicant">
+                <fieldset id="Guarantee">
                     <legend>担保人
                         <a class="add" onclick="AddGuarantee()">
                             <img src="images/add.png" />
@@ -1494,10 +1436,6 @@
                     </div>
                 </div>
             </div>
-        </div>
-
-        <div id="btn">
-            <a id="save" class="easyui-linkbutton" href="javascript:void(0)" data-options="iconCls:'icon-save',onClick:Submit">保存</a>
         </div>
     </form>
 </body>

@@ -58,7 +58,7 @@
             CreateMap<ApplicationViewModel, Applicant>();
             CreateMap<VehicleViewModel, Vehicle>();
             CreateMap<FinanceApplyViewModel, Finance>()
-               .ForMember(d => d.FinanceProduce, opt => opt.Ignore()).ForMember(d => d.Applicant, opt => opt.Ignore());
+            /*   .ForMember(d => d.FinanceProduce, opt => opt.Ignore()).ForMember(d => d.Applicant, opt => opt.Ignore())*/;
             CreateMap<FinanceProduceViewModel, FinanceProduce>();
         }
     }

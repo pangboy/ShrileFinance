@@ -136,6 +136,10 @@
     <Compile Include="Migrations\201611200908369_DraftModel.Designer.cs">
       <DependentUpon>201611200908369_DraftModel.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201611210319019_UpdateVehicleDate.cs" />
+    <Compile Include="Migrations\201611210319019_UpdateVehicleDate.Designer.cs">
+      <DependentUpon>201611210319019_UpdateVehicleDate.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs">
       <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
     </Compile>
@@ -360,6 +364,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201611200908369_DraftModel.resx">
       <DependentUpon>201611200908369_DraftModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611210319019_UpdateVehicleDate.resx">
+      <DependentUpon>201611210319019_UpdateVehicleDate.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using AccountViewModels;
     using Core.Entities.Finance;
 
     public class FinanceApplyViewModel : IEntityViewModel
@@ -110,6 +111,16 @@
         /// 首次租金支付日期
         /// </summary>
         public DateTime? RepayRentDate { get; set; }
+
+        /// <summary>
+        /// 创建者
+        /// </summary>
+        public UserViewModel CreateBy { get; set; }
+
+        /// <summary>
+        /// 渠道
+        /// </summary>
+        public PartnerViewModels.PartnerViewModel CreateOf { get; set; }
 
         /// <summary>
         /// 联系人
