@@ -13,48 +13,59 @@
         var Status = {};
 
 		var flow = {
-			InstanceId: 0,
-			InstanceData: {}
-		};
-		var binder = {
-			addBinder: function (type, obj) { }
+		    InstanceId: "",
+            RootKey: ""
 		};
 
 		$(function () {
-			Init();
+		    flow.InstanceId = uc.GetParams().instanceId;
+
+		    if (flow.InstanceId) {
+		        LoadFrame(flow.InstanceId);
+		    }
 		});
 
-		function Init() {
-			var query = uc.GetParams();
-			Status = query.Status;
+		function LoadFrame(instanceId) {
 			$.ajax({
-				async: false,
-				data: { instanceId: query.instanceId },
+				async: true,
+				data: { instanceId: instanceId },
 				method: "GET",
-				url: "../api/Flow/FrameView",
+				url: "../api/Instance/GetFrameView",
 				statusCode: {
 					200: function (data) {
-						RanderTabs(data.Menus);
+					    flow.RootKey = data.RootKey;
 
-						flow.InstanceId = query.instanceId;
-						flow.InstanceData = data.XMLData && JSON.parse(data.XMLData);
+					    RanderTabs(data.Forms);
 					}
 				}
 			});
 		}
 
-		function RanderTabs(tabs) {
-			$(tabs).each(function (i) {
-				$("#tabs").tabs("add", {
-					title: this.Name
-				});
-                $("#tabs").tabs("getTab", i).data("url", this.Link+ "?Status=" + Status);
-			});
+		function RanderTabs(forms) {
+		    var openIndex;
 
-			$("#tabs").tabs("select", 0);
+		    $(forms).each(function (i, form) {
+		        var link = form.Link;
+
+		        link += "?state=" + form.State;
+
+		        if (openIndex == undefined && form.IsOpen) {
+		            openIndex = i;
+		        }
+
+		        $("#tabs").tabs("add", {
+		            title: form.Name
+		        }).tabs("getTab", i).data("url", link);
+		    });
+
+		    if (forms.length > 0) {
+		        $("#tabs").tabs("select", openIndex || 0);
+		    }
 		}
+
 		function TabSelect(title, index) {
-			var tab = $("#tabs").tabs("getSelected");
+		    var tab = $("#tabs").tabs("getSelected");
+
 			var url = tab.data("url");
 
 			if (url) {
