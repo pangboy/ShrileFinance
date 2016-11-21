@@ -56,6 +56,11 @@
         public string MakeCode { get; set; }
 
         /// <summary>
+        /// 车况
+        /// </summary>
+        public int VehicleCondition { get; set; }
+
+        /// <summary>
         /// 系列
         /// </summary>
         public string FamilyCode { get; set; }

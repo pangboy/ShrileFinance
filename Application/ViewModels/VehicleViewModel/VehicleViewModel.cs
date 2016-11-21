@@ -22,6 +22,11 @@
         public string VehicleKey { get; set; }
 
         /// <summary>
+        /// 车况
+        /// </summary>
+        public int VehicleCondition { get; set; }
+
+        /// <summary>
         /// 厂商指导价
         /// </summary>
         public decimal ManufacturerGuidePrice { get; set; }

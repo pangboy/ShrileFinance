@@ -120,8 +120,8 @@
                     var finance = financeRepository.Get(instance.RootKey.Value);
 
                     // TODO: 模拟合作商
-                    //var partner = finance.CreateOf;
-                    var partner = partnerRepository.Get(new Guid("341fac9b-6aac-e611-80c6-507b9de4a488"));
+                    var partner = finance.CreateOf;
+                    //var partner = partnerRepository.Get(new Guid("341fac9b-6aac-e611-80c6-507b9de4a488"));
 
                     user = partner.Approvers.Single(m => m.RoleId == action.Transfer.RoleId);
                     break;
