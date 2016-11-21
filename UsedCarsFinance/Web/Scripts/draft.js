@@ -84,7 +84,9 @@ function Draft(onSave, onLoad) {
 	this.AutoSave = function (millisec) {
 		var millisec = millisec || (3 * 60 * 1000);
 
-		interval = setInterval(this.Save, millisec);
+		setTimeout(function () {
+			interval = setInterval(this.Save, millisec);
+		}, millisec);
 
 		top.$.messager.show({ msg: "自动保存草稿已开启（" + (millisec / 60 / 1000) + "分钟）！" });
 	}
