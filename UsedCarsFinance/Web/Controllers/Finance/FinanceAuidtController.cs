@@ -4,7 +4,9 @@
     using System.Data;
     using System.Web.Http;
     using Application;
+    using Application.ViewModels;
     using Application.ViewModels.FinanceViewModels;
+    using Application.ViewModels.ProduceViewModel;
 
     public class FinanceAuidtController : ApiController
     {
@@ -62,7 +64,7 @@
         {
             var list = partnerAppService.GetPageListByPartner(Search, page, rows);
 
-            return Ok(list);
+            return Ok(new PagedListViewModel<ProduceListViewModel>(list));
         }
 
         public IHttpActionResult Create(FinanceApplyViewModel value)

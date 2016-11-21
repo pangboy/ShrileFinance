@@ -53,7 +53,7 @@ namespace Data.PDF
             //bool Is = wdHelp.OpenAndActive(url1, false, false);
             //if (Is)
             //{
-            string path = @"~\upload\PDF\";
+           // string path = @"~\upload\PDF\";
                 object fullpath = url;// HttpContent.Current.Server.MapPath(path);
 
                 //if (Directory.Exists(fullpath))
@@ -120,7 +120,7 @@ namespace Data.PDF
 
 
                 } 
-            catch (Exception ex)
+            catch
             {
 
             }

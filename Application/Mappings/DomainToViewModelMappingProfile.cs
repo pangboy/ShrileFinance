@@ -11,7 +11,6 @@
     using ViewModels.FinanceViewModels;
     using ViewModels.OrganizationViewModels;
     using ViewModels.PartnerViewModels;
-    using ViewModels.ProduceViewModel;
     using ViewModels.VehicleViewModel;
     using X.PagedList;
 
@@ -66,14 +65,14 @@
             CreateMap<InstitutionLiabilities, InstitutionLiabilitiesViewModel>();
 
             CreateMap<Produce, ViewModels.ProduceViewModel.ProduceViewModel>();
-            CreateMap<FinancingItem, FinancingItemViewModel>();
-            CreateMap<FinancingProject, FinancingProjectViewModel>();
+            CreateMap<Produce, ViewModels.ProduceViewModel.ProduceListViewModel>();
+            CreateMap<FinancingItem, ViewModels.ProduceViewModel.FinancingItemViewModel>();
+            CreateMap<FinancingProject, ViewModels.ProduceViewModel.FinancingProjectViewModel>();
             CreateMap<Finance, FinanceApplyViewModel>();
             CreateMap<Vehicle, VehicleViewModel>();
             CreateMap<Applicant, ApplicationViewModel>();
 
             CreateMap<CreditExamine, CreditExamineViewModel>();
-            // 运营
             CreateMap<FinanceExtension, OperationViewModel>();
             CreateMap<FinanceProduce, FinanceProduceViewModel>();
         }

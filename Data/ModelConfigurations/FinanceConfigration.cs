@@ -52,10 +52,10 @@
             HasOptional(m => m.FinanceExtension).WithOptionalPrincipal().Map(m => m.MapKey("FinanceId")).WillCascadeOnDelete();
 
             ////合作商
-            //HasOptional(m => m.CreateOf).WithOptionalPrincipal().Map(m => m.MapKey("FinanceId")).WillCascadeOnDelete();
+           ////HasOptional(m => m.CreateOf).WithOptionalPrincipal().Map(m => m.MapKey("FinanceId")).WillCascadeOnDelete();
 
             ////用户
-            //HasOptional(m => m.CreateBy).WithOptionalPrincipal().Map(m => m.MapKey("FinanceId")).WillCascadeOnDelete();
+            ////HasOptional(m => m.CreateBy).WithOptionalPrincipal().Map(m => m.MapKey("FinanceId")).WillCascadeOnDelete();
 
             ToTable("FANC_Finance");
         }

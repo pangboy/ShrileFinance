@@ -105,7 +105,7 @@
         /// <summary>
         /// 月供先付期数
         /// </summary>
-        public int OncePayMonths { get; set; }
+        public int? OncePayMonths { get; set; }
 
         /// <summary>
         /// 首次租金支付日期

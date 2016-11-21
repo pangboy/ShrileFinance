@@ -27,13 +27,6 @@
         private readonly IContractRepository contractRepository;
         private readonly IPartnerRepository partnerRepository;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="FinanceAppService" /> class.
-        /// </summary>
-        /// <param name="repository">融资仓储</param>
-        /// <param name="userManager">用户管理</param>
-        /// <param name="roleManager">角色管理</param>
-        /// <param name="contractRepository">合同</param>
         public FinanceAppService(IFinanceRepository repository, AppUserManager userManager, AppRoleManager roleManager, IContractRepository contractRepository, IPartnerRepository partnerRepository)
         {
             this.repository = repository;
@@ -57,7 +50,7 @@
                 repository.Commit();
                 value.Id = finance.Id;
             }
-            catch
+            catch 
             {
                 throw new Core.Exceptions.InvalidOperationAppException("保存失败.");
             }
@@ -65,16 +58,16 @@
 
         public PartnerAndUser GetPartnerAndUser()
         {
-            AppUser user = userManager.CurrentUser();
+           AppUser user = userManager.CurrentUser();
             Partner partner = partnerRepository.GetByUser(userManager.CurrentUser());
             return new PartnerAndUser()
             {
-                PartnerName = partner.ProxyArea,
+                PartnerName = partner.Name,
                 UserName = user.Name,
                 Phone = user.PhoneNumber,
             };
-
         }
+
         public void Modify(FinanceApplyViewModel model)
         {
             try
@@ -92,8 +85,6 @@
             {
                 throw new Core.Exceptions.InvalidOperationAppException("修改失败.");
             }
-
-
         }
 
         public FinanceApplyViewModel Get(Guid id)
@@ -107,6 +98,7 @@
         public string CreateLeaseInfoPdf(Guid financeId)
         {
             var finance = repository.Get(financeId);
+
             // 合同pdf地址
             string pdfPath = string.Empty;
             using (TransactionScope scope = new TransactionScope())
@@ -114,7 +106,8 @@
                 var mainApplicant = finance.Applicant.Where(m => m.Type == Applicant.TypeEnum.主要申请人).FirstOrDefault();
                 if (mainApplicant != null)
                 {
-                    string hz = GetContractNum("HZ", financeId);//融资租赁合同编号代码
+                    // 融资租赁合同编号代码
+                    string hz = GetContractNum("HZ", financeId);
 
                     // 获取融资信息
                     SqlParameter[] sqlparams = new SqlParameter[1];
@@ -149,58 +142,61 @@
                             Name = "融资租赁合同",
                             Number = pdfName,
                             Path = pdfPath
-
                         });
+
                         repository.Modify(finance);
                         repository.Commit();
                     }
                 }
             }
+
             return pdfPath;
         }
 
         public string GetContractNum(string type, Guid financeid)
         {
-            string error = "";
-            string AAAA = "";
-            string CCCC = "";
-            string DDD = "";
+            string error = string.Empty;
+            string aaaa = string.Empty;
+            string cccc = string.Empty;
+            string dddd = string.Empty;
 
-            //合作商编码
+            // 合作商编码
             var partnerCode = "01";
 
-            //查询合作商ID
-            Guid BB = FindByCreateOf(financeid, ref error);
-            if (BB != null && error == "")
+            // 查询合作商ID
+            Guid bb = FindByCreateOf(financeid, ref error);
+            if (bb != null && error == string.Empty)
             {
-                AAAA = GetCityCode(BB);
+                aaaa = GetCityCode(bb);
 
-                CCCC = GetYYMM();
+                cccc = GetYYMM();
 
                 // 获取月初
-                DateTime Time = DateTime.Now.AddDays(1 - DateTime.Now.Day);
+                DateTime time = DateTime.Now.AddDays(1 - DateTime.Now.Day);
 
-                int ddCountBymonth = contractRepository.GetAll(m => m.Date >= Time && m.Date <= DateTime.Now && m.Number.Contains(partnerCode)).ToList().Count;// contract.FindCount(Time, BB).ToString();//当月当渠道的流水号
+                // 月当渠道的流水号
+                // contract.FindCount(Time, BB).ToString();
+                int countBymonth = contractRepository.GetAll(m => m.Date >= time && m.Date <= DateTime.Now && m.Number.Contains(partnerCode)).ToList().Count;
 
-                int DDlength = ddCountBymonth + 1;
-                DDD = DDlength.ToString().PadLeft(3, '0');
-
+                int ddlength = countBymonth + 1;
+                dddd = ddlength.ToString().PadLeft(3, '0');
             }
 
-            //组成AAAABBCCCCDDD
-            return AAAA + partnerCode + CCCC + DDD;
+            // 组成AAAABBCCCCDDD
+            return aaaa + partnerCode + cccc + dddd;
         }
 
         /// <summary>
         /// 查找系统渠道ID
         /// </summary>
-        /// <param name="financeid">融资id</param>
-        /// <returns>01</returns>
-        public Guid FindByCreateOf(Guid financeid, ref string error)
+        /// <param name="financeId">融资ID</param>
+        /// <param name="error">错误提示</param>
+        /// <returns></returns>
+        public Guid FindByCreateOf(Guid financeId, ref string error)
         {
             Guid varCreateOf = new Guid();
 
-            var finance = repository.Get(financeid);
+            var finance = repository.Get(financeId);
             if (finance.CreateOf == null)
             {
                 error = "未找到系统[渠道编码]";
@@ -225,14 +221,14 @@
         /// <summary>
         /// 获得城市代码1200天津市
         /// </summary>
-        /// <param name="partnerId"></param>
+        /// <param name="partnerId">合作商ID</param>
         /// <returns></returns>
         public string GetCityCode(Guid partnerId)
         {
             var partner = partnerRepository.Get(partnerId);
 
-            //由于没有城市代码先手动赋值
-            //return partner.City;
+            // 由于没有城市代码先手动赋值
+            // return partner.City;
             return "1010";
         }
 
@@ -331,7 +327,7 @@
                     creditExamineReportViewModel.ApprovePerson= new KeyValuePair<string, string>(curentUser.Id, curentUser.Name);
                     creditExamineReportViewModel.FinalPerson = new KeyValuePair<string, string>(curentUser.Id, curentUser.Name);
                 }
-            }
+                }
 
             return creditExamineReportViewModel;
         }
@@ -367,14 +363,14 @@
 
             // 执行修改
             repository.Commit();
-        }
+            }
 
         /// <summary>
         /// 信审报告设置审批人
         /// </summary>
         /// <param name="financeId">融资标识</param>
         public void SetApprover(Guid financeId)
-        {
+            {
             var currentUser = userManager.CurrentUser();
             var finance = repository.Get(financeId);
 
@@ -428,7 +424,7 @@
                 FinancingItems = GetFinancingItems(finance)
             };
 
-            // 部分映射 
+            // 部分映射
             var array = new string[] { "AdviceMoney", "AdviceRatio", "ApprovalMoney", "ApprovalRatio", "Payment", "Poundage" };
             financeAuditViewModel = PartialMapper(finance, financeAuditViewModel, array);
 
