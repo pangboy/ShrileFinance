@@ -20,12 +20,12 @@
 
         $(function () {
             // 获取参数
-            query = $.extend(uc.GetParams(), parent.flow.InstanceData);
-            query.FinanceId = parent.flow.RootKey;
+            //query = $.extend(uc.GetParams(), parent.flow.InstanceData);
+            //query.FinanceId = parent.flow.RootKey;
             debugger
             if (query.FinanceId == undefined || query.FinanceId.length == 0) {
                 query.FinanceId = "ED468191-9FAB-E611-80C5-507B9DE4A488";
-                query.state = 1;
+                query.state = 2;
             }
 
             // 初始化
@@ -37,19 +37,36 @@
             if (data) {
                 // 记录节点类型
                 $('form[name=FinanceOperation]>input[name=NodeType]').val("Operation");
-                // 运营数据加载
+                debugger
+                // 加载放款信息、还款信息
+                FieldsetLoadDateFactory("CreditBankInfo", 'text', data);
+                FieldsetLoadDateFactory("CustomerBankInfo", 'text', data);
+                $('fieldset[name=CreditBankInfo] select[comboname=LoanPrincipal]').combobox('unselect', data.LoanPrincipal).combobox('select', data.LoanPrincipal);
+
+                // 加载运营基础信息(租赁信息)
                 LoadDataBase(data);
+
+                // 加载融资项
+                LoadFinancingItem(data.FinancingItems);
+
+                // 加载手续费
+                LoadFinancingCost(data.FinanceCosts);
 
                 if (query.state == 0) {
                     // 禁用所有
                     Disabled($("fieldset"));
+
+                    // 禁用合同
+                    ContactCheck = false;
+                    $('fieldset[name=Contact] div[id=Contact_tb]').hide();
+                    Disabled($('fieldset[name=Contact]'));
                 }
                 else if (query.state == 1) {
-                    // 初审
+                    // 运营
                     LoadData_Trial(data);
                 }
                 else if (query.state == 2) {
-                    // 复审
+                    // 客户
                     LoadData_Review(data);
                 }
             }
@@ -154,18 +171,25 @@
             }
         }
 
-        // 运营初审
+        // 运营
         function LoadData_Trial(data) {
-            if (data.FinancingItems != null) {
-                // 加载融资项
-                LoadFinancingItem(data.FinancingItems);
-            }
+            // 禁用还款信息
+            Disabled($('fieldset[name=CustomerBankInfo]'));
         }
 
-        // 运营复审
+        // 客户
         function LoadData_Review(data) {
             // 禁用运营
             Disabled($('fieldset[name=Operation]'));
+
+            // 禁用放款信息
+            Disabled($('fieldset[name=CreditBankInfo]'));
+
+            if (data.LoanPrincipal != "Customer")
+            {
+                // 禁用还款信息
+                Disabled($('fieldset[name=CustomerBankInfo]'));
+            }
 
             // 禁用合同
             ContactCheck = false;
@@ -192,6 +216,20 @@
             });
 
             FieldsetLoadDateFactory('FinancingItems', 'table', tableData);
+        }
+
+        // 加载手续费
+        function LoadFinancingCost(dataKV) {
+            if (dataKV == null) {
+                return;
+            }
+
+            var tableData = [];
+            $(dataKV).each(function (i, e) {
+                tableData.push({ Name: e.Value.Key, Money: e.Value.Value + " 元" });
+            });
+
+            FieldsetLoadDateFactory('FinancingCosts', 'table', tableData);
         }
     </script>
 </head>
@@ -248,6 +286,7 @@
                                     value: '',
                                     readonly: false
                                 });
+
                             }
                             else {
                                 // 隐藏渠道放款
@@ -271,29 +310,80 @@
                                     value: '',
                                     readonly: true
                                 });
+
                             }
                         }
 
                         $(this).combobox('setValue', record.value);
                     }
 
-                    // 渠道放款信息
-                    function ShowChannel(bool, Obj) {
-                        if (bool) {
-                            if (Obj == null) {
-                                Obj = $('form[name=FinanceOperation]>fieldset[name=Operation]');
-                            }
+                    function ChangeReadonly(bool)
+                    {
+                        if ($("form fieldset[name=CustomerBankInfo]>div.row>div").length > 0)
+                        {
+                            $("form fieldset[name=CustomerBankInfo]>div.row>div").remove();
+                        }
 
-                            $($('form[name=FinanceOperation] template#CreditBankInfo').html()).insertAfter(Obj);
-                            $.parser.parse($('form[name=FinanceOperation]>fieldset[name=CreditBankInfo]'));
+                        if (bool == true) {
+                            // 加载只读模版
+                            $("form fieldset[name=CustomerBankInfo]>div.row").append($("form fieldset[name=CustomerBankInfo]>div.row>template#CustomerBankInfo_R").html());
                         }
                         else {
-                            if ($('form[name=FinanceOperation]>fieldset[name=CreditBankInfo]')[0] != undefined) {
-                                $('form[name=FinanceOperation]>fieldset[name=CreditBankInfo]').hide();
-                            }
+                            // 加载可输入模版
+                            $("form fieldset[name=CustomerBankInfo]>div.row").append($("form fieldset[name=CustomerBankInfo]>div.row>template#CustomerBankInfo_R").html());
                         }
+
+                        $.parser.parse($("form fieldset[name=CustomerBankInfo]>div.row"));
                     }
                 </script>
+            </fieldset>
+
+            <fieldset name="CustomerBankInfo">
+                <legend>还款信息</legend>
+                <div class="row">
+                    <div class="col-6">
+                        <label>还款账户:</label>
+                        <input name="CustomerAccountName" class="easyui-textbox" data-options="required:false,validType:'',value:'',readonly:false" />
+                    </div>
+                    <div class="col-6">
+                        <label>开户行:</label>
+                        <input name="CustomerBankName" class="easyui-textbox" data-options="required:false,validType:'',value:'',readonly:false" />
+                    </div>
+                    <div class="col-6">
+                        <label>卡号:</label>
+                        <input name="CustomerBankCard" class="easyui-textbox" data-options="required:false,validType:['Integer','length[19,19]'],value:'',readonly:false" />
+                    </div>
+
+                    <template id="CustomerBankInfo">
+                        <div class="col-6">
+                            <label>还款账户:</label>
+                            <input name="CustomerAccountName" class="easyui-textbox" data-options="required:true,validType:'',value:''" />
+                        </div>
+                        <div class="col-6">
+                            <label>开户行:</label>
+                            <input name="CustomerBankName" class="easyui-textbox" data-options="required:true,validType:'',value:''" />
+                        </div>
+                        <div class="col-6">
+                            <label>卡号:</label>
+                            <input name="CustomerBankCard" class="easyui-textbox" data-options="required:true,validType:['Integer','length[19,19]'],value:''" />
+                        </div>
+                    </template>
+
+                    <template id="CustomerBankInfo_R">
+                        <div class="col-6">
+                            <label>还款账户:</label>
+                            <input name="CustomerAccountName" class="easyui-textbox" data-options="required:false,validType:'',value:'',readonly:true" />
+                        </div>
+                        <div class="col-6">
+                            <label>开户行:</label>
+                            <input name="CustomerBankName" class="easyui-textbox" data-options="required:false,validType:'',value:'',readonly:true" />
+                        </div>
+                        <div class="col-6">
+                            <label>卡号:</label>
+                            <input name="CustomerBankCard" class="easyui-textbox" data-options="required:false,validType:['Integer','length[19,19]'],value:'',readonly:true" />
+                        </div>
+                    </template>
+                </div>
             </fieldset>
 
             <fieldset name="Operation">
@@ -336,25 +426,52 @@
             </fieldset>
 
             <fieldset name="FinancingItems" style="display:none">
-                <legend>融资项</legend>
-                <table id="FinancingItems_dg" class="easyui-datagrid" style="width:820px;" data-options="
+                <legend>融资项和手续费</legend>
+                <div class="row">
+                    <div class="col-6">
+                        <label>融资项:</label>
+                        <table id="FinancingItems_dg" class="easyui-datagrid" data-options="height: '230',width:'400',
                                singleSelect:true,
                                onSelect:FinanceItemSelect,
                                rownumbers:true,
                                title:'融资项'
                                 ">
-                    <thead>
-                        <tr>
-                            <th data-options="field:'Name',width:410,align:'center'">名称</th>
-                            <th data-options="field:'Money',width:410,align:'center'">金额</th>
-                        </tr>
-                    </thead>
-                </table>
+                            <thead>
+                                <tr>
+                                    <th data-options="field:'Name',width:180,align:'center'">名称</th>
+                                    <th data-options="field:'Money',width:180,align:'center'">金额</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+
+                    <div class="col-6">
+                        <label>客户手续费:</label>
+                        <table id="FinancingCosts_dg" class="easyui-datagrid" data-options="height: 230,width:400,
+                               singleSelect:true,
+                               onSelect:FinanceCostSelect,
+                               rownumbers:true,
+                               title:'手续费'
+                                ">
+                            <thead>
+                                <tr>
+                                    <th data-options="field:'Name',width:180,align:'center'">名称</th>
+                                    <th data-options="field:'Money',width:180,align:'center'">金额</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
                 <script type="text/javascript">
                     function FinanceItemSelect(index, row) {
                         $('#FinancingItems_dg').datagrid('uncheckRow', index);
                     }
+
+                    function FinanceCostSelect(index, row) {
+                        $('#FinancingCosts_dg').datagrid('uncheckRow', index);
+                    }
                 </script>
+
             </fieldset>
 
             <fieldset name="Contact">

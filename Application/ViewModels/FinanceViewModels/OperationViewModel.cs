@@ -21,6 +21,11 @@
         public ICollection<KeyValuePair<Guid, KeyValuePair<string, decimal?>>> FinancingItems { get; set; }
 
         /// <summary>
+        /// 融资项（Id、(Name、Maney)）
+        /// </summary>
+        public ICollection<KeyValuePair<Guid, KeyValuePair<string, decimal?>>> FinanceCosts { get; set; }
+
+        /// <summary>
         /// 选择还款日
         /// </summary>
         [Required(ErrorMessage = "选择还款日 不可为空")]

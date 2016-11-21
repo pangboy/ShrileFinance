@@ -421,7 +421,7 @@
                 ManufacturerGuidePrice = finance.Vehicle.ManufacturerGuidePrice,
 
                 // 融资项（Id、<Name_Maney>）
-                FinancingItems = GetFinancingItems(finance)
+                FinancingItems = GetFinancingItemsOrCosts(finance)
             };
 
             // 部分映射
@@ -506,7 +506,10 @@
             operationReportViewModel = PartialMapper(finance, operationReportViewModel, array);
 
             // 融资项
-            operationReportViewModel.FinancingItems = GetFinancingItems(finance);
+            operationReportViewModel.FinancingItems = GetFinancingItemsOrCosts(finance);
+
+            // 手续费
+            operationReportViewModel.FinanceCosts = GetFinancingItemsOrCosts(finance,false);
 
             // 车辆补充信息
             var array1 = new string[] { "RegisterDate", "RunningMiles", "FactoryDate", "BusinessType", "PlateNo", "FrameNo", "EngineNo", "RegisterCity", "Condition" };
@@ -572,21 +575,21 @@
         }
 
         /// <summary>
-        ///  获取融资项
+        ///  获取融资项或手续费
         /// </summary>
         /// <param name="finance">融资实体</param>
+        /// <param name="isFinancing">是否为融资项</param>
         /// <returns>融资项</returns>
-        private ICollection<KeyValuePair<Guid, KeyValuePair<string, decimal?>>> GetFinancingItems(Finance finance)
+        private ICollection<KeyValuePair<Guid, KeyValuePair<string, decimal?>>> GetFinancingItemsOrCosts(Finance finance,bool isFinancing=true)
         {
-            var financingItems = new List<KeyValuePair<Guid, KeyValuePair<string, decimal?>>>();
+            var financingCosts = new List<KeyValuePair<Guid, KeyValuePair<string, decimal?>>>();
 
-            // 提取融资项
-            finance.FinanceProduce.ToList().ForEach(item =>
+            finance.FinanceProduce.ToList().FindAll(m => m.IsFinancing=isFinancing).ForEach(item =>
             {
-                financingItems.Add(new KeyValuePair<Guid, KeyValuePair<string, decimal?>>(item.Id, new KeyValuePair<string, decimal?>(item.Name, item.Money)));
+                financingCosts.Add(new KeyValuePair<Guid, KeyValuePair<string, decimal?>>(item.Id, new KeyValuePair<string, decimal?>(item.Name, item.Money)));
             });
 
-            return financingItems;
+            return financingCosts;
         }
 
         /// <summary>
