@@ -28,7 +28,7 @@
             Property(m => m.Color).HasMaxLength(50);
             Property(m => m.BusinessType);
             Property(m => m.Condition);
-
+            Property(m => m.VehicleCondition);
             ToTable("FANC_Vehicle");
         }
     }

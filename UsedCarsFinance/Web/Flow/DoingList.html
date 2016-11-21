@@ -12,6 +12,12 @@
     <script>
         uc.grid = new UCGrid("#dg");
 
+        $(function () {
+            if (top.$("#role_name").text() == "客户经理") {
+                $("#add").show();
+            }
+        });
+
         function Search() {
             var isValid = $("#search_form").form("validate");
 
@@ -78,11 +84,11 @@
         ">
         <thead>
             <tr>
-                <th data-options="field:'Title',width:500,align:'center'">标题</th>
+                <th data-options="field:'Title',width:360,align:'center'">标题</th>
                 <th data-options="field:'Flow',width:150,align:'center'">所处流程</th>
                 <th data-options="field:'CurrentNode',width:150,align:'center'">当前节点</th>
-                <th data-options="field:'CurrentUser',width:100,align:'center'">当前操作者</th>
-                <th data-options="field:'ProcessUser',width:100,align:'center'">上一个操作者</th>
+                <th data-options="field:'CurrentUser',width:150,align:'center'">当前操作者</th>
+                <th data-options="field:'ProcessUser',width:150,align:'center'">上一个操作者</th>
                 <th data-options="field:'ProcessTime',width:150,align:'center'">处理时间</th>
                 <th data-options="field:'StartUser',width:150,align:'center'">发起者</th>
                 <th data-options="field:'StartTime',width:150,align:'center'">发起时间</th>
@@ -106,7 +112,7 @@
         </form>
 
         <div>
-            <a id="add" class="easyui-linkbutton" href="javascript:void(0)" data-options="onClick:Start,iconCls:'icon-add',plain:true">发起流程</a>
+            <a id="add" class="easyui-linkbutton" href="javascript:void(0)" data-options="onClick:Start,iconCls:'icon-add',plain:true" style="display:none;">发起流程</a>
             <a id="mod" class="easyui-linkbutton" href="javascript:void(0)" data-options="onClick:Process,iconCls:'icon-edit',plain:true">处理</a>
         </div>
     </div>

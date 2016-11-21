@@ -89,6 +89,7 @@ function UsedCars() {
 		});
 	}
 	this.CloseWindow = function () {
+		top.$("#wiframe").attr("src", "about:blank");
 		top.$("#win").window("close");
 	}
 

@@ -55,6 +55,8 @@
                     data: { instanceId: row.Id },
                     statusCode: {
                         200: function (data) {
+                            uc.grid.Reload();
+
                             $.messager.show({ msg: "撤回成功！" });
                         },
                         400: uc.E400
@@ -79,11 +81,11 @@
            ">
         <thead>
             <tr>
-                <th data-options="field:'Title',width:500,align:'center'">标题</th>
+                <th data-options="field:'Title',width:360,align:'center'">标题</th>
                 <th data-options="field:'Flow',width:150,align:'center'">所处流程</th>
                 <th data-options="field:'CurrentNode',width:150,align:'center'">当前节点</th>
-                <th data-options="field:'CurrentUser',width:100,align:'center'">当前操作者</th>
-                <th data-options="field:'ProcessUser',width:100,align:'center'">上一个操作者</th>
+                <th data-options="field:'CurrentUser',width:150,align:'center'">当前操作者</th>
+                <th data-options="field:'ProcessUser',width:150,align:'center'">上一个操作者</th>
                 <th data-options="field:'ProcessTime',width:150,align:'center'">处理时间</th>
                 <th data-options="field:'StartUser',width:150,align:'center'">发起者</th>
                 <th data-options="field:'StartTime',width:150,align:'center'">发起时间</th>

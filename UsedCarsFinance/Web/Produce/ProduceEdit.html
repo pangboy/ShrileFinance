@@ -141,30 +141,26 @@
         }
 
         function Submit() {
-            if ($("#MinFinancingRatio").val() > 100) {
-                top.$.messager.show({ msg: "融资比例下限必须小于100！" });
-                return;
-            }
-            if ($("#MaxFinancingRatio").val() > 100) {
-                top.$.messager.show({ msg: "融资比例上限必须小于100！" });
-                return;
-            }
+            var min = parseInt($("input[textboxname = MinFinancingRatio]").textbox("getValue"));
+            var max = parseInt($("input[textboxname = MaxFinancingRatio]").textbox("getValue"));
+
             if ($("#CustomerBailRatio").val() > 100) {
                 top.$.messager.show({ msg: "客户保证金比例必须小于100！" });
-                return;
+                return false;
             }
             if ($("#FinalRatio").val() > 100) {
                 top.$.messager.show({ msg: "尾款比例必须小于100！" });
-                return;
+                return false;
             }
-
-            if ($("#MinFinancingRatio").val() > $("#MaxFinancingRatio").val()) {
+          
+            if (min != "" && max != "" && max < min) {
+                $("input[textboxname = MaxFinancingRatio]").textbox("setValue", "")
                 top.$.messager.show({ msg: "融资比例下限必须小于融资比例上限！" });
-                return;
+                return false
             }
-           // toUppers();
+            toUppers();
 
-            //if (disction) {
+            if (disction) {
             var produceInfo = $(".container").serializeJson();
                 ChangeStatus("Poundage");
                 ChangeStatus("Financing");
@@ -179,7 +175,7 @@
                     url: "../api/Produce/Modify",
                     data: produceInfo
                 });
-           // }
+            }
         }
 
         $.extend($.fn.datagrid.methods, {
@@ -197,6 +193,7 @@
             var min = parseInt($("input[textboxname = MinFinancingRatio]").textbox("getValue"));
             var max = parseInt($("input[textboxname = MaxFinancingRatio]").textbox("getValue"));
             if (min != "" && max != "" && max < min) {
+                $("input[textboxname = MaxFinancingRatio]").textbox("setValue", "")
                 top.$.messager.show({ msg: "融资比例下限必须小于融资比例上限！" });
                 return false
             }
@@ -339,9 +336,9 @@
 
                 <div class="col-6">
                     <label>融资比例区间:</label>
-                    <input name="MinFinancingRatio" class="easyui-textbox" style="width:190px;" data-options="required:true,onChange:onChange" />
+                    <input name="MinFinancingRatio" class="easyui-textbox" style="width:190px;" data-options="required:true,onChange:onChange,validType:'Price'" />
                     <span style="display:inline-block;width:22px; text-align:center;">-</span>
-                    <input name="MaxFinancingRatio" class="easyui-textbox" style="width:190px;" data-options="required:true,onChange:onChange" />
+                    <input name="MaxFinancingRatio" class="easyui-textbox" style="width:190px;" data-options="required:true,onChange:onChange,validType:'Price'" />
                     <span class="unit">%</span>
                 </div>
             </div>

@@ -587,7 +587,7 @@
 
         function BindColor(index, row) {
             if (row.IsEdit==false) {
-                return 'background-color:#f5fffa;color:blue;font-weight:bold;';
+                return 'background-color:#d9fcfb;color:blue;font-weight:bold;';
             }
         }
     </script>
@@ -1147,7 +1147,7 @@
 
                             <div class="col-6">
                                 <label>自有住房登记日期:</label>
-                                <input id="ownHouseRegisterDate" name="OwnHouseRegisterDate" class="easyui-textbox" />
+                                <input id="ownHouseRegisterDate" name="OwnHouseRegisterDate" class="easyui-datebox" data-options="validType:'Date',width:380"/>
                             </div>
                         </div>
 

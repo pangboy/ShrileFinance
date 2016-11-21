@@ -1,7 +1,7 @@
 ﻿namespace Application.ViewModels.ProduceViewModel
 {
     using System;
-    using static Core.Entities.Produce.Produce;
+    using Core.Entities.Produce;
 
     public class ProduceListViewModel
     {
@@ -20,9 +20,9 @@
         /// <summary>
         /// 还款方式
         /// </summary>
-        public RepaymentMethodEnum RepaymentMethod { get; set; }
+        public Produce.RepaymentMethodEnum RepaymentMethod { get; set; }
 
-        public string RepaymentMethodDesc { get; set; }
+        public string RepaymentMethodDesc { get { return RepaymentMethod.ToString(); } }
 
         /// <summary>
         /// 融资期限
