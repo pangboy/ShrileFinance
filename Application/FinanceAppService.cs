@@ -11,6 +11,7 @@
     using Core.Entities;
     using Core.Entities.Finance;
     using Core.Entities.Identity;
+    using Core.Entities.Partner;
     using Core.Interfaces.Repositories;
     using Data.PDF;
     using ViewModels.FinanceViewModels;
@@ -47,21 +48,33 @@
             try
             {
                 var finance = Mapper.Map<Finance>(value);
+                finance.FinanceProduce = Mapper.Map<ICollection<FinanceProduce>>(value.FinanceProduce);
+                finance.Applicant = Mapper.Map<ICollection<Applicant>>(value.Applicant);
                 finance.CreateBy = userManager.CurrentUser();
-                AppUser user = new AppUser();
                 finance.CreateOf = partnerRepository.GetByUser(userManager.CurrentUser());
                 finance.Produce = null;
                 repository.Create(finance);
                 repository.Commit();
                 value.Id = finance.Id;
             }
-            catch (Exception ex)
+            catch 
             {
                 throw new Core.Exceptions.InvalidOperationAppException("保存失败.");
             }
-          
         }
 
+        public PartnerAndUser GetPartnerAndUser()
+        {
+           AppUser user = userManager.CurrentUser();
+            Partner partner = partnerRepository.GetByUser(userManager.CurrentUser());
+            return new PartnerAndUser()
+            {
+                ProxyArea = partner.ProxyArea,
+                Name = user.Name,
+                Phone = user.PhoneNumber,
+            };
+                 
+        }
         public void Modify(FinanceApplyViewModel model)
         {
             try
@@ -75,7 +88,7 @@
                 repository.Modify(finance);
                 repository.Commit();
             }
-            catch (Exception)
+            catch
             {
                 throw new Core.Exceptions.InvalidOperationAppException("修改失败.");
             }

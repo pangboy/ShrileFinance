@@ -24,9 +24,9 @@
         /// <param name="rows">行数</param>
         /// <returns></returns>
         [HttpGet]
-        public IHttpActionResult DoingList(int page, int rows)
+        public IHttpActionResult DoingList(int page, int rows, string searchString = null, Guid? currentNode = null, DateTime? beginTime = null, DateTime? endTime = null)
         {
-            var list = service.DoingPagedList(null, page, rows);
+            var list = service.DoingPagedList(searchString, page, rows, currentNode, beginTime, endTime);
 
             return Ok(new PagedListViewModel<InstanceViewModel>(list));
         }
@@ -38,9 +38,9 @@
         /// <param name="rows">行数</param>
         /// <returns></returns>
         [HttpGet]
-        public IHttpActionResult DoneList(int page, int rows)
+        public IHttpActionResult DoneList(int page, int rows, string searchString = null, Guid? currentNode = null, DateTime? beginTime = null, DateTime? endTime = null, Core.Entities.Flow.InstanceStatusEnum? status = null)
         {
-            var list = service.DonePagedList(null, page, rows);
+            var list = service.DonePagedList(searchString, page, rows, currentNode, beginTime, endTime, status);
 
             return Ok(new PagedListViewModel<InstanceViewModel>(list));
         }
