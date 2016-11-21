@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Net;
@@ -11,29 +12,29 @@ namespace Data.PDF
     public class CreatePdf
     {
 
-     
 
-    //public string CreatePdf(string fileName,string param,string targetPdfName)
-    //    {
-    //        string url = "D:/Projects/UsedCarsFinance/trunk/Web/upload/PDF/";
-    //        url = url + fileName;
-    //        File.Copy(url+1, url);
-    //        WordHelper wdHelp = new WordHelper();
-    //        bool Is = wdHelp.OpenAndActive(url, false, false);
-    //        if (Is)
-    //        {
-    //            string path = @"~\upload\PDF\";
-    //            string fullpath = HttpContext.Current.Server.MapPath(path);
 
-    //            if (!Directory.Exists(fullpath))
-    //            {
-    //                Directory.CreateDirectory(fullpath);
-    //            }
-    //            // 保存pdf文件
-    //            wdHelp.SaveAsPDF(fullpath+url);
-    //            wdHelp.Close();
-    //        }
-    //    }
+        //public string CreatePdf(string fileName,string param,string targetPdfName)
+        //    {
+        //        string url = "D:/Projects/UsedCarsFinance/trunk/Web/upload/PDF/";
+        //        url = url + fileName;
+        //        File.Copy(url+1, url);
+        //        WordHelper wdHelp = new WordHelper();
+        //        bool Is = wdHelp.OpenAndActive(url, false, false);
+        //        if (Is)
+        //        {
+        //            string path = @"~\upload\PDF\";
+        //            string fullpath = HttpContext.Current.Server.MapPath(path);
+
+        //            if (!Directory.Exists(fullpath))
+        //            {
+        //                Directory.CreateDirectory(fullpath);
+        //            }
+        //            // 保存pdf文件
+        //            wdHelp.SaveAsPDF(fullpath+url);
+        //            wdHelp.Close();
+        //        }
+        //    }
 
         /// <summary>
         /// 远程转Pdf,并返回pdf保存路径
@@ -41,94 +42,87 @@ namespace Data.PDF
         /// <param name="fileName">合同模板名</param>
         /// <param name="param">参数</param>
         /// <param name="targetPdfName">需要生成的pdf的名字</param>
-        public string TransformPdf( string fileName, string param, string targetPdfName)
+        public string TransformPdf(string fileName, string param, string targetPdfName)
         {
 
-            string url = "D:/Projects/UsedCarsFinance/trunk/Web/upload/PDF/" + fileName;
-            string url1 = "D:/Projects/upload/PDF/" + fileName.Substring(0,fileName.Length-5)+DateTime.Now.Millisecond+".docx";
-            File.Copy(url , url1);
+            object url = "D:/Projects/upload/PDF/" + fileName;//模板
+            object url1 = "D:/Projects/upload/PDF/" + fileName.Substring(0, fileName.Length - 5) + DateTime.Now.Millisecond + ".docx";//新生成的
             WordHelper wdHelp = new WordHelper();
-            bool Is = wdHelp.OpenAndActive(url1, false, false);
-            if (Is)
+            File.Copy(url.ToString(), url1.ToString());
+
+            //bool Is = wdHelp.OpenAndActive(url1, false, false);
+            //if (Is)
+            //{
+            string path = @"~\upload\PDF\";
+                object fullpath = url;// HttpContent.Current.Server.MapPath(path);
+
+                //if (Directory.Exists(fullpath))
+                //{
+                //    Directory.CreateDirectory(fullpath);
+                //}
+                //string  aaa = wdHelp.GetContract(url1, false, false);
+
+
+
+                Microsoft.Office.Interop.Word.Application app = null;
+                Microsoft.Office.Interop.Word.Document doc = null;
+                //将要导出的新word文件名
+                string newFile = DateTime.Now.ToString("yyyyMMddHHmmssss") + ".doc";
+                string physicNewFile = "D:/Projects/upload/PDF/" + targetPdfName + ".pdf";
+            try
             {
-                string path = @"~\upload\PDF\";
-                string fullpath = url;// HttpContent.Current.Server.MapPath(path);
+                app = new Microsoft.Office.Interop.Word.Application();//创建word应用程序
+                                                                      // object fileName = Server.MapPath("template.doc");//模板文件
+                                                                      //打开模板文件
+                object oMissing = System.Reflection.Missing.Value;
+                doc = app.Documents.Open(ref url1,
+                ref oMissing, ref oMissing, ref oMissing, ref oMissing, ref oMissing,
+                ref oMissing, ref oMissing, ref oMissing, ref oMissing, ref oMissing,
+                ref oMissing, ref oMissing, ref oMissing, ref oMissing, ref oMissing);
 
-                if (Directory.Exists(fullpath))
+                //构造数据
+                Dictionary<string, string> datas = new Dictionary<string, string>();
+                datas.Add("[融资租赁合同]", "张三");
+                datas.Add("[乙方姓名]", "男");
+                datas.Add("{provinve}", "浙江");
+                datas.Add("{address}", "浙江省杭州市");
+                datas.Add("{education}", "本科");
+                datas.Add("{telephone}", "12345678");
+                datas.Add("{cardno}", "123456789012345678");
+
+                object replace = Microsoft.Office.Interop.Word.WdReplace.wdReplaceAll;
+                foreach (var item in datas)
                 {
-                    Directory.CreateDirectory(fullpath);
-                }
+                    app.Selection.Find.Replacement.ClearFormatting();
+                    app.Selection.Find.ClearFormatting();
+                    app.Selection.Find.Text = item.Key;//需要被替换的文本
+                    app.Selection.Find.Replacement.Text = item.Value;//替换文本 
+
+                    //执行替换操作
+                    app.Selection.Find.Execute(
+                    ref oMissing, ref oMissing,
+                    ref oMissing, ref oMissing,
+                    ref oMissing, ref oMissing,
+                    ref oMissing, ref oMissing, ref oMissing,
+                    ref oMissing, ref replace,
+                    ref oMissing, ref oMissing,
+                    ref oMissing, ref oMissing);
+                    }
+
+                    //对替换好的word模板另存为一个新的word文档
+                    doc.SaveAs(physicNewFile,
+                    oMissing, oMissing, oMissing, oMissing, oMissing, oMissing, oMissing, oMissing, oMissing,
+                    oMissing, oMissing, oMissing, oMissing, oMissing, oMissing);
+
+                    // 保存pdf文件
+                    // wdHelp.SaveAsPDF("D:/Projects/upload/PDF/" + targetPdfName + ".pdf");
+                    wdHelp.Close();
 
 
-                // 保存pdf文件
-                wdHelp.SaveAsPDF("D:/Projects/upload/PDF/" + targetPdfName + ".pdf");
-                wdHelp.Close();
+                } 
+            catch (Exception ex)
+            {
 
-                //string url = System.Web.Configuration.WebConfigurationManager.AppSettings["PrintUrl"].ToString();
-                ////string url = "D:/Projects/UsedCarsFinance/trunk/Web/upload/PDF/";
-                ////url = url+"fileName=" + fileName;
-                ////url = url + fileName;
-                ////string[] strs = File.ReadAllLines(url);
-
-                //// 创建httpWebRequest对象
-                //HttpWebRequest webRequest = (HttpWebRequest)WebRequest.Create(new Uri(url));
-                //byte[] byteArray = Encoding.UTF8.GetBytes(param);
-                //// 初始化HttpWebRequest对象
-                //webRequest.ContentType = "application/x-www-form-urlencoded";
-                //webRequest.Method = "POST";
-                //webRequest.ContentLength = byteArray.Length;
-
-                //// 附加要POST给服务器的数据到HttpWebRequest对象(附加POST数据的过程比较特殊，它并没有提供一个属性给用户存取，需要写入HttpWebRequest对象提供的一个stream里面。)
-                //Stream newStream = webRequest.GetRequestStream();
-                //newStream.Write(byteArray, 0, byteArray.Length);
-                //newStream.Close();
-
-                //// 读取服务器的返回信息
-                //HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse();
-
-                //Stream stream = webResponse.GetResponseStream();
-
-                //// 请求下载的pdf地址
-                //string pdfFile = "D:/Projects/upload/PDF/" + targetPdfName + ".pdf";// System.Web.HttpContext.Current.Server.MapPath("~\\upload\\PDF\\" + targetPdfName + ".pdf");
-
-                //FileStream fs = new FileStream(pdfFile, FileMode.Create);
-
-                //int bufferSize = 2048;
-                //byte[] bytes = new byte[bufferSize];
-                //try
-                //{
-                //    int length = stream.Read(bytes, 0, bufferSize);
-                //    while (length > 0)
-                //    {
-                //        fs.Write(bytes, 0, length);
-
-                //        length = stream.Read(bytes, 0, bufferSize);
-                //    }
-
-                //    stream.Close();
-                //    fs.Close();
-                //    webResponse.Close();
-
-                //    // 把生成的pdf写入文件流
-                //    FileStream fileStream = new FileStream(pdfFile, FileMode.Open);
-                //    byte[] file = new byte[fileStream.Length];
-                //    fileStream.Read(file, 0, file.Length);
-                //    fileStream.Close();
-
-                //    // 强制下载
-                //    //HttpResponse response = System.Web.HttpContext.Current.Response;
-                //    //response.AddHeader("content-disposition", "attachment; filename=" + pdfFile);
-                //    //response.ContentType = "application/octet-stream";
-                //    //response.BinaryWrite(file);
-                //    //response.End();
-                //}
-                //catch (Exception)
-                //{
-                //    stream.Close();
-                //    fs.Close();
-                //    webResponse.Close();
-                //    pdfFile = string.Empty;
-                //}
             }
             return null;
         }

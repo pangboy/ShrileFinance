@@ -363,5 +363,19 @@ $.extend($.fn.validatebox.defaults.rules, {
 			return /^(13|15|18)\d{9}$/i.test(value) || /^((\(\d{2,3}\))|(\d{3}\-))?(\(0\d{2,3}\)|0\d{2,3}-)?[1-9]\d{6,7}(\-\d{1,4})?$/i.test(value);
 		},
 		message: '请填入手机或电话号码,如13800000000或010-8888888'
-	}
+	},
+    //日期
+    YearMonth: {
+    validator: function (value) {
+        return /^\d{4}-\d{2}$/i.test(value);
+    },
+    message: "请输入正确的日期！(如:2000-01)"
+    },
+    //日期
+    Year: {
+    validator: function (value) {
+        return /^\d{4}$/i.test(value);
+    },
+    message: "请输入正确的日期！(如:2000)"
+    }
 });

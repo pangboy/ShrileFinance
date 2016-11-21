@@ -98,6 +98,23 @@ namespace PDFPrint
             }
         }
 
+        public string GetContract(string FileName, bool IsReadOnly, bool IsVisibleWin)
+        {
+            if (string.IsNullOrEmpty(FileName))
+            {
+                return "";
+            }
+            try
+            {
+                _wordDocument = OpenOneDocument(FileName, missing, IsReadOnly, missing, missing, missing, missing, missing, missing, missing, missing, IsVisibleWin, missing, missing, missing, missing);
+                return _wordDocument.Content.Text;
+            }
+            catch
+            {
+                return "";
+            }
+        }
+
         /// <summary>
         /// 关闭
         /// Closes the specified document or documents.

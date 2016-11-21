@@ -98,7 +98,7 @@
         /// <summary>
         /// 注册登记日期
         /// </summary>
-        public DateTime? RegisterDate { get; set; }
+        public string RegisterDate { get; set; }
 
         /// <summary>
         /// 行驶里程
@@ -108,7 +108,7 @@
         /// <summary>
         /// 出厂日期
         /// </summary>
-        public DateTime? FactoryDate { get; set; }
+        public string FactoryDate { get; set; }
 
         /// <summary>
         /// 购买年份

@@ -44,23 +44,43 @@
 
         public void Create(FinanceApplyViewModel value)
         {
-            var finance = Mapper.Map<Finance>(value);
-
-            finance.Produce = null;
-            repository.Create(finance);
-            repository.Commit();
+            try
+            {
+                var finance = Mapper.Map<Finance>(value);
+                finance.CreateBy = userManager.CurrentUser();
+                AppUser user = new AppUser();
+                finance.CreateOf = partnerRepository.GetByUser(userManager.CurrentUser());
+                finance.Produce = null;
+                repository.Create(finance);
+                repository.Commit();
+                value.Id = finance.Id;
+            }
+            catch (Exception ex)
+            {
+                throw new Core.Exceptions.InvalidOperationAppException("保存失败.");
+            }
+          
         }
 
         public void Modify(FinanceApplyViewModel model)
         {
-            var finance = repository.Get(model.Id.Value);
-            Mapper.Map(model, finance);
+            try
+            {
+                var finance = repository.Get(model.Id.Value);
+                Mapper.Map(model, finance);
 
-            new UpdateBind().Bind(finance.FinanceProduce, model.FinanceProduce);
-            new UpdateBind().Bind(finance.Applicant, model.Applicant);
+                new UpdateBind().Bind(finance.FinanceProduce, model.FinanceProduce);
+                new UpdateBind().Bind(finance.Applicant, model.Applicant);
 
-            repository.Modify(finance);
-            repository.Commit();
+                repository.Modify(finance);
+                repository.Commit();
+            }
+            catch (Exception)
+            {
+                throw new Core.Exceptions.InvalidOperationAppException("修改失败.");
+            }
+
+         
         }
 
         public FinanceApplyViewModel Get(Guid id)
@@ -95,14 +115,14 @@
                     string pdfName = string.Empty;
 
                     // 合同模板名称
-                    string contractName = "ServiceContract.docx";
+                    string contractName = "FinancingLease.docx";
 
                     CreatePdf pdf = new CreatePdf();
 
                     if (dt.Rows.Count > 0)
                     {
                         contractParams = pdf.DataRowToParams(dt.Rows[0]);
-                        dt.Rows[0]["@融资租赁合同"] = hz;
+                        dt.Rows[0]["[融资租赁合同]"] = hz;
                         pdfName = hz;
                     }
 
