@@ -12,7 +12,8 @@ function GetUserInfo() {
         statusCode: {
         	200: function (data) {
         		$("#user_id").val(data.Id);
-                $("#user_name").text(data.Name);
+        		$("#user_name").text(data.Name);
+        		$("#role_name").text(data.Role);
             }
         }
     });
