@@ -48,11 +48,6 @@
         public decimal Payment { get; set; }
 
         /// <summary>
-        /// 手续费
-        /// </summary>
-        public decimal Cost { get; set; }
-
-        /// <summary>
         /// 是否为复审
         /// </summary>
         public bool IsReview { get; set; }
@@ -98,9 +93,14 @@
         public DateTime? DateEffective { get; set; }
 
         /// <summary>
-        /// 意向融资金额
+        /// 融资金额
         /// </summary>
-        public decimal IntentionPrincipal { get; set; }
+        public decimal? Financing { get; set; }
+
+        /// <summary>
+        /// 手续费
+        /// </summary>
+        public decimal? Poundage { get; set; }
 
         /// <summary>
         /// 月供先付期数

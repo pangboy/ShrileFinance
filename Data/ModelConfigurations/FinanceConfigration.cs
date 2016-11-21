@@ -19,12 +19,12 @@
             Property(m => m.RepaymentDate);
             Property(m => m.RepaymentScheme);
             Property(m => m.Bail);
-            Property(m => m.Cost);
             Property(m => m.State);
             Property(m => m.OnePayInterest);
             Property(m => m.DateEffective);
             Property(m => m.DateCreated);
-            Property(m => m.IntentionPrincipal);
+            Property(m => m.Financing);
+            Property(m => m.Poundage);
             Property(m => m.OncePayMonths);
             Property(m => m.AdviceMoney);
             Property(m => m.AdviceRatio);

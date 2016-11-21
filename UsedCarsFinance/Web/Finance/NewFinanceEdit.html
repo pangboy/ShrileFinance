@@ -91,7 +91,7 @@
         }
 
         input:checked ~ article.Vehicle {
-            height: 965px;
+            height: 1100px;
         }
 
         input:checked ~ article.produce {
@@ -124,6 +124,10 @@
             if (parent.flow.RootKey != undefined) {
                 GetByFinanceId();
             }
+            debugger
+            if(1=1){
+                uc.form.DisableForm();
+            }
             else {
                 $.ajax({
                     async: false,
@@ -133,8 +137,8 @@
                     statusCode: {
                         200: function (data) {
                             $("#Phone").textbox("setValue", data.Phone)
-                            $("#Name").textbox("setValue", data.Name)
-                            $("#ProxyArea").textbox("setValue", data.ProxyArea)
+                            $("#UserName").textbox("setValue", data.UserName)
+                            $("#PartnerName").textbox("setValue", data.PartnerName)
                         }
                     }
                 });
@@ -162,13 +166,14 @@
                 CheckProduce();
                 FinanceProduce(data.FinanceProduce);
                 $("#Phone").textbox("setValue", data.CreateBy.Phone)
-                $("#Name").textbox("setValue", data.CreateBy.Username)
-                $("#ProxyArea").textbox("setValue", data.CreateOf.ProxyArea)
+                $("#UserName").textbox("setValue", data.CreateBy.Username)
+                $("#PartnerName").textbox("setValue", data.CreateOf.Name)
 
                 $("#Vehicle").form("load", data.Vehicle);
                 $("select[comboname='MakeCode']").combobox("unselect", data.Vehicle.MakeCode).combobox("select", data.Vehicle.MakeCode);
                 $("select[comboname='FamilyCode']").combobox("select", data.Vehicle.FamilyCode);
                 $("select[comboname='VehicleKey']").combobox("select", data.Vehicle.VehicleKey);
+                $("#ManufacturerGuidePrice").textbox("setValue", data.Vehicle.ManufacturerGuidePrice);
                 //加载联系人
                 LoadApplicant(data);
             }
@@ -234,7 +239,6 @@
                 statusCode: {
                     200: function (data) {
                         if (data != null) {
-                            debugger
                             $("#ProduceId").val(data.Id);
                             $("#Id").val(data.Id);//ProduceId、ID都表示产品ID
                             $("#produce").form("load", data);
@@ -367,6 +371,7 @@
             }
             if (id == "Financing") {
                 $("#FinancingCount").text(count);
+                $("#IntentionPrincipal").textbox("setValue", count)
             }
             else {
                 $("#PoundageCount").text(count);
@@ -481,6 +486,15 @@
             $("#Code").textbox("setValue", row["Code"]);
             $("#dd").dialog('close');
         }
+        
+        function Add() {
+            if ($('#dg').datagrid('getSelected')) {
+                ChooseProduce();
+            }
+            else {
+                $.messager.show({ msg: "请选中一行!" });
+            }
+        }
 
         //验证数据
         function ValidData() {
@@ -533,9 +547,6 @@
             for (var i = 0; i < $('#Poundage').datagrid('getRows').length; i++) {
                 data["FinanceProduce"].push($('#Poundage').datagrid('getRows')[i])
             }
-            //result["formName"] = "融资申请信息";
-            //result["buildData"] = data;
-            debugger
             return data;
         }
         //选择通讯地址类型时候加载单位地址和住宅地址
@@ -559,6 +570,18 @@
                 $("#wife").hide();
             }
         }
+
+        function RelationWithMaster() {
+            if ($(this).combobox("getValue") == "夫妻") {
+                debugger
+                $("#" + $(this).parents("fieldset")[0].id).find("div").find("#Name").textbox("setValue", $("#WifeName").textbox("getValue"));
+                $("#" + $(this).parents("fieldset")[0].id).find("div").find("#Mobile").textbox("setValue", $("#WifePhone").textbox("getValue"));
+                if ($(this).parents("fieldset")[1].id == "Guarantee" || $(this).parents("fieldset")[1].id == "joint") {
+                    $("#" + $(this).parents("fieldset")[0].id).find("div").find("#OfficeName").textbox("setValue", $("#WifeOfficeName").textbox("getValue"));
+                    $("#" + $(this).parents("fieldset")[0].id).find("div").find("#OfficeAddress").textbox("setValue", $("#WifeOfficeAddress").textbox("getValue"));
+                }
+            }
+        }
     </script>
 </head>
 <body>
@@ -575,16 +598,16 @@
             <article class="Vehicle">
                 <fieldset id="Vehicle" style="margin-bottom:0px;padding-left:20px">
                     <input name="Id" id="Id" type="hidden" />
-                    <legend>联系人信息</legend>
+                    <legend>渠道信息</legend>
                     <div class="row">
                         <div class="col-6">
                             <label>渠道名称:</label>
-                            <input name="ProxyArea" id="ProxyArea" class="easyui-textbox" readonly />
+                            <input name="PartnerName" id="PartnerName" class="easyui-textbox" readonly />
                         </div>
 
                         <div class="col-6">
                             <label>联系人:</label>
-                            <input name="Name" id="Name" class="easyui-textbox" readonly />
+                            <input name="UserName" id="UserName" class="easyui-textbox" readonly />
                         </div>
                     </div>
                     <div class="row">
@@ -617,36 +640,18 @@
                     <div class="row">
                         <div class="col-6">
                             <label>厂商指导价:</label>
-                            <input name="ManufacturerGuidePrice" class="easyui-textbox" data-options="validType:'Price'" />
+                            <input name="ManufacturerGuidePrice" id="ManufacturerGuidePrice" class="easyui-textbox" data-options="validType:'Price'" />
                             <span class="unit">万元</span>
                         </div>
 
                         <div class="col-6">
                             <label>排量:</label>
-                            <input name="Displacement" class="easyui-textbox" />
+                            <input name="Displacement" class="easyui-textbox" readonly/>
                         </div>
                     </div>
 
                     <legend style="margin-top:25px;">车辆补充信息</legend>
                     <div class="row">
-                        <div class="col-6">
-                            <label>注册登记日期:</label>
-                            <input name="RegisterDate" class="easyui-textbox" data-options="validType:'YearMonth'" />
-                        </div>
-
-                        <div class="col-6">
-                            <label>行驶里程:</label>
-                            <input name="RunningMiles" class="easyui-textbox" data-options="validType:'Integer'" />
-                            <span class="unit">公里</span>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-6">
-                            <label>车辆出厂日期:</label>
-                            <input name="FactoryDate" class="easyui-textbox" data-options="validType:'Date'" />
-                        </div>
-
                         <div class="col-6">
                             <label>业务类型:</label>
                             <select id="Type" name="Type" class="easyui-combobox" data-options="editable:false">
@@ -658,6 +663,52 @@
                                 <option value="6">新车交易贷</option>
                             </select>
                         </div>
+
+                        <div class="col-6">
+                            <label>车牌号:</label>
+                            <input name="PlateNo" class="easyui-textbox" data-options="validType:'PlateNo'" />
+                        </div>
+
+                    </div>
+
+                    <div class="row">
+                        <div class="col-6">
+                            <label>车架号:</label>
+                            <input name="FrameNo" class="easyui-textbox" />
+                        </div>
+
+                        <div class="col-6">
+                            <label>发动机号:</label>
+                            <input name="EngineNo" class="easyui-textbox" />
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-6">
+                            <label>车况:</label>
+                            <select id="VehicleCondition" name="VehicleCondition" class="easyui-combobox" data-options="editable:false">
+                                <option value="1">新车</option>
+                                <option value="2">二手车</option>
+                            </select>
+                        </div>
+
+                        <div class="col-6">
+                            <label>行驶里程:</label>
+                            <input name="RunningMiles" class="easyui-textbox" data-options="validType:'Integer'" />
+                            <span class="unit">公里</span>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-6">
+                            <label>注册登记日期:</label>
+                            <input name="RegisterDate" class="easyui-textbox" data-options="validType:'YearMonth'" />
+                        </div>
+
+                        <div class="col-6">
+                            <label>车辆出厂日期:</label>
+                            <input name="FactoryDate" class="easyui-textbox" data-options="validType:'Date'" />
+                        </div>
                     </div>
 
                     <div class="row">
@@ -667,9 +718,8 @@
                         </div>
 
                         <div class="col-6">
-                            <label>车况:</label>
-                            <input id="VehicleCondition1" name="VehicleCondition" type="radio" checked="checked" value="1">新车
-                            <input id="VehicleCondition2" name="VehicleCondition" type="radio" value="2">二手车
+                            <label>车身颜色:</label>
+                            <input name="Color" class="easyui-textbox" />
                         </div>
                     </div>
                 </fieldset>
@@ -682,7 +732,7 @@
                 <fieldset id="produce" style="margin-bottom:0px;padding:0 20px">
                     <legend>租赁信息</legend>
                     <input name="Id" id="Id" type="hidden" />
-
+                    <input name="Poundage" type="hidden">
                     <div class="row">
                         <div class="col-6">
                             <label>产品代码:</label>
@@ -752,6 +802,27 @@
 
                     <div class="row">
                         <div class="col-6">
+                            <label>融资项:</label>
+                            <table id="Financing" class="easyui-datagrid" data-options="height: 230,width:400,rownumbers: true,  loadMsg: '正在加载，请稍候...',
+                               onDblClickCell:onEditor,
+                               singleSelect:true,
+                               ">
+                                <thead>
+                                    <tr>
+                                        <th data-options="field:'FinancingProjectId',hidden:true">Id</th>
+                                        <th data-options="field:'Name',width:185,align:'center'">名称</th>
+                                        <th data-options="field:'Money',width:180,align:'center',editor:{type:'text',options:{required:true}}">价格</th>
+                                        <th data-options="field:'IsFinancing',width:120,align:'center',hidden:true">是否是融资项</th>
+                                        <th data-options="field:'IsEdit',width:120,align:'center',hidden:true">是否可编辑</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                            <div style="float:left;margin-left: 250px">
+                                <label>融资项总计:<span name="FinancingCount" id="FinancingCount" style="font-weight:bold" /></label>
+                            </div>
+                        </div>
+
+                        <div class="col-6">
                             <label>客户手续费:</label>
                             <table id="Poundage" class="easyui-datagrid" data-options="height: 230,width:400,rownumbers: true,
                                 loadMsg: '正在加载，请稍候...',
@@ -772,34 +843,12 @@
                                 <label>手续费总计:<span name="PoundageCount" id="PoundageCount" style="font-weight:bold" /></label>
                             </div>
                         </div>
-
-                        <div class="col-6">
-                            <label>融资项:</label>
-                            <table id="Financing" class="easyui-datagrid" data-options="height: 230,width:400,rownumbers: true,  loadMsg: '正在加载，请稍候...',
-                               onDblClickCell:onEditor,
-                               singleSelect:true,
-                               ">
-                                <thead>
-                                    <tr>
-                                        <th data-options="field:'FinancingProjectId',hidden:true">Id</th>
-                                        <th data-options="field:'Name',width:185,align:'center'">名称</th>
-                                        <th data-options="field:'Money',width:180,align:'center',editor:{type:'text',options:{required:true}}">价格</th>
-                                        <th data-options="field:'IsFinancing',width:120,align:'center',hidden:true">是否是融资项</th>
-                                        <th data-options="field:'IsEdit',width:120,align:'center',hidden:true">是否可编辑</th>
-                                    </tr>
-                                </thead>
-                            </table>
-
-                            <div style="float:left;margin-left: 250px">
-                                <label>融资项总计:<span name="FinancingCount" id="FinancingCount" style="font-weight:bold" /></label>
-                            </div>
-                        </div>
                     </div>
 
                     <div class="row">
                         <div class="col-6">
-                            <label>意向融资金额:</label>
-                            <input id="IntentionPrincipal" name="IntentionPrincipal" class="easyui-textbox" data-options="validType:'Price',required:true" />
+                            <label>融资额:</label>
+                            <input id="Financing" name="Financing" class="easyui-textbox" data-options="validType:'Price',required:true" />
                             <span class="unit">元</span>
                         </div>
                         <div class="col-6" id="OncePayMonthsDiv">
@@ -916,6 +965,7 @@
                         <div class="col-6">
                             <label>行业:</label>
                             <select id="IndustryType" name="IndustryType" class="easyui-combobox" data-options="editable:false">
+                                <option>　</option>
                                 <option value="农、林、牧、渔业">农、林、牧、渔业</option>
                                 <option value="采掘业">采掘业</option>
                                 <option value="制造业">制造业</option>
@@ -959,7 +1009,7 @@
 
                             <div class="col-6">
                                 <label>配偶移动电话:</label>
-                                <input id="WifePhone" name="WifePhone" class="easyui-textbox" data-options="validType:'PhoneOrMobile'" />
+                                <input id="WifePhone" name="WifePhone" class="easyui-textbox" data-options="validType:'Mobile'" />
                             </div>
                         </div>
 
@@ -1107,6 +1157,7 @@
                             <input name="Type" type="hidden" value="2" />
                             <input name="Id" type="hidden" />
                         </div>
+
                         <div class="minusdiv">
                             <a class="add" onclick="MinusContacts(this, joints)">
                                 <img src="images/minus.png" />
@@ -1115,16 +1166,36 @@
 
                         <div class="row">
                             <div class="col-6">
+                                <label>与申请人关系:</label>
+                                <select id="RelationWithMaster" name="RelationWithMaster" class="easyui-combobox" data-options="editable:false,onSelect:RelationWithMaster">
+                                    <option value="父母或子女">父母或子女</option>
+                                    <option value="兄弟姐妹">兄弟姐妹</option>
+                                    <option value="同事">同事</option>
+                                    <option value="同学">同学</option>
+                                    <option value="朋友">朋友</option>
+                                    <option value="夫妻">夫妻</option>
+                                    <option value="其他">其他</option>
+                                </select>
+                            </div>
+
+                            <div class="col-6">
                                 <label>姓名:</label>
                                 <input id="Name" name="Name" class="easyui-textbox" data-options="required:true" />
                             </div>
+                        </div>
 
+                        <div class="row">
                             <div class="col-6">
                                 <label>性别:</label>
                                 <select id="Sex" name="Sex" class="easyui-combobox" data-options="editable:false">
                                     <option value="男">男</option>
                                     <option value="女">女</option>
                                 </select>
+                            </div>
+
+                            <div class="col-6">
+                                <label>手机:</label>
+                                <input id="Mobile" name="Mobile" class="easyui-textbox" data-options="validType:'Mobile',required:true" />
                             </div>
                         </div>
 
@@ -1137,26 +1208,6 @@
                                     <option value="大专">大专</option>
                                     <option value="高中">高中</option>
                                     <option value="初中及以下">初中及以下</option>
-                                </select>
-                            </div>
-
-                            <div class="col-6">
-                                <label>手机:</label>
-                                <input id="Mobile" name="Mobile" class="easyui-textbox" data-options="validType:'Mobile',required:true" />
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-6">
-                                <label>与申请人关系:</label>
-                                <select id="RelationWithMaster" name="RelationWithMaster" class="easyui-combobox" data-options="editable:false">
-                                    <option value="父母或子女">父母或子女</option>
-                                    <option value="兄弟姐妹">兄弟姐妹</option>
-                                    <option value="同事">同事</option>
-                                    <option value="同学">同学</option>
-                                    <option value="朋友">朋友</option>
-                                    <option value="夫妻">夫妻</option>
-                                    <option value="其他">其他</option>
                                 </select>
                             </div>
                         </div>
@@ -1220,7 +1271,6 @@
                             </div>
                         </div>
                     </template>
-                   
                 </fieldset>
 
                 <fieldset id="Guarantee">
@@ -1245,16 +1295,38 @@
 
                         <div class="row">
                             <div class="col-6">
+                                <label>与申请人关系:</label>
+                                <select id="RelationWithMaster" name="RelationWithMaster" class="easyui-combobox" style="width:408px" data-options="required:true,onSelect:RelationWithMaster">
+                                    <option value="父母或子女">父母或子女</option>
+                                    <option value="兄弟姐妹">兄弟姐妹</option>
+                                    <option value="同事">同事</option>
+                                    <option value="同学">同学</option>
+                                    <option value="朋友">朋友</option>
+                                    <option value="夫妻">夫妻</option>
+                                    <option value="其他">其他</option>
+                                </select>
+                            </div>
+
+                            <div class="col-6">
                                 <label>姓名:</label>
                                 <input id="Name" name="Name" class="easyui-textbox" data-options="required:true" />
                             </div>
 
+                        
+                        </div>
+
+                        <div class="row">
                             <div class="col-6">
                                 <label>性别:</label>
                                 <select id="Sex" name="Sex" class="easyui-combobox" data-options="editable:false">
                                     <option value="男">男</option>
                                     <option value="女">女</option>
                                 </select>
+                            </div>
+
+                            <div class="col-6">
+                                <label>手机:</label>
+                                <input id="Mobile" name="Mobile" class="easyui-textbox" data-options="validType:'Mobile',required:true" />
                             </div>
                         </div>
 
@@ -1267,26 +1339,6 @@
                                     <option value="大专">大专</option>
                                     <option value="高中">高中</option>
                                     <option value="初中及以下">初中及以下</option>
-                                </select>
-                            </div>
-
-                            <div class="col-6">
-                                <label>手机:</label>
-                                <input id="Mobile" name="Mobile" class="easyui-textbox" data-options="validType:'Mobile',required:true" />
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-6">
-                                <label>与申请人关系:</label>
-                                <select id="RelationWithMaster" name="RelationWithMaster" class="easyui-combobox" data-options="editable:false">
-                                    <option value="父母或子女">父母或子女</option>
-                                    <option value="兄弟姐妹">兄弟姐妹</option>
-                                    <option value="同事">同事</option>
-                                    <option value="同学">同学</option>
-                                    <option value="朋友">朋友</option>
-                                    <option value="夫妻">夫妻</option>
-                                    <option value="其他">其他</option>
                                 </select>
                             </div>
                         </div>
@@ -1376,23 +1428,8 @@
 
                         <div class="row">
                             <div class="col-6">
-                                <label>姓名:</label>
-                                <input name="Name" class="easyui-textbox" data-options="required:true" />
-                            </div>
-
-                            <div class="col-6">
-                                <label>性别:</label>
-                                <select id="sex" name="sex" class="easyui-combobox" style="width:408px" data-options="required:true">
-                                    <option value="男">男</option>
-                                    <option value="女">女</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-6">
                                 <label>与申请人关系:</label>
-                                <select id="RelationWithMaster" name="RelationWithMaster" class="easyui-combobox" style="width:408px" data-options="required:true">
+                                <select id="RelationWithMaster" name="RelationWithMaster" class="easyui-combobox" style="width:408px" data-options="required:true,onSelect:RelationWithMaster">
                                     <option value="父母或子女">父母或子女</option>
                                     <option value="兄弟姐妹">兄弟姐妹</option>
                                     <option value="同事">同事</option>
@@ -1404,8 +1441,23 @@
                             </div>
 
                             <div class="col-6">
+                                <label>姓名:</label>
+                                <input name="Name" id="Name" class="easyui-textbox" data-options="required:true" />
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-6">
+                                <label>性别:</label>
+                                <select id="sex" name="sex" class="easyui-combobox" style="width:408px" data-options="required:true">
+                                    <option value="男">男</option>
+                                    <option value="女">女</option>
+                                </select>
+                            </div>
+
+                            <div class="col-6">
                                 <label>移动电话:</label>
-                                <input name="Mobile" class="easyui-textbox" data-options="required:true" />
+                                <input name="Mobile" id ="Mobile" class="easyui-textbox" data-options="required:true" />
                             </div>
                         </div>
 
@@ -1427,7 +1479,7 @@
                 pageSize: 20,
                 pageList: [10,20,30,40,50],
                 method: 'GET',
-                url: '../api/Produce/GetPageList',
+                url: '../api/FinanceAuidt/GetPageList',
                 loadMsg: '正在加载，请稍候...',
                 onBeforeLoad: BeforeLoad,
                 onDblClickCell:ChooseProduce,
@@ -1453,6 +1505,7 @@
                     <div style="height:30px; width:auto;">
                         <input id="ProductCodeOrName" class="easyui-textbox" style="width: 200px;height:25px; margin-top:3px;" data-options="prompt:'请输入产品代码或产品名称'" />
                         <a id="search" class="easyui-linkbutton" href="javascript:void(0)" style="width: auto;height:25px; margin-top:3px;" data-options="iconCls:'icon-search',onClick:Reload">搜索</a>
+                        <a id="add" class="easyui-linkbutton" href="javascript:void(0)" style="width: auto;height:25px; margin-top:3px;" data-options="iconCls:'icon-add',onClick:Add">保存</a>
                     </div>
                 </div>
             </div>

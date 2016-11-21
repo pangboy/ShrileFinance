@@ -69,8 +69,8 @@
             Partner partner = partnerRepository.GetByUser(userManager.CurrentUser());
             return new PartnerAndUser()
             {
-                ProxyArea = partner.ProxyArea,
-                Name = user.Name,
+                PartnerName = partner.ProxyArea,
+                UserName = user.Name,
                 Phone = user.PhoneNumber,
             };
                  
