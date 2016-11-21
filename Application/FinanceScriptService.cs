@@ -25,11 +25,11 @@
             // 创建或修改
             if (finance.Id.HasValue)
             {
-                financeService.Modify(finance);
+                financeAppService.Modify(finance);
             }
             else
             {
-                financeService.Create(finance);
+                financeAppService.Create(finance);
 
                 // 设置流程实例关联的业务标识
                 Instance.RootKey = finance.Id;
