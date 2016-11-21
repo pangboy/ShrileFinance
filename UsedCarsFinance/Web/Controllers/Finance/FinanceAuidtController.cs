@@ -85,6 +85,12 @@
             return Ok(finance);
         }
 
+        public IHttpActionResult GetParentAndUser()
+        {
+            var parentAndUser = financeAppService.GetPartnerAndUser();
+            return Ok(parentAndUser);
+        }
+
         [HttpGet]
         public IHttpActionResult LeaseeContract(Guid Id)
         {

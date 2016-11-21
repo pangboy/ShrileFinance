@@ -124,6 +124,21 @@
             if (parent.flow.RootKey != undefined) {
                 GetByFinanceId();
             }
+            else {
+                $.ajax({
+                    async: false,
+                    data: { },
+                    type: "GET",
+                    url: "../api/FinanceAuidt/GetParentAndUser",
+                    statusCode: {
+                        200: function (data) {
+                            $("#Phone").textbox("setValue", data.Phone)
+                            $("#Name").textbox("setValue", data.Name)
+                            $("#ProxyArea").textbox("setValue", data.ProxyArea)
+                        }
+                    }
+                });
+            }
         }
         //加载融资信息
         function GetByFinanceId() {
@@ -219,6 +234,7 @@
                 statusCode: {
                     200: function (data) {
                         if (data != null) {
+                            debugger
                             $("#ProduceId").val(data.Id);
                             $("#Id").val(data.Id);//ProduceId、ID都表示产品ID
                             $("#produce").form("load", data);
@@ -508,7 +524,11 @@
             data["ProduceId"] = $("#ProduceId").val();;
             data["IntentionPrincipal"] = $("#IntentionPrincipal").textbox("getValue");
             data["OncePayMonths"] = $("#OncePayMonths").textbox("getValue");
-            data["FinanceProduce"] = $('#Financing').datagrid('getRows');
+            data["FinanceProduce"] = new Array();
+            for (var i = 0; i < $('#Financing').datagrid('getRows').length; i++) {
+                data["FinanceProduce"].push($('#Financing').datagrid('getRows')[i])
+            }
+
             data["Id"] = $("#financeId").val();
             for (var i = 0; i < $('#Poundage').datagrid('getRows').length; i++) {
                 data["FinanceProduce"].push($('#Poundage').datagrid('getRows')[i])
