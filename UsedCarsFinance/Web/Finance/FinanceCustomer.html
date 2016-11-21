@@ -15,50 +15,41 @@
     <script src="../BankInfo/JS/validType.js"></script>
 
     <script type="text/javascript">
+        uc.form = new UCForm(".container");
+        var query = {};
+
         $(function () {
             // 获取参数
-            var query = {} //$.extend(uc.GetParams(), parent.flow.InstanceData);
-
+            //query =$.extend(uc.GetParams(), parent.flow.InstanceData);
+            //query.FinanceId = parent.flow.RootKey;
+            debugger
             if (query.FinanceId == undefined || query.FinanceId.length == 0) {
-                query.FinanceId = 'ED468191-9FAB-E611-80C5-507B9DE4A488';
+                query.FinanceId = "ED468191-9FAB-E611-80C5-507B9DE4A488";
+                query.state = 1;
             }
-
-            nodeType = $('form[name=FinanceCustomer]>input[name=NodeType]').val();
 
             // 初始化
             Init(query);
         });
 
-        // 初始化
-        function Init(query) {
-            // 客户页面加载
-            LoadCustomerPage();
+        // LoadData方法
+        function LoadData(data)
+        {
+            if (data) {
+                // 客户数据加载
+                LoadCustomer(data);
 
-            // 加载数据
-            LoadData(query);
-        }
-
-        // 加载数据
-        function LoadData(query) {
-            if (query == undefined || query.FinanceId == undefined) {
-                return;
-            }
-
-            // 加载运营
-            $.ajax({
-                async: false,
-                method: "GET",
-                data: { financeId: query.FinanceId },
-                url: '../api/Operation/GetOperation',
-                statusCode: {
-                    200: function (data) {
-                        if (data) {
-                            // 客户数据加载
-                            LoadCustomer(data);
-                        }
-                    }
+                if (query.state == 0) {
+                    // 禁用所有
+                    Disabled($("fieldset"));
                 }
-            });
+                else if (query.state == 1) {
+                    // 初审
+                }
+                else if (query.state == 2) {
+                    // 复审
+                }
+            }
         }
 
         //验证数据
@@ -104,6 +95,31 @@
             result["buildData"] = value;
 
             return result;
+        }
+    </script>
+
+    <script type="text/javascript">
+        // 初始化
+        function Init(query) {
+            // 客户页面加载
+            LoadCustomerPage();
+
+            // 加载远程数据
+            if (query == undefined || query.FinanceId == undefined) {
+                return;
+            }
+
+            $.ajax({
+                async: false,
+                method: "GET",
+                data: { financeId: query.FinanceId },
+                url: '../api/Operation/GetOperation',
+                statusCode: {
+                    200: function (data) {
+                        LoadData(data);
+                    }
+                }
+            });
         }
 
         // 运营页面加载

@@ -215,7 +215,7 @@
 
             if (user == null)
             {
-                throw new ArgumentNullAppException("Invalid name or password.");
+                throw new ArgumentNullAppException("用户名或密码无效.");
             }
 
             return await userManager.CreateIdentityAsync(user, DefaultAuthenticationTypes.ApplicationCookie);

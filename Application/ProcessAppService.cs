@@ -124,7 +124,7 @@
                     user = partner.Approvers.Single(m => m.RoleId == action.Transfer.RoleId);
                     break;
                 case ActionAllocationEnum.记录:
-                    user = instance.Logs.Last(m => m.ActionId == action.TransferId).ProcessUser;
+                    user = instance.Logs.Last(m => m.NodeId == action.TransferId).ProcessUser;
                     break;
                 case ActionAllocationEnum.发起者:
                     user = instance.StartUser;
@@ -253,38 +253,48 @@
         /// </summary>
         /// <param name="instanceId">实例标识</param>
         /// <returns></returns>
-        public FrameViewModel GetFrame(Guid? instanceId)
+        public FrameViewModel GetFrame(Guid instanceId)
         {
             var frame = new FrameViewModel();
 
-            if (instanceId.HasValue)
-            {
-                var instance = instanceReopsitory.Get(instanceId.Value);
+            var instance = instanceReopsitory.Get(instanceId);
 
-                frame.Actions = Mapper.Map<IEnumerable<ActionViewModel>>(instance.CurrentNode.Actions);
-                frame.Forms = formRepository.GetByNode(instance.CurrentNodeId.Value)
-                    .Select(m => new FormViewModel {
-                        Id = m.FormId,
-                        Name = m.Form.Name,
-                        Link = m.Form.Link,
-                        State = m.State,
-                        IsHandler = m.IsHandler,
-                        IsOpen = m.IsOpen
-                    });
+            frame.Actions = Mapper.Map<IEnumerable<ActionViewModel>>(instance.CurrentNode.Actions);
+            frame.Forms = formRepository.GetByNode(instance.CurrentNodeId.Value)
+                .Select(m => new FormViewModel {
+                    Id = m.FormId,
+                    Name = m.Form.Name,
+                    Link = m.Form.Link,
+                    State = m.State,
+                    IsHandler = m.IsHandler,
+                    IsOpen = m.IsOpen
+                });
 
-                frame.HasInnerOpinion = roleManager.FindByIdAsync(CurrentUser.RoleId).Result.Power < 4;
-                frame.RootKey = instance.RootKey;
-            }
-            else
-            {
-                frame.Forms = formRepository.GetByRole(CurrentUser.RoleId)
-                    .Select(m => new FormViewModel {
-                        Id = m.FormId,
-                        Name = m.Form.Name,
-                        Link = m.Form.Link,
-                        State = m.State
-                    });
-            }
+            frame.HasInnerOpinion = roleManager.FindByIdAsync(CurrentUser.RoleId).Result.Power < 4;
+            frame.RootKey = instance.RootKey;
+
+            return frame;
+        }
+
+        /// <summary>
+        /// 以当前角色获取框架信息
+        /// </summary>
+        /// <param name="instanceId">实例标识</param>
+        /// <returns></returns>
+        public FrameViewModel GetFrameView(Guid instanceId)
+        {
+            var frame = new FrameViewModel();
+
+            var instance = instanceReopsitory.Get(instanceId);
+
+            frame.Forms = formRepository.GetByRole(CurrentUser.RoleId)
+                .Select(m => new FormViewModel {
+                    Id = m.FormId,
+                    Name = m.Form.Name,
+                    Link = m.Form.Link,
+                    State = m.State
+                });
+            frame.RootKey = instance.RootKey;
 
             return frame;
         }
