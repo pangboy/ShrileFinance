@@ -1,6 +1,7 @@
 ﻿namespace Web.Controllers.Finance
 {
     using System;
+    using System.Collections.Generic;
     using System.Data;
     using System.Web.Http;
     using Application;
@@ -60,11 +61,11 @@
         }
 
         [HttpGet]
-        public IHttpActionResult GetPageList(int page, int rows, string Search)
+        public IHttpActionResult GetPageList( string Search)
         {
-            var list = partnerAppService.GetPageListByPartner(Search, page, rows);
+            var list = partnerAppService.GetPageListByPartner(Search);
 
-            return Ok(new PagedListViewModel<ProduceListViewModel>(list));
+            return Ok(list);
         }
 
         public IHttpActionResult Create(FinanceApplyViewModel value)
