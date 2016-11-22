@@ -28,9 +28,6 @@
 
             if (flow.InstanceId) {
                 LoadFrame(flow.InstanceId);
-
-                // 加载草稿
-                setTimeout(draft.Load, 5000);
             }
 
             // 开启草稿保存
@@ -80,6 +77,9 @@
                 }).tabs("getTab", i).data("url", link);
             });
 
+            // 加载草稿
+            draft.Load();
+
             if (forms.length > 0) {
                 $("#tabs").tabs("select", openIndex || 0);
             }
@@ -87,18 +87,30 @@
 
         function TabSelect(title, index) {
             var tab = $("#tabs").tabs("getSelected");
-
             var url = tab.data("url");
 
             if (url) {
+                var formId = tab.attr("id");
+
                 $("#tabs").tabs("update", {
                     tab: tab,
                     options: {
-                        content: "<iframe name='" + tab.attr("id") + "' scrolling='auto' frameborder='0'  src='" + url + "' style='width:100%;height:99%;'></iframe>"
+                        content: "<iframe name='" + formId + "' scrolling='auto' frameborder='0'  src='" + url + "' style='width:100%;height:99%;'></iframe>"
                     }
                 });
 
                 tab.removeData("url");
+
+                setTimeout(function () {
+                    var draft = tab.data("draft");
+                    if (draft) {
+                        var frame = frames[formId];
+
+                        if (frame.LoadData) {
+                            frame.LoadData(draft);
+                        }
+                    }
+                }, 1000);
             }
         }
 
@@ -176,7 +188,9 @@
             $(flow.Forms).each(function (i, form) {
                 var frame = frames[form.Id];
 
-                data[form.Id] = frame.BuildData();
+                if (frame.BuildData) {
+                    data[form.Id] = frame.BuildData();
+                }
             });
 
             return data;
@@ -184,9 +198,9 @@
 
         function LoadData(data) {
             $(flow.Forms).each(function (i, form) {
-                var frame = frames[form.Id];
-
-                frame.LoadData(data[form.Id]);
+                if (data[form.Id]) {
+                    $("#" + form.Id).data("draft", data[form.Id]);
+                }
             });
         }
     </script>
