@@ -30,7 +30,7 @@
                  fv.PlateNo AS '[车牌号]', fv.FrameNo AS '[车架号]', fv.EngineNo AS '[发动机号]', fv.RunningMiles AS '[读表里程数]',
                  vvi.CarBrand AS '[品牌]', vvi.Series AS '[型号]',
                  '' AS '[融资额大写]', fi.Principal AS '[融资额]', fi.ProduceId,
-                 pi.FinancingPeriods AS '[融资期限', '' AS '[手续费大写]', fi.Cost AS '[手续费]',
+                 pi.FinancingPeriods AS '[融资期限', '' AS '[手续费大写]', fi.Poundage AS '[手续费]',
                  '' AS '[保证金大写]', (pi.CustomerBailRatio * fi.Principal)AS '[保证金]',
                  fi.RepaymentDate AS '[还款日]',
                  YEAR(DATEADD(MM, 1, fi.RepayRentDate)) AS '[首次支付年]', MONTH(DATEADD(MM, 1, fi.RepayRentDate)) AS '[首次支付月]', fi.RepayRentDate AS '[首次支付日]',

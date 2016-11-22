@@ -50,10 +50,10 @@ namespace Data.PDF
             WordHelper wdHelp = new WordHelper();
             File.Copy(url.ToString(), url1.ToString());
 
-            //bool Is = wdHelp.OpenAndActive(url1, false, false);
+           // bool Is = wdHelp.OpenAndActive(url1.ToString(), false, false);
             //if (Is)
             //{
-           // string path = @"~\upload\PDF\";
+                // string path = @"~\upload\PDF\";
                 object fullpath = url;// HttpContent.Current.Server.MapPath(path);
 
                 //if (Directory.Exists(fullpath))
@@ -66,64 +66,67 @@ namespace Data.PDF
 
                 Microsoft.Office.Interop.Word.Application app = null;
                 Microsoft.Office.Interop.Word.Document doc = null;
+                Microsoft.Office.Interop.Word.WdExportFormat wdPdf = Microsoft.Office.Interop.Word.WdExportFormat.wdExportFormatPDF;
+
                 //将要导出的新word文件名
                 string newFile = DateTime.Now.ToString("yyyyMMddHHmmssss") + ".doc";
                 string physicNewFile = "D:/Projects/upload/PDF/" + targetPdfName + ".pdf";
-            try
-            {
-                app = new Microsoft.Office.Interop.Word.Application();//创建word应用程序
-                                                                      // object fileName = Server.MapPath("template.doc");//模板文件
-                                                                      //打开模板文件
-                object oMissing = System.Reflection.Missing.Value;
-                doc = app.Documents.Open(ref url1,
-                ref oMissing, ref oMissing, ref oMissing, ref oMissing, ref oMissing,
-                ref oMissing, ref oMissing, ref oMissing, ref oMissing, ref oMissing,
-                ref oMissing, ref oMissing, ref oMissing, ref oMissing, ref oMissing);
-
-                //构造数据
-                Dictionary<string, string> datas = new Dictionary<string, string>();
-                datas.Add("[融资租赁合同]", "张三");
-                datas.Add("[乙方姓名]", "男");
-                datas.Add("{provinve}", "浙江");
-                datas.Add("{address}", "浙江省杭州市");
-                datas.Add("{education}", "本科");
-                datas.Add("{telephone}", "12345678");
-                datas.Add("{cardno}", "123456789012345678");
-
-                object replace = Microsoft.Office.Interop.Word.WdReplace.wdReplaceAll;
-                foreach (var item in datas)
+                try
                 {
-                    app.Selection.Find.Replacement.ClearFormatting();
-                    app.Selection.Find.ClearFormatting();
-                    app.Selection.Find.Text = item.Key;//需要被替换的文本
-                    app.Selection.Find.Replacement.Text = item.Value;//替换文本 
+                    app = new Microsoft.Office.Interop.Word.Application();//创建word应用程序
+                                                                          // object fileName = Server.MapPath("template.doc");//模板文件
+                                                                          //打开模板文件
+                    object oMissing = System.Reflection.Missing.Value;
+                    doc = app.Documents.Open(ref url1,
+                    ref oMissing, ref oMissing, ref oMissing, ref oMissing, ref oMissing,
+                    ref oMissing, ref oMissing, ref oMissing, ref oMissing, ref oMissing,
+                    ref oMissing, ref oMissing, ref oMissing, ref oMissing, ref oMissing);
 
-                    //执行替换操作
-                    app.Selection.Find.Execute(
-                    ref oMissing, ref oMissing,
-                    ref oMissing, ref oMissing,
-                    ref oMissing, ref oMissing,
-                    ref oMissing, ref oMissing, ref oMissing,
-                    ref oMissing, ref replace,
-                    ref oMissing, ref oMissing,
-                    ref oMissing, ref oMissing);
+                    //构造数据
+                    Dictionary<string, string> datas = new Dictionary<string, string>();
+                    datas.Add("[融资租赁合同]", "张三");
+                    datas.Add("[乙方姓名]", "男");
+                    datas.Add("{provinve}", "浙江");
+                    datas.Add("{address}", "浙江省杭州市");
+                    datas.Add("{education}", "本科");
+                    datas.Add("{telephone}", "12345678");
+                    datas.Add("{cardno}", "123456789012345678");
+
+                    object replace = Microsoft.Office.Interop.Word.WdReplace.wdReplaceAll;
+                    foreach (var item in datas)
+                    {
+                        app.Selection.Find.Replacement.ClearFormatting();
+                        app.Selection.Find.ClearFormatting();
+                        app.Selection.Find.Text = item.Key;//需要被替换的文本
+                        app.Selection.Find.Replacement.Text = item.Value;//替换文本 
+
+                        //执行替换操作
+                        app.Selection.Find.Execute(
+                        ref oMissing, ref oMissing,
+                        ref oMissing, ref oMissing,
+                        ref oMissing, ref oMissing,
+                        ref oMissing, ref oMissing, ref oMissing,
+                        ref oMissing, ref replace,
+                        ref oMissing, ref oMissing,
+                        ref oMissing, ref oMissing);
                     }
-
+                    object objWdPdf = wdPdf;
                     //对替换好的word模板另存为一个新的word文档
                     doc.SaveAs(physicNewFile,
-                    oMissing, oMissing, oMissing, oMissing, oMissing, oMissing, oMissing, oMissing, oMissing,
+                    objWdPdf, oMissing, oMissing, oMissing, oMissing, oMissing, oMissing, oMissing, oMissing,
                     oMissing, oMissing, oMissing, oMissing, oMissing, oMissing);
+                app.Documents.Close(ref oMissing, ref oMissing, ref oMissing);
+                //// 保存pdf文件
+                // wdHelp.SaveAsPDF("D:/Projects/upload/PDF/" + targetPdfName + ".pdf");
+                //wdHelp.Close();
 
-                    // 保存pdf文件
-                    // wdHelp.SaveAsPDF("D:/Projects/upload/PDF/" + targetPdfName + ".pdf");
-                    wdHelp.Close();
-
-
-                } 
-            catch
-            {
 
             }
+                catch
+                {
+
+                }
+           // }
             return null;
         }
 

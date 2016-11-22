@@ -1,6 +1,7 @@
 ﻿namespace Application
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
     using AutoMapper;
@@ -119,7 +120,7 @@
             return models;
         }
 
-        public IPagedList<ProduceListViewModel> GetPageListByPartner(string serach, int pageNumber, int pageSize)
+        public List<ProduceListViewModel> GetPageListByPartner(string serach)
         {
             var partner = repository.GetByUser(userManager.CurrentUser());
 
@@ -130,11 +131,11 @@
                 produces = produces.Where(m => m.Name.Contains(serach) || m.Code.Contains(serach));
             }
 
-            var pagedList = produces.ToPagedList(pageNumber, pageSize);
+           // var pagedList = produces.ToPagedList(pageNumber, pageSize);
 
-            var models = Mapper.Map<IPagedList<ProduceListViewModel>>(pagedList);
+           // var models = Mapper.Map<IPagedList<ProduceListViewModel>>(pagedList);
 
-            return models;
+            return Mapper.Map<List<ProduceListViewModel>>(produces).ToList();
         }
     }
 }
