@@ -88,23 +88,22 @@ function FieldsetLoadDateFactory(name, type, data) {
     return data;
 }
 
-// 对象遍历工厂 （isFunction：true or false）
-function TraverseDateFactory(RefObj, OutObj, isFunction) {
-    if (RefObj == null)
-    {
+// 部分映射工厂 （ RefObj：输入对象, OutObj：输出对象，isFunction(是否为方法)：true or false，array：属性数组，默认null（全属性映射））
+function TraverseDateFactory(RefObj, OutObj, isFunction, array) {
+    if (RefObj == null) {
         return OutObj;
     }
 
-    if (isFunction==true) {
+    if (isFunction == true) {
         for (var name in RefObj) {
-            if (typeof (RefObj[name]) == "function") {
+            if (typeof (RefObj[name]) == "function" && (array == null || $.inArray(name, array))) {
                 OutObj[name] = RefObj[name];
             }
         }
     }
     else {
         for (var name in RefObj) {
-            if (typeof (RefObj[name]) != "function") {
+            if (typeof (RefObj[name]) != "function" && (array == null || $.inArray(name, array))) {
                 OutObj[name] = RefObj[name];
             }
         }
@@ -113,20 +112,17 @@ function TraverseDateFactory(RefObj, OutObj, isFunction) {
     return OutObj;
 }
 
-
 $.extend($.fn.validatebox.defaults.rules, {
     Money: {
         validator: function (value) {
-            if (/^-?\d+\.\d{2}$/.test(value) || /^\d+$/.test(value))
-            {
-                if (value.length>=2 && /^[0][0-9]*$/.test(value.substr(0,2)))
-                {
+            if (/^-?\d+\.\d{2}$/.test(value) || /^\d+$/.test(value)) {
+                if (value.length >= 2 && /^[0][0-9]*$/.test(value.substr(0, 2))) {
                     return false;
                 }
-                
+
                 return true;
             }
-            
+
             return false;
         },
         message: '请输入整数或两位小数！'

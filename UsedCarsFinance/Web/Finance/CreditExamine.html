@@ -21,6 +21,7 @@
             // 获取参数
             query =$.extend(uc.GetParams(), parent.flow.InstanceData);
             query.FinanceId = parent.flow.RootKey;
+
             if (query.FinanceId == undefined || query.FinanceId.length == 0) {
                 query.FinanceId = "ED468191-9FAB-E611-80C5-507B9DE4A488";
                 query.state = 1;
@@ -38,7 +39,14 @@
                     data.IncomeSourceBusiness = 1;
                 }
 
-                $("form[id=CreditExamineReportFrom]>input[type=hidden]").form('load', data);
+                if (data.FinanceId == undefined || data.FinanceId == "")
+                {
+                    data.FinanceId = query.FinanceId;
+                }
+
+                $("form[id=CreditExamineReportFrom]>input[name=FinanceId]").val(data.FinanceId);
+                $("form[id=CreditExamineReportFrom]>input[name=Id]").val(data.Id);
+                
                 $("form[id=CreditExamineReportFrom] fieldset[id*=f]").each(function (i, e) {
                     if ($(e).attr("id") != "f5") {
                         $(e).form('load', data);
@@ -50,7 +58,10 @@
                                 $("form[id=CreditExamineReportFrom] fieldset#f5>div.row").append($("form[id=CreditExamineReportFrom] fieldset#f5 template#Guarantor").html());
                                 $.parser.parse($("form[id=CreditExamineReportFrom] fieldset#f5>div.row>div.col-6:last"));
                             }
-                            $("form[id=CreditExamineReportFrom] fieldset#f5>div.row>div.col-6:last>lable").text("保证人" + i + "姓名：");
+
+                            var number = i + 1;
+                            
+                            $("form[id=CreditExamineReportFrom] fieldset#f5>div.row>div.col-6:last>label").text("保证人" + number + "姓名：");
                             $("form[id=CreditExamineReportFrom] fieldset#f5>div.row>div.col-6:last>input[textboxname=Guarantor]").textbox('setValue', data.Guarantor[i]);
                         }
 
@@ -62,6 +73,7 @@
 
                 // 初始化radio
                 f7_InitLiving(data);
+                f11_InitLiving();
                 f12_InitAgeRange(data);
                 f21_InitSurvey(data);
 
@@ -84,6 +96,7 @@
 
         // 验证数据
         function ValidData() {
+            debugger
             if (!$("#CreditExamineReportFrom").form("validate")) {
                 return false;
             }
@@ -100,11 +113,7 @@
                 $("fieldset[id=f11] input[textboxname=IncreaseMarginReson]").textbox('setValue', '');
             }
 
-            var result = {};
-            result["formName"] = "信审报告";
-            result["buildData"] = value;
-
-            return result;
+            return value;
         }
     </script>
 
@@ -264,8 +273,6 @@
                         </div>
                     </template>
                 </div>
-
-                
             </fieldset>
 
             <fieldset id="f6">
@@ -483,17 +490,17 @@
                 <div class="row">
                     <div class="col-6">
                         <label>网核价格：</label>
-                        <input name="NetnuclearPrice" class="easyui-textbox" data-options="value:'000.00',validType:['Money'],required:true" />
+                        <input name="NetnuclearPrice" class="easyui-textbox" data-options="value:'0.00',validType:['Money'],required:true" />
                     </div>
                     <div class="col-6">
                         <label>核批价格：</label>
-                        <input name="NuclearGroupPrice" class="easyui-textbox" data-options="value:'000.00',validType:['Money'],required:true" />
+                        <input name="NuclearGroupPrice" class="easyui-textbox" data-options="value:'0.00',validType:['Money'],required:true" />
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-6">
                         <label>终审额度：</label>
-                        <input name="FinalLine" class="easyui-textbox" data-options="value:'000.00',validType:['Money'],required:true" />
+                        <input name="FinalLine" class="easyui-textbox" data-options="value:'0.00',validType:['Money'],required:true" />
                     </div>
                 </div>
             </fieldset>
@@ -533,6 +540,11 @@
                     </div>
                 </div>
                 <script type="text/javascript">
+                    function f11_InitLiving()
+                    {
+                        $("fieldset[id=f11] input[type=checkbox]").eq(0).click().click();
+                    }
+
                     function f11MarginClick(Obj) {
                         var inputs = $("fieldset[id=f11]").find("input[name*=Margin]");
 
@@ -570,7 +582,7 @@
                         <span style="margin-left:40px;"></span>
                         <input name="AgeRange" class="" type="radio" onclick="f12RdOther(this)" checked value="其他" /><span onclick="$(this).prev().click()">其他</span>
 
-                        <input name="AgeRangeOther" class="easyui-textbox col-2" style="width:100px" data-options="validType:['PositiveInteger','length[1,20]'],required:true" />
+                        <input name="AgeRangeOther" class="easyui-textbox col-2" style="width:100px" data-options="validType:['PositiveInteger','length[1,3]'],required:true" />
                     </div>
                 </div>
                 <script>

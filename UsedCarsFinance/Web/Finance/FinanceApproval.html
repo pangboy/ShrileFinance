@@ -1,0 +1,261 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>运营审核</title>
+    <meta charset="utf-8" />
+    <link href="../Content/easyui/themes/bootstrap/easyui.css" rel="stylesheet" />
+    <link href="../Content/easyui/themes/icon.css" rel="stylesheet" />
+    <link href="../Content/form-bootstrap.css" rel="stylesheet" />
+    <script src="../Scripts/jquery/jquery.js"></script>
+    <script src="../Scripts/easyui/jquery.easyui.js"></script>
+    <script src="../Scripts/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="Content/FinanceJs.js"></script>
+    <script src="../Scripts/usedcars.js"></script>
+    <script src="../BankInfo/JS/validType.js"></script>
+
+    <script type="text/javascript">
+        uc.form = new UCForm(".container");
+        var query = {};
+
+        $(function () {
+            // 获取参数
+            //query = $.extend(uc.GetParams(), parent.flow.InstanceData);
+            //query.FinanceId = parent.flow.RootKey;
+            debugger
+            if (query.FinanceId == undefined || query.FinanceId.length == 0) {
+                query.FinanceId = "ED468191-9FAB-E611-80C5-507B9DE4A488";
+                query.state = 1;
+            }
+
+            // 初始化
+            Init(query);
+        });
+
+        // LoadData方法
+        function LoadData(data) {
+            if (data) {
+                // 记录节点类型
+                $('form[name=FinanceOperation]>input[name=NodeType]').val("Operation");
+
+                // 加载运营
+                FieldsetLoadDateFactory('Operation', 'text', data);
+
+                // 加载融资项
+                LoadFinancingItem(data.FinancingItems);
+
+                if (query.state == 0) {
+                    // 禁用所有
+                    Disabled($("fieldset"));
+                }
+                else if (query.state == 1) {
+                    // 初审
+                }
+                else if (query.state == 2) {
+                    // 复审
+                    Disabled($('fieldset[name=Operation]'));
+
+                }
+            }
+        }
+
+        //验证数据
+        function ValidData() {
+            if (!$("form[name=FinanceOperation]").form("validate")) {
+                return false;
+            }
+
+            return true;
+        }
+
+        //构建数据
+        function BuildData() {
+            // 序列化运营信息
+            var value = FieldsetSerializeFactory('Operation', 'text');
+
+            // 节点类型
+            value.NodeType = $('form[name=FinanceOperation]>input[name=NodeType]').val();
+
+            return value;
+        }
+    </script>
+
+    <script type="text/javascript">
+        // 初始化
+        function Init(query) {
+            // 显示运营页面
+            $('form[name=FinanceOperation]').append($('form[name=FinanceOperation] template#Operation').html());
+            $.parser.parse($('form[name=FinanceOperation]'));
+
+
+            // 加载远程数据
+            if (query == undefined || query.FinanceId == undefined) {
+                return;
+            }
+
+            // 加载运营
+            $.ajax({
+                async: false,
+                method: "GET",
+                data: { financeId: query.FinanceId },
+                url: '../api/Operation/GetOperation',
+                statusCode: {
+                    200: function (data) {
+                        LoadData(data);
+                    }
+                }
+            });
+        }
+
+        // 运营基础信息加载
+        function LoadDataBase(data) {
+            if (data) {
+                // 加载运营
+                FieldsetLoadDateFactory('Operation', 'text', data);
+
+                // 加载融资项
+                LoadFinancingItem(data.FinancingItems);
+
+                // 加载手续费
+                LoadFinancingCost(data.FinanceCosts);
+            }
+        }
+
+        // 运营复审
+        function LoadData_Review(data) {
+            // 禁用运营
+            Disabled($('fieldset[name=Operation]'));
+        }
+
+        // 加载融资项
+        function LoadFinancingItem(dataKV) {
+            if (dataKV == null) {
+                return;
+            }
+
+            // 显示融资项
+            $("fieldset[name=FinancingItems]").show();
+
+            var tableData = [];
+            $(dataKV).each(function (i, e) {
+                if (e.Value.Key == "裸车价") {
+                    tableData.push({ Name: e.Value.Key, Money: e.Value.Value + " 万元" });
+                }
+
+                tableData.push({ Name: e.Value.Key, Money: e.Value.Value + " 元" });
+            });
+
+            FieldsetLoadDateFactory('FinancingItems', 'table', tableData);
+        }
+
+        // 加载手续费
+        function LoadFinancingCost(dataKV) {
+            if (dataKV == null) {
+                return;
+            }
+
+            var tableData = [];
+            $(dataKV).each(function (i, e) {
+                tableData.push({ Name: e.Value.Key, Money: e.Value.Value + " 元" });
+            });
+
+            FieldsetLoadDateFactory('FinancingCosts', 'table', tableData);
+        }
+    </script>
+</head>
+<body>
+    <form name="FinanceOperation" class="container">
+        <input type="hidden" name="NodeType" value="Operation" placeholder="节点类型（运营/客户）" />
+
+        <template id="Operation">
+            <fieldset name="Operation">
+                <legend>租赁信息</legend>
+                <input type="hidden" name="FinanceId" value="00000000-0000-0000-0000-000000000000" placeholder="融资标识" />
+
+                <div class="row">
+                    <div class="col-6">
+                        <label>选择还款日：</label>
+                        <select name="RepaymentDate" class="easyui-combobox" data-options="required:true,validType:'',value:'',readonly:false,editable:false">
+                            <option value="10">每月10号</option>
+                            <option value="25">每月25号</option>
+                        </select>
+                    </div>
+                    <div class="col-6">
+                        <label>首次租金支付日期：</label>
+                        <input name="RepayRentDate" class="easyui-datebox" data-options="required:true,validType:'',readonly:false,editable:false,width:410" />
+                    </div>
+                    <div class="col-6">
+                        <label>保证金：</label>
+                        <input name="Bail" class="easyui-textbox" data-options="required:true,validType:'Money',readonly:false" />
+                        <span name="uint">元</span>
+                    </div>
+                    <div class="col-6">
+                        <label><!--先付月供：-->月供金额</label>
+                        <input name="PayMonthly" class="easyui-textbox" data-options="required:true,validType:'Money',readonly:false" />
+                        <span name="uint">元</span>
+                    </div>
+                    <div class="col-6">
+                        <label>一次性付息：</label>
+                        <input name="OnePayInterest" class="easyui-textbox" data-options="required:true,validType:'Money',readonly:false" />
+                        <span name="uint">元</span>
+                    </div>
+                    <div class="col-6">
+                        <label>实际用款额：</label>
+                        <input name="ActualAmount" class="easyui-textbox" data-options="required:true,validType:'Money',readonly:false" />
+                        <span name="uint">万元</span>
+                    </div>
+                </div>
+            </fieldset>
+
+            <fieldset name="FinancingItems" style="display:none">
+                <legend>融资项和手续费</legend>
+                <div class="row">
+                    <div class="col-6">
+                        <label>融资项:</label>
+                        <table id="FinancingItems_dg" class="easyui-datagrid" data-options="height: '230',width:'400',
+                               singleSelect:true,
+                               onSelect:FinanceItemSelect,
+                               rownumbers:true,
+                               title:'融资项'
+                                ">
+                            <thead>
+                                <tr>
+                                    <th data-options="field:'Name',width:180,align:'center'">名称</th>
+                                    <th data-options="field:'Money',width:180,align:'center'">金额</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+
+                    <div class="col-6">
+                        <label>客户手续费:</label>
+                        <table id="FinancingCosts_dg" class="easyui-datagrid" data-options="height: 230,width:400,
+                               singleSelect:true,
+                               onSelect:FinanceCostSelect,
+                               rownumbers:true,
+                               title:'手续费'
+                                ">
+                            <thead>
+                                <tr>
+                                    <th data-options="field:'Name',width:180,align:'center'">名称</th>
+                                    <th data-options="field:'Money',width:180,align:'center'">金额</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+                <script type="text/javascript">
+                    function FinanceItemSelect(index, row) {
+                        $('#FinancingItems_dg').datagrid('uncheckRow', index);
+                    }
+
+                    function FinanceCostSelect(index, row) {
+                        $('#FinancingCosts_dg').datagrid('uncheckRow', index);
+                    }
+                </script>
+
+            </fieldset>
+        </template>
+    </form>
+</body>
+</html>

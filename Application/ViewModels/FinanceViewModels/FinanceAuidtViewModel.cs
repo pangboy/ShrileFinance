@@ -24,6 +24,16 @@
         public decimal? ManufacturerGuidePrice { get; set; }
 
         /// <summary>
+        /// 最小融资比例
+        /// </summary>
+        public decimal MinFinancingRatio { get; set; }
+
+        /// <summary>
+        /// 最大融资比例
+        /// </summary>
+        public decimal MaxFinancingRatio { get; set; }
+
+        /// <summary>
         /// 建议融资金额
         /// </summary>
         public decimal? AdviceMoney { get; set; }
@@ -51,7 +61,7 @@
         /// <summary>
         /// 手续费
         /// </summary>
-        public decimal? Cost { get; set; }
+        public decimal? Poundage { get; set; }
 
         /// <summary>
         /// 是否为复审
