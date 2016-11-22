@@ -111,6 +111,7 @@
     <Compile Include="UpdateBind.cs" />
     <Compile Include="ViewModels\AccountViewModels\ChangePasswordViewModel.cs" />
     <Compile Include="ViewModels\AccountViewModels\LoginViewModel.cs" />
+    <Compile Include="ViewModels\AccountViewModels\UserInfoViewModel.cs" />
     <Compile Include="ViewModels\FinanceViewModels\ApplicationViewModel.cs" />
     <Compile Include="ViewModels\FinanceViewModels\ContractViewModel.cs" />
     <Compile Include="ViewModels\FinanceViewModels\CreditExamineViewModel.cs" />

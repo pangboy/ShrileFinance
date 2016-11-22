@@ -947,9 +947,9 @@
     <Compile Include="Controllers\Unused\FlowController.cs" />
     <Compile Include="Controllers\Unused\InstanceController.cs" />
     <Compile Include="Controllers\Unused\NodeController.cs" />
-    <Compile Include="Controllers\Credit\Account\RoleController.cs" />
+    <Compile Include="Controllers\Account\RoleController.cs" />
     <Compile Include="Controllers\Sys\MenuController.cs" />
-    <Compile Include="Controllers\Credit\Account\UserController.cs" />
+    <Compile Include="Controllers\Account\UserController.cs" />
     <Compile Include="Controllers\Unused\WorkFlowController.cs" />
     <Compile Include="Controllers\ValidModel.cs" />
     <Compile Include="Controllers\Vehicle\CarHomeController.cs" />

@@ -20,7 +20,7 @@
 
         [DataType(DataType.Password)]
         [Display(Name = "确认密码")]
-        [Compare("NewPassword", ErrorMessage = "密码和确认密码不匹配。")]
+        [Compare("NewPassword", ErrorMessage = "{0} 和 {1} 不匹配。")]
         public string ConfirmPassword { get; set; }
     }
 }

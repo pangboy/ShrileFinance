@@ -95,11 +95,9 @@ function UsedCars() {
 
 	//默认 BadRequest 错误处理
 	this.E400 = function (xhr, status, error) {
-		var message;
+		var message = "";
 
 		if (xhr.responseJSON) {
-			message = xhr.responseJSON.Message + "<br />";
-
 			if (xhr.responseJSON.ModelState) {
 				var modelState = xhr.responseJSON.ModelState;
 
@@ -108,6 +106,8 @@ function UsedCars() {
 						message += errMsg + "<br />";
 					});
 				}
+			} else {
+				message = xhr.responseJSON.Message;
 			}
 		} else {
 			message = "请求失败!";

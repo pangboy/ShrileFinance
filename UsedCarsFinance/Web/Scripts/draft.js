@@ -69,7 +69,7 @@ function Draft(onSave, onLoad) {
 		};
 
 		$.ajax({
-			async: true,
+			async: false,
 			data: searchData,
 			method: "DELETE",
 			url: "../api/Draft/Clear",

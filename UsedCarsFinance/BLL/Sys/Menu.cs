@@ -28,7 +28,7 @@ namespace BLL.Sys
         /// <returns></returns>
         public List<MenuInfo> GetOnlyAuthorization()
 		{
-            string roleId = service.CurrentRole().Id;
+            string roleId = service.CurrentRole().Name;
 
 			List<MenuInfo> result = GetWithPermissions(roleId);
 

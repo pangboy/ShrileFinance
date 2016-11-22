@@ -1,24 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Threading.Tasks;
-using System.Web.Http;
-using Application;
-using Application.ViewModels.AccountViewModels;
-using Microsoft.AspNet.Identity;
-using Microsoft.Owin.Security;
-using Models;
-
-namespace Web.Controllers.Account
+﻿namespace Web.Controllers.Account
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Net.Http;
+    using System.Threading.Tasks;
+    using System.Web.Http;
+    using Application;
+    using Application.ViewModels.AccountViewModels;
+    using Microsoft.AspNet.Identity;
+    using Microsoft.Owin.Security;
+    using Models;
+
     public class UserController : ApiController
     {
         private readonly AccountAppService service;
-        private IAuthenticationManager AuthManager
-        {
-            get { return Request.GetOwinContext().Authentication; }
-        }
 
         public UserController(AccountAppService userService)
         {
@@ -26,10 +22,15 @@ namespace Web.Controllers.Account
             this.service.User = User;
         }
 
+        private IAuthenticationManager AuthManager
+        {
+            get { return Request.GetOwinContext().Authentication; }
+        }
+
         /// <summary>
         /// 分页查询
         /// </summary>
-        /// qiy		15.11.17
+        /// <param name="searchString">搜索字符串</param>
         /// <param name="page">页码</param>
         /// <param name="rows">尺寸</param>
         /// <returns></returns>
@@ -46,12 +47,11 @@ namespace Web.Controllers.Account
         /// <summary>
         /// 获取用户
         /// </summary>
-        /// qiy		15.11.12
-        /// <param name="Id">用户标识</param>
+        /// <param name="id">用户标识</param>
         /// <returns></returns>
-        public IHttpActionResult Get(string Id)
+        public IHttpActionResult Get(string id)
         {
-            var user = service.GetUser(Id);
+            var user = service.GetUser(id);
 
             return user != null ? (IHttpActionResult)Ok(user) : NotFound();
         }
@@ -59,7 +59,6 @@ namespace Web.Controllers.Account
         /// <summary>
         /// 用户选项
         /// </summary>
-        /// qiy     16.05.31
         /// <param name="roleId">角色标识</param>
         /// <returns></returns>
         [HttpGet]
@@ -71,11 +70,10 @@ namespace Web.Controllers.Account
         /// <summary>
         /// 注册帐号
         /// </summary>
-        /// qiy		15.11.12
-        /// <param name="value"></param>
+        /// <param name="model">视图模型</param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<IHttpActionResult> Post(UserViewModel value)
+        public async Task<IHttpActionResult> Post(UserViewModel model)
         {
             if (!ModelState.IsValid)
             {
@@ -84,7 +82,7 @@ namespace Web.Controllers.Account
 
             try
             {
-                var result = await service.CreateUserAsync(value);
+                var result = await service.CreateUserAsync(model);
 
                 if (!result.Succeeded)
                 {
@@ -102,19 +100,17 @@ namespace Web.Controllers.Account
         /// <summary>
         /// 修改帐号
         /// </summary>
-        /// qiy		15.11.12
-        /// <param name="userId"></param>
-        /// <param name="value"></param>
+        /// <param name="model">视图模型</param>
         /// <returns></returns>
         [HttpPut]
-        public async Task<IHttpActionResult> Put(UserViewModel value)
+        public async Task<IHttpActionResult> Put(UserViewModel model)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var result = await service.ModifyUserAsync(value);
+            var result = await service.ModifyUserAsync(model);
 
             if (!result.Succeeded)
             {
@@ -124,13 +120,33 @@ namespace Web.Controllers.Account
             return Ok();
         }
 
+        /// <summary>
+        /// 修改我的信息
+        /// </summary>
+        /// <param name="model">视图模型</param>
+        /// <returns></returns>
+        [HttpPut]
+        public async Task<IHttpActionResult> ModifyMyInfo(UserInfoViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var result = await service.ModifyMyInfoAsync(model);
+
+            if (!result.Succeeded)
+            {
+                return GetErrorResult(result);
+            }
+
+            return Ok();
+        }
 
         /// <summary>
         /// 登录
         /// </summary>
-        /// qiy		15.11.12
-        /// <param name="username">用户名</param>
-        /// <param name="password">密码</param>
+        /// <param name="model">视图模型</param>
         /// <returns></returns>
         [HttpPost]
         [AllowAnonymous]
@@ -146,9 +162,9 @@ namespace Web.Controllers.Account
                 var ident = await service.Login(model);
 
                 AuthManager.SignOut();
-                AuthManager.SignIn(new AuthenticationProperties {
-                    IsPersistent = false
-                }, ident);
+                AuthManager.SignIn(
+                    new AuthenticationProperties { IsPersistent = false },
+                    ident);
 
                 return Ok();
             }
@@ -161,7 +177,6 @@ namespace Web.Controllers.Account
         /// <summary>
         /// 注销
         /// </summary>
-        /// qiy		15.11.12
         /// <returns></returns>
         [HttpGet]
         public IHttpActionResult SignOut()
@@ -174,7 +189,6 @@ namespace Web.Controllers.Account
         /// <summary>
         /// 查询当前用户信息
         /// </summary>
-        /// yand     15.11.24
         /// <returns></returns>
         [HttpGet]
         public IHttpActionResult CurrentUser()
@@ -184,12 +198,12 @@ namespace Web.Controllers.Account
             return Ok(user);
         }
 
-        [HttpGet]
         /// <summary>
         /// 检查用户名
         /// </summary>
-        /// qiy		15.11.25
+        /// <param name="username">用户名</param>
         /// <returns></returns>
+        [HttpGet]
         public IHttpActionResult CheckUsername(string username)
         {
             return !service.CheckUsername(username) ? (IHttpActionResult)Ok() : BadRequest();
@@ -198,17 +212,17 @@ namespace Web.Controllers.Account
         /// <summary>
         /// 启用帐号
         /// </summary>
-        /// qiy		15.11.25
-        /// <param name="Id">用户标识</param>
+        /// <param name="id">用户标识</param>
+        /// <returns></returns>
         [HttpGet]
-        public async Task<IHttpActionResult> Enable(string Id)
+        public async Task<IHttpActionResult> Enable(string id)
         {
-            if (string.IsNullOrEmpty(Id))
+            if (string.IsNullOrEmpty(id))
             {
-                return BadRequest($"{nameof(Id)} 不可为空.");
+                return BadRequest($"{nameof(id)} 不可为空.");
             }
 
-            var result = await service.EnableAsync(Id);
+            var result = await service.EnableAsync(id);
 
             if (!result.Succeeded)
             {
@@ -221,17 +235,17 @@ namespace Web.Controllers.Account
         /// <summary>
         /// 禁用帐号
         /// </summary>
-        /// qiy		15.11.12
-        /// <param name="Id">用户标识</param>
+        /// <param name="id">用户标识</param>
+        /// <returns></returns>
         [HttpGet]
-        public async Task<IHttpActionResult> Disable(string Id)
+        public async Task<IHttpActionResult> Disable(string id)
         {
-            if (string.IsNullOrEmpty(Id))
+            if (string.IsNullOrEmpty(id))
             {
-                return BadRequest($"{nameof(Id)} 不可为空.");
+                return BadRequest($"{nameof(id)} 不可为空.");
             }
 
-            var result = await service.DisableAsync(Id);
+            var result = await service.DisableAsync(id);
 
             if (!result.Succeeded)
             {
@@ -244,17 +258,17 @@ namespace Web.Controllers.Account
         /// <summary>
         /// 重置密码
         /// </summary>
-        /// qiy		15.11.25
-        /// <param name="Id">用户标识</param>
+        /// <param name="id">用户标识</param>
+        /// <returns></returns>
         [HttpGet]
-        public async Task<IHttpActionResult> ResetPassword(string Id)
+        public async Task<IHttpActionResult> ResetPassword(string id)
         {
-            if (string.IsNullOrEmpty(Id))
+            if (string.IsNullOrEmpty(id))
             {
-                return BadRequest($"{nameof(Id)} 不可为空.");
+                return BadRequest($"{nameof(id)} 不可为空.");
             }
 
-            var result = await service.ResetPasswordAsync(Id);
+            var result = await service.ResetPasswordAsync(id);
 
             if (!result.Succeeded)
             {
@@ -267,12 +281,9 @@ namespace Web.Controllers.Account
         /// <summary>
         /// 修改密码
         /// </summary>
-        /// yaoy    15.11.25
-        /// <param name="UserId"></param>
-        /// <param name="Old_Password"></param>
-        /// <param name="New_Password"></param>
+        /// <param name="model">视图模型</param>
         /// <returns></returns>
-        [HttpGet]
+        [HttpPost]
         public async Task<IHttpActionResult> PasswordEdit(ChangePasswordViewModel model)
         {
             if (!ModelState.IsValid)
@@ -295,16 +306,14 @@ namespace Web.Controllers.Account
         /// <summary>
         /// 编辑权限
         /// </summary>
-        /// yaoy    15.11.25
-        /// qiy		16.03.09
-        /// <param name="value"></param>
+        /// <param name="model">视图模型</param>
         /// <returns></returns>
         [HttpPost]
-        public IHttpActionResult PermissionEdit(MenuPermissionsInfo value)
+        public IHttpActionResult PermissionEdit(MenuPermissionsInfo model)
         {
             BLL.User.Permissions menuPermissions = new BLL.User.Permissions();
 
-            return menuPermissions.MenuPermissionEdit(value) ? (IHttpActionResult)Ok() : BadRequest("保存失败");
+            return menuPermissions.MenuPermissionEdit(model) ? (IHttpActionResult)Ok() : BadRequest("保存失败");
         }
 
         private IHttpActionResult GetErrorResult(IdentityResult result)
@@ -320,7 +329,7 @@ namespace Web.Controllers.Account
                 {
                     foreach (string error in result.Errors)
                     {
-                        ModelState.AddModelError("", error);
+                        ModelState.AddModelError(string.Empty, error);
                     }
                 }
 
