@@ -70,10 +70,10 @@
         /// <summary>
         /// 注册帐号
         /// </summary>
-        /// <param name="value"></param>
+        /// <param name="model">视图模型</param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<IHttpActionResult> Post(UserViewModel value)
+        public async Task<IHttpActionResult> Post(UserViewModel model)
         {
             if (!ModelState.IsValid)
             {
@@ -82,7 +82,7 @@
 
             try
             {
-                var result = await service.CreateUserAsync(value);
+                var result = await service.CreateUserAsync(model);
 
                 if (!result.Succeeded)
                 {
@@ -100,17 +100,40 @@
         /// <summary>
         /// 修改帐号
         /// </summary>
-        /// <param name="value"></param>
+        /// <param name="model">视图模型</param>
         /// <returns></returns>
         [HttpPut]
-        public async Task<IHttpActionResult> Put(UserViewModel value)
+        public async Task<IHttpActionResult> Put(UserViewModel model)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var result = await service.ModifyUserAsync(value);
+            var result = await service.ModifyUserAsync(model);
+
+            if (!result.Succeeded)
+            {
+                return GetErrorResult(result);
+            }
+
+            return Ok();
+        }
+
+        /// <summary>
+        /// 修改我的信息
+        /// </summary>
+        /// <param name="model">视图模型</param>
+        /// <returns></returns>
+        [HttpPut]
+        public async Task<IHttpActionResult> ModifyMyInfo(UserInfoViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var result = await service.ModifyMyInfoAsync(model);
 
             if (!result.Succeeded)
             {
@@ -123,7 +146,7 @@
         /// <summary>
         /// 登录
         /// </summary>
-        /// <param name="model"></param>
+        /// <param name="model">视图模型</param>
         /// <returns></returns>
         [HttpPost]
         [AllowAnonymous]
@@ -139,9 +162,9 @@
                 var ident = await service.Login(model);
 
                 AuthManager.SignOut();
-                AuthManager.SignIn(new AuthenticationProperties {
-                    IsPersistent = false
-                }, ident);
+                AuthManager.SignIn(
+                    new AuthenticationProperties { IsPersistent = false },
+                    ident);
 
                 return Ok();
             }
@@ -175,11 +198,12 @@
             return Ok(user);
         }
 
-        [HttpGet]
         /// <summary>
         /// 检查用户名
         /// </summary>
+        /// <param name="username">用户名</param>
         /// <returns></returns>
+        [HttpGet]
         public IHttpActionResult CheckUsername(string username)
         {
             return !service.CheckUsername(username) ? (IHttpActionResult)Ok() : BadRequest();
@@ -188,16 +212,17 @@
         /// <summary>
         /// 启用帐号
         /// </summary>
-        /// <param name="Id">用户标识</param>
+        /// <param name="id">用户标识</param>
+        /// <returns></returns>
         [HttpGet]
-        public async Task<IHttpActionResult> Enable(string Id)
+        public async Task<IHttpActionResult> Enable(string id)
         {
-            if (string.IsNullOrEmpty(Id))
+            if (string.IsNullOrEmpty(id))
             {
-                return BadRequest($"{nameof(Id)} 不可为空.");
+                return BadRequest($"{nameof(id)} 不可为空.");
             }
 
-            var result = await service.EnableAsync(Id);
+            var result = await service.EnableAsync(id);
 
             if (!result.Succeeded)
             {
@@ -210,16 +235,17 @@
         /// <summary>
         /// 禁用帐号
         /// </summary>
-        /// <param name="Id">用户标识</param>
+        /// <param name="id">用户标识</param>
+        /// <returns></returns>
         [HttpGet]
-        public async Task<IHttpActionResult> Disable(string Id)
+        public async Task<IHttpActionResult> Disable(string id)
         {
-            if (string.IsNullOrEmpty(Id))
+            if (string.IsNullOrEmpty(id))
             {
-                return BadRequest($"{nameof(Id)} 不可为空.");
+                return BadRequest($"{nameof(id)} 不可为空.");
             }
 
-            var result = await service.DisableAsync(Id);
+            var result = await service.DisableAsync(id);
 
             if (!result.Succeeded)
             {
@@ -232,16 +258,17 @@
         /// <summary>
         /// 重置密码
         /// </summary>
-        /// <param name="Id">用户标识</param>
+        /// <param name="id">用户标识</param>
+        /// <returns></returns>
         [HttpGet]
-        public async Task<IHttpActionResult> ResetPassword(string Id)
+        public async Task<IHttpActionResult> ResetPassword(string id)
         {
-            if (string.IsNullOrEmpty(Id))
+            if (string.IsNullOrEmpty(id))
             {
-                return BadRequest($"{nameof(Id)} 不可为空.");
+                return BadRequest($"{nameof(id)} 不可为空.");
             }
 
-            var result = await service.ResetPasswordAsync(Id);
+            var result = await service.ResetPasswordAsync(id);
 
             if (!result.Succeeded)
             {
@@ -254,11 +281,9 @@
         /// <summary>
         /// 修改密码
         /// </summary>
-        /// <param name="UserId"></param>
-        /// <param name="Old_Password"></param>
-        /// <param name="New_Password"></param>
+        /// <param name="model">视图模型</param>
         /// <returns></returns>
-        [HttpGet]
+        [HttpPost]
         public async Task<IHttpActionResult> PasswordEdit(ChangePasswordViewModel model)
         {
             if (!ModelState.IsValid)
@@ -281,14 +306,14 @@
         /// <summary>
         /// 编辑权限
         /// </summary>
-        /// <param name="value"></param>
+        /// <param name="model">视图模型</param>
         /// <returns></returns>
         [HttpPost]
-        public IHttpActionResult PermissionEdit(MenuPermissionsInfo value)
+        public IHttpActionResult PermissionEdit(MenuPermissionsInfo model)
         {
             BLL.User.Permissions menuPermissions = new BLL.User.Permissions();
 
-            return menuPermissions.MenuPermissionEdit(value) ? (IHttpActionResult)Ok() : BadRequest("保存失败");
+            return menuPermissions.MenuPermissionEdit(model) ? (IHttpActionResult)Ok() : BadRequest("保存失败");
         }
 
         private IHttpActionResult GetErrorResult(IdentityResult result)
@@ -304,7 +329,7 @@
                 {
                     foreach (string error in result.Errors)
                     {
-                        ModelState.AddModelError("", error);
+                        ModelState.AddModelError(string.Empty, error);
                     }
                 }
 

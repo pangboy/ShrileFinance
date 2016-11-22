@@ -152,6 +152,14 @@
             return addRole;
         }
 
+        public Task<IdentityResult> ModifyMyInfoAsync(UserInfoViewModel model)
+        {
+            var user = userManager.FindById(model.Id);
+            Mapper.Map(model, user);
+
+            return userManager.UpdateAsync(user);
+        }
+
         /// <summary>
         /// 检查用户名是否存在
         /// </summary>
