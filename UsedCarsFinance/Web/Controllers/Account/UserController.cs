@@ -12,7 +12,6 @@
     using Microsoft.Owin.Security;
     using Models;
 
-    [Authorize]
     public class UserController : ApiController
     {
         private readonly AccountAppService service;
