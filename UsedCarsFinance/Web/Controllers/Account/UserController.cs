@@ -1,24 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Threading.Tasks;
-using System.Web.Http;
-using Application;
-using Application.ViewModels.AccountViewModels;
-using Microsoft.AspNet.Identity;
-using Microsoft.Owin.Security;
-using Models;
-
-namespace Web.Controllers.Account
+﻿namespace Web.Controllers.Account
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Net.Http;
+    using System.Threading.Tasks;
+    using System.Web.Http;
+    using Application;
+    using Application.ViewModels.AccountViewModels;
+    using Microsoft.AspNet.Identity;
+    using Microsoft.Owin.Security;
+    using Models;
+
+    [Authorize]
     public class UserController : ApiController
     {
         private readonly AccountAppService service;
-        private IAuthenticationManager AuthManager
-        {
-            get { return Request.GetOwinContext().Authentication; }
-        }
 
         public UserController(AccountAppService userService)
         {
@@ -26,10 +23,15 @@ namespace Web.Controllers.Account
             this.service.User = User;
         }
 
+        private IAuthenticationManager AuthManager
+        {
+            get { return Request.GetOwinContext().Authentication; }
+        }
+
         /// <summary>
         /// 分页查询
         /// </summary>
-        /// qiy		15.11.17
+        /// <param name="searchString">搜索字符串</param>
         /// <param name="page">页码</param>
         /// <param name="rows">尺寸</param>
         /// <returns></returns>
@@ -46,12 +48,11 @@ namespace Web.Controllers.Account
         /// <summary>
         /// 获取用户
         /// </summary>
-        /// qiy		15.11.12
-        /// <param name="Id">用户标识</param>
+        /// <param name="id">用户标识</param>
         /// <returns></returns>
-        public IHttpActionResult Get(string Id)
+        public IHttpActionResult Get(string id)
         {
-            var user = service.GetUser(Id);
+            var user = service.GetUser(id);
 
             return user != null ? (IHttpActionResult)Ok(user) : NotFound();
         }
@@ -59,7 +60,6 @@ namespace Web.Controllers.Account
         /// <summary>
         /// 用户选项
         /// </summary>
-        /// qiy     16.05.31
         /// <param name="roleId">角色标识</param>
         /// <returns></returns>
         [HttpGet]
@@ -71,7 +71,6 @@ namespace Web.Controllers.Account
         /// <summary>
         /// 注册帐号
         /// </summary>
-        /// qiy		15.11.12
         /// <param name="value"></param>
         /// <returns></returns>
         [HttpPost]
@@ -102,8 +101,6 @@ namespace Web.Controllers.Account
         /// <summary>
         /// 修改帐号
         /// </summary>
-        /// qiy		15.11.12
-        /// <param name="userId"></param>
         /// <param name="value"></param>
         /// <returns></returns>
         [HttpPut]
@@ -124,13 +121,10 @@ namespace Web.Controllers.Account
             return Ok();
         }
 
-
         /// <summary>
         /// 登录
         /// </summary>
-        /// qiy		15.11.12
-        /// <param name="username">用户名</param>
-        /// <param name="password">密码</param>
+        /// <param name="model"></param>
         /// <returns></returns>
         [HttpPost]
         [AllowAnonymous]
@@ -161,7 +155,6 @@ namespace Web.Controllers.Account
         /// <summary>
         /// 注销
         /// </summary>
-        /// qiy		15.11.12
         /// <returns></returns>
         [HttpGet]
         public IHttpActionResult SignOut()
@@ -174,7 +167,6 @@ namespace Web.Controllers.Account
         /// <summary>
         /// 查询当前用户信息
         /// </summary>
-        /// yand     15.11.24
         /// <returns></returns>
         [HttpGet]
         public IHttpActionResult CurrentUser()
@@ -188,7 +180,6 @@ namespace Web.Controllers.Account
         /// <summary>
         /// 检查用户名
         /// </summary>
-        /// qiy		15.11.25
         /// <returns></returns>
         public IHttpActionResult CheckUsername(string username)
         {
@@ -198,7 +189,6 @@ namespace Web.Controllers.Account
         /// <summary>
         /// 启用帐号
         /// </summary>
-        /// qiy		15.11.25
         /// <param name="Id">用户标识</param>
         [HttpGet]
         public async Task<IHttpActionResult> Enable(string Id)
@@ -221,7 +211,6 @@ namespace Web.Controllers.Account
         /// <summary>
         /// 禁用帐号
         /// </summary>
-        /// qiy		15.11.12
         /// <param name="Id">用户标识</param>
         [HttpGet]
         public async Task<IHttpActionResult> Disable(string Id)
@@ -244,7 +233,6 @@ namespace Web.Controllers.Account
         /// <summary>
         /// 重置密码
         /// </summary>
-        /// qiy		15.11.25
         /// <param name="Id">用户标识</param>
         [HttpGet]
         public async Task<IHttpActionResult> ResetPassword(string Id)
@@ -267,7 +255,6 @@ namespace Web.Controllers.Account
         /// <summary>
         /// 修改密码
         /// </summary>
-        /// yaoy    15.11.25
         /// <param name="UserId"></param>
         /// <param name="Old_Password"></param>
         /// <param name="New_Password"></param>
@@ -295,8 +282,6 @@ namespace Web.Controllers.Account
         /// <summary>
         /// 编辑权限
         /// </summary>
-        /// yaoy    15.11.25
-        /// qiy		16.03.09
         /// <param name="value"></param>
         /// <returns></returns>
         [HttpPost]
