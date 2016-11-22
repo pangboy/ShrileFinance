@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Net;
+using System.Net.Http;
 using System.Text;
 using System.Web;
 using PDFPrint;
@@ -11,72 +12,44 @@ namespace Data.PDF
 {
     public class CreatePdf
     {
+        Microsoft.Office.Interop.Word.Application app = null;
+        Microsoft.Office.Interop.Word.Document doc = null;
+        Microsoft.Office.Interop.Word.WdExportFormat wdPdf = Microsoft.Office.Interop.Word.WdExportFormat.wdExportFormatPDF;
+        object missing = System.Reflection.Missing.Value;
+
         /// <summary>
         /// 远程转Pdf,并返回pdf保存路径
         /// </summary>
+        /// <param name="oldPath">word模板路径</param>
+        /// <param name="newPath">新的pdf路径</param>
         /// <param name="fileName">合同模板名</param>
         /// <param name="param">参数</param>
         /// <param name="targetPdfName">需要生成的pdf的名字</param>
-        public string TransformPdf(string fileName, string param, string targetPdfName)
+        public string TransformPdf(string oldPath,string newPath,string fileName, string param, string targetPdfName)
         {
-           object url = "D:/Projects/upload/PDF/" + fileName;//模板
-            object url1 = "D:/Projects/upload/PDF/" + fileName.Substring(0, fileName.Length - 5) + DateTime.Now.Millisecond + ".docx";//新生成的
+            oldPath = oldPath + fileName;//模板
+            object newPdfPath = newPath + targetPdfName + ".docx";//新生成的
             WordHelper wdHelp = new WordHelper();
-            File.Copy(url.ToString(), url1.ToString());
-
-            // string path = @"~\upload\PDF\";
-            object fullpath = url;// HttpContent.Current.Server.MapPath(path);
-            //if (Directory.Exists(fullpath))
-            //{
-            //    Directory.CreateDirectory(fullpath);
-            //}
-            string WordContent = wdHelp.GetContract(url1.ToString(), false, false);
-            //List<string> list = new List<string>(WordContent.Substring)
-
-            Microsoft.Office.Interop.Word.Application app = null;
-            Microsoft.Office.Interop.Word.Document doc = null;
-            Microsoft.Office.Interop.Word.WdExportFormat wdPdf = Microsoft.Office.Interop.Word.WdExportFormat.wdExportFormatPDF;
-
+            File.Copy(oldPath.ToString(), newPdfPath.ToString());
             //将要导出的新word文件名
-            string newFile = DateTime.Now.ToString("yyyyMMddHHmmssss") + ".doc";
-            string physicNewFile = "D:/Projects/upload/PDF/" + targetPdfName + ".pdf";
+            string physicNewFile = newPath + targetPdfName + ".pdf";
             try
             {
-                //将获取的页面数据按'['进行分割
-                string[] spilt = param.Split('&');
-                // 构造数据，用于存放占位符数据
-                Dictionary<string, string> placeholder = new Dictionary<string, string>();
-                foreach (var item in spilt)
-                {
-                    if (item.IndexOf('=') > -0)
-                    {
-                        if (item.IndexOf('=') >= 0)
-                        {
-                            var x = item.Substring(0, item.IndexOf('='));
-                            var y = item.Substring(item.IndexOf('=') + 1, item.Length - item.IndexOf('=') - 1);
-                            placeholder.Add(x, y);
-                        }
-                    }
-                }
+                // 处理成字典类型的占位符和数据
+                var placeholder = BuildPlaceholder(param);
 
-                app = new Microsoft.Office.Interop.Word.Application();//创建word应用程序
+                //创建word应用程序
+                app = new Microsoft.Office.Interop.Word.Application();
                 object oMissing = System.Reflection.Missing.Value;
-                doc = app.Documents.Open(ref url1,
+
+                // 打开Word文档
+                doc = app.Documents.Open(ref newPdfPath,
                 ref oMissing, ref oMissing, ref oMissing, ref oMissing, ref oMissing,
                 ref oMissing, ref oMissing, ref oMissing, ref oMissing, ref oMissing,
                 ref oMissing, ref oMissing, ref oMissing, ref oMissing, ref oMissing);
 
-                Dictionary<string, string> datas = new Dictionary<string, string>();
-                datas.Add("[融资租赁合同]", "张三");
-                datas.Add("[乙方姓名]", "男");
-                datas.Add("{provinve}", "浙江");
-                datas.Add("{address}", "浙江省杭州市");
-                datas.Add("{education}", "本科");
-                datas.Add("{telephone}", "12345678");
-                datas.Add("{cardno}", "123456789012345678");
-
                 object replace = Microsoft.Office.Interop.Word.WdReplace.wdReplaceAll;
-                foreach (var item in datas)
+                foreach (var item in placeholder)
                 {
                     app.Selection.Find.Replacement.ClearFormatting();
                     app.Selection.Find.ClearFormatting();
@@ -98,12 +71,46 @@ namespace Data.PDF
                 doc.SaveAs(physicNewFile,
                 objWdPdf, oMissing, oMissing, oMissing, oMissing, oMissing, oMissing, oMissing, oMissing,
                 oMissing, oMissing, oMissing, oMissing, oMissing, oMissing);
+                doc.Close(ref missing, ref missing, ref missing);
+                app.Quit(ref missing, ref missing, ref missing);
+                File.Delete(newPdfPath.ToString());
             }
-            catch(Exception ex)
+            catch
             {
-               
+                return null;
+                throw new Core.Exceptions.InvalidOperationAppException("合同生成失败.");
             }
-            return null;
+            return physicNewFile;
+        }
+
+        /// <summary>
+        /// 将占位符和数据处理成字典类型
+        /// </summary>
+        /// <param name="param">占位符和数</param>
+        /// <returns></returns>
+        public Dictionary<string, string> BuildPlaceholder(string param)
+        {
+            //将获取的页面数据按'['进行分割
+            string[] spilt = param.Split('&');
+            // 构造数据，用于存放占位符数据
+            Dictionary<string, string> placeholder = new Dictionary<string, string>();
+            foreach (var item in spilt)
+            {
+                if (item.IndexOf('=') > -0)
+                {
+                    if (item.IndexOf('=') >= 0)
+                    {
+                        var x = item.Substring(0, item.IndexOf('='));
+                        var y = item.Substring(item.IndexOf('=') + 1, item.Length - item.IndexOf('=') - 1);
+                        if (string.IsNullOrEmpty(y))
+                        {
+                            y = y.PadLeft(x.Length, ' ');
+                        }
+                        placeholder.Add(x, y);
+                    }
+                }
+            }
+            return placeholder;
         }
 
         /// <summary>

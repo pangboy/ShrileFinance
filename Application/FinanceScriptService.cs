@@ -1,6 +1,8 @@
 ﻿namespace Application
 {
+    using System.IO;
     using System.Linq;
+    using System.Web;
     using Core.Entities.Flow;
     using Core.Interfaces.Repositories;
     using Newtonsoft.Json.Linq;
@@ -126,6 +128,14 @@
             // 创建或修改
             financeAppService.EditOperation(finance);
 
+            string path = @"~\upload\PDF\";
+            string fullpath = HttpContext.Current.Server.MapPath(path);
+
+            if (!Directory.Exists(fullpath))
+            {
+                Directory.CreateDirectory(fullpath);
+            }
+            financeAppService.CreateLeaseInfoPdf(finance.FinanceId, fullpath, fullpath);
             // 如果执行失败则抛出异常, 或用返回值表示结果.
             if (false)
             {

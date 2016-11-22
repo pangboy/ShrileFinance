@@ -815,11 +815,13 @@
     <Content Include="System\信封1.png" />
     <Content Include="Tests\HtmlPage1.html" />
     <Content Include="Tests\HtmlPage2.html" />
+    <Content Include="Tests\HtmlPage3.html" />
     <Content Include="Tests\ValidTestPage.html" />
     <Content Include="Finance\images\up.png" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="Contracts\FinancingLease.docx" />
     <None Include="Properties\PublishProfiles\Test.pubxml">
       <SubType>Designer</SubType>
     </None>
