@@ -14,6 +14,7 @@
     <script>
         // 判断datagrid中行是否可编辑
         var editIndex = undefined;
+        var query = uc.GetParams();
 
         uc.form = new UCForm(".container");
 
@@ -22,11 +23,10 @@
         });
 
         function Init() {
-            var query = uc.GetParams();
 
             if (query.method == "mod" || query.method == "view") {
                 if (query.method == "mod") {
-
+                    $("#Code").textbox("readonly",true)
                 }
                 if (query.method == "view") {
                     $("#save").linkbutton("disable");
@@ -141,6 +141,7 @@
         }
 
         function Submit() {
+            var url;
             var min = parseInt($("input[textboxname = MinFinancingRatio]").textbox("getValue"));
             var max = parseInt($("input[textboxname = MaxFinancingRatio]").textbox("getValue"));
 
@@ -170,9 +171,17 @@
                 //保存前将datagrid中的编辑状态的行结束编辑，数据保存在datagrid中
                 $('#Poundage').datagrid('getEditingRowIndexs');
                 $('#Financing').datagrid('getEditingRowIndexs');
+
+                if (query.method == "mod") {
+                    url = "../api/Produce/Modify";
+                }
+                else if (query.method == "add") {
+                    url = "../api/Produce/Create";
+                }
+
                 uc.form.Submit({
                     method: "POST",
-                    url: "../api/Produce/Modify",
+                    url: url,
                     data: produceInfo
                 });
             }
@@ -303,7 +312,7 @@
             <div class="row">
                 <div class="col-6">
                     <label>产品代码:</label>
-                    <input name="Code" class="easyui-textbox" data-options="required:true,validType:'length[0,100]'" />
+                    <input name="Code" id="Code" class="easyui-textbox" data-options="required:true,validType:'length[0,100]'" />
                 </div>
 
                 <div class="col-6">

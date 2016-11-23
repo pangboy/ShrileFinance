@@ -1,15 +1,11 @@
 ﻿namespace Web.Controllers.Finance
 {
     using System;
-    using System.Collections.Generic;
-    using System.Data;
     using System.IO;
     using System.Web;
     using System.Web.Http;
     using Application;
-    using Application.ViewModels;
     using Application.ViewModels.FinanceViewModels;
-    using Application.ViewModels.ProduceViewModel;
 
     public class FinanceAuidtController : ApiController
     {
@@ -100,6 +96,16 @@
             return Ok(finance);
         }
 
+        public IHttpActionResult GetContract(Guid id)
+        {
+            var finance = financeAppService.Get(id);
+            foreach (var item in finance.Contact)
+            {
+                item.Path = HttpContext.Current.Server.MapPath(item.Path);
+            }
+            return Ok(finance.Contact);
+        }
+
         public IHttpActionResult GetParentAndUser()
         {
             var parentAndUser = financeAppService.GetPartnerAndUser();
@@ -118,7 +124,7 @@
             }
             string oldPath = HttpContext.Current.Server.MapPath(System.Web.HttpContext.Current.Request.ApplicationPath.ToString())+ "\\Contracts\\";
 
-            var result =financeAppService.CreateLeaseInfoPdf(Id, oldPath, fullpath);
+            var result =financeAppService.CreateLeaseInfoPdf(Id, fullpath);
             return Ok(result);
         }
     }

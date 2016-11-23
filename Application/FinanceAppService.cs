@@ -77,11 +77,11 @@
 
                 new UpdateBind().Bind(finance.FinanceProduce, model.FinanceProduce);
                 new UpdateBind().Bind(finance.Applicant, model.Applicant);
-
+                finance.Produce = null;
                 repository.Modify(finance);
                 repository.Commit();
             }
-            catch
+            catch(Exception ex)
             {
                 throw new Core.Exceptions.InvalidOperationAppException("修改失败.");
             }
@@ -95,7 +95,7 @@
             return financeViewModel;
         }
 
-        public string CreateLeaseInfoPdf(Guid financeId,string oldPath,string newPath)
+        public string CreateLeaseInfoPdf(Guid financeId, string newPath)
         {
             var finance = repository.Get(financeId);
 
@@ -125,25 +125,28 @@
 
             if (dt.Rows.Count > 0)
             {
-                dt.Rows[0]["[融资租赁合同]"] = "HZ" + hz;
+                dt.Rows[0]["[融资租赁合同]"] = hz;
                 contractParams = pdf.DataRowToParams(dt.Rows[0]);
-                pdfName = "HZ" + hz;
+                pdfName =  hz;
             }
 
-            pdfPath = pdf.TransformPdf(oldPath,newPath,contractName, contractParams, pdfName);
+            pdfPath = pdf.TransformPdf( newPath, contractName, contractParams, pdfName);
 
-            if (pdfPath != null)
+            if(finance.Contact.FirstOrDefault(m => m.Name == "融资租赁合同") == null)
             {
-                finance.Contact.Add(new Contract
+                if (pdfPath != null)
                 {
-                    Date = DateTime.Now,
-                    Name = "融资租赁合同",
-                    Number = pdfName,
-                    Path = pdfPath
-                });
+                    finance.Contact.Add(new Contract
+                    {
+                        Date = DateTime.Now,
+                        Name = "融资租赁合同",
+                        Number = pdfName,
+                        Path = "~\\upload\\PDF\\"
+                    });
 
-                repository.Modify(finance);
-                repository.Commit();
+                    repository.Modify(finance);
+                    repository.Commit();
+                }
             }
 
             return pdfPath;
@@ -155,31 +158,42 @@
             string aaaa = string.Empty;
             string cccc = string.Empty;
             string dddd = string.Empty;
-
+            string ContractNumber = string.Empty;
             // 合作商编码
             var partnerCode = "01";
 
-            // 查询合作商ID
-            Guid bb = FindByCreateOf(financeid, ref error);
-            if (bb != null && error == string.Empty)
+            var finance = repository.Get(financeid);
+            var contract =finance.Contact.FirstOrDefault(m=>m.Name=="融资租赁合同");
+
+            if (contract != null)
             {
-                aaaa = GetCityCode(bb);
-
-                cccc = GetYYMM();
-
-                // 获取月初
-                DateTime time = DateTime.Now.AddDays(1 - DateTime.Now.Day);
-
-                // 月当渠道的流水号
-                // contract.FindCount(Time, BB).ToString();
-                int countBymonth = contractRepository.GetAll(m => m.Date >= time && m.Date <= DateTime.Now && m.Number.Contains(partnerCode)).ToList().Count;
-
-                int ddlength = countBymonth + 1;
-                dddd = ddlength.ToString().PadLeft(3, '0');
+                ContractNumber = contract.Number;
             }
+            else
+            {
+                // 查询合作商ID
+                Guid bb = FindByCreateOf(financeid, ref error);
+                if (bb != null && error == string.Empty)
+                {
+                    aaaa = GetCityCode(bb);
 
-            // 组成AAAABBCCCCDDD
-            return aaaa + partnerCode + cccc + dddd;
+                    cccc = GetYYMM();
+
+                    // 获取月初
+                    DateTime time = DateTime.Now.AddDays(1 - DateTime.Now.Day);
+
+                    // 月当渠道的流水号
+                    // contract.FindCount(Time, BB).ToString();
+                    int countBymonth = contractRepository.GetAll(m => m.Date >= time && m.Date <= DateTime.Now && m.Number.Contains(partnerCode)).ToList().Count;
+
+                    int ddlength = countBymonth + 1;
+                    dddd = ddlength.ToString().PadLeft(3, '0');
+                }
+
+                // 组成AAAABBCCCCDDD
+                ContractNumber = type+aaaa + partnerCode + cccc + dddd;
+            }
+            return ContractNumber;
         }
 
         /// <summary>
@@ -314,10 +328,12 @@
                 {
                     creditExamineReportViewModel.TrialPerson = new KeyValuePair<string, string>(curentUser.Id, curentUser.Name);
                 }
+
                 if (curentRole.Name.Equals("复审员"))
                 {
                     creditExamineReportViewModel.ReviewPerson = new KeyValuePair<string, string>(curentUser.Id, curentUser.Name);
                 }
+
                 if (curentRole.Name.Equals("总经理"))
                 {
                     creditExamineReportViewModel.ApprovePerson = new KeyValuePair<string, string>(curentUser.Id, curentUser.Name);

@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Data.PDF
+﻿namespace Infrastructure.PDF
 {
-    class MoneyToUpper
+    using System;
+
+    public class MoneyToUpper
     {
        public string RMBToUpper(decimal num)
         {

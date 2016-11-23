@@ -6,7 +6,7 @@
     using System.Data.SqlClient;
     using Core.Entities.Finance;
     using Core.Interfaces.Repositories;
-    using PDF;
+    using Infrastructure.PDF;
 
     public class FinanceRepository : BaseRepository<Finance>, IFinanceRepository
     {
