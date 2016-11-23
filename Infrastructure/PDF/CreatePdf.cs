@@ -30,11 +30,16 @@ namespace Data.PDF
         {
             PathManager path = new PathManager();
             object oldPath = path.GetTemplatePath() + fileName;//模板
-            object newPdfPath = newPath + targetPdfName + ".docx";//新生成的
+            object newPdfPath =path.GetPath(newPath) + targetPdfName + ".docx";//新生成的
             WordHelper wdHelp = new WordHelper();
+            //判断该文件是否存在，存在就删除，否则同名文件生成会报错
+            if (File.Exists(newPdfPath.ToString()))
+            {
+                File.Delete(newPdfPath.ToString());
+            }
             File.Copy(oldPath.ToString(), newPdfPath.ToString());
             //将要导出的新word文件名
-            string physicNewFile = newPath + targetPdfName + ".pdf";
+            string physicNewFile = path.GetPath(newPath) + targetPdfName + ".pdf";
 
             try
             {
@@ -84,7 +89,7 @@ namespace Data.PDF
                 app.Quit(ref missing, ref missing, ref missing);
                 File.Delete(newPdfPath.ToString());
             }
-            catch
+            catch(Exception ex)
             {
                 return null;
                 throw new Core.Exceptions.InvalidOperationAppException("合同生成失败.");

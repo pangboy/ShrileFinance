@@ -122,11 +122,9 @@
         /// </summary>
         public void FinanceCustomer()
         {
+
             // 获取数据
             var finance = GetData<OperationViewModel>("5ADC5FCF-18A4-E611-80C5-507B9DE4A488");
-
-            // 创建或修改
-            financeAppService.EditOperation(finance);
 
             // 执行合同的生成
             string path = @"~\upload\PDF\";
@@ -136,6 +134,9 @@
             {
                 throw new Core.Exceptions.InvalidOperationAppException("保存失败.");
             }
+
+            // 创建或修改
+            financeAppService.EditOperation(finance);
         }
 
         private T GetData<T>(string formId) where T : class, new()

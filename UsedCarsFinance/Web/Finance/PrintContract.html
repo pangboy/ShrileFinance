@@ -20,19 +20,19 @@
             $.ajax({
                 async: true,
                 method: "GET",
-                data: { id: $("#ContrantType").combobox("getValue") },
+                data: { contractId: $("#ContrantType").combobox("getValue") },
                 url: '../api/FinanceAuidt/GetContractById',
                 statusCode: {
                     200: function (data) {
                         if (data) {
-                            var filepath = data[0].Path;
-                            var fp = ".." + filepath.substring(1, filepath.length) + data[0].Number + ".pdf";//截取出 ~ 以后的字符串
-                            $("#iframe").attr("src", path);
+                            var fp = ".." + data.Path.substring(1, data.Path.length) + data.Number + ".pdf";//截取出 ~ 以后的字符串
+                            $("#iframe").attr("src", fp);
                         }
                     }
                 }
             });
-        }
+       }
+     
        function SelectContrantType() {
            $('#ContrantType').combobox({
                method: "GET",
@@ -41,6 +41,15 @@
                valueField: 'Id',
                textField: 'Name'
            });
+       }
+        // 用于测试是否打印
+       function ValidData() {
+           return true;
+       }
+
+
+       function BuildData() {
+           return undefined;
        }
     </script>
 </head>
