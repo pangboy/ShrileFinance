@@ -11,7 +11,7 @@ namespace Models
 	/// </summary>
    public class MenuPermissionsInfo
    {
-       public int RoleId { get; set; }
+       public string RoleId { get; set; }
 
        public List<int> Menus { get; set; }
        

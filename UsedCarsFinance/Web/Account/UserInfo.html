@@ -30,12 +30,15 @@
 
             uc.form.Submit({
                 method: "PUT",
-                url: "../api/User/Put",
+                url: "../api/User/ModifyMyInfo",
                 data: user,
                 statusCode:{
                     200: function(data){
                         top.$.messager.show({ msg: "保存成功！" });
-                    }
+
+                        $("#save").linkbutton("enable");
+                    },
+                    400: uc.E400
                 }
             });
         }
@@ -47,7 +50,7 @@
             <legend>用户信息</legend>
 
             <div id="data">
-                <input name="UserId" type="hidden" />
+                <input name="Id" type="hidden" />
             </div>
 
             <div class="row">
@@ -65,20 +68,13 @@
             <div class="row">
 				<div>
 					<label>手机:</label>
-					<input name="Mobile" class="easyui-textbox" data-options="validType:'Mobile'" />
+					<input name="Phone" class="easyui-textbox" data-options="validType:'Mobile'" />
 				</div>
 
 				<div>
 					<label>邮箱:</label>
 					<input name="Email" class="easyui-textbox" data-options="validType:'Email'" />
 				</div>
-            </div>
-
-            <div class="row">
-                <div>
-                    <label>备注:</label>
-                    <input name="Remarks" class="easyui-textbox" data-options="multiline:true,height:66,width:555" />
-                </div>
             </div>
         </fieldset>
 

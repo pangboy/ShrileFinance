@@ -23,7 +23,7 @@ namespace DAL.User
                 @"SELECT MenuId FROM USER_Permissions AS up
                     LEFT JOIN USER_Role AS ur ON up.RoleId = ur.UR_ID
                     LEFT JOIN AspNetRoles AS ar ON ur.Name = ar.Name
-                WHERE ar.Id = @RoleId"
+                WHERE ar.Name = @RoleId"
 			);
 
 			DHelper.AddParameter(comm, "@RoleId", SqlDbType.NVarChar, roleId);
@@ -46,8 +46,15 @@ namespace DAL.User
         /// <returns></returns>
         public int Insert(MenuPermissionsInfo value)
         {
-            SqlCommand comm = DHelper.GetSqlCommand(string.Empty);
-            DHelper.AddParameter(comm, "@RoleId", SqlDbType.Int, value.RoleId);
+            SqlCommand comm = DHelper.GetSqlCommand(
+                @"
+                DECLARE @RoleId int;
+                SELECT @RoleId = ur.UR_ID FROM USER_Role AS ur
+                    LEFT JOIN AspNetRoles AS ar ON ur.Name = ar.Name
+                WHERE ar.Name = @RoleName;
+                ");
+
+            DHelper.AddParameter(comm, "@RoleName", SqlDbType.NVarChar, value.RoleId);
 
             StringBuilder commStr = new StringBuilder();
 
@@ -57,7 +64,7 @@ namespace DAL.User
                 DHelper.AddParameter(comm, "@MenuId" + i, SqlDbType.Int, value.Menus[i]);
             }
 
-            comm.CommandText = commStr.ToString();
+            comm.CommandText += commStr.ToString();
 
             return DHelper.ExecuteNonQuery(comm);
         }
@@ -69,15 +76,16 @@ namespace DAL.User
 		/// qiy		16.03.08
 		/// <param name="roleId"></param>
 		/// <returns></returns>
-		public void DeleteByRole(int roleId)
+		public void DeleteByRole(string roleId)
         {
             SqlCommand comm = DHelper.GetSqlCommand(
-                @"DELETE USER_Permissions AS up
-                    LEFT JOIN USER_Role AS ur ON up.RoleId = ur.UR_ID
-                    LEFT JOIN AspNetRoles AS ar ON ur.Name = ar.Name
-                WHERE ar.Id = @RoleId"
-                );
-            DHelper.AddParameter(comm, "@RoleId", SqlDbType.Int, roleId);
+                @"DELETE USER_Permissions
+                WHERE RoleId IN (
+                    SELECT ur.UR_ID FROM USER_Role AS ur
+                        LEFT JOIN AspNetRoles AS ar ON ur.Name = ar.Name
+                    WHERE ar.Name = @RoleId
+                )");
+            DHelper.AddParameter(comm, "@RoleId", SqlDbType.NVarChar, roleId);
 
             DHelper.ExecuteNonQuery(comm);
         }
