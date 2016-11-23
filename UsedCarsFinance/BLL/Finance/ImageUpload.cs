@@ -22,7 +22,7 @@
         /// cais    16.04.08
         /// <param name="referenceId">标识</param>
         /// <returns></returns>
-        public ReferenceInfo Get(Guid referenceId)
+        public ReferenceInfo Get(int referenceId)
         {
             return Reference.Get(referenceId);
         }
@@ -35,7 +35,7 @@
         /// <param name="referencedModule">被引用模块</param>
         /// <param name="referencedSid">被引用子标识</param>
         /// <returns></returns>
-        public ReferenceInfo Get(int? referencedId, int? referencedModule, int? referencedSid)
+        public ReferenceInfo Get(Guid? referencedId, int? referencedModule, int? referencedSid)
         {
             return Reference.Apply(referencedId, referencedModule, referencedSid);
         }
@@ -67,7 +67,7 @@
         /// </summary>
         /// cais    16.04.08
         /// <param name="referenceId">文件引用id</param>
-        public void Delete(Guid referenceId)
+        public void Delete(int referenceId)
         {
             Imageupload.Delete(referenceId);
         }
@@ -78,13 +78,13 @@
         /// cais    16.04.27
         /// <param name="referencesid">所有的referencesid</param>
         /// <returns>List</returns>
-        public List<Guid> StringtoList(string referencesid)
+        public List<int> StringtoList(string referencesid)
         {
             referencesid = referencesid.TrimEnd(',');
 
             string[] s1 = referencesid.Split(new char[] { ',' });
 
-            List<Guid> referenceList = new List<Guid>();
+            var referenceList = new List<int>();
 
             foreach (var item in s1)
             {
@@ -92,7 +92,7 @@
                 {
                     try
                     {
-                        referenceList.Add(Guid.Parse(item));
+                        referenceList.Add(Convert.ToInt32(item));
                     }
                     catch
                     {
@@ -109,7 +109,7 @@
         /// cais    16.04.27
         /// <param name="references">referencesid 集合</param>
         /// <returns>一个压缩好的文件信息</returns>
-        public Models.Sys.FileInfo Download(List<Guid> references)
+        public Models.Sys.FileInfo Download(List<int> references)
         {
             Sys.File file = new Sys.File();
             Compress compress = new Compress();
@@ -186,7 +186,7 @@
         /// <param name="referenceId">引用id</param>
         /// cais    16.05.04
         /// <returns>引用id 下的引用列表</returns>
-        public DataTable GetFiles(Guid referenceId)
+        public DataTable GetFiles(int referenceId)
         {
             return Imageupload.FindFiles(referenceId);
         }

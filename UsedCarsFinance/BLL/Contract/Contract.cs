@@ -178,20 +178,22 @@ namespace BLL.Contract
         /// <param name="referenceid"></param>
         private bool InsertFile(string number, Guid referenceid, string ContrantName)
         {
-            bool result = false;
-            //插入一条pdf文件数据
-            Models.Sys.FileInfo fi = new Models.Sys.FileInfo();
-            fileMapper.Insert(fi = new Models.Sys.FileInfo
-            {
-                OldName = number,
-                ExtName = ".pdf",
-                NewName = ContrantName,
-                FilePath = PDFPath,
-                ReferenceId = referenceid,
-                AddDate = DateTime.Now
-            });
-            result = fi.FileId > 0;
-            return result;
+            throw new NotImplementedException();
+
+            //bool result = false;
+            ////插入一条pdf文件数据
+            //Models.Sys.FileInfo fi = new Models.Sys.FileInfo();
+            //fileMapper.Insert(fi = new Models.Sys.FileInfo
+            //{
+            //    OldName = number,
+            //    ExtName = ".pdf",
+            //    NewName = ContrantName,
+            //    FilePath = PDFPath,
+            //    ReferenceId = referenceid,
+            //    AddDate = DateTime.Now
+            //});
+            //result = fi.FileId > 0;
+            //return result;
         }
 
         /// <summary>
@@ -201,48 +203,50 @@ namespace BLL.Contract
         /// <param name="FinanceId">融资ID</param>
         public bool SaveFile(int FinanceId)
         {
-            bool result = true;
-            List<ApplicantInfo> Applicant = applicantInfoMapper.Find(FinanceId);
-            using (TransactionScope scope = new TransactionScope())
-            {
-                var mainApplicant = Applicant.Find(m => m.Type == ApplicantInfo.TypeEnum.主要申请人);
-                if (mainApplicant != null)
-                {
-                    string hz = contractsCalc.GetContractNum("HZ", FinanceId, mainApplicant.ApplicantId.Value);//融资租赁合同编号代码
-                    ReferenceInfo referenceInfo = reference.Apply(FinanceId, 4, 1);//合同模块为4，1为融资租赁合同
-                    var refid = referenceInfo.ReferenceId;
-                    if (result)
-                        result &= InsertFile(hz, refid, "融资租赁合同");
+            throw new NotImplementedException();
 
-                    referenceInfo = reference.Apply(FinanceId, 4, 2);//合同模块为4，2为车辆抵押
-                    refid = referenceInfo.ReferenceId;
+            //bool result = true;
+            //List<ApplicantInfo> Applicant = applicantInfoMapper.Find(FinanceId);
+            //using (TransactionScope scope = new TransactionScope())
+            //{
+            //    var mainApplicant = Applicant.Find(m => m.Type == ApplicantInfo.TypeEnum.主要申请人);
+            //    if (mainApplicant != null)
+            //    {
+            //        string hz = contractsCalc.GetContractNum("HZ", FinanceId, mainApplicant.ApplicantId.Value);//融资租赁合同编号代码
+            //        ReferenceInfo referenceInfo = reference.Apply(FinanceId, 4, 1);//合同模块为4，1为融资租赁合同
+            //        var refid = referenceInfo.ReferenceId;
+            //        if (result)
+            //            result &= InsertFile(hz, refid, "融资租赁合同");
 
-                    List<Models.Sys.FileInfo> filelist = fileMapper.FindByReference(refid);
-                    string dy = contractsCalc.GetContractNum("DY", FinanceId, mainApplicant.ApplicantId.Value);//融资租赁合同编号代码
-                    if (filelist.Count > 0)
-                    {
-                        dy += (filelist.Count + 1);
-                    }
-                    else
-                    {
-                        dy += 1;
-                    }
-                    if (result)
-                        result &= InsertFile(dy, refid, "车辆抵押合同");
-                }
-                var guarantee = Applicant.FindAll(m => m.Type == ApplicantInfo.TypeEnum.担保人);
-                for (int i = 1; i <= guarantee.Count; i++)
-                {
-                    string bz = contractsCalc.GetContractNum("BZ", FinanceId, guarantee[i - 1].ApplicantId.Value);//保证合同编号代码
-                    ReferenceInfo referenceInfo = reference.Apply(FinanceId, 4, 3);//合同模块为4，3保证合同
-                    var refid = referenceInfo.ReferenceId;
-                    if (result)
-                        result &= InsertFile(bz, refid, "保证合同" + i);
-                }
+            //        referenceInfo = reference.Apply(FinanceId, 4, 2);//合同模块为4，2为车辆抵押
+            //        refid = referenceInfo.ReferenceId;
 
-                if (result) scope.Complete();
-            }
-            return result;
+            //        List<Models.Sys.FileInfo> filelist = fileMapper.FindByReference(refid);
+            //        string dy = contractsCalc.GetContractNum("DY", FinanceId, mainApplicant.ApplicantId.Value);//融资租赁合同编号代码
+            //        if (filelist.Count > 0)
+            //        {
+            //            dy += (filelist.Count + 1);
+            //        }
+            //        else
+            //        {
+            //            dy += 1;
+            //        }
+            //        if (result)
+            //            result &= InsertFile(dy, refid, "车辆抵押合同");
+            //    }
+            //    var guarantee = Applicant.FindAll(m => m.Type == ApplicantInfo.TypeEnum.担保人);
+            //    for (int i = 1; i <= guarantee.Count; i++)
+            //    {
+            //        string bz = contractsCalc.GetContractNum("BZ", FinanceId, guarantee[i - 1].ApplicantId.Value);//保证合同编号代码
+            //        ReferenceInfo referenceInfo = reference.Apply(FinanceId, 4, 3);//合同模块为4，3保证合同
+            //        var refid = referenceInfo.ReferenceId;
+            //        if (result)
+            //            result &= InsertFile(bz, refid, "保证合同" + i);
+            //    }
+
+            //    if (result) scope.Complete();
+            //}
+            //return result;
         }
 
         /// <summary>

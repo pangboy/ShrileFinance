@@ -16,13 +16,18 @@
     <script src="../Finance/Content/UploadImages.js"></script>
     <script>
         var ReferenceIdstr = 0;//引用id
+        var query = {};
+
 
         function GetParams() {
-            return $.extend(uc.GetParams(), parent.flow.InstanceData);
+            return query;
+            // return $.extend(uc.GetParams(), parent.flow.InstanceData);
         }
 
         $(function () {
-            var query = $.extend(uc.GetParams(), parent.flow.InstanceData);
+            // 获取参数
+            query.state = GetQueryString("state");
+            query.FinanceId = parent.flow.RootKey;
 
             // 加载数据
             LoadData(query.FinanceId);
@@ -78,7 +83,7 @@
             if (query.Status == undefined) {
                 query.Status = "0";
             }
-
+            debugger
             // 设置“添加”和“删除”按钮
             if (query.Status == "0") {
                 $("#add").hide();

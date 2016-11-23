@@ -14,14 +14,14 @@ namespace DAL.Sys
 		/// qiy		16.03.30
 		/// <param name="id">引用标识</param>
 		/// <returns></returns>
-		public ReferenceInfo Find(Guid id)
+		public ReferenceInfo Find(int id)
 		{
 			string findStatement =
 				"SELECT ReferenceId, ReferencedId, ReferencedModule, ReferencedSid FROM SYS_ReferenceNew WHERE ReferenceId = @ID";
 
             var sqlCommand= DHelper.GetSqlCommand(findStatement);
 
-            DHelper.AddParameter(sqlCommand, "@ID", SqlDbType.UniqueIdentifier, id);
+            DHelper.AddParameter(sqlCommand, "@ID", SqlDbType.Int, id);
 
             return Load(DHelper.ExecuteDataTable(sqlCommand));
 		}
@@ -40,7 +40,7 @@ namespace DAL.Sys
 					AND ReferencedModule = @ReferencedModule
 					AND (@ReferencedSid IS NULL OR ReferencedSid = @ReferencedSid)
 			");
-			DHelper.AddParameter(comm, "@ReferencedId", SqlDbType.Int, referenced.ReferencedId);
+			DHelper.AddParameter(comm, "@ReferencedId", SqlDbType.UniqueIdentifier, referenced.ReferencedId.Value);
 			DHelper.AddParameter(comm, "@ReferencedModule", SqlDbType.Int, referenced.ReferencedModule);
 			DHelper.AddParameter(comm, "@ReferencedSid", SqlDbType.Int, referenced.ReferencedSid);
 
@@ -60,11 +60,11 @@ namespace DAL.Sys
 				INSERT INTO SYS_ReferenceNew (ReferencedId, ReferencedModule, ReferencedSid) 
 				VALUES (@ReferencedId, @ReferencedModule, @ReferencedSid) SELECT SCOPE_IDENTITY()
 			");
-			DHelper.AddParameter(comm, "@ReferencedId", SqlDbType.Int, value.ReferencedId);
+			DHelper.AddParameter(comm, "@ReferencedId", SqlDbType.UniqueIdentifier, value.ReferencedId.Value);
 			DHelper.AddParameter(comm, "@ReferencedModule", SqlDbType.Int, value.ReferencedModule);
 			DHelper.AddParameter(comm, "@ReferencedSid", SqlDbType.Int, value.ReferencedSid);
 
-			value.ReferenceId = Guid.Parse(DHelper.ExecuteScalar(comm).ToString());
+			value.ReferenceId = Convert.ToInt32(DHelper.ExecuteScalar(comm).ToString());
 		}
 
 		/// <summary>
@@ -82,9 +82,9 @@ namespace DAL.Sys
 					ReferencedSid = @ReferencedSid 
 				WHERE ReferenceId = @ReferenceId
 			");
-			DHelper.AddParameter(comm, "@ReferenceId", SqlDbType.UniqueIdentifier, value.ReferenceId);
+			DHelper.AddParameter(comm, "@ReferenceId", SqlDbType.Int, value.ReferenceId);
 
-			DHelper.AddParameter(comm, "@ReferencedId", SqlDbType.Int, value.ReferencedId);
+			DHelper.AddParameter(comm, "@ReferencedId", SqlDbType.UniqueIdentifier, value.ReferencedId.Value);
 			DHelper.AddParameter(comm, "@ReferencedModule", SqlDbType.Int, value.ReferencedModule);
 			DHelper.AddParameter(comm, "@ReferencedSid", SqlDbType.Int, value.ReferencedSid);
 

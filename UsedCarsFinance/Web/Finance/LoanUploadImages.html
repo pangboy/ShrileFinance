@@ -14,17 +14,23 @@
     <script src="../Scripts/usedcars.js"></script>
     <script src="../Scripts/uploadify/jquery.uploadify.min.js"></script>
     <script src="../Finance/Content/UploadImages.js"></script>
+    <script src="Content/FinanceJs.js"></script>
+
     <script>
         var ReferenceIdstr = 0;//引用id
         uc.form = new UCForm("#ff");
 
+        var query = {};
+
         function GetParams() {
-            return $.extend(uc.GetParams(), parent.flow.InstanceData);
+            return query;
+            //return $.extend(uc.GetParams(), parent.flow.InstanceData);
         }
 
         $(function () {
-            // 获取流程参数
-            var query = $.extend(uc.GetParams(), parent.flow.InstanceData);
+            // 获取参数
+            query.state = GetQueryString("state");
+            query.FinanceId = parent.flow.RootKey;
 
             // 切换页面状态
             ChangeStatus(query);
@@ -83,13 +89,10 @@
 
             if (query.Status == "0") {
                 // 设置“添加”和“删除”按钮
-                $("#add").hide();
-                $("#del").hide();
+               // $("#add").hide();
+              //  $("#del").hide();
             }
-            else {
-                // 加载临时数据
-                LoadTempData();
-            }
+            
         }
 
         // 加载临时数据
@@ -128,7 +131,7 @@
                 <a id="downloadall" class="easyui-linkbutton" href="javascript:void(0)" data-options="onClick:downLoadall,width:100">下载全部</a>
                 <a id="add" class="easyui-linkbutton" href="javascript:void(0)" data-options="iconCls:'icon-add',width:100,onClick:Add">添加</a>
             </div>
-            <div style="width:200px;height:25px; padding-top:40px;"><input id="cball" style="float:left;width:30px " name="cball" type="checkbox" class="easyui-validatebox" onclick="checkall()"><label id="label1" style="width:30px;margin-top:2px;" for="cball">全选</label></div>
+            <div style="width:200px;height:25px; padding-top:40px;"><input id="cball" style="float:left;width:30px " name="cball" type="checkbox" class="easyui-validatebox" onclick="checkall()"><label id="label1" style="width:30px;margin-top:2px;" for="" onclick="$(this).prev().click()">全选</label></div>
         </div>
     </div>
     <!--上传控件-->

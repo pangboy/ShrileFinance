@@ -10,7 +10,7 @@ namespace Models.Sys
     {
         [Alias("FL_ID")]
         public int FileId { get; set; }
-        public Guid ReferenceId { get; set; }
+        public int ReferenceId { get; set; }
         [Newtonsoft.Json.JsonIgnore]
         public string OldName { get; set; }
         [Newtonsoft.Json.JsonIgnore]

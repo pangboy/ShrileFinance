@@ -11,6 +11,7 @@
     <script src="../Scripts/easyui/jquery.easyui.js"></script>
     <script src="../Scripts/easyui/locale/easyui-lang-zh_CN.js"></script>
     <script src="../Scripts/usedcars.js"></script>
+    <script src="Content/FinanceJs.js"></script>
 </head>
 <body>
     <script type="text/javascript">
@@ -22,8 +23,11 @@
 
         function Init()
         {
-            //合并URL参数和流程参数
-            var query = $.extend(uc.GetParams(), parent.flow.InstanceData);
+            var query = {};
+
+            // 获取参数
+            query.state = GetQueryString("state");
+            query.FinanceId = parent.flow.RootKey;
 
             // 加载数据
             LoadData(query);

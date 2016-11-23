@@ -11,11 +11,11 @@
 		/// <summary>
 		/// 引用标识
 		/// </summary>
-		public Guid ReferenceId { get; set; }
+		public int ReferenceId { get; set; }
 		/// <summary>
 		/// 被引用标识
 		/// </summary>
-		public int? ReferencedId { get; set; }
+		public Guid? ReferencedId { get; set; }
 		/// <summary>
 		/// 被引用子标识
 		/// </summary>

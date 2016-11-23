@@ -28,12 +28,12 @@
         /// qiy		16.04.05
         /// <param name="referenceId">引用标识</param>
         /// <returns></returns>
-        public List<FileInfo> FindByReference(Guid referenceId)
+        public List<FileInfo> FindByReference(int referenceId)
         {
             SqlCommand comm = DHelper.GetSqlCommand(@"
 				SELECT FL_ID, ReferenceId, OldName, NewName, ExtName, FilePath, AddDate FROM SYS_FileList WHERE ReferenceId = @ReferenceId 
 			");
-            DHelper.AddParameter(comm, "@ReferenceId", SqlDbType.UniqueIdentifier, referenceId);
+            DHelper.AddParameter(comm, "@ReferenceId", SqlDbType.Int, referenceId);
 
             DataTable dt = DHelper.ExecuteDataTable(comm);
 
@@ -81,7 +81,7 @@
 				INSERT INTO SYS_FileList (ReferenceId, OldName, NewName, ExtName, FilePath, AddDate) 
 				VALUES (@ReferenceId, @OldName, @NewName, @ExtName, @FilePath, @AddDate) SELECT SCOPE_IDENTITY()
 			");
-            DHelper.AddParameter(comm, "@ReferenceId", SqlDbType.UniqueIdentifier, value.ReferenceId);
+            DHelper.AddParameter(comm, "@ReferenceId", SqlDbType.Int, value.ReferenceId);
             DHelper.AddParameter(comm, "@OldName", SqlDbType.NVarChar, value.OldName);
             DHelper.AddParameter(comm, "@NewName", SqlDbType.NVarChar, value.NewName);
             DHelper.AddParameter(comm, "@ExtName", SqlDbType.NVarChar, value.ExtName);

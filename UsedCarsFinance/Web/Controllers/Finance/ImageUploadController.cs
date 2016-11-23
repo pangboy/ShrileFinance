@@ -41,7 +41,7 @@
         /// cais    16.05.04
         /// <returns>引用id 下的引用列表</returns>
         [HttpGet]
-        public DataTable GetFiles(Guid ReferenceId)
+        public DataTable GetFiles(int ReferenceId)
         {
             return ImageUploadInstance.GetFiles(ReferenceId);
         }
@@ -52,9 +52,14 @@
         /// cais    16.04.08
         /// <param name="referenceId">文件引用id</param>
         [HttpDelete]
-        public IHttpActionResult Delete(Guid referenceId)
+        public IHttpActionResult Delete(int? referenceId)
         {
-            ImageUploadInstance.Delete(referenceId);
+            if (referenceId == null)
+            {
+                return BadRequest("参数为null");
+            }
+
+            ImageUploadInstance.Delete(referenceId.Value);
 
             return Ok();
         }
@@ -65,7 +70,7 @@
         /// cais    16.04.08
         /// <param name="referenceId">标识</param>
         /// <returns>引用</returns>
-        public ReferenceInfo Get(Guid referenceId)
+        public ReferenceInfo Get(int referenceId)
         {
             return ImageUploadInstance.Get(referenceId);
         }
@@ -78,7 +83,7 @@
         /// <param name="referencedModule">被引用模块</param>
         /// <param name="referencedSid">被引用子标识</param>
         /// <returns>引用</returns>
-        public ReferenceInfo Get(int? referencedId, int? referencedModule, int? referencedSid = null)
+        public ReferenceInfo Get(Guid? referencedId, int? referencedModule, int? referencedSid = null)
         {
             return ImageUploadInstance.Get(referencedId, referencedModule, referencedSid);
         }

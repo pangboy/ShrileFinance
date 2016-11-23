@@ -284,28 +284,31 @@ function Add() {
 //删除，ReferencedModule暂时为2
 function del() {
     var ckchecked = $("input:checked");
-
+    var picNum = -1;
     if (ckchecked.length > 0) {
         for (var i = 0; i < ckchecked.length; i++) {
             var referenceId = $(ckchecked[i]).next().val();
-            $.ajax({
-                type: "Delete",
-                url: "../api/ImageUpload/Delete?referenceId=" + referenceId,
-                success: function (data) {
-                    for (var k = 0; k < ckchecked.length; k++) {
-                        var delthirdth = $(ckchecked[k]).parent().next().next().find("div");
-                        $(ckchecked[k]).attr("checked", false);
+            if (referenceId.length > 0) {
+                picNum = i;
+                $.ajax({
+                    type: "Delete",
+                    url: "../api/ImageUpload/Delete?referenceId=" + referenceId,
+                    success: function (data) {
+                        for (var k = 0; k < ckchecked.length; k++) {
+                            var delthirdth = $(ckchecked[k]).parent().next().next().find("div");
+                            $(ckchecked[k]).attr("checked", false);
 
-                        // 隐藏图片文件名div容器
-                        delthirdth.hide();
+                            // 隐藏图片文件名div容器
+                            delthirdth.hide();
 
-                        delthirdth.empty();
+                            delthirdth.empty();
+                        }
                     }
-                }
-            });
+                });
+            }
         }
     }
-    else {
+    else if (picNum < 0) {
         $.messager.show({ msg: "请至少选中一项!" });
     }
 }
@@ -424,7 +427,7 @@ function InputBindonClick() {
 // checkbox单选
 function ChecboxSingleCheck(inputObj) {
     var inputchecboxs = $("div.container").find("fieldset:visible").find("input[type=checkbox]:checked");
-    
+
     var inputObjState = $(inputObj)[0].checked;
 
     if ($("input#cball")[0].checked == false) {

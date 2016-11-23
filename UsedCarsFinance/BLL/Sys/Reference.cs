@@ -13,7 +13,7 @@
         /// qiy		16.03.30
         /// <param name="referenceId">标识</param>
         /// <returns></returns>
-        public ReferenceInfo Get(Guid referenceId)
+        public ReferenceInfo Get(int referenceId)
         {
             return referenceMapper.Find(referenceId);
         }
@@ -26,7 +26,7 @@
         /// <param name="referencedModule">被引用模块</param>
         /// <param name="referencedSid">被引用子标识</param>
         /// <returns></returns>
-        public ReferenceInfo Get(int? referencedId, int? referencedModule, int? referencedSid = null)
+        public ReferenceInfo Get(Guid? referencedId, int? referencedModule, int? referencedSid = null)
         {
             return referenceMapper.FindByReferenced(new ReferenceInfo
             {
@@ -45,7 +45,7 @@
         /// <param name="referencedModule">被引用模块</param>
         /// <param name="referencedSid">被引用子标识</param>
         /// <returns></returns>
-        public ReferenceInfo Apply(int? referencedId, int? referencedModule, int? referencedSid = null)
+        public ReferenceInfo Apply(Guid? referencedId, int? referencedModule, int? referencedSid = null)
         {
             ReferenceInfo reference = Get(referencedId, referencedModule, referencedSid);
 

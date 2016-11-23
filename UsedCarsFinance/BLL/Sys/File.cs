@@ -28,7 +28,7 @@ namespace BLL.Sys
         /// qiy		16.04.05
         /// <param name="referenceId">引用信息</param>
         /// <returns></returns>
-        public List<FileInfo> GetByReference(Guid referenceId)
+        public List<FileInfo> GetByReference(int referenceId)
         {
             return fileMapper.FindByReference(referenceId);
         }
@@ -40,7 +40,7 @@ namespace BLL.Sys
         /// <param name="file">文件</param>
         /// <param name="referenceId">引用标识</param>
         /// <returns></returns>
-        public int Add(HttpPostedFile file, Guid referenceId, out string message)
+        public int Add(HttpPostedFile file, int referenceId, out string message)
         {
             message = "";
             string filename = file.FileName;
@@ -78,7 +78,7 @@ namespace BLL.Sys
         /// <param name="files">文件集合</param>
         /// <param name="referenceId">引用标识</param>
         /// <returns></returns>
-        public bool Add(HttpFileCollection files, Guid referenceId, out string message)
+        public bool Add(HttpFileCollection files, int referenceId, out string message)
         {
             message = "";
 
