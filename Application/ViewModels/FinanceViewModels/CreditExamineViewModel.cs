@@ -203,11 +203,6 @@
         public Guid FinanceId { get; set; }
 
         /// <summary>
-        /// 信审标识
-        /// </summary>
-        public Guid Id { get; set; }
-
-        /// <summary>
         /// 递交资料渠道
         /// </summary>
         public string SubmitDataChannel { get; set; }
@@ -215,7 +210,6 @@
         /// <summary>
         /// 牌照登记至
         /// </summary>
-        ////[Required(ErrorMessage = "牌照登记至 不可为空")]
         public LicenseRegistrationEnum LicenseRegistration { get; set; }
 
         /// <summary>
@@ -254,68 +248,42 @@
         public string LesseeMobile { get; set; }
 
         /// <summary>
-        /// 共借人① 姓名
+        /// 共借人姓名
         /// </summary>
-        public string CommonBorrwerName1 { get; set; }
-
-        /// <summary>
-        /// 共借人②姓名
-        /// </summary>
-        public string CommonBorrwerName2 { get; set; }
-
-        /// <summary>
-        /// 共借人③姓名
-        /// </summary>
-        public string CommonBorrwerName3 { get; set; }
-
+        public string CommonBorrwerName { get; set; }
+        
         /// <summary>
         /// 保证人姓名
         /// </summary>
         public IEnumerable<string> Guarantor { get; set; }
 
-        /////// <summary>
-        /////// 保证人① 姓名
-        /////// </summary>
-        ////public string Guarantor1 { get; set; }
-
-        /////// <summary>
-        /////// 保证人②姓名
-        /////// </summary>
-        ////public string Guarantor2 { get; set; }
-
-        /////// <summary>
-        /////// 保证人③姓名
-        /////// </summary>
-        ////public string Guarantor3 { get; set; }
-
         /// <summary>
         /// 客户类别
         /// </summary>
-        ////[Required(ErrorMessage = "客户类别 不可为空")]
+        [Required(ErrorMessage = "客户类别 不可为空")]
         public CustomerCategoryEnum CustomerCategory { get; set; }
 
         /// <summary>
         /// 客户具体行业
         /// </summary>
-        ////[Required(ErrorMessage = "客户具体行业 不可为空")]
+        [Required(ErrorMessage = "客户具体行业 不可为空")]
         public string DetailedIndustry { get; set; }
 
         /// <summary>
         /// 户籍所在地
         /// </summary>
-        ////[Required(ErrorMessage = "户籍所在地 不可为空")]
         public CensusRegisterSeatEnum CensusRegisterSeat { get; set; }
 
         /// <summary>
         /// 居住情况
         /// </summary>
-        ////[Required(ErrorMessage = "居住情况 不可为空")]
+        [Required(ErrorMessage = "居住情况 不可为空")]
         public string LivingSituation { get; set; }
 
         /// <summary>
         /// 工作情况
         /// </summary>
-        ////[Required(ErrorMessage = "工作情况 不可为空")]
+       [Required(ErrorMessage = "工作情况 不可为空")]
         public string WorkingCondition { get; set; }
 
         /// <summary>
@@ -331,31 +299,31 @@
         /// <summary>
         /// 月收入
         /// </summary>
-        ////[Required(ErrorMessage = "月收入 不可为空")]
+        [Required(ErrorMessage = "月收入 不可为空")]
         public string MonthlyIncome { get; set; }
 
         /// <summary>
         /// 核算依据
         /// </summary>
-        ////[Required(ErrorMessage = "核算依据 不可为空")]
+        [Required(ErrorMessage = "核算依据 不可为空")]
         public string AccountingBasis { get; set; }
 
         /// <summary>
         /// 网核价格
         /// </summary>
-        ////[Required(ErrorMessage = "网核价格 不可为空")]
+        [Required(ErrorMessage = "网核价格 不可为空")]
         public string NetnuclearPrice { get; set; }
 
         /// <summary>
         /// 核批价格
         /// </summary>
-        ////[Required(ErrorMessage = "核批价格 不可为空")]
+        [Required(ErrorMessage = "核批价格 不可为空")]
         public string NuclearGroupPrice { get; set; }
 
         /// <summary>
         /// 终审额度
         /// </summary>
-        ////[Required(ErrorMessage = "终审额度 不可为空")]
+        [Required(ErrorMessage = "终审额度 不可为空")]
         public string FinalLine { get; set; }
 
         /// <summary>
@@ -372,12 +340,12 @@
         public string SpecialInstructions { get; set; }
 
         /// <summary>
-        /// 保证金1
+        /// 保证金5%
         /// </summary>
         public string Margin1 { get; set; }
 
         /// <summary>
-        /// 保证金2
+        /// 保证金10%
         /// </summary>
         public string Margin2 { get; set; }
 
@@ -401,13 +369,11 @@
         /// <summary>
         /// 婚姻
         /// </summary>
-        ////[Required(ErrorMessage = "婚姻 不可为空")]
         public MarriageStateEnum MarriageState { get; set; }
 
         /// <summary>
         /// 居住
         /// </summary>
-        ////[Required(ErrorMessage = "居住 不可为空")]
         public LiveEnum Live { get; set; }
 
         /// <summary>
@@ -420,13 +386,11 @@
         /// <summary>
         /// 工作
         /// </summary>
-        ////[Required(ErrorMessage = "工作 不可为空")]
         public WorkEnum Work { get; set; }
 
         /// <summary>
         /// 家访
         /// </summary>
-        ////[Required(ErrorMessage = "家访 不可为空")]
         public FamilyVisitEnum FamilyVisit { get; set; }
 
         /// <summary>
@@ -476,10 +440,5 @@
         /// 终审人
         /// </summary>
         public KeyValuePair<string, string> FinalPerson { get; set; }
-
-        /// <summary>
-        /// 当前审批人
-        /// </summary>
-        public int CurentUser { get; set; }
     }
 }

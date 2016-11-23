@@ -14,14 +14,17 @@ namespace DAL.Sys
 		/// qiy		16.03.30
 		/// <param name="id">引用标识</param>
 		/// <returns></returns>
-		public ReferenceInfo Find(int id)
+		public ReferenceInfo Find(Guid id)
 		{
 			string findStatement =
-				"SELECT ReferenceId, ReferencedId, ReferencedModule, ReferencedSid FROM SYS_Reference WHERE ReferenceId = @ID";
+				"SELECT ReferenceId, ReferencedId, ReferencedModule, ReferencedSid FROM SYS_ReferenceNew WHERE ReferenceId = @ID";
 
-			return AbstractFind(findStatement, id);
+            var sqlCommand= DHelper.GetSqlCommand(findStatement);
+
+            DHelper.AddParameter(sqlCommand, "@ID", SqlDbType.UniqueIdentifier, id);
+
+            return Load(DHelper.ExecuteDataTable(sqlCommand));
 		}
-
 
 		/// <summary>
 		/// 根据被引用信息查找
@@ -32,7 +35,7 @@ namespace DAL.Sys
 		public ReferenceInfo FindByReferenced(ReferenceInfo referenced)
 		{
 			SqlCommand comm = DHelper.GetSqlCommand(@"
-				SELECT ReferenceId, ReferencedId, ReferencedModule, ReferencedSid FROM SYS_Reference 
+				SELECT ReferenceId, ReferencedId, ReferencedModule, ReferencedSid FROM SYS_ReferenceNew 
 				WHERE ReferencedId = @ReferencedId 
 					AND ReferencedModule = @ReferencedModule
 					AND (@ReferencedSid IS NULL OR ReferencedSid = @ReferencedSid)
@@ -54,14 +57,14 @@ namespace DAL.Sys
 		public void Insert(ReferenceInfo value)
 		{
 			SqlCommand comm = DHelper.GetSqlCommand(@"
-				INSERT INTO SYS_Reference (ReferencedId, ReferencedModule, ReferencedSid) 
+				INSERT INTO SYS_ReferenceNew (ReferencedId, ReferencedModule, ReferencedSid) 
 				VALUES (@ReferencedId, @ReferencedModule, @ReferencedSid) SELECT SCOPE_IDENTITY()
 			");
 			DHelper.AddParameter(comm, "@ReferencedId", SqlDbType.Int, value.ReferencedId);
 			DHelper.AddParameter(comm, "@ReferencedModule", SqlDbType.Int, value.ReferencedModule);
 			DHelper.AddParameter(comm, "@ReferencedSid", SqlDbType.Int, value.ReferencedSid);
 
-			value.ReferenceId = Convert.ToInt32(DHelper.ExecuteScalar(comm));
+			value.ReferenceId = Guid.Parse(DHelper.ExecuteScalar(comm).ToString());
 		}
 
 		/// <summary>
@@ -73,13 +76,13 @@ namespace DAL.Sys
 		public int Update(ReferenceInfo value)
 		{
 			SqlCommand comm = DHelper.GetSqlCommand(@"
-				UPDATE SYS_Reference SET 
+				UPDATE SYS_ReferenceNew SET 
 					ReferencedId = @ReferencedId,
 					ReferencedModule = @ReferencedModule, 
 					ReferencedSid = @ReferencedSid 
 				WHERE ReferenceId = @ReferenceId
 			");
-			DHelper.AddParameter(comm, "@ReferenceId", SqlDbType.Int, value.ReferenceId);
+			DHelper.AddParameter(comm, "@ReferenceId", SqlDbType.UniqueIdentifier, value.ReferenceId);
 
 			DHelper.AddParameter(comm, "@ReferencedId", SqlDbType.Int, value.ReferencedId);
 			DHelper.AddParameter(comm, "@ReferencedModule", SqlDbType.Int, value.ReferencedModule);

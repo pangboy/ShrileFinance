@@ -23,11 +23,16 @@
         /// <param name="financeId">融资标识</param>
         /// <returns>融资审核ViewModel</returns>
         [HttpGet]
-        public OperationViewModel GetOperation(Guid financeId)
+        public IHttpActionResult GetOperation(Guid financeId)
         {
             var operationViewModel = financeAppService.GetOperationByFinanceId(financeId);
 
-            return operationViewModel;
+            if (operationViewModel == null)
+            {
+                return BadRequest();
+            }
+
+            return Ok(operationViewModel);
         }
 
         /// <summary>
@@ -45,7 +50,7 @@
 
             financeAppService.EditOperation(value: value);
 
-            return Ok(value);
+            return Ok();
         }
     }
 }

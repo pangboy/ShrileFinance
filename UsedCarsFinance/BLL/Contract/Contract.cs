@@ -176,7 +176,7 @@ namespace BLL.Contract
         /// </summary>
         /// <param name="number">合同编号作为OldName</param>
         /// <param name="referenceid"></param>
-        private bool InsertFile(string number, int referenceid, string ContrantName)
+        private bool InsertFile(string number, Guid referenceid, string ContrantName)
         {
             bool result = false;
             //插入一条pdf文件数据
@@ -210,7 +210,7 @@ namespace BLL.Contract
                 {
                     string hz = contractsCalc.GetContractNum("HZ", FinanceId, mainApplicant.ApplicantId.Value);//融资租赁合同编号代码
                     ReferenceInfo referenceInfo = reference.Apply(FinanceId, 4, 1);//合同模块为4，1为融资租赁合同
-                    int refid = referenceInfo.ReferenceId;
+                    var refid = referenceInfo.ReferenceId;
                     if (result)
                         result &= InsertFile(hz, refid, "融资租赁合同");
 
@@ -235,7 +235,7 @@ namespace BLL.Contract
                 {
                     string bz = contractsCalc.GetContractNum("BZ", FinanceId, guarantee[i - 1].ApplicantId.Value);//保证合同编号代码
                     ReferenceInfo referenceInfo = reference.Apply(FinanceId, 4, 3);//合同模块为4，3保证合同
-                    int refid = referenceInfo.ReferenceId;
+                    var refid = referenceInfo.ReferenceId;
                     if (result)
                         result &= InsertFile(bz, refid, "保证合同" + i);
                 }
@@ -251,7 +251,7 @@ namespace BLL.Contract
         /// yand    16.05.17
         /// <param name="financeId"></param>
         /// <returns></returns>
-        public List<ComboInfo> FindContrantName(int financeId)
+        public List<ComboInfo> FindContrantName(Guid financeId)
         {
             List<ComboInfo> referenceList = new DAL.Sys.FileListMapper().FindContrantByReferenced(financeId);
             return referenceList;

@@ -10,7 +10,13 @@ function Disabled(selector) {
     selector = selector || "fieldset";
 
     $(selector).attr("disabled", "disabled");
-    //$(selector + " select.easyui-combobox").combobox("disable");
+
+    $(selector).find(".easyui-combobox").combobox("disable");
+
+    
+    if ($(selector).hasClass(".easyui-combobox")) {
+        $(selector).combobox("disable");
+    }
 }
 
 // Json序列化

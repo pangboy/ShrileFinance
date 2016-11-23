@@ -28,7 +28,7 @@ namespace BLL.Sys
         /// qiy		16.04.05
         /// <param name="referenceId">引用信息</param>
         /// <returns></returns>
-        public List<FileInfo> GetByReference(int referenceId)
+        public List<FileInfo> GetByReference(Guid referenceId)
         {
             return fileMapper.FindByReference(referenceId);
         }
@@ -40,16 +40,17 @@ namespace BLL.Sys
         /// <param name="file">文件</param>
         /// <param name="referenceId">引用标识</param>
         /// <returns></returns>
-        public int Add(HttpPostedFile file, int referenceId,out string message)
+        public int Add(HttpPostedFile file, Guid referenceId, out string message)
         {
             message = "";
             string filename = file.FileName;
-            string[] str = { ".jpg",".bmp", ".gif", ".rar", ".xls", ".pdf", ".psd", ".avi", ".zip", ".doc", ".ai",".ppt",".mp4",".mp3",".png", ".swf", ".docx" };
+            string[] str = { ".jpg", ".bmp", ".gif", ".rar", ".xls", ".pdf", ".psd", ".avi", ".zip", ".doc", ".ai", ".ppt", ".mp4", ".mp3", ".png", ".swf", ".docx" };
             List<string> extType = str.ToList();
 
             int pos = filename.LastIndexOf('.');
 
-            FileInfo info = new FileInfo {
+            FileInfo info = new FileInfo
+            {
                 OldName = filename.Substring(0, pos),
                 ExtName = filename.Substring(pos).ToLower(),
                 NewName = this.RandomName(),
@@ -62,8 +63,8 @@ namespace BLL.Sys
                 message = "不合法的文件格式！";
                 return 0;
             }
-            
-                fileMapper.Insert(info);
+
+            fileMapper.Insert(info);
 
             if (info.FileId > 0)
                 Save(info, file);
@@ -77,17 +78,20 @@ namespace BLL.Sys
         /// <param name="files">文件集合</param>
         /// <param name="referenceId">引用标识</param>
         /// <returns></returns>
-        public bool Add(HttpFileCollection files, int referenceId,out string message)
+        public bool Add(HttpFileCollection files, Guid referenceId, out string message)
         {
             message = "";
 
-            if (referenceId == 0) return false;
+            if (referenceId.Equals(Guid.Empty))
+            {
+                return false;
+            }
 
             for (int i = 0; i < files.Count; i++)
             {
                 if (files[i].ContentLength > 0)
                 {
-                    Add(files[i], referenceId,out message);
+                    Add(files[i], referenceId, out message);
                 }
             }
 
@@ -110,7 +114,7 @@ namespace BLL.Sys
         /// qiy		16.04.05
         /// <param name="referenceId">引用信息</param>
         /// <returns></returns>
-        public void DeleteByReference(int referenceId)
+        public void DeleteByReference(Guid referenceId)
         {
             fileMapper.DeleteByReference(referenceId);
         }

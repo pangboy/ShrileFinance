@@ -1,5 +1,7 @@
 ﻿namespace Models.Sys
 {
+    using System;
+
 	/// <summary>
 	/// 引用类
 	/// </summary>
@@ -9,7 +11,7 @@
 		/// <summary>
 		/// 引用标识
 		/// </summary>
-		public int ReferenceId { get; set; }
+		public Guid ReferenceId { get; set; }
 		/// <summary>
 		/// 被引用标识
 		/// </summary>

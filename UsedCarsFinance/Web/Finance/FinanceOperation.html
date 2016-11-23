@@ -15,19 +15,13 @@
     <script src="../BankInfo/JS/validType.js"></script>
 
     <script type="text/javascript">
-        uc.form = new UCForm(".container");
         var query = {};
 
         $(function () {
             // 获取参数
-            //query = $.extend(uc.GetParams(), parent.flow.InstanceData);
-            //query.FinanceId = parent.flow.RootKey;
-            debugger
-            if (query.FinanceId == undefined || query.FinanceId.length == 0) {
-                query.FinanceId = "ED468191-9FAB-E611-80C5-507B9DE4A488";
-                query.state = 2;
-            }
-
+            query.state = GetQueryString("state");
+            query.FinanceId = parent.flow.RootKey;
+            
             // 初始化
             Init(query);
         });
@@ -35,13 +29,12 @@
         // LoadData方法
         function LoadData(data) {
             if (data) {
-                // 记录节点类型
-                $('form[name=FinanceOperation]>input[name=NodeType]').val("Operation");
-                debugger
-                // 加载放款信息、还款信息
+                // 加载放款信息
                 FieldsetLoadDateFactory("CreditBankInfo", 'text', data);
-                FieldsetLoadDateFactory("CustomerBankInfo", 'text', data);
-                $('fieldset[name=CreditBankInfo] select[comboname=LoanPrincipal]').combobox('unselect', data.LoanPrincipal).combobox('select', data.LoanPrincipal);
+
+                if (data.LoanPrincipal) {
+                    $('fieldset[name=CreditBankInfo] select[comboname=LoanPrincipal]').combobox('unselect', data.LoanPrincipal).combobox('select', data.LoanPrincipal);
+                }
 
                 // 加载运营基础信息(租赁信息)
                 LoadDataBase(data);
@@ -53,6 +46,14 @@
                 LoadFinancingCost(data.FinanceCosts);
 
                 if (query.state == 0) {
+                    // 显示车辆信息
+                    if ($("form fieldset[name=VehicleInfo]")[0] == undefined) {
+                        $($("form template#VehicleInfo").html()).insertAfter($("form fieldset[name=Operation]"));
+                        $.parser.parse($("form fieldset[name=VehicleInfo]"));
+                    }
+                    FieldsetLoadDateFactory("VehicleInfo", "text", data);
+
+
                     // 禁用所有
                     Disabled($("fieldset"));
 
@@ -63,11 +64,11 @@
                 }
                 else if (query.state == 1) {
                     // 运营
-                    LoadData_Trial(data);
+                    LoadData_Opera(data);
                 }
                 else if (query.state == 2) {
                     // 客户
-                    LoadData_Review(data);
+                    LoadData_Cust(data);
                 }
             }
         }
@@ -83,31 +84,35 @@
 
         //构建数据
         function BuildData() {
-            // 序列化运营信息
-            var value = FieldsetSerializeFactory('Operation', 'text');
-
-            // 序列化放款信息
-            if (value.LoanPrincipal == "Channel") {
-                TraverseDateFactory(FieldsetSerializeFactory('CreditBankInfo', 'text'), value, false, null);
-            }
-
-            // 序列化放款信息
-            TraverseDateFactory(FieldsetSerializeFactory('CreditBankInfo', 'text'), value, false, null);
-
-            // 序列化合同信息
-            var array = [];
-            $(FieldsetSerializeFactory('Contact', 'table')).each(function (i, e) {
-                if (e.Name.length > 0) {
-                    array.push(e);
-                }
-            });
-            value.ContactJson = JSON.stringify(array);
-
-            // 客户
+            var value = {};
+            // 记录节点类型
             value.NodeType = $('form[name=FinanceOperation]>input[name=NodeType]').val();
-            if (value.LoanPrincipal != 'Channel') {
-                // 放款账户信息
-                TraverseDateFactory(FieldsetSerializeFactory('CreditBankInfo', 'text'), value, false);
+
+            // 序列化放款信息
+            TraverseDateFactory(FieldsetSerializeFactory("CreditBankInfo", "text"), value, false, null);
+
+            if (value.NodeType == "Customer") {
+                // 记录融资标识
+                value.FinanceId = $('fieldset[name=Operation]>input[name=FinanceId]').val();
+
+                // 序列化还款信息
+                TraverseDateFactory(FieldsetSerializeFactory("CustomerBankInfo", "text"), value, false, null);
+
+                // 序列化车辆信息
+                TraverseDateFactory(FieldsetSerializeFactory("VehicleInfo", "text"), value, false, null);
+            }
+            else {
+                // 序列化租赁信息
+                TraverseDateFactory(FieldsetSerializeFactory('Operation', 'text'), value, false, null)
+
+                // 序列化合同信息
+                var array = [];
+                $(FieldsetSerializeFactory('Contact', 'table')).each(function (i, e) {
+                    if (e.Name.length > 0) {
+                        array.push(e);
+                    }
+                });
+                value.ContactJson = JSON.stringify(array);
             }
 
             return value;
@@ -120,7 +125,6 @@
             // 显示运营页面
             $('form[name=FinanceOperation]').append($('form[name=FinanceOperation] template#Operation').html());
             $.parser.parse($('form[name=FinanceOperation]'));
-
 
             // 加载远程数据
             if (query == undefined || query.FinanceId == undefined) {
@@ -144,14 +148,9 @@
         // 运营基础信息加载
         function LoadDataBase(data) {
             if (data) {
-                // 加载放款信息
-                if (data.LoanPrincipal == "Channel") {
-                    $("fieldset[name=CreditBankInfo] select[textboxname=LoanPrincipal]").combobox('select', "Channel");
-                    FieldsetLoadDateFactory('CreditBankInfo', 'text', data);
-                }
-                else {
-                    $("fieldset[name=CreditBankInfo] select[textboxname=LoanPrincipal]").combobox('select', "Customer");
-                }
+                // 加载放还款信息
+                FieldsetLoadDateFactory('CreditBankInfo', 'text', data);
+                FieldsetLoadDateFactory('CustomerBankInfo', 'text', data);
 
                 // 加载运营
                 FieldsetLoadDateFactory('Operation', 'text', data);
@@ -167,29 +166,53 @@
                     ];
                     FieldsetLoadDateFactory('Contact', 'table', contactTempData);
                 }
-                $('fieldset[name=Contact] table#Contact_dg').prev().find('table tr#datagrid-row-r1-2-0 input[type=checkbox]').hide();
+
+                $('fieldset[name=Contact] table#Contact_dg').prev().children().eq(1).find("tr input[type=checkbox]").eq(0).hide()
+                //$('fieldset[name=Contact] table#Contact_dg').prev().find('table tr#datagrid-row-r1-2-0 input[type=checkbox]').hide();
             }
         }
 
         // 运营
-        function LoadData_Trial(data) {
+        function LoadData_Opera(data) {
+            // 记录节点类型
+            $('form[name=FinanceOperation]>input[name=NodeType]').val("Operation");
+
             // 禁用还款信息
             Disabled($('fieldset[name=CustomerBankInfo]'));
         }
 
         // 客户
-        function LoadData_Review(data) {
-            // 禁用运营
-            Disabled($('fieldset[name=Operation]'));
+        function LoadData_Cust(data) {
+            // 记录节点类型
+            $('form[name=FinanceOperation]>input[name=NodeType]').val("Customer");
 
-            // 禁用放款信息
-            Disabled($('fieldset[name=CreditBankInfo]'));
-
-            if (data.LoanPrincipal != "Customer")
-            {
-                // 禁用还款信息
-                Disabled($('fieldset[name=CustomerBankInfo]'));
+            if (data.LoanPrincipal != "Customer") {
+                // 禁用放款信息
+                Disabled($('fieldset[name=CreditBankInfo]'));
             }
+            else {
+                // 放款信息 可编辑
+                ChannelReadonly(false);
+                $("fieldset[name=CreditBankInfo] select[comboname=LoanPrincipal]").combobox('disable');
+            }
+            // 加载放款信息
+            FieldsetLoadDateFactory("CreditBankInfo", 'text', data);
+
+            // 加载还款信息
+            $("fieldset[name=CustomerBankInfo]>div.row>div.col-6").remove();
+            $("fieldset[name=CustomerBankInfo]>div.row").append($("fieldset[name=CustomerBankInfo]>div.row>template#CustomerBankInfo").html());
+            $.parser.parse($("fieldset[name=CustomerBankInfo]>div.row"));
+            FieldsetLoadDateFactory("CustomerBankInfo", 'text', data);
+
+            // 加载车辆信息
+            if ($("form fieldset[name=VehicleInfo]")[0] == undefined) {
+                $($("form template#VehicleInfo").html()).insertAfter($("form fieldset[name=Operation]"));
+                $.parser.parse($("form fieldset[name=VehicleInfo]"));
+            }
+            FieldsetLoadDateFactory("VehicleInfo", "text", data);
+
+            // 禁用租赁信息
+            Disabled($('fieldset[name=Operation]'));
 
             // 禁用合同
             ContactCheck = false;
@@ -203,19 +226,17 @@
                 return;
             }
 
-            // 显示融资项
-            $("fieldset[name=FinancingItems]").show();
-
             var tableData = [];
             $(dataKV).each(function (i, e) {
                 if (e.Value.Key == "裸车价") {
                     tableData.push({ Name: e.Value.Key, Money: e.Value.Value + " 万元" });
                 }
-
-                tableData.push({ Name: e.Value.Key, Money: e.Value.Value + " 元" });
+                else {
+                    tableData.push({ Name: e.Value.Key, Money: e.Value.Value + " 元" });
+                }
             });
 
-            FieldsetLoadDateFactory('FinancingItems', 'table', tableData);
+            $("fieldset[name=FinancingItemsOrCosts] table#FinancingItems_dg").datagrid("loadData", tableData);
         }
 
         // 加载手续费
@@ -229,7 +250,7 @@
                 tableData.push({ Name: e.Value.Key, Money: e.Value.Value + " 元" });
             });
 
-            FieldsetLoadDateFactory('FinancingCosts', 'table', tableData);
+            $("fieldset[name=FinancingItemsOrCosts] table#FinancingCosts_dg").datagrid("loadData", tableData);
         }
     </script>
 </head>
@@ -265,62 +286,67 @@
                     function ChooseLoanPrincipal(record) {
                         if (record) {
                             if (record.text == "渠道") {
-                                // 显示渠道放款
-                                $("fieldset[name=CreditBankInfo] input[textboxname=CreditAccountName]").textbox({
-                                    required:true,
-                                    validType:[],
-                                    value:'',
-                                    readonly:false
-                                });
-
-                                $("fieldset[name=CreditBankInfo] input[textboxname=CreditBankName]").textbox({
-                                    required: true,
-                                    validType: [],
-                                    value: '',
-                                    readonly: false
-                                });
-
-                                $("fieldset[name=CreditBankInfo] input[textboxname=CreditBankCard]").textbox({
-                                    required: true,
-                                    validType: ['Integer', 'length[19,19]'],
-                                    value: '',
-                                    readonly: false
-                                });
-
+                                // 渠道放款 可输入
+                                ChannelReadonly(false);
                             }
                             else {
-                                // 隐藏渠道放款
-                                $("fieldset[name=CreditBankInfo] input[textboxname=CreditAccountName]").textbox({
-                                    required: false,
-                                    validType: [],
-                                    value: '',
-                                    readonly: true
-                                });
-
-                                $("fieldset[name=CreditBankInfo] input[textboxname=CreditBankName]").textbox({
-                                    required: false,
-                                    validType: [],
-                                    value: '',
-                                    readonly: true
-                                });
-
-                                $("fieldset[name=CreditBankInfo] input[textboxname=CreditBankCard]").textbox({
-                                    required: false,
-                                    validType: ['Integer', 'length[19,19]'],
-                                    value: '',
-                                    readonly: true
-                                });
-
+                                // 渠道放款 只读
+                                ChannelReadonly(true);
                             }
                         }
 
                         $(this).combobox('setValue', record.value);
                     }
 
-                    function ChangeReadonly(bool)
-                    {
-                        if ($("form fieldset[name=CustomerBankInfo]>div.row>div").length > 0)
-                        {
+                    function ChannelReadonly(isReadonly) {
+                        if (isReadonly == true) {
+                            $("fieldset[name=CreditBankInfo] input[textboxname=CreditAccountName]").textbox({
+                                required: false,
+                                validType: [],
+                                value: '',
+                                readonly: true
+                            });
+
+                            $("fieldset[name=CreditBankInfo] input[textboxname=CreditBankName]").textbox({
+                                required: false,
+                                validType: [],
+                                value: '',
+                                readonly: true
+                            });
+
+                            $("fieldset[name=CreditBankInfo] input[textboxname=CreditBankCard]").textbox({
+                                required: false,
+                                validType: ['Integer', 'length[19,19]'],
+                                value: '',
+                                readonly: true
+                            });
+                        }
+                        else {
+                            $("fieldset[name=CreditBankInfo] input[textboxname=CreditAccountName]").textbox({
+                                required: true,
+                                validType: [],
+                                value: '',
+                                readonly: false
+                            });
+
+                            $("fieldset[name=CreditBankInfo] input[textboxname=CreditBankName]").textbox({
+                                required: true,
+                                validType: [],
+                                value: '',
+                                readonly: false
+                            });
+
+                            $("fieldset[name=CreditBankInfo] input[textboxname=CreditBankCard]").textbox({
+                                required: true,
+                                validType: ['Integer', 'length[19,19]'],
+                                value: '',
+                                readonly: false
+                            });
+                        }
+                    }
+
+                    function ChangeReadonly(bool) {
+                        if ($("form fieldset[name=CustomerBankInfo]>div.row>div").length > 0) {
                             $("form fieldset[name=CustomerBankInfo]>div.row>div").remove();
                         }
 
@@ -425,7 +451,68 @@
                 </div>
             </fieldset>
 
-            <fieldset name="FinancingItems" style="display:none">
+            <template id="VehicleInfo">
+                <fieldset name="VehicleInfo">
+                    <legend style="margin-top:25px;">车辆补充信息</legend>
+                    <div class="row">
+                        <div class="col-6">
+                            <label>车牌号:</label>
+                            <input name="PlateNo" class="easyui-textbox" data-options="validType:['PlateNo'],required:true" />
+                        </div>
+
+                        <div class="col-6">
+                            <label>车架号:</label>
+                            <input name="FrameNo" class="easyui-textbox" data-options="validType:['AN','length[17,17]'],required:true" />
+                        </div>
+
+                        <div class="col-6">
+                            <label>发动机号:</label>
+                            <input name="EngineNo" class="easyui-textbox" data-options="validType:['AN','length[0,20]'],required:true" />
+                        </div>
+
+                        <div class="col-6">
+                            <label>注册登记日期:</label>
+                            <input name="RegisterDate" class="easyui-datebox" data-options="validType:'Date',required:true,editable:false,width:410" />
+                        </div>
+
+                        <div class="col-6">
+                            <label>行驶里程:</label>
+                            <input name="RunningMiles" class="easyui-textbox" data-options="validType:['Integer','length[0,9]'],required:true" />
+                            <span class="unit">公里</span>
+                        </div>
+
+                        <div class="col-6">
+                            <label>车辆出厂日期:</label>
+                            <input name="FactoryDate" class="easyui-datebox" data-options="validType:'Date',required:true,editable:false,width:410" />
+                        </div>
+
+                        <div class="col-6">
+                            <label>业务类型:</label>
+                            <select name="BusinessType" class="easyui-combobox" data-options="editable:false,required:true,value:''">
+                                <option value="1">以租代购</option>
+                                <option value="2">快速贷</option>
+                                <option value="3">押车贷</option>
+                                <option value="4">车抵贷</option>
+                                <option value="5">二手车交易贷</option>
+                                <option value="0">新车交易贷</option>
+                            </select>
+                        </div>
+
+                        <div class="col-6">
+                            <label>车辆上牌城市:</label>
+                            <input name="RegisterCity" class="easyui-textbox" data-options="validType:[],required:true" />
+                        </div>
+
+                        <div class="col-6">
+                            <label>车况:</label>
+                            <input name="Condition" type="radio" checked value="0"><span onclick="$(this).prev().click()">新车</span>
+                            <input name="Condition" type="radio" value="1"><span onclick="$(this).prev().click()">二手车</span>
+                        </div>
+                    </div>
+                </fieldset>
+            </template>
+
+            <fieldset name="FinancingItemsOrCosts" style="display:block">
                 <legend>融资项和手续费</legend>
                 <div class="row">
                     <div class="col-6">
@@ -451,7 +538,7 @@
                                singleSelect:true,
                                onSelect:FinanceCostSelect,
                                rownumbers:true,
-                               title:'手续费'
+                               title:'客户手续费'
                                 ">
                             <thead>
                                 <tr>
@@ -582,7 +669,7 @@
                     // table 单元格双击
                     function ContactDblClickCell(index, field, value) {
                         // 融资租赁合同不可编辑
-                        if (index == 0 || ContactCheck==false) {
+                        if (index == 0 || ContactCheck == false) {
                             return;
                         }
 

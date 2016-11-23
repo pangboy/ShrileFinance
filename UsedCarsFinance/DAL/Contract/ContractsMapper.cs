@@ -118,7 +118,7 @@ namespace DAL.Contract
                 JOIN V_CarHome AS ch ON vi.VehicleKey = ch.VehicleCode
                 JOIN (
 	                SELECT fl.OldName  
-                    FROM SYS_Reference ref
+                    FROM SYS_ReferenceNew ref
                     LEFT JOIN  SYS_FileList fl ON ref.ReferenceId = fl.ReferenceId
 	                WHERE ReferencedId = @ReferencedId 
 			                AND ReferencedModule = @ReferencedModule
@@ -126,7 +126,7 @@ namespace DAL.Contract
                 )  AS rz ON 1=1
                 JOIN(
   	                SELECT fl.OldName 
-                    FROM SYS_Reference ref
+                    FROM SYS_ReferenceNew ref
                     LEFT JOIN  SYS_FileList fl ON ref.ReferenceId = fl.ReferenceId
 	                WHERE ReferencedId = @ReferencedId 
 			                AND ReferencedModule = @ReferencedModule
@@ -175,7 +175,7 @@ namespace DAL.Contract
                 ) AS db ON ma.FinanceId = db.FinanceId
                 LEFT JOIN (
 	                SELECT fl.OldName 
-                    FROM SYS_Reference ref
+                    FROM SYS_ReferenceNew ref
                     LEFT JOIN  SYS_FileList fl ON ref.ReferenceId = fl.ReferenceId
 	                WHERE ReferencedId = @ReferencedId 
 		                AND ReferencedModule = @ReferencedModule
@@ -183,7 +183,7 @@ namespace DAL.Contract
                 ) AS rz on 1=1
                 LEFT JOIN (
 	                SELECT fl.OldName
-                    FROM SYS_Reference ref
+                    FROM SYS_ReferenceNew ref
                     LEFT JOIN  SYS_FileList fl ON ref.ReferenceId = fl.ReferenceId
 	                WHERE ReferencedId = @ReferencedId 
 			                AND ReferencedModule = @ReferencedModule
@@ -243,7 +243,7 @@ namespace DAL.Contract
                 ) AS ja ON ja.FinanceId = fi.FinanceId 
                 LEFT JOIN (
 	                SELECT fl.OldName
-                    FROM SYS_Reference ref
+                    FROM SYS_ReferenceNew ref
                     LEFT JOIN  SYS_FileList fl ON ref.ReferenceId = fl.ReferenceId
 	                WHERE ReferencedId = @ReferencedId 
 			                AND ReferencedModule = @ReferencedModule
@@ -251,7 +251,7 @@ namespace DAL.Contract
                 )AS rz ON 1=1
                 LEFT JOIN(
   	                SELECT fl.OldName 
-                    FROM SYS_Reference ref
+                    FROM SYS_ReferenceNew ref
                     LEFT JOIN  SYS_FileList fl ON ref.ReferenceId = fl.ReferenceId
 	                WHERE ReferencedId = @ReferencedId
 			                AND ReferencedModule = @ReferencedModule

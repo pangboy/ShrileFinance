@@ -1,7 +1,8 @@
-﻿using Models.Sys;
-
-namespace BLL.Sys
+﻿namespace BLL.Sys
 {
+    using System;
+    using Models.Sys;
+
     public class Reference
     {
         private readonly static DAL.Sys.ReferenceMapper referenceMapper = new DAL.Sys.ReferenceMapper();
@@ -12,7 +13,7 @@ namespace BLL.Sys
         /// qiy		16.03.30
         /// <param name="referenceId">标识</param>
         /// <returns></returns>
-        public ReferenceInfo Get(int referenceId)
+        public ReferenceInfo Get(Guid referenceId)
         {
             return referenceMapper.Find(referenceId);
         }

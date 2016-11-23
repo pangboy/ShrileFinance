@@ -51,7 +51,7 @@
 
             financeAppService.EditCreditExamine(value);
 
-            return Ok(value);
+            return Ok();
         }
     }
 }
