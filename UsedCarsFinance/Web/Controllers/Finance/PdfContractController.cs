@@ -1,21 +1,10 @@
-﻿using Models;
-using Models.Sys;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Data;
-using System.IO;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Text;
-using System.Web;
-using System.Web.Http;
-using System.Xml;
-
-namespace Web.Controllers
+﻿namespace Web.Controllers
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Web.Http;
+    using Models;
+
     public class PdfContractController : ApiController
     {
         private static readonly BLL.Contract.PdfContract contract = new BLL.Contract.PdfContract();
@@ -39,11 +28,10 @@ namespace Web.Controllers
         /// <param name="FinanceId"></param>
         /// <returns></returns>
         [HttpGet]
-        public List<ComboInfo> GetContrantType(int FinanceId)
+        public List<ComboInfo> GetContrantType(Guid FinanceId)
         {
             return new BLL.Contract.PdfContract().FindContrantName(FinanceId);
         }
-
 
         /// <summary>
         /// 测试,测试,测试
@@ -56,7 +44,5 @@ namespace Web.Controllers
             _contract.CreateContrant(id);
             return Ok();
         }
-
-
     }
 }

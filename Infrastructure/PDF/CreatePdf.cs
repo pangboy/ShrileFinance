@@ -6,6 +6,7 @@ using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Web;
+using Infrastructure.PDF;
 using PDFPrint;
 
 namespace Data.PDF
@@ -25,16 +26,24 @@ namespace Data.PDF
         /// <param name="fileName">合同模板名</param>
         /// <param name="param">参数</param>
         /// <param name="targetPdfName">需要生成的pdf的名字</param>
-        public string TransformPdf(string oldPath,string newPath,string fileName, string param, string targetPdfName)
+        public string TransformPdf(string newPath, string fileName, string param, string targetPdfName)
         {
-            oldPath = oldPath + fileName;//模板
+            PathManager path = new PathManager();
+            object oldPath = path.GetTemplatePath() + fileName;//模板
             object newPdfPath = newPath + targetPdfName + ".docx";//新生成的
             WordHelper wdHelp = new WordHelper();
             File.Copy(oldPath.ToString(), newPdfPath.ToString());
             //将要导出的新word文件名
             string physicNewFile = newPath + targetPdfName + ".pdf";
+
             try
             {
+                //判断该文件是否存在，存在就删除，否则同名文件生成会报错
+                if (File.Exists(physicNewFile))
+                {
+                    File.Delete(physicNewFile);
+                }
+
                 // 处理成字典类型的占位符和数据
                 var placeholder = BuildPlaceholder(param);
 

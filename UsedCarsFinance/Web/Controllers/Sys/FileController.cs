@@ -34,7 +34,7 @@ namespace Web.Controllers.Sys
         /// <param name="referenceId">引用标识</param>
         /// <returns></returns>
         [HttpGet]
-        public List<Models.Sys.FileInfo> List(int referenceId)
+        public List<Models.Sys.FileInfo> List(Guid referenceId)
         {
             return _file.GetByReference(referenceId);
         }
@@ -95,7 +95,7 @@ namespace Web.Controllers.Sys
             if (!Request.Content.IsMimeMultipartContent())
                 return BadRequest("不支持的媒体类型!");
 
-            int referenceId = System.Convert.ToInt32(HttpContext.Current.Request.Form["ReferenceId"]);
+            var referenceId = Guid.Parse(HttpContext.Current.Request.Form["ReferenceId"]);
 
             bool result = _file.Add(HttpContext.Current.Request.Files, referenceId, out message);
 
@@ -126,7 +126,7 @@ namespace Web.Controllers.Sys
         /// <param name="referenceId">引用标识</param>
         /// <returns></returns>
         [HttpDelete]
-        public IHttpActionResult DeleteByReference(int referenceId)
+        public IHttpActionResult DeleteByReference(Guid referenceId)
         {
             _file.DeleteByReference(referenceId);
 

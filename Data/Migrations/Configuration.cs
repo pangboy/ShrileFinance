@@ -164,7 +164,7 @@
                 new Form { Id = new Guid("{5BDC5FCF-18A4-E611-80C5-507B9DE4A488}"), FlowId = new Guid("{228C8C80-06A4-E611-80C5-507B9DE4A488}"), Name = "放款资料", Link = "../Finance/LoanUploadImages.html", Sort = 200 },
                 new Form { Id = new Guid("{5CDC5FCF-18A4-E611-80C5-507B9DE4A488}"), FlowId = new Guid("{228C8C80-06A4-E611-80C5-507B9DE4A488}"), Name = "运营审核", Link = "../Finance/FinanceApproval.html", Sort = 200 },
                 new Form { Id = new Guid("{5DDC5FCF-18A4-E611-80C5-507B9DE4A488}"), FlowId = new Guid("{228C8C80-06A4-E611-80C5-507B9DE4A488}"), Name = "财务信息", Link = "../Finance/Loan.html", Sort = 200 },
-                new Form { Id = new Guid("{5EDC5FCF-18A4-E611-80C5-507B9DE4A488}"), FlowId = new Guid("{228C8C80-06A4-E611-80C5-507B9DE4A488}"), Name = "预留表单", Link = "about:blank", Sort = 200 },
+                new Form { Id = new Guid("{5EDC5FCF-18A4-E611-80C5-507B9DE4A488}"), FlowId = new Guid("{228C8C80-06A4-E611-80C5-507B9DE4A488}"), Name = "合同生成", Link = "about:blank", Sort = 200 },
                 new Form { Id = new Guid("{5FDC5FCF-18A4-E611-80C5-507B9DE4A488}"), FlowId = new Guid("{228C8C80-06A4-E611-80C5-507B9DE4A488}"), Name = "预留表单", Link = "about:blank", Sort = 200 },
                 new Form { Id = new Guid("{60DC5FCF-18A4-E611-80C5-507B9DE4A488}"), FlowId = new Guid("{228C8C80-06A4-E611-80C5-507B9DE4A488}"), Name = "预留表单", Link = "about:blank", Sort = 200 },
                 new Form { Id = new Guid("{61DC5FCF-18A4-E611-80C5-507B9DE4A488}"), FlowId = new Guid("{228C8C80-06A4-E611-80C5-507B9DE4A488}"), Name = "预留表单", Link = "about:blank", Sort = 200 },

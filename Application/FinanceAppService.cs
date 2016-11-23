@@ -49,7 +49,7 @@
                 repository.Commit();
                 value.Id = finance.Id;
             }
-            catch 
+            catch
             {
                 throw new Core.Exceptions.InvalidOperationAppException("保存失败.");
             }
@@ -57,7 +57,7 @@
 
         public PartnerAndUser GetPartnerAndUser()
         {
-           AppUser user = userManager.CurrentUser();
+            AppUser user = userManager.CurrentUser();
             Partner partner = partnerRepository.GetByUser(userManager.CurrentUser());
             return new PartnerAndUser()
             {
@@ -76,7 +76,7 @@
 
                 new UpdateBind().Bind(finance.FinanceProduce, model.FinanceProduce);
                 new UpdateBind().Bind(finance.Applicant, model.Applicant);
-
+                finance.Produce = null;
                 repository.Modify(finance);
                 repository.Commit();
             }
@@ -94,7 +94,7 @@
             return financeViewModel;
         }
 
-        public string CreateLeaseInfoPdf(Guid financeId,string oldPath,string newPath)
+        public string CreateLeaseInfoPdf(Guid financeId, string newPath)
         {
             var finance = repository.Get(financeId);
 
@@ -103,47 +103,50 @@
 
             var mainApplicant = finance.Applicant.Where(m => m.Type == Applicant.TypeEnum.主要申请人).First();
 
-                    // 融资租赁合同编号代码
-                    string hz = GetContractNum("HZ", financeId);
+            // 融资租赁合同编号代码
+            string hz = GetContractNum("HZ", financeId);
 
-                    // 获取融资信息
-                    SqlParameter[] sqlparams = new SqlParameter[1];
-                    sqlparams[0] = new SqlParameter("FinanceId", financeId);
-                    DataTable dt = repository.LeaseeContract(sqlparams);
+            // 获取融资信息
+            SqlParameter[] sqlparams = new SqlParameter[1];
+            sqlparams[0] = new SqlParameter("FinanceId", financeId);
+            DataTable dt = repository.LeaseeContract(sqlparams);
 
-                    // 合同参数
-                    string contractParams = string.Empty;
+            // 合同参数
+            string contractParams = string.Empty;
 
-                    // 保存的PDF名称(以合同编号命名)
-                    string pdfName = string.Empty;
+            // 保存的PDF名称(以合同编号命名)
+            string pdfName = string.Empty;
 
-                    // 合同模板名称
-                    string contractName = "FinancingLease.docx";
+            // 合同模板名称
+            string contractName = "FinancingLease.docx";
 
-                    CreatePdf pdf = new CreatePdf();
+            CreatePdf pdf = new CreatePdf();
 
-                    if (dt.Rows.Count > 0)
-                    {
-                dt.Rows[0]["[融资租赁合同]"] = "HZ" + hz;
-                        contractParams = pdf.DataRowToParams(dt.Rows[0]);
-                pdfName = "HZ" + hz;
-                    }
+            if (dt.Rows.Count > 0)
+            {
+                dt.Rows[0]["[融资租赁合同]"] = hz;
+                contractParams = pdf.DataRowToParams(dt.Rows[0]);
+                pdfName =  hz;
+            }
 
-            pdfPath = pdf.TransformPdf(oldPath,newPath,contractName, contractParams, pdfName);
+            pdfPath = pdf.TransformPdf( newPath, contractName, contractParams, pdfName);
 
-                    if (pdfPath != null)
-                    {
+            if(finance.Contact.FirstOrDefault(m => m.Name == "融资租赁合同") == null)
+            {
+            if (pdfPath != null)
+            {
                 finance.Contact.Add(new Contract
-                        {
-                            Date = DateTime.Now,
-                            Name = "融资租赁合同",
-                            Number = pdfName,
-                            Path = pdfPath
-                        });
+                {
+                    Date = DateTime.Now,
+                    Name = "融资租赁合同",
+                    Number = pdfName,
+                        Path = "~\\upload\\PDF\\"
+                });
 
-                        repository.Modify(finance);
-                        repository.Commit();
-                    }
+                repository.Modify(finance);
+                repository.Commit();
+            }
+            }
 
             return pdfPath;
         }
@@ -154,10 +157,19 @@
             string aaaa = string.Empty;
             string cccc = string.Empty;
             string dddd = string.Empty;
-
+            string ContractNumber = string.Empty;
             // 合作商编码
             var partnerCode = "01";
 
+            var finance = repository.Get(financeid);
+            var contract =finance.Contact.FirstOrDefault(m=>m.Name=="融资租赁合同");
+
+            if (contract != null)
+            {
+                ContractNumber = contract.Number;
+            }
+            else
+            {
             // 查询合作商ID
             Guid bb = FindByCreateOf(financeid, ref error);
             if (bb != null && error == string.Empty)
@@ -178,7 +190,9 @@
             }
 
             // 组成AAAABBCCCCDDD
-            return aaaa + partnerCode + cccc + dddd;
+                ContractNumber = type+aaaa + partnerCode + cccc + dddd;
+            }
+            return ContractNumber;
         }
 
         /// <summary>
@@ -325,7 +339,7 @@
                     creditExamineReportViewModel.ApprovePerson = new KeyValuePair<string, string>(curentUser.Id, curentUser.Name);
                     creditExamineReportViewModel.FinalPerson = new KeyValuePair<string, string>(curentUser.Id, curentUser.Name);
                 }
-                }
+            }
 
             return creditExamineReportViewModel;
         }
@@ -361,14 +375,14 @@
 
             // 执行修改
             repository.Commit();
-            }
+        }
 
         /// <summary>
         /// 信审报告设置审批人
         /// </summary>
         /// <param name="financeId">融资标识</param>
         public void SetApprover(Guid financeId)
-            {
+        {
             var currentUser = userManager.CurrentUser();
             var finance = repository.Get(financeId);
 
@@ -594,9 +608,9 @@
             var financingItemsOrCosts = new List<KeyValuePair<Guid, KeyValuePair<string, decimal?>>>();
 
             finance.FinanceProduce.ToList().FindAll(m => m.IsFinancing == isFinancing).ForEach(item =>
-            {
+              {
                   financingItemsOrCosts.Add(new KeyValuePair<Guid, KeyValuePair<string, decimal?>>(item.Id, new KeyValuePair<string, decimal?>(item.Name, item.Money)));
-            });
+              });
 
             return financingItemsOrCosts;
         }

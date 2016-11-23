@@ -1,19 +1,20 @@
-﻿using BLL.Sys;
-using Models.Sys;
-using System;
-using System.Collections.Generic;
-using System.Data;
-using System.IO;
-using System.Web;
-
-namespace BLL.Finance
+﻿namespace BLL.Finance
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Data;
+    using System.IO;
+    using System.Web;
+    using BLL.Sys;
+    using Models.Sys;
+
     /// <summary>
     /// 引用模块
     /// </summary>
     public class ImageUpload
     {
-        private readonly static BLL.Sys.Reference reference = new Sys.Reference();
+        private static readonly DAL.Finance.ImageUploadMapper Imageupload = new DAL.Finance.ImageUploadMapper();
+        private static readonly BLL.Sys.Reference Reference = new Sys.Reference();
 
         /// <summary>
         /// 获取引用数据
@@ -21,9 +22,9 @@ namespace BLL.Finance
         /// cais    16.04.08
         /// <param name="referenceId">标识</param>
         /// <returns></returns>
-        public ReferenceInfo Get(int referenceId)
+        public ReferenceInfo Get(Guid referenceId)
         {
-            return reference.Get(referenceId);
+            return Reference.Get(referenceId);
         }
 
         /// <summary>
@@ -36,7 +37,7 @@ namespace BLL.Finance
         /// <returns></returns>
         public ReferenceInfo Get(int? referencedId, int? referencedModule, int? referencedSid)
         {
-            return reference.Apply(referencedId, referencedModule, referencedSid);
+            return Reference.Apply(referencedId, referencedModule, referencedSid);
         }
 
         /// <summary>
@@ -47,20 +48,18 @@ namespace BLL.Finance
         /// <returns></returns>
         public bool Modify(ReferenceInfo referenceInfo)
         {
-            return reference.Modify(referenceInfo);
+            return Reference.Modify(referenceInfo);
         }
-
-        private readonly static DAL.Finance.ImageUploadMapper imageupload = new DAL.Finance.ImageUploadMapper();
 
         /// <summary>
         /// 获取融资id所有文件
         /// </summary>
         /// cais    16.04.08
-        /// <param name="financeid">融资ID</param>
+        /// <param name="financeId">融资ID</param>
         /// <returns></returns>
-        public DataTable ListByfinanceid(int financeid)
+        public DataTable ListByfinanceid(Guid financeId)
         {
-            return imageupload.Find(financeid);
+            return Imageupload.Find(financeId);
         }
 
         /// <summary>
@@ -68,9 +67,9 @@ namespace BLL.Finance
         /// </summary>
         /// cais    16.04.08
         /// <param name="referenceId">文件引用id</param>
-        public void Delete(int referenceId)
+        public void Delete(Guid referenceId)
         {
-            imageupload.Delete(referenceId);
+            Imageupload.Delete(referenceId);
         }
 
         /// <summary>
@@ -79,19 +78,25 @@ namespace BLL.Finance
         /// cais    16.04.27
         /// <param name="referencesid">所有的referencesid</param>
         /// <returns>List</returns>
-        public List<int> StringtoList(string referencesid)
+        public List<Guid> StringtoList(string referencesid)
         {
             referencesid = referencesid.TrimEnd(',');
 
             string[] s1 = referencesid.Split(new char[] { ',' });
 
-            List<int> referenceList = new List<int>();
+            List<Guid> referenceList = new List<Guid>();
 
             foreach (var item in s1)
             {
-                if (item.ToString() != "")
+                if (!string.IsNullOrEmpty(item.ToString()))
                 {
-                    referenceList.Add(Convert.ToInt32(item));
+                    try
+                    {
+                        referenceList.Add(Guid.Parse(item));
+                    }
+                    catch
+                    {
+                    }
                 }
             }
 
@@ -104,19 +109,17 @@ namespace BLL.Finance
         /// cais    16.04.27
         /// <param name="references">referencesid 集合</param>
         /// <returns>一个压缩好的文件信息</returns>
-        public Models.Sys.FileInfo Download(List<int> references)
+        public Models.Sys.FileInfo Download(List<Guid> references)
         {
-            BLL.Sys.File _file = new BLL.Sys.File();
-            Compress _compress = new Compress();
+            Sys.File file = new Sys.File();
+            Compress compress = new Compress();
 
-            foreach (int reference in references)
+            foreach (var reference in references)
             {
-                _compress.Add(
-                    _file.GetByReference(reference)
-                );
+                compress.Add(file.GetByReference(reference));
             }
 
-            return _compress.Comperssing();
+            return compress.Comperssing();
         }
 
         /// <summary>
@@ -129,7 +132,9 @@ namespace BLL.Finance
             if (compressFile.FilePath != null)
             {
                 var server = HttpContext.Current.Server;
-                DelOverdueZipFile(server.MapPath(compressFile.FilePath), server.MapPath(@"~\Upload\Temps"));//将虚拟转化成物理路劲
+
+                // 将虚拟转化成物理路劲
+                DelOverdueZipFile(server.MapPath(compressFile.FilePath), server.MapPath(@"~\Upload\Temps"));
             }
         }
 
@@ -141,19 +146,25 @@ namespace BLL.Finance
         /// <param name="file">删除压缩文件的地址</param>
         public void DelOverdueZipFile(string fartherFilder, string file)
         {
-            Directory.Delete(fartherFilder.TrimEnd('/'), true);//适用于里面有子目录，文件的文件夹
-            //Directory.Delete(fartherFilder);//适用于空文件夹
+            // 适用于里面有子目录，文件的文件夹
+            Directory.Delete(fartherFilder.TrimEnd('/'), true);
+             
+            ////Directory.Delete(fartherFilder);//适用于空文件夹
             DirectoryInfo di = new DirectoryInfo(file);
+
             System.IO.FileInfo[] fi = di.GetFiles("*.zip");
-            DateTime dtNow = DateTime.Now;
+            DateTime dateTimeNow = DateTime.Now;
+
             foreach (System.IO.FileInfo tmpfi in fi)
             {
-                //tmpfi.CreationTime;//创建时间
-                //tmpfi.LastWriteTime//最后一次写
-                TimeSpan ts = dtNow.Subtract(tmpfi.LastWriteTime);
-                if (ts.TotalDays > 1)//距现在一天以上
+                // tmpfi.CreationTime;//创建时间 tmpfi.LastWriteTime//最后一次写
+                TimeSpan ts = dateTimeNow.Subtract(tmpfi.LastWriteTime);
+
+                // 距现在一天以上
+                if (ts.TotalDays > 1)
                 {
-                    tmpfi.Delete();//删除服务器临时保存文件
+                    // 删除服务器临时保存文件
+                    tmpfi.Delete();
                 }
             }
         }
@@ -162,21 +173,22 @@ namespace BLL.Finance
         /// 根据FinanceId 获得所有申请人的引用ID
         /// </summary>
         /// cais    16.05.03
-        /// <param name="financeid"></param>
-        public DataTable RefListByfinanceid(int financeid)
+        /// <param name="financeId">融资标识</param>
+        /// <returns>列表</returns>
+        public DataTable RefListByfinanceid(Guid financeId)
         {
-            return imageupload.FindReferenceId(financeid);
+            return Imageupload.FindReferenceId(financeId);
         }
 
         /// <summary>
         /// 根据ReferenceId  获得文件
         /// </summary>
-        /// <param name="ReferenceId">引用id</param>
+        /// <param name="referenceId">引用id</param>
         /// cais    16.05.04
         /// <returns>引用id 下的引用列表</returns>
-        public DataTable GetFiles(int ReferenceId)
+        public DataTable GetFiles(Guid referenceId)
         {
-            return imageupload.FindFiles(ReferenceId);
+            return Imageupload.FindFiles(referenceId);
         }
     }
 }

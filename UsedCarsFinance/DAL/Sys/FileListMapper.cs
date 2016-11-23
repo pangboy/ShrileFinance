@@ -1,58 +1,58 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.SqlClient;
-using Models.Sys;
-using Models;
-
-namespace DAL.Sys
+﻿namespace DAL.Sys
 {
-	public class FileListMapper : AbstractMapper<FileInfo>
-	{
-		/// <summary>
-		/// 查找
-		/// </summary>
-		/// qiy		16.04.05
-		/// <param name="id">文件标识</param>
-		/// <returns></returns>
-		public FileInfo Find(int id)
-		{
-			string findStatement =
-				"SELECT FL_ID, ReferenceId, OldName, NewName, ExtName, FilePath, AddDate FROM SYS_FileList WHERE FL_ID = @ID";
+    using System;
+    using System.Collections.Generic;
+    using System.Data;
+    using System.Data.SqlClient;
+    using Models;
+    using Models.Sys;
 
-			return AbstractFind(findStatement, id);
-		}
-		/// <summary>
-		/// 根据被引用信息查找
-		/// </summary>
-		/// qiy		16.04.05
-		/// <param name="referenceId">引用标识</param>
-		/// <returns></returns>
-		public List<FileInfo> FindByReference(int referenceId)
-		{
-			SqlCommand comm = DHelper.GetSqlCommand(@"
+    public class FileListMapper : AbstractMapper<FileInfo>
+    {
+        /// <summary>
+        /// 查找
+        /// </summary>
+        /// qiy		16.04.05
+        /// <param name="id">文件标识</param>
+        /// <returns></returns>
+        public FileInfo Find(int id)
+        {
+            string findStatement =
+                "SELECT FL_ID, ReferenceId, OldName, NewName, ExtName, FilePath, AddDate FROM SYS_FileList WHERE FL_ID = @ID";
+
+            return AbstractFind(findStatement, id);
+        }
+        /// <summary>
+        /// 根据被引用信息查找
+        /// </summary>
+        /// qiy		16.04.05
+        /// <param name="referenceId">引用标识</param>
+        /// <returns></returns>
+        public List<FileInfo> FindByReference(Guid referenceId)
+        {
+            SqlCommand comm = DHelper.GetSqlCommand(@"
 				SELECT FL_ID, ReferenceId, OldName, NewName, ExtName, FilePath, AddDate FROM SYS_FileList WHERE ReferenceId = @ReferenceId 
 			");
-			DHelper.AddParameter(comm, "@ReferenceId", SqlDbType.Int, referenceId);
+            DHelper.AddParameter(comm, "@ReferenceId", SqlDbType.UniqueIdentifier, referenceId);
 
-			DataTable dt = DHelper.ExecuteDataTable(comm);
+            DataTable dt = DHelper.ExecuteDataTable(comm);
 
-			return LoadAll(dt.Rows);
-		}
+            return LoadAll(dt.Rows);
+        }
 
         /// <summary>
         /// 查询合同名称
         /// </summary>
         /// yand    16.05.17
-        /// <param name="referenced"></param>
+        /// <param name="referencedId"></param>
         /// <returns></returns>
-        public List<ComboInfo> FindContrantByReferenced(int referenced)
+        public List<ComboInfo> FindContrantByReferenced(Guid referencedId)
         {
             SqlCommand comm = DHelper.GetSqlCommand(@"
                     SELECT * FROM SYS_FileList WHERE ReferenceId IN(
-                            SELECT ReferenceId FROM SYS_Reference WHERE ReferencedId = @ReferencedId AND ReferencedModule =4)
+                            SELECT ReferenceId FROM SYS_ReferenceNew WHERE ReferencedId = @ReferencedId AND ReferencedModule =4)
 			");
-            DHelper.AddParameter(comm, "@ReferencedId", SqlDbType.Int, referenced);
+            DHelper.AddParameter(comm, "@ReferencedId", SqlDbType.UniqueIdentifier, referencedId);
 
             DataTable dt = DHelper.ExecuteDataTable(comm);
 
@@ -69,57 +69,57 @@ namespace DAL.Sys
             return list;
         }
 
-    
-		/// <summary>
-		/// 插入
-		/// </summary>
-		/// qiy		16.04.05
-		/// <param name="value">值</param>
-		public void Insert(FileInfo value)
-		{
-			SqlCommand comm = DHelper.GetSqlCommand(@"
+
+        /// <summary>
+        /// 插入
+        /// </summary>
+        /// qiy		16.04.05
+        /// <param name="value">值</param>
+        public void Insert(FileInfo value)
+        {
+            SqlCommand comm = DHelper.GetSqlCommand(@"
 				INSERT INTO SYS_FileList (ReferenceId, OldName, NewName, ExtName, FilePath, AddDate) 
 				VALUES (@ReferenceId, @OldName, @NewName, @ExtName, @FilePath, @AddDate) SELECT SCOPE_IDENTITY()
 			");
-			DHelper.AddParameter(comm, "@ReferenceId", SqlDbType.Int, value.ReferenceId);
-			DHelper.AddParameter(comm, "@OldName", SqlDbType.NVarChar, value.OldName);
-			DHelper.AddParameter(comm, "@NewName", SqlDbType.NVarChar, value.NewName);
-			DHelper.AddParameter(comm, "@ExtName", SqlDbType.NVarChar, value.ExtName);
-			DHelper.AddParameter(comm, "@FilePath", SqlDbType.NVarChar, value.FilePath);
-			DHelper.AddParameter(comm, "@AddDate", SqlDbType.DateTime, value.AddDate);
+            DHelper.AddParameter(comm, "@ReferenceId", SqlDbType.UniqueIdentifier, value.ReferenceId);
+            DHelper.AddParameter(comm, "@OldName", SqlDbType.NVarChar, value.OldName);
+            DHelper.AddParameter(comm, "@NewName", SqlDbType.NVarChar, value.NewName);
+            DHelper.AddParameter(comm, "@ExtName", SqlDbType.NVarChar, value.ExtName);
+            DHelper.AddParameter(comm, "@FilePath", SqlDbType.NVarChar, value.FilePath);
+            DHelper.AddParameter(comm, "@AddDate", SqlDbType.DateTime, value.AddDate);
 
-			value.FileId = Convert.ToInt32(DHelper.ExecuteScalar(comm));
-		}
+            value.FileId = Convert.ToInt32(DHelper.ExecuteScalar(comm));
+        }
 
-		/// <summary>
-		/// 删除文件
-		/// </summary>
-		/// qiy		16.04.05
-		/// <param name="fileId">文件标识</param>
-		/// <returns></returns>
-		public int Delete(int fileId)
-		{
-			SqlCommand comm = DHelper.GetSqlCommand(
-				"DELETE SYS_FileList WHERE FL_ID = @FileId"
-			);
-			DHelper.AddParameter(comm, "@FileId", SqlDbType.Int, fileId);
+        /// <summary>
+        /// 删除文件
+        /// </summary>
+        /// qiy		16.04.05
+        /// <param name="fileId">文件标识</param>
+        /// <returns></returns>
+        public int Delete(int fileId)
+        {
+            SqlCommand comm = DHelper.GetSqlCommand(
+                "DELETE SYS_FileList WHERE FL_ID = @FileId"
+            );
+            DHelper.AddParameter(comm, "@FileId", SqlDbType.Int, fileId);
 
-			return DHelper.ExecuteNonQuery(comm);
-		}
-		/// <summary>
-		/// 根据外键删除
-		/// </summary>
-		/// qiy		16.04.05
-		/// <param name="referenceId">引用标识</param>
-		/// <returns></returns>
-		public int DeleteByReference(int referenceId)
-		{
-			SqlCommand comm = DHelper.GetSqlCommand(
-				"DELETE SYS_FileList WHERE ReferenceId = @ReferenceId"
-			);
-			DHelper.AddParameter(comm, "@ReferenceId", SqlDbType.Int, referenceId);
+            return DHelper.ExecuteNonQuery(comm);
+        }
+        /// <summary>
+        /// 根据外键删除
+        /// </summary>
+        /// qiy		16.04.05
+        /// <param name="referenceId">引用标识</param>
+        /// <returns></returns>
+        public int DeleteByReference(Guid referenceId)
+        {
+            SqlCommand comm = DHelper.GetSqlCommand(
+                "DELETE SYS_FileList WHERE ReferenceId = @ReferenceId"
+            );
+            DHelper.AddParameter(comm, "@ReferenceId", SqlDbType.UniqueIdentifier, referenceId);
 
-			return DHelper.ExecuteNonQuery(comm);
-		}
-	}
+            return DHelper.ExecuteNonQuery(comm);
+        }
+    }
 }

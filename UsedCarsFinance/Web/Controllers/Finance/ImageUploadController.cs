@@ -1,5 +1,6 @@
 ﻿namespace Web.Controllers.Finance
 {
+    using System;
     using System.Data;
     using System.Net.Http;
     using System.Web.Http;
@@ -17,7 +18,7 @@
         /// <param name="financeid">融资ID</param>
         /// <returns></returns>
         [HttpGet]
-        public DataTable GetAll(int financeid)
+        public DataTable GetAll(Guid financeid)
         {
             return ImageUploadInstance.ListByfinanceid(financeid);
         }
@@ -28,7 +29,7 @@
         /// cais    16.05.03
         /// <param name="financeid"></param>
         [HttpGet]
-        public DataTable GetAllRef(int financeid)
+        public DataTable GetAllRef(Guid financeid)
         {
             return ImageUploadInstance.RefListByfinanceid(financeid);
         }
@@ -40,7 +41,7 @@
         /// cais    16.05.04
         /// <returns>引用id 下的引用列表</returns>
         [HttpGet]
-        public DataTable GetFiles(int ReferenceId)
+        public DataTable GetFiles(Guid ReferenceId)
         {
             return ImageUploadInstance.GetFiles(ReferenceId);
         }
@@ -51,7 +52,7 @@
         /// cais    16.04.08
         /// <param name="referenceId">文件引用id</param>
         [HttpDelete]
-        public IHttpActionResult Delete(int referenceId)
+        public IHttpActionResult Delete(Guid referenceId)
         {
             ImageUploadInstance.Delete(referenceId);
 
@@ -64,7 +65,7 @@
         /// cais    16.04.08
         /// <param name="referenceId">标识</param>
         /// <returns>引用</returns>
-        public ReferenceInfo Get(int referenceId)
+        public ReferenceInfo Get(Guid referenceId)
         {
             return ImageUploadInstance.Get(referenceId);
         }
