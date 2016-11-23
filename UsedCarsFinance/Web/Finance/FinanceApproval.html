@@ -15,12 +15,11 @@
     <script src="../BankInfo/JS/validType.js"></script>
 
     <script type="text/javascript">
-        uc.form = new UCForm(".container");
         var query = {};
 
         $(function () {
             // 获取参数
-            query = $.extend(uc.GetParams(), parent.flow.InstanceData);
+            query.state = GetQueryString("state");
             query.FinanceId = parent.flow.RootKey;
             //debugger
             if (query.FinanceId == undefined || query.FinanceId.length == 0) {
@@ -141,8 +140,9 @@
                 if (e.Value.Key == "裸车价") {
                     tableData.push({ Name: e.Value.Key, Money: e.Value.Value + " 万元" });
                 }
-
-                tableData.push({ Name: e.Value.Key, Money: e.Value.Value + " 元" });
+                else {
+                    tableData.push({ Name: e.Value.Key, Money: e.Value.Value + " 元" });
+                }
             });
 
             FieldsetLoadDateFactory('FinancingItems', 'table', tableData);

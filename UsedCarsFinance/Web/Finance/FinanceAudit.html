@@ -15,12 +15,11 @@
     <script src="../Scripts/usedcars.js"></script>
 
     <script type="text/javascript">
-        uc.form = new UCForm(".container");
         var query = {};
 
         $(function () {
             // 获取参数
-            query = $.extend(uc.GetParams(), parent.flow.InstanceData);
+            query.state = GetQueryString("state");
             query.FinanceId = parent.flow.RootKey;
             
             if (query.FinanceId == undefined || query.FinanceId.length == 0) {

@@ -80,7 +80,7 @@
                 repository.Modify(finance);
                 repository.Commit();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw new Core.Exceptions.InvalidOperationAppException("修改失败.");
             }
@@ -292,7 +292,7 @@
 
             // 共借人(最多一个)
             var commonBorrwer = finance.Applicant.ToList().Find(m => m.Type == Applicant.TypeEnum.共同申请人) ?? new Applicant() { Name = string.Empty };
-            creditExamineReportViewModel.CommonBorrwerName1 = commonBorrwer.Name;
+            creditExamineReportViewModel.CommonBorrwerName = commonBorrwer.Name;
 
             // 保证人
             creditExamineReportViewModel.Guarantor = from applicant
@@ -526,7 +526,7 @@
         /// <param name="value">运营ViewModel</param>
         public void EditOperation(OperationViewModel value)
         {
-            if (value == null || value.FinanceId == null)
+            if (value == null || value.FinanceId == null || !(new string[] { "Customer", "Channel" }).Contains(value.LoanPrincipal))
             {
                 return;
             }
@@ -541,16 +541,18 @@
 
             finance.FinanceExtension = finance.FinanceExtension ?? new FinanceExtension();
 
+            finance.FinanceExtension.LoanPrincipal = value.LoanPrincipal;
+
             if (value.NodeType.Equals("Customer"))
             {
                 // 还款信息
                 var customerArray = new string[] { "CustomerAccountName", "CustomerBankName", "CustomerBankCard" };
                 finance.FinanceExtension = PartialMapper(value, finance.FinanceExtension, customerArray);
-                
-                if (!finance.FinanceExtension.LoanPrincipal.Equals("Channel"))
+
+                if (!value.LoanPrincipal.Equals("Channel"))
                 {
                     // 放款信息
-                    var creditArray = new string[] { "LoanPrincipal", "CreditAccountName", "CreditBankName", "CreditBankCard" };
+                    var creditArray = new string[] { "CreditAccountName", "CreditBankName", "CreditBankCard" };
                     finance.FinanceExtension = PartialMapper(value, finance.FinanceExtension, creditArray);
                 }
 
@@ -572,10 +574,10 @@
                 // 选择还款日、首次租金支付日期、保证金、先付月供、一次性付息、实际用款额
                 finance = PartialMapper(value, finance, new string[] { "RepaymentDate", "RepayRentDate", "Bail", "Payment", "OnePayInterest" });
 
-                // 放款主体、放款账户、放款账户开户行、放款账户卡号
+                // 放款账户、放款账户开户行、放款账户卡号
                 if (value.LoanPrincipal.Equals("Channel"))
                 {
-                    finance.FinanceExtension = PartialMapper(value, finance.FinanceExtension, new string[] {  "LoanPrincipal", "CreditAccountName", "CreditBankName", "CreditBankCard" });
+                    finance.FinanceExtension = PartialMapper(value, finance.FinanceExtension, new string[] { "CreditAccountName", "CreditBankName", "CreditBankCard" });
                 }
             }
 
@@ -611,7 +613,7 @@
         /// <returns></returns>
         private ICollection<FinanceProduce> EditFinanceAuidts(ICollection<FinanceProduce> financingItems, ICollection<KeyValuePair<Guid, KeyValuePair<string, decimal?>>> financingItemCollection)
         {
-            var financingItemList = financingItems.ToList().FindAll(m=>m.IsFinancing);
+            var financingItemList = financingItems.ToList().FindAll(m => m.IsFinancing);
 
             // 更新融资项各金额
             financingItemList.ForEach(financingItem =>

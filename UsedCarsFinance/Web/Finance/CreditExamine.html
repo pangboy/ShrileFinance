@@ -14,19 +14,13 @@
     <script src="Content/FinanceJs.js"></script>
 
     <script type="text/javascript">
-        uc.form = new UCForm(".container");
         var query = {};
 
         $(function () {
             // 获取参数
-            query =$.extend(uc.GetParams(), parent.flow.InstanceData);
+            query.state = GetQueryString("state");
             query.FinanceId = parent.flow.RootKey;
             
-            if (query.FinanceId == undefined || query.FinanceId.length == 0) {
-                query.FinanceId = "ED468191-9FAB-E611-80C5-507B9DE4A488";
-                query.state = 1;
-            }
-
             // 初始化
             Init(query);
         });
@@ -172,7 +166,6 @@
             <h1 style="text-align:center">信审报告</h1>
 
             <input type="hidden" name="FinanceId" placeholder="融资标识" />
-            <input type="hidden" name="Id" placeholder="信审标识" />
 
             <fieldset id="f0">
                 <div class="row">
@@ -245,19 +238,8 @@
                 <legend>四、共借人信息：</legend>
                 <div class="row">
                     <div class="col-6">
-                        <label><!--共借人① 姓名-->共借人姓名:</label>
+                        <label>共借人姓名:</label>
                         <input name="CommonBorrwerName1" class="easyui-textbox" data-options="validType:['ANC','length[1,20]'],required:false,readonly:true" />
-                    </div>
-                    <div class="col-6" style="display:none">
-                        <label>共借人②姓名:</label>
-                        <input name="CommonBorrwerName2" class="easyui-textbox" data-options="validType:['ANC','length[1,20]'],required:false,readonly:true" />
-                    </div>
-                </div>
-
-                <div class="row" style="display:none">
-                    <div class="col-6">
-                        <label>共借人③姓名:</label>
-                        <input name="CommonBorrwerName3" class="easyui-textbox" data-options="validType:['ANC','length[1,20]'],required:false,readonly:true" />
                     </div>
                 </div>
             </fieldset>

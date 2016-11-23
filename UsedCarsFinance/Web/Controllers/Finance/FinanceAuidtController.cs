@@ -1,13 +1,9 @@
 ﻿namespace Web.Controllers.Finance
 {
     using System;
-    using System.Collections.Generic;
-    using System.Data;
     using System.Web.Http;
     using Application;
-    using Application.ViewModels;
     using Application.ViewModels.FinanceViewModels;
-    using Application.ViewModels.ProduceViewModel;
 
     public class FinanceAuidtController : ApiController
     {

@@ -4,24 +4,6 @@
     using System.Linq;
 
     /// <summary>
-    /// 身份证校验
-    /// </summary>
-    public class IdCardAttribute : ValidationAttribute
-    {
-        public override bool IsValid(object value)
-        {
-            value = value ?? string.Empty;
-
-            if (string.IsNullOrEmpty(value.ToString()))
-            {
-                return true;
-            }
-
-            return true;
-        }
-    }
-
-    /// <summary>
     /// 信用状况范围
     /// </summary>
     public class CreditConditionRangAttribute : ValidationAttribute
