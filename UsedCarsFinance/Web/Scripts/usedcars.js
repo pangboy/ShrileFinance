@@ -367,18 +367,46 @@ $.extend($.fn.validatebox.defaults.rules, {
 		},
 		message: '请填入手机或电话号码,如13800000000或010-8888888'
 	},
-    //日期
-    YearMonth: {
-    validator: function (value) {
-        return /^\d{4}-\d{2}$/i.test(value);
-    },
-    message: "请输入正确的日期！(如:2000-01)"
-    },
-    //日期
-    Year: {
-    validator: function (value) {
-        return /^\d{4}$/i.test(value);
-    },
-    message: "请输入正确的日期！(如:2000)"
-    }
+	//日期
+	YearMonth: {
+		validator: function (value) {
+			return /^\d{4}-\d{2}$/i.test(value);
+		},
+		message: "请输入正确的日期！(如:2000-01)"
+	},
+	//日期
+	Year: {
+		validator: function (value) {
+			return /^\d{4}$/i.test(value);
+		},
+		message: "请输入正确的日期！(如:2000)"
+	},
+	//重复验证
+	checkUsernameRepeat: {
+		validator: function (value, param) {
+			var result = false;
+
+			$.ajax({
+				async: false,
+				data: { username: value },
+				type: "GET",
+				url: "../api/User/CheckUsername",
+				statusCode: {
+					200: function (data) {
+						result = true;
+					}
+				}
+			});
+
+			return result;
+		},
+		message: '用户名已使用!'
+	},
+	//帐号
+	checkUsernameFormat: {
+		validator: function (value) {
+			return /^[a-z\_]{1}\w{1,18}$/i.test(value);
+		},
+		message: "请输入正确的用户名，由字母、数字和下划线组成。不可以数字开头,长度在2-18位之间!"
+	}
 });
