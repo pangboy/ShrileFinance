@@ -48,6 +48,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Helper.cs" />
     <Compile Include="Logger\Log4net.cs" />
     <Compile Include="Logger\LoggingModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">

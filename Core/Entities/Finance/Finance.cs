@@ -12,8 +12,8 @@
         {
             DateEffective = DateTime.Now;
             DateCreated = DateTime.Now;
-            Applicant = new List<Applicant>();
-            Contact = new List<Contract>();
+            Applicant = new HashSet<Applicant>();
+            Contact = new HashSet<Contract>();
         }
 
         public enum RepaymentSchemeEnum : byte

@@ -1,6 +1,10 @@
 ﻿namespace Web.Controllers.Finance
 {
     using System;
+    using System.Collections.Generic;
+    using System.Data;
+    using System.IO;
+    using System.Web;
     using System.Web.Http;
     using Application;
     using Application.ViewModels.FinanceViewModels;
@@ -103,7 +107,16 @@
         [HttpGet]
         public IHttpActionResult LeaseeContract(Guid Id)
         {
-            string result = financeAppService.CreateLeaseInfoPdf(Id);
+            string path = @"~\upload\PDF\";
+            string fullpath = HttpContext.Current.Server.MapPath(path);
+            string directory = Directory.GetCurrentDirectory();
+            if (!Directory.Exists(fullpath))
+            {
+                Directory.CreateDirectory(fullpath);
+            }
+            string oldPath = HttpContext.Current.Server.MapPath(System.Web.HttpContext.Current.Request.ApplicationPath.ToString())+ "\\Contracts\\";
+
+            var result =financeAppService.CreateLeaseInfoPdf(Id, oldPath, fullpath);
             return Ok(result);
         }
     }

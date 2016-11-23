@@ -121,6 +121,7 @@
     <Compile Include="Entities\Produce\Scheme.cs" />
     <Compile Include="Entities\Vehicle\Vehicle.cs" />
     <Compile Include="Exceptions\AppException.cs" />
+    <Compile Include="Exceptions\ArgumentAppException.cs" />
     <Compile Include="Exceptions\ArgumentNullAppException.cs" />
     <Compile Include="Exceptions\InvalidOperationAppException.cs" />
     <Compile Include="Interfaces\IAggregateRoot.cs" />

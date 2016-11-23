@@ -49,7 +49,7 @@
                 repository.Commit();
                 value.Id = finance.Id;
             }
-            catch
+            catch 
             {
                 throw new Core.Exceptions.InvalidOperationAppException("保存失败.");
             }
@@ -57,7 +57,7 @@
 
         public PartnerAndUser GetPartnerAndUser()
         {
-            AppUser user = userManager.CurrentUser();
+           AppUser user = userManager.CurrentUser();
             Partner partner = partnerRepository.GetByUser(userManager.CurrentUser());
             return new PartnerAndUser()
             {
@@ -94,17 +94,15 @@
             return financeViewModel;
         }
 
-        public string CreateLeaseInfoPdf(Guid financeId)
+        public string CreateLeaseInfoPdf(Guid financeId,string oldPath,string newPath)
         {
             var finance = repository.Get(financeId);
 
             // 合同pdf地址
             string pdfPath = string.Empty;
-            using (TransactionScope scope = new TransactionScope())
-            {
-                var mainApplicant = finance.Applicant.Where(m => m.Type == Applicant.TypeEnum.主要申请人).FirstOrDefault();
-                if (mainApplicant != null)
-                {
+
+            var mainApplicant = finance.Applicant.Where(m => m.Type == Applicant.TypeEnum.主要申请人).First();
+
                     // 融资租赁合同编号代码
                     string hz = GetContractNum("HZ", financeId);
 
@@ -126,16 +124,16 @@
 
                     if (dt.Rows.Count > 0)
                     {
+                dt.Rows[0]["[融资租赁合同]"] = "HZ" + hz;
                         contractParams = pdf.DataRowToParams(dt.Rows[0]);
-                        dt.Rows[0]["[融资租赁合同]"] = hz;
-                        pdfName = hz;
+                pdfName = "HZ" + hz;
                     }
 
-                    pdfPath = pdf.TransformPdf(contractName, contractParams, pdfName);
+            pdfPath = pdf.TransformPdf(oldPath,newPath,contractName, contractParams, pdfName);
 
                     if (pdfPath != null)
                     {
-                        finance.Contact.Add(new Contract()
+                finance.Contact.Add(new Contract
                         {
                             Date = DateTime.Now,
                             Name = "融资租赁合同",
@@ -146,8 +144,6 @@
                         repository.Modify(finance);
                         repository.Commit();
                     }
-                }
-            }
 
             return pdfPath;
         }
@@ -329,7 +325,7 @@
                     creditExamineReportViewModel.ApprovePerson = new KeyValuePair<string, string>(curentUser.Id, curentUser.Name);
                     creditExamineReportViewModel.FinalPerson = new KeyValuePair<string, string>(curentUser.Id, curentUser.Name);
                 }
-            }
+                }
 
             return creditExamineReportViewModel;
         }
@@ -365,14 +361,14 @@
 
             // 执行修改
             repository.Commit();
-        }
+            }
 
         /// <summary>
         /// 信审报告设置审批人
         /// </summary>
         /// <param name="financeId">融资标识</param>
         public void SetApprover(Guid financeId)
-        {
+            {
             var currentUser = userManager.CurrentUser();
             var finance = repository.Get(financeId);
 
@@ -598,9 +594,9 @@
             var financingItemsOrCosts = new List<KeyValuePair<Guid, KeyValuePair<string, decimal?>>>();
 
             finance.FinanceProduce.ToList().FindAll(m => m.IsFinancing == isFinancing).ForEach(item =>
-              {
+            {
                   financingItemsOrCosts.Add(new KeyValuePair<Guid, KeyValuePair<string, decimal?>>(item.Id, new KeyValuePair<string, decimal?>(item.Name, item.Money)));
-              });
+            });
 
             return financingItemsOrCosts;
         }
@@ -662,7 +658,7 @@
             // 从字典取值，并对输出对象对应的属性赋值
             var outObjType = outObj.GetType();
             container.ToList().ForEach(item =>
-            {
+                    {
                 var outObjPropertyInfo = outObjType.GetProperty(item.Key.ToString());
 
                 try
@@ -671,7 +667,7 @@
                 }
                 catch
                 {
-                }
+            }
             });
 
             return outObj;

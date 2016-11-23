@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Net;
+using System.Net.Http;
 using System.Text;
 using System.Web;
 using PDFPrint;
@@ -11,123 +12,105 @@ namespace Data.PDF
 {
     public class CreatePdf
     {
-
-
-
-        //public string CreatePdf(string fileName,string param,string targetPdfName)
-        //    {
-        //        string url = "D:/Projects/UsedCarsFinance/trunk/Web/upload/PDF/";
-        //        url = url + fileName;
-        //        File.Copy(url+1, url);
-        //        WordHelper wdHelp = new WordHelper();
-        //        bool Is = wdHelp.OpenAndActive(url, false, false);
-        //        if (Is)
-        //        {
-        //            string path = @"~\upload\PDF\";
-        //            string fullpath = HttpContext.Current.Server.MapPath(path);
-
-        //            if (!Directory.Exists(fullpath))
-        //            {
-        //                Directory.CreateDirectory(fullpath);
-        //            }
-        //            // 保存pdf文件
-        //            wdHelp.SaveAsPDF(fullpath+url);
-        //            wdHelp.Close();
-        //        }
-        //    }
+        Microsoft.Office.Interop.Word.Application app = null;
+        Microsoft.Office.Interop.Word.Document doc = null;
+        Microsoft.Office.Interop.Word.WdExportFormat wdPdf = Microsoft.Office.Interop.Word.WdExportFormat.wdExportFormatPDF;
+        object missing = System.Reflection.Missing.Value;
 
         /// <summary>
         /// 远程转Pdf,并返回pdf保存路径
         /// </summary>
+        /// <param name="oldPath">word模板路径</param>
+        /// <param name="newPath">新的pdf路径</param>
         /// <param name="fileName">合同模板名</param>
         /// <param name="param">参数</param>
         /// <param name="targetPdfName">需要生成的pdf的名字</param>
-        public string TransformPdf(string fileName, string param, string targetPdfName)
+        public string TransformPdf(string oldPath,string newPath,string fileName, string param, string targetPdfName)
         {
-
-            object url = "D:/Projects/upload/PDF/" + fileName;//模板
-            object url1 = "D:/Projects/upload/PDF/" + fileName.Substring(0, fileName.Length - 5) + DateTime.Now.Millisecond + ".docx";//新生成的
+            oldPath = oldPath + fileName;//模板
+            object newPdfPath = newPath + targetPdfName + ".docx";//新生成的
             WordHelper wdHelp = new WordHelper();
-            File.Copy(url.ToString(), url1.ToString());
+            File.Copy(oldPath.ToString(), newPdfPath.ToString());
+            //将要导出的新word文件名
+            string physicNewFile = newPath + targetPdfName + ".pdf";
+            try
+            {
+                // 处理成字典类型的占位符和数据
+                var placeholder = BuildPlaceholder(param);
 
-           // bool Is = wdHelp.OpenAndActive(url1.ToString(), false, false);
-            //if (Is)
-            //{
-                // string path = @"~\upload\PDF\";
-                object fullpath = url;// HttpContent.Current.Server.MapPath(path);
+                //创建word应用程序
+                app = new Microsoft.Office.Interop.Word.Application();
+                object oMissing = System.Reflection.Missing.Value;
 
-                //if (Directory.Exists(fullpath))
-                //{
-                //    Directory.CreateDirectory(fullpath);
-                //}
-                //string  aaa = wdHelp.GetContract(url1, false, false);
+                // 打开Word文档
+                doc = app.Documents.Open(ref newPdfPath,
+                ref oMissing, ref oMissing, ref oMissing, ref oMissing, ref oMissing,
+                ref oMissing, ref oMissing, ref oMissing, ref oMissing, ref oMissing,
+                ref oMissing, ref oMissing, ref oMissing, ref oMissing, ref oMissing);
 
-
-
-                Microsoft.Office.Interop.Word.Application app = null;
-                Microsoft.Office.Interop.Word.Document doc = null;
-                Microsoft.Office.Interop.Word.WdExportFormat wdPdf = Microsoft.Office.Interop.Word.WdExportFormat.wdExportFormatPDF;
-
-                //将要导出的新word文件名
-                string newFile = DateTime.Now.ToString("yyyyMMddHHmmssss") + ".doc";
-                string physicNewFile = "D:/Projects/upload/PDF/" + targetPdfName + ".pdf";
-                try
+                object replace = Microsoft.Office.Interop.Word.WdReplace.wdReplaceAll;
+                foreach (var item in placeholder)
                 {
-                    app = new Microsoft.Office.Interop.Word.Application();//创建word应用程序
-                                                                          // object fileName = Server.MapPath("template.doc");//模板文件
-                                                                          //打开模板文件
-                    object oMissing = System.Reflection.Missing.Value;
-                    doc = app.Documents.Open(ref url1,
-                    ref oMissing, ref oMissing, ref oMissing, ref oMissing, ref oMissing,
-                    ref oMissing, ref oMissing, ref oMissing, ref oMissing, ref oMissing,
-                    ref oMissing, ref oMissing, ref oMissing, ref oMissing, ref oMissing);
+                    app.Selection.Find.Replacement.ClearFormatting();
+                    app.Selection.Find.ClearFormatting();
+                    app.Selection.Find.Text = item.Key;//需要被替换的文本
+                    app.Selection.Find.Replacement.Text = item.Value;//替换文本 
 
-                    //构造数据
-                    Dictionary<string, string> datas = new Dictionary<string, string>();
-                    datas.Add("[融资租赁合同]", "张三");
-                    datas.Add("[乙方姓名]", "男");
-                    datas.Add("{provinve}", "浙江");
-                    datas.Add("{address}", "浙江省杭州市");
-                    datas.Add("{education}", "本科");
-                    datas.Add("{telephone}", "12345678");
-                    datas.Add("{cardno}", "123456789012345678");
-
-                    object replace = Microsoft.Office.Interop.Word.WdReplace.wdReplaceAll;
-                    foreach (var item in datas)
-                    {
-                        app.Selection.Find.Replacement.ClearFormatting();
-                        app.Selection.Find.ClearFormatting();
-                        app.Selection.Find.Text = item.Key;//需要被替换的文本
-                        app.Selection.Find.Replacement.Text = item.Value;//替换文本 
-
-                        //执行替换操作
-                        app.Selection.Find.Execute(
-                        ref oMissing, ref oMissing,
-                        ref oMissing, ref oMissing,
-                        ref oMissing, ref oMissing,
-                        ref oMissing, ref oMissing, ref oMissing,
-                        ref oMissing, ref replace,
-                        ref oMissing, ref oMissing,
-                        ref oMissing, ref oMissing);
-                    }
-                    object objWdPdf = wdPdf;
-                    //对替换好的word模板另存为一个新的word文档
-                    doc.SaveAs(physicNewFile,
-                    objWdPdf, oMissing, oMissing, oMissing, oMissing, oMissing, oMissing, oMissing, oMissing,
-                    oMissing, oMissing, oMissing, oMissing, oMissing, oMissing);
-                app.Documents.Close(ref oMissing, ref oMissing, ref oMissing);
-                //// 保存pdf文件
-                // wdHelp.SaveAsPDF("D:/Projects/upload/PDF/" + targetPdfName + ".pdf");
-                //wdHelp.Close();
-
-
-            }
-                catch
-                {
-
+                    //执行替换操作
+                    app.Selection.Find.Execute(
+                    ref oMissing, ref oMissing,
+                    ref oMissing, ref oMissing,
+                    ref oMissing, ref oMissing,
+                    ref oMissing, ref oMissing, ref oMissing,
+                    ref oMissing, ref replace,
+                    ref oMissing, ref oMissing,
+                    ref oMissing, ref oMissing);
                 }
-           // }
-            return null;
+                object objWdPdf = wdPdf;
+                //保存PDF文档
+                doc.SaveAs(physicNewFile,
+                objWdPdf, oMissing, oMissing, oMissing, oMissing, oMissing, oMissing, oMissing, oMissing,
+                oMissing, oMissing, oMissing, oMissing, oMissing, oMissing);
+                doc.Close(ref missing, ref missing, ref missing);
+                app.Quit(ref missing, ref missing, ref missing);
+                File.Delete(newPdfPath.ToString());
+            }
+            catch
+            {
+                return null;
+                throw new Core.Exceptions.InvalidOperationAppException("合同生成失败.");
+            }
+            return physicNewFile;
+        }
+
+        /// <summary>
+        /// 将占位符和数据处理成字典类型
+        /// </summary>
+        /// <param name="param">占位符和数</param>
+        /// <returns></returns>
+        public Dictionary<string, string> BuildPlaceholder(string param)
+        {
+            //将获取的页面数据按'['进行分割
+            string[] spilt = param.Split('&');
+            // 构造数据，用于存放占位符数据
+            Dictionary<string, string> placeholder = new Dictionary<string, string>();
+            foreach (var item in spilt)
+            {
+                if (item.IndexOf('=') > -0)
+                {
+                    if (item.IndexOf('=') >= 0)
+                    {
+                        var x = item.Substring(0, item.IndexOf('='));
+                        var y = item.Substring(item.IndexOf('=') + 1, item.Length - item.IndexOf('=') - 1);
+                        if (string.IsNullOrEmpty(y))
+                        {
+                            y = y.PadLeft(x.Length, ' ');
+                        }
+                        placeholder.Add(x, y);
+                    }
+                }
+            }
+            return placeholder;
         }
 
         /// <summary>
