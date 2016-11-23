@@ -1,0 +1,38 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title></title>
+	<meta charset="utf-8" />
+    <link href="../Content/easyui/themes/gray/easyui.css" rel="stylesheet" />
+    <link href="../Content/easyui/themes/icon.css" rel="stylesheet" />
+    <script src="../Scripts/jquery/jquery.js"></script>
+    <script src="../Scripts/easyui/jquery.easyui.js"></script>
+    <script src="../Scripts/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../Scripts/usedcars.js"></script>
+    <script type="text/javascript"></script>
+    <script>
+        $.ajax({
+            async: true,
+            data: { Id: 'c49adb8f-e5af-e611-80c7-507b9de4a488' },
+            method: "GET",
+            //url: "../api/PdfContract/GetPath",
+            url: "../api/FinanceAuidt/LeaseeContract",
+            statusCode: {
+                200: function (data) {
+                    
+                    for (var i = 0; i < data.length; i++) {
+                        var filepath = data[i].FilePath;
+                        var fp = filepath.substring(1);//截取出 ~ 以后的字符串
+                        var path = ".." + fp + data[i].OldName + data[i].ExtName;
+                        window.open(path);
+                    }
+                }
+            }
+        });
+    </script>
+</head>
+<body>
+
+</body>
+</html>
