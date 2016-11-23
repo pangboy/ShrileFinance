@@ -11,6 +11,11 @@
     <script src="../Scripts/easyui/locale/easyui-lang-zh_CN.js"></script>
     <script src="../Scripts/usedcars.js"></script>
     <script src="../Scripts/draft.js"></script>
+    <style>
+        td > .textbox[style*="height: 22px;"] { height: 22px !important; }
+        td > .textbox[style*="height: 22px;"] > .textbox-text { padding: 0px 4px !important; font-size: 12px !important; line-height: 1.42857143; }
+    </style>
+
     <script>
         uc.form = new UCForm("#credit_ff");
 
@@ -61,15 +66,17 @@
                             return false;
                         }
                     }
-                })
+                });
             });
+
+            $("#account_dg").datagrid("loadData", data.Accounts);
         }
 
         function Build() {
             var data = $.extend({},
                $("#credit_info").serializeJson(),
                $("#partner_info").serializeJson(),
-               { Produces: [], Approvers: [] }
+               { Produces: [], Approvers: [], Accounts: [] }
                );
 
             $("select[name=Produces] option").each(function () {
@@ -80,10 +87,16 @@
                 data.Approvers.push($(this).combobox("getValue"));
             });
 
+            data.Accounts = $("#account_dg").datagrid("getData").rows;
+
             return data;
         }
 
         function Submit() {
+            if (!endEditing()) {
+                return false;
+            }
+
             var data = Build();
 
             uc.form.Submit({
@@ -265,6 +278,133 @@
                                 400: uc.E400
                             }
                         });
+                    }
+                }
+            </script>
+        </fieldset>
+
+        <fieldset id="account_user">
+            <table id="account_dg" class="easyui-datagrid" data-options="singleSelect: true,
+                   toolbar: '#account_tb', onClickCell: onClickCell, onEndEdit: onEndEdit">
+                <thead>
+                    <tr>
+                        <th data-options="field:'Username',width:150,
+                        editor:{
+                            type:'textbox',
+                            options:{
+                                required:true,
+                                readonly:true,
+                                novalidate:true,
+                                validType:['checkUsernameRepeat','checkUsernameFormat'],
+                                delay:800
+                            }
+                        }">帐号</th>
+                        <th data-options="field:'Role',width:150,
+                        formatter:function(value,row){
+                            return row.Role;
+                        },
+                        editor:{
+                            type:'combobox',
+                            options:{
+						        editable:false,
+                                required:true,
+                                data:[
+                                    {'value':'渠道经理','text':'渠道经理'},
+                                    {'value':'客户经理','text':'客户经理'}
+                                ]
+                            }
+                        }">角色</th>
+                        <th data-options="field:'Name',width:150,
+                        editor:{
+                            type:'textbox',
+                            options:{
+                                required:true
+                            }
+                        }">姓名</th>
+                        <th data-options="field:'Phone',width:150,
+                        editor:{
+                            type:'textbox',
+                            options:{
+                                validType:'Mobile'
+                            }
+                        }">手机</th>
+                        <th data-options="field:'Email',width:150,
+                        editor:{
+                            type:'textbox',
+                            options:{
+                                validType:'Email'
+                            }
+                        }">邮箱</th>
+                    </tr>
+                </thead>
+            </table>
+
+            <div id="account_tb">
+                <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true,onClick:AppendAccount">添加</a>
+                <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-remove',plain:true,onClick:RemoveAccount">移除</a>
+                <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-save',plain:true,onClick:AcceptAccount">确定</a>
+            </div>
+
+            <script>
+                var editIndex = undefined;
+                function endEditing() {
+                    if (editIndex == undefined) { return true; }
+                    if ($("#account_dg").datagrid("validateRow", editIndex)) {
+                        $("#account_dg").datagrid("endEdit", editIndex);
+                        editIndex = undefined;
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
+                function onClickCell(index, field) {
+                    if (editIndex != index) {
+                        if (endEditing()) {
+                            $("#account_dg").datagrid("selectRow", index)
+                                    .datagrid("beginEdit", index);
+                            var ed = $("#account_dg").datagrid("getEditor", { index: index, field: field });
+                            if (ed) {
+                                ($(ed.target).data("textbox") ? $(ed.target).textbox("textbox") : $(ed.target)).focus();
+                            }
+                            editIndex = index;
+                        } else {
+                            setTimeout(function () {
+                                $("#account_dg").datagrid("selectRow", editIndex);
+                            }, 0);
+                        }
+                    }
+                }
+                function onEndEdit(index, row) {
+                    //var ed = $(this).datagrid('getEditor', {
+                    //    index: index,
+                    //    field: 'Role'
+                    //});
+                    //row.RoleName = $(ed.target).combobox('getText');
+                }
+                function AppendAccount() {
+                    if (endEditing()) {
+                        $("#account_dg").datagrid("appendRow", { Role: "客户经理" });
+                        editIndex = $("#account_dg").datagrid("getRows").length - 1;
+
+                        $("#account_dg").datagrid("selectRow", editIndex)
+                                .datagrid("beginEdit", editIndex);
+
+                        var ed = $("#account_dg").datagrid('getEditor', {
+                            index: editIndex,
+                            field: 'Username'
+                        });
+                        $(ed.target).textbox("readonly", false).textbox("enableValidation");
+                    }
+                }
+                function RemoveAccount() {
+                    if (editIndex == undefined) { return; }
+                    $("#account_dg").datagrid("cancelEdit", editIndex)
+                            .datagrid("deleteRow", editIndex);
+                    editIndex = undefined;
+                }
+                function AcceptAccount() {
+                    if (endEditing()) {
+                        $("#account_dg").datagrid("acceptChanges");
                     }
                 }
             </script>

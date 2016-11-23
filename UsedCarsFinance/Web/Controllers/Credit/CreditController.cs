@@ -1,17 +1,14 @@
 ﻿namespace Web.Controllers.Credit
 {
     using System;
-    using System.Collections.Generic;
+    using System.Threading.Tasks;
     using System.Web.Http;
     using Application;
     using Application.ViewModels;
     using Application.ViewModels.PartnerViewModels;
-    using Models;
 
     public class CreditController : ApiController
     {
-        private static readonly BLL.Credit.Partner _partner = new BLL.Credit.Partner();
-        private static readonly BLL.Credit.Credit credit = new BLL.Credit.Credit();
         private readonly PartnerAppService service;
 
         public CreditController(PartnerAppService service)
@@ -34,22 +31,12 @@
         }
 
         /// <summary>
-        /// 获取授信主体选项
-        /// </summary>
-        /// qiy     16.03.29
-        /// <returns></returns>
-        [HttpGet]
-        public List<ComboInfo> Option()
-        {
-            return _partner.Option();
-        }
-
-        /// <summary>
         /// 渠道列表
         /// </summary>
         /// qiy     16.03.29
         /// <param name="page">页码</param>
         /// <param name="rows">尺寸</param>
+        /// <param name="searchString">搜索字符串</param>
         /// <returns></returns>
         [HttpGet]
         public IHttpActionResult GetAll(int page, int rows, string searchString = null)
@@ -85,14 +72,14 @@
         /// <param name="model">值</param>
         /// <returns></returns>
         [HttpPut]
-        public IHttpActionResult Put(PartnerViewModel model)
+        public async Task<IHttpActionResult> Put(PartnerViewModel model)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            service.Modify(model);
+            await service.ModifyAsync(model);
 
             return Ok();
         }

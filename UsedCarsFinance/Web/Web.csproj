@@ -830,8 +830,6 @@
     <Content Include="Content\uploadify\uploadify-cancel.png" />
     <Content Include="Content\uploadify\uploadify.css" />
     <Content Include="Content\uploadify\uploadify.swf" />
-    <Content Include="Credit\CreditAccountEdit.html" />
-    <Content Include="Credit\CreditAccountList.html" />
     <Content Include="Credit\CreditEdit.html" />
     <Content Include="Credit\CreditList.html" />
     <Content Include="Finance\ApplicantEdit.html" />
@@ -917,7 +915,6 @@
     <Compile Include="Controllers\BankCredit\ReportFilesController.cs" />
     <Compile Include="Controllers\BankCredit\SegmentRuleController.cs" />
     <Compile Include="Controllers\BankCredit\TempRecordController.cs" />
-    <Compile Include="Controllers\Credit\CreditAccountController.cs" />
     <Compile Include="Controllers\Credit\CreditController.cs" />
     <Compile Include="Controllers\Customer\CustomerController.cs" />
     <Compile Include="Controllers\Finance\ApplicantController.cs" />

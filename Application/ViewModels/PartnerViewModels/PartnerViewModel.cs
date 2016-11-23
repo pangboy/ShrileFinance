@@ -35,5 +35,7 @@
         public IEnumerable<ProduceViewModel> Produces { get; set; }
 
         public IEnumerable<string> Approvers { get; set; }
+
+        public IEnumerable<UserViewModel> Accounts { get; set; }
     }
 }

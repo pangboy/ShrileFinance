@@ -59,7 +59,7 @@
             repository.Commit();
         }
 
-        public void Modify(PartnerViewModel model)
+        public async Task ModifyAsync(PartnerViewModel model)
         {
             var partner = repository.Get(model.Id.Value);
             Mapper.Map(model, partner);
@@ -74,6 +74,30 @@
             if (partner.Approvers.Select(m => m.RoleId).Count() != 5)
             {
                 throw new Core.Exceptions.InvalidOperationAppException("每个角色有且仅有一个审批用户.");
+            }
+
+            var modelIds = model.Accounts.Select(m => m.Id);
+            partner.Accounts.Where(m => !modelIds.Contains(m.Id)).ToList()
+                .ForEach(m => partner.Accounts.Remove(m));
+
+            foreach (var item in model.Accounts)
+            {
+                var entity = partner.Accounts.SingleOrDefault(m => m.Id == item.Id);
+
+                if (entity == null)
+                {
+                    var idenResult = await accountService.CreateUserAsync(item);
+
+                    if (!idenResult.Succeeded)
+                    {
+                        throw new Core.Exceptions.ArgumentAppException(idenResult.Errors.First());
+                    }
+
+                    entity = userManager.FindById(item.Id);
+                    partner.Accounts.Add(entity);
+                }
+
+                Mapper.Map(item, entity);
             }
 
             repository.Modify(partner);
@@ -130,10 +154,6 @@
             {
                 produces = produces.Where(m => m.Name.Contains(serach) || m.Code.Contains(serach));
             }
-
-           // var pagedList = produces.ToPagedList(pageNumber, pageSize);
-
-           // var models = Mapper.Map<IPagedList<ProduceListViewModel>>(pagedList);
 
             return Mapper.Map<List<ProduceListViewModel>>(produces).ToList();
         }
