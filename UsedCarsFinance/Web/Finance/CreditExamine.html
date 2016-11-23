@@ -21,7 +21,7 @@
             // 获取参数
             query =$.extend(uc.GetParams(), parent.flow.InstanceData);
             query.FinanceId = parent.flow.RootKey;
-
+            
             if (query.FinanceId == undefined || query.FinanceId.length == 0) {
                 query.FinanceId = "ED468191-9FAB-E611-80C5-507B9DE4A488";
                 query.state = 1;
@@ -48,7 +48,11 @@
                 $("form[id=CreditExamineReportFrom]>input[name=Id]").val(data.Id);
                 
                 $("form[id=CreditExamineReportFrom] fieldset[id*=f]").each(function (i, e) {
-                    if ($(e).attr("id") != "f5") {
+                    if ($(e).attr("id") == "f22") {
+                        // 加载审批者
+                        LoadAduitPerson(data);
+                    }
+                    else if ($(e).attr("id") != "f5") {
                         $(e).form('load', data);
                     }
                     else {
@@ -59,9 +63,9 @@
                                 $.parser.parse($("form[id=CreditExamineReportFrom] fieldset#f5>div.row>div.col-6:last"));
                             }
 
-                            var number = i + 1;
+                            var number = parseInt(i) + 1;
                             
-                            $("form[id=CreditExamineReportFrom] fieldset#f5>div.row>div.col-6:last>label").text("保证人" + number + "姓名：");
+                            $("form[id=CreditExamineReportFrom] fieldset#f5>div.row>div.col-6:last>label").text("保证人" + number + " 姓名：");
                             $("form[id=CreditExamineReportFrom] fieldset#f5>div.row>div.col-6:last>input[textboxname=Guarantor]").textbox('setValue', data.Guarantor[i]);
                         }
 
@@ -96,7 +100,6 @@
 
         // 验证数据
         function ValidData() {
-            debugger
             if (!$("#CreditExamineReportFrom").form("validate")) {
                 return false;
             }
@@ -264,12 +267,12 @@
                 <div class="row">
                     <div class="col-6">
                         <label>保证人姓名:</label>
-                        <input name="Guarantor" class="easyui-textbox" data-options="validType:['ANC','length[1,20]'],required:false,readonly:true" />
+                        <input name="Guarantor" class="easyui-textbox" data-options="validType:['ANC','length[1,40]'],required:false,readonly:true" />
                     </div>
                     <template id="Guarantor">
                         <div class="col-6">
                             <label>保证人姓名:</label>
-                            <input name="Guarantor" class="easyui-textbox" data-options="validType:['ANC','length[1,20]'],required:false,readonly:true" />
+                            <input name="Guarantor" class="easyui-textbox" data-options="validType:['ANC','length[1,40]'],required:false,readonly:true" />
                         </div>
                     </template>
                 </div>
@@ -691,7 +694,7 @@
                 <div class="row">
                     <div class="col-12">
                         <label>用途</label>
-                        <input name="CapitalUse" class="easyui-textbox" data-options="validType:['ANC','length[1,20]'],required:true,multiline:true,height:100" />
+                        <input name="CapitalUse" class="easyui-textbox" data-options="validType:['ANC','length[1,800]'],required:true,multiline:true,height:100" />
                     </div>
                 </div>
             </fieldset>
@@ -701,7 +704,7 @@
                 <div class="row">
                     <div class="col-12">
                         <label>电询</label>
-                        <input name="CableInquiry" class="easyui-textbox" data-options="validType:['ANC','length[1,20]'],required:true,multiline:true,height:100" />
+                        <input name="CableInquiry" class="easyui-textbox" data-options="validType:['ANC','length[1,800]'],required:true,multiline:true,height:100" />
                     </div>
                 </div>
             </fieldset>
@@ -711,7 +714,7 @@
                 <div class="row">
                     <div class="col-12">
                         <label>结论</label>
-                        <input name="Conclusion" class="easyui-textbox" data-options="validType:['ANC','length[1,20]'],required:true,multiline:true,height:100" />
+                        <input name="Conclusion" class="easyui-textbox" data-options="validType:['ANC','length[1,800]'],required:true,multiline:true,height:100" />
                     </div>
                 </div>
             </fieldset>

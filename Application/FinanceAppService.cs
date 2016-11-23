@@ -5,7 +5,6 @@
     using System.Data;
     using System.Data.SqlClient;
     using System.Linq;
-    using System.Reflection;
     using System.Transactions;
     using AutoMapper;
     using Core.Entities;
@@ -50,7 +49,7 @@
                 repository.Commit();
                 value.Id = finance.Id;
             }
-            catch 
+            catch
             {
                 throw new Core.Exceptions.InvalidOperationAppException("保存失败.");
             }
@@ -58,7 +57,7 @@
 
         public PartnerAndUser GetPartnerAndUser()
         {
-           AppUser user = userManager.CurrentUser();
+            AppUser user = userManager.CurrentUser();
             Partner partner = partnerRepository.GetByUser(userManager.CurrentUser());
             return new PartnerAndUser()
             {
@@ -81,7 +80,7 @@
                 repository.Modify(finance);
                 repository.Commit();
             }
-            catch
+            catch(Exception ex)
             {
                 throw new Core.Exceptions.InvalidOperationAppException("修改失败.");
             }
@@ -292,7 +291,8 @@
             creditExamineReportViewModel.LesseeMobile = lessee.Mobile;
 
             // 共借人(最多一个)
-            creditExamineReportViewModel.CommonBorrwerName1 = finance.Applicant.ToList().Find(m => m.Type == Applicant.TypeEnum.共同申请人).Name;
+            var commonBorrwer = finance.Applicant.ToList().Find(m => m.Type == Applicant.TypeEnum.共同申请人) ?? new Applicant() { Name = string.Empty };
+            creditExamineReportViewModel.CommonBorrwerName1 = commonBorrwer.Name;
 
             // 保证人
             creditExamineReportViewModel.Guarantor = from applicant
@@ -318,16 +318,18 @@
                 {
                     creditExamineReportViewModel.TrialPerson = new KeyValuePair<string, string>(curentUser.Id, curentUser.Name);
                 }
+
                 if (curentRole.Name.Equals("复审员"))
                 {
                     creditExamineReportViewModel.ReviewPerson = new KeyValuePair<string, string>(curentUser.Id, curentUser.Name);
                 }
+
                 if (curentRole.Name.Equals("总经理"))
                 {
-                    creditExamineReportViewModel.ApprovePerson= new KeyValuePair<string, string>(curentUser.Id, curentUser.Name);
+                    creditExamineReportViewModel.ApprovePerson = new KeyValuePair<string, string>(curentUser.Id, curentUser.Name);
                     creditExamineReportViewModel.FinalPerson = new KeyValuePair<string, string>(curentUser.Id, curentUser.Name);
                 }
-                }
+            }
 
             return creditExamineReportViewModel;
         }
@@ -363,14 +365,14 @@
 
             // 执行修改
             repository.Commit();
-            }
+        }
 
         /// <summary>
         /// 信审报告设置审批人
         /// </summary>
         /// <param name="financeId">融资标识</param>
         public void SetApprover(Guid financeId)
-            {
+        {
             var currentUser = userManager.CurrentUser();
             var finance = repository.Get(financeId);
 
@@ -509,7 +511,7 @@
             operationReportViewModel.FinancingItems = GetFinancingItemsOrCosts(finance);
 
             // 手续费
-            operationReportViewModel.FinanceCosts = GetFinancingItemsOrCosts(finance,false);
+            operationReportViewModel.FinanceCosts = GetFinancingItemsOrCosts(finance, false);
 
             // 车辆补充信息
             var array1 = new string[] { "RegisterDate", "RunningMiles", "FactoryDate", "BusinessType", "PlateNo", "FrameNo", "EngineNo", "RegisterCity", "Condition" };
@@ -544,11 +546,11 @@
                 // 还款信息
                 var customerArray = new string[] { "CustomerAccountName", "CustomerBankName", "CustomerBankCard" };
                 finance.FinanceExtension = PartialMapper(value, finance.FinanceExtension, customerArray);
-
+                
                 if (!finance.FinanceExtension.LoanPrincipal.Equals("Channel"))
                 {
                     // 放款信息
-                    var creditArray = new string[] { "CreditAccountName", "CreditBankName", "CreditBankCard" };
+                    var creditArray = new string[] { "LoanPrincipal", "CreditAccountName", "CreditBankName", "CreditBankCard" };
                     finance.FinanceExtension = PartialMapper(value, finance.FinanceExtension, creditArray);
                 }
 
@@ -558,14 +560,23 @@
             }
             else
             {
-                // 选择还款日、首次租金支付日期、保证金、先付月供、一次性付息、实际用款额、放款主体、放款账户、放款账户开户行、放款账户卡号、合同Json
-                var operationArray = new string[] { "RepaymentDate", "RepayRentDate", "Bail", "PayMonthly", "OnePayInterest", "ActualAmount", "LoanPrincipal", "CreditAccountName", "CreditBankName", "CreditBankCard", "ContactJson" };
-                if (!value.LoanPrincipal.Equals("Channel"))
-                {
-                    operationArray = new string[] { "RepaymentDate", "RepayRentDate", "Bail", "PayMonthly", "OnePayInterest", "ActualAmount", "LoanPrincipal", "ContactJson" };
-                }
+                // 先付月供
+                finance.Payment = value.PayMonthly;
 
-                finance.FinanceExtension = PartialMapper(value, finance.FinanceExtension, operationArray);
+                // 实际用款额
+                finance.Principal = value.ActualAmount;
+
+                // 合同Json
+                finance.FinanceExtension.ContactJson = value.ContactJson;
+
+                // 选择还款日、首次租金支付日期、保证金、先付月供、一次性付息、实际用款额
+                finance = PartialMapper(value, finance, new string[] { "RepaymentDate", "RepayRentDate", "Bail", "Payment", "OnePayInterest" });
+
+                // 放款主体、放款账户、放款账户开户行、放款账户卡号
+                if (value.LoanPrincipal.Equals("Channel"))
+                {
+                    finance.FinanceExtension = PartialMapper(value, finance.FinanceExtension, new string[] {  "LoanPrincipal", "CreditAccountName", "CreditBankName", "CreditBankCard" });
+                }
             }
 
             repository.Modify(finance);
@@ -580,16 +591,16 @@
         /// <param name="finance">融资实体</param>
         /// <param name="isFinancing">是否为融资项</param>
         /// <returns>融资项</returns>
-        private ICollection<KeyValuePair<Guid, KeyValuePair<string, decimal?>>> GetFinancingItemsOrCosts(Finance finance,bool isFinancing=true)
+        private ICollection<KeyValuePair<Guid, KeyValuePair<string, decimal?>>> GetFinancingItemsOrCosts(Finance finance, bool isFinancing = true)
         {
-            var financingCosts = new List<KeyValuePair<Guid, KeyValuePair<string, decimal?>>>();
+            var financingItemsOrCosts = new List<KeyValuePair<Guid, KeyValuePair<string, decimal?>>>();
 
-            finance.FinanceProduce.ToList().FindAll(m => m.IsFinancing=isFinancing).ForEach(item =>
-            {
-                financingCosts.Add(new KeyValuePair<Guid, KeyValuePair<string, decimal?>>(item.Id, new KeyValuePair<string, decimal?>(item.Name, item.Money)));
-            });
+            finance.FinanceProduce.ToList().FindAll(m => m.IsFinancing == isFinancing).ForEach(item =>
+              {
+                  financingItemsOrCosts.Add(new KeyValuePair<Guid, KeyValuePair<string, decimal?>>(item.Id, new KeyValuePair<string, decimal?>(item.Name, item.Money)));
+              });
 
-            return financingCosts;
+            return financingItemsOrCosts;
         }
 
         /// <summary>
@@ -600,7 +611,7 @@
         /// <returns></returns>
         private ICollection<FinanceProduce> EditFinanceAuidts(ICollection<FinanceProduce> financingItems, ICollection<KeyValuePair<Guid, KeyValuePair<string, decimal?>>> financingItemCollection)
         {
-            var financingItemList = financingItems.ToList();
+            var financingItemList = financingItems.ToList().FindAll(m=>m.IsFinancing);
 
             // 更新融资项各金额
             financingItemList.ForEach(financingItem =>
@@ -609,7 +620,7 @@
                 var key = financingItem.Id;
 
                 // 更新指定融资项对应的金额
-                financingItem.Money = financingItemCollection.Single(m => m.Key.Equals(key)).Value.Value.Value;
+                financingItem.Money = financingItemCollection.SingleOrDefault(m => m.Key.Equals(key)).Value.Value.Value;
             });
 
             return financingItemList;
@@ -646,25 +657,20 @@
                 }
             }
 
-            // 字典为空，则返回
-            if (container.Keys.Count == 0)
-            {
-                return outObj;
-            }
-
             // 从字典取值，并对输出对象对应的属性赋值
-            foreach (PropertyInfo item in outObj.GetType().GetProperties())
+            var outObjType = outObj.GetType();
+            container.ToList().ForEach(item =>
             {
-                if (array == null || array.Contains(item.Name))
-                {
-                    if (container.Keys.Contains(item.Name))
-                    {
-                        item.SetValue(outObj, container[item.Name], null);
+                var outObjPropertyInfo = outObjType.GetProperty(item.Key.ToString());
 
-                        container.Remove(item.Name);
-                    }
+                try
+                {
+                    outObjPropertyInfo.SetValue(outObj, item.Value, null);
                 }
-            }
+                catch
+                {
+                }
+            });
 
             return outObj;
         }

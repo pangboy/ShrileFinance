@@ -20,9 +20,9 @@
 
         $(function () {
             // 获取参数
-            query =$.extend(uc.GetParams(), parent.flow.InstanceData);
+            query = $.extend(uc.GetParams(), parent.flow.InstanceData);
             query.FinanceId = parent.flow.RootKey;
-            debugger
+            
             if (query.FinanceId == undefined || query.FinanceId.length == 0) {
                 query.FinanceId = "ED468191-9FAB-E611-80C5-507B9DE4A488";
                 query.state = 1;
@@ -33,12 +33,10 @@
         });
 
         // LoadData方法
-        function LoadData(data)
-        {
+        function LoadData(data) {
             if (data) {
                 // 融资比例限制
-                if (data.MinFinancingRatio != undefined && data.MaxFinancingRatio !=undefined)
-                {
+                if (data.MinFinancingRatio != undefined && data.MaxFinancingRatio != undefined) {
                     var radio = [];
                     radio.push(data.MinFinancingRatio);
                     radio.push(data.MaxFinancingRatio);
@@ -65,10 +63,12 @@
                     $("input[textboxname = 'ApprovalRatio']").textbox({ validType: ["FratioLimit[" + radio + "]"] });
                 }
 
-                FieldsetLoadDateFactory("FinanceAudit",'text',data)
+                FieldsetLoadDateFactory("FinanceAudit", 'text', data)
 
                 // 加载融资项
-                LoadFinancingItem(data.FinancingItems);
+                if ($("fieldset[name=FinancingItems]>div.row>div")[0] == undefined) {
+                    LoadFinancingItem(data.FinancingItems);
+                }
 
                 if (query.state == 0) {
                     // 禁用所有
@@ -94,7 +94,7 @@
                 return false;
             }
 
-            return true; 
+            return true;
         }
 
         //构建数据BuildData

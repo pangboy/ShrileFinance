@@ -154,7 +154,7 @@
     <Content Include="Account\UserEdit.html" />
     <Content Include="Account\UserInfo.html" />
     <Content Include="Finance\FinanceApproval.html" />
-    <Content Include="Finance\FinanceCustomer.html" />
+    <Content Include="Finance\Unused\FinanceCustomer.html" />
     <Content Include="Finance\images\add.png" />
     <Content Include="BankInfo\BorrowerProfile.html" />
     <Content Include="BankInfo\InfoImg.png" />

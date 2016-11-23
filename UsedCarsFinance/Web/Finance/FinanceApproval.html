@@ -20,9 +20,9 @@
 
         $(function () {
             // 获取参数
-            //query = $.extend(uc.GetParams(), parent.flow.InstanceData);
-            //query.FinanceId = parent.flow.RootKey;
-            debugger
+            query = $.extend(uc.GetParams(), parent.flow.InstanceData);
+            query.FinanceId = parent.flow.RootKey;
+            //debugger
             if (query.FinanceId == undefined || query.FinanceId.length == 0) {
                 query.FinanceId = "ED468191-9FAB-E611-80C5-507B9DE4A488";
                 query.state = 1;
@@ -208,7 +208,7 @@
             </fieldset>
 
             <fieldset name="FinancingItems" style="display:none">
-                <legend>融资项和手续费</legend>
+                <legend>融资项和客户手续费</legend>
                 <div class="row">
                     <div class="col-6">
                         <label>融资项:</label>
@@ -233,7 +233,7 @@
                                singleSelect:true,
                                onSelect:FinanceCostSelect,
                                rownumbers:true,
-                               title:'手续费'
+                               title:'客户手续费'
                                 ">
                             <thead>
                                 <tr>
