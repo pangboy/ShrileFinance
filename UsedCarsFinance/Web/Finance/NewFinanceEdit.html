@@ -557,6 +557,7 @@
             for (var i = 0; i < $('#Poundagedg').datagrid('getRows').length; i++) {
                 data["FinanceProduce"].push($('#Poundagedg').datagrid('getRows')[i])
             }
+            debugger
             return data;
         }
         //选择通讯地址类型时候加载单位地址和住宅地址
@@ -929,10 +930,9 @@
                         <div class="col-6">
                             <label>婚姻状况:</label>
                             <select id="MaritalStatus" name="MaritalStatus" class="easyui-combobox" data-options="editable:false,onSelect:ChooseMarital">
-                                <option value="1">已婚</option>
-                                <option value="2">未婚</option>
-                                <option value="3">离异</option>
-                                <option value="4">丧偶</option>
+                                <option value="0">已婚</option>
+                                <option value="1">离异</option>
+                                <option value="2">单身</option>
                             </select>
                         </div>
 
@@ -1475,7 +1475,7 @@
 
                             <div class="col-6">
                                 <label>移动电话:</label>
-                                <input name="Mobile" id ="Mobile" class="easyui-textbox" data-options="required:true" />
+                                <input name="Mobile" id ="Mobile" class="easyui-textbox" data-options="validType:'Mobile',required:true" />
                             </div>
                         </div>
 
