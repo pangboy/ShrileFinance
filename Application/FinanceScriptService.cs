@@ -12,9 +12,12 @@
     {
         private readonly FinanceAppService financeAppService;
 
-        public FinanceScriptAppService(FinanceAppService financeAppService)
+        private readonly IFinanceRepository repository;
+
+        public FinanceScriptAppService(FinanceAppService financeAppService, IFinanceRepository repository)
         {
             this.financeAppService = financeAppService;
+            this.repository = repository;
         }
 
         public Instance Instance { get; set; }
@@ -67,6 +70,8 @@
 
             // 创建信审
             financeAppService.EditCreditExamine(financeCreditExmine);
+
+            repository.Commit();
 
             // 修改信审审核人
             financeAppService.SetApprover(financeAudit.FinanceId);

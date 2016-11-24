@@ -491,7 +491,7 @@
             repository.Modify(finance);
 
             // 执行修改
-            repository.Commit();
+           // repository.Commit();
         }
 
         /// <summary>
@@ -605,8 +605,8 @@
 
             repository.Modify(finance);
 
-            // 执行修改
-            repository.Commit();
+            ////// 执行修改
+            ////repository.Commit();
         }
 
         /// <summary>

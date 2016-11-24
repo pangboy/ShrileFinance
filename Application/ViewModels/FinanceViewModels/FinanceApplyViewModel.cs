@@ -43,11 +43,6 @@
         public decimal? Financing { get; set; }
 
         /// <summary>
-        /// 手续费
-        /// </summary>
-        public decimal? Poundage { get; set; }
-
-        /// <summary>
         /// 月供先付期数
         /// </summary>
         public int? OncePayMonths { get; set; }
