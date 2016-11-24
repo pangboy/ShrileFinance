@@ -1,10 +1,7 @@
 ﻿namespace Application
 {
-    using System;
-    using System.IO;
     using System.Linq;
     using Core.Entities.Flow;
-    using Core.Interfaces.Repositories;
     using Newtonsoft.Json.Linq;
     using ViewModels.FinanceViewModels;
 
@@ -12,12 +9,9 @@
     {
         private readonly FinanceAppService financeAppService;
 
-        private readonly IFinanceRepository repository;
-
-        public FinanceScriptAppService(FinanceAppService financeAppService, IFinanceRepository repository)
+        public FinanceScriptAppService(FinanceAppService financeAppService)
         {
             this.financeAppService = financeAppService;
-            this.repository = repository;
         }
 
         public Instance Instance { get; set; }
@@ -45,12 +39,6 @@
                 Instance.RootKey = finance.Id;
             }
 
-            // 如果执行失败则抛出异常, 或用返回值表示结果.
-            if (false)
-            {
-                throw new Core.Exceptions.InvalidOperationAppException("保存失败.");
-            }
-
             Instance.Title = $"{finance.Applicant.First(m => m.Type == ApplicationViewModel.TypeEnum.主要申请人).Name} - {finance.Vehicle.PlateNo}";
         }
 
@@ -73,14 +61,6 @@
 
             // 修改信审审核人
             financeAppService.SetApprover(financeAudit.FinanceId);
-
-            repository.Commit();
-
-            // 如果执行失败则抛出异常, 或用返回值表示结果.
-            if (false)
-            {
-                throw new Core.Exceptions.InvalidOperationAppException("保存失败.");
-            }
         }
 
         /// <summary>
@@ -96,14 +76,6 @@
 
             // 修改信审审核人
             financeAppService.SetApprover(financeAudit.FinanceId);
-
-            repository.Commit();
-
-            // 如果执行失败则抛出异常, 或用返回值表示结果.
-            if (false)
-            {
-                throw new Core.Exceptions.InvalidOperationAppException("保存失败.");
-            }
         }
 
         /// <summary>
@@ -116,12 +88,6 @@
 
             // 创建或修改
             financeAppService.EditOperation(finance);
-
-            // 如果执行失败则抛出异常, 或用返回值表示结果.
-            if (false)
-            {
-                throw new Core.Exceptions.InvalidOperationAppException("保存失败.");
-            }
         }
 
         /// <summary>
@@ -131,13 +97,6 @@
         {
             // 获取数据
             var finance = GetData<OperationViewModel>("5ADC5FCF-18A4-E611-80C5-507B9DE4A488");
-
-            // 如果执行失败则抛出异常, 或用返回值表示结果.
-            if (false)
-            {
-                throw new Core.Exceptions.InvalidOperationAppException("保存失败.");
-
-            }
 
             // 创建或修改
             financeAppService.EditOperation(finance);
@@ -154,8 +113,6 @@
         {
             // 修改信审审核人
             financeAppService.SetApprover(Instance.RootKey.Value);
-
-            repository.Commit();
         }
 
         private T GetData<T>(string formId) where T : class, new()
