@@ -384,9 +384,6 @@
             finance.CreditExamine.Margin = value.Margin1 + "-" + value.Margin2;
 
             repository.Modify(finance);
-
-            // 执行修改
-            repository.Commit();
         }
 
         /// <summary>
@@ -413,6 +410,8 @@
                 default:
                     break;
             }
+
+            repository.Modify(finance);
         }
 
         /// <summary>
@@ -489,9 +488,6 @@
             }
 
             repository.Modify(finance);
-
-            // 执行修改
-           // repository.Commit();
         }
 
         /// <summary>
@@ -635,7 +631,7 @@
         /// <returns></returns>
         private ICollection<FinanceProduce> EditFinanceAuidts(ICollection<FinanceProduce> financingItems, ICollection<KeyValuePair<Guid, KeyValuePair<string, decimal?>>> financingItemCollection)
         {
-            var financingItemList = financingItems.ToList().FindAll(m => m.IsFinancing);
+            var financingItemList = financingItems.ToList();
 
             // 更新融资项各金额
             financingItemList.ForEach(financingItem =>
