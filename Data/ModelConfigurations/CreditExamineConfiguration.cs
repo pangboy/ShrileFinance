@@ -75,9 +75,6 @@
             // 年龄（其他）
             Property(m => m.AgeRangeOther).HasMaxLength(20);
             
-            // 婚姻
-            Property(m => m.MarriageState).HasMaxLength(20);
-            
             // 居住
             Property(m => m.Live).HasMaxLength(20);
             

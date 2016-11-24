@@ -73,27 +73,6 @@
     }
 
     /// <summary>
-    /// 婚姻 枚举
-    /// </summary>
-    public enum MarriageStateEnum
-    {
-        /// <summary>
-        /// 已婚
-        /// </summary>
-        已婚 = 0,
-
-        /// <summary>
-        /// 离异
-        /// </summary>
-        离异 = 1,
-
-        /// <summary>
-        /// 单身
-        /// </summary>
-        单身 = 2
-    }
-
-    /// <summary>
     /// 居住 枚举
     /// </summary>
     public enum LiveEnum
@@ -369,7 +348,7 @@
         /// <summary>
         /// 婚姻
         /// </summary>
-        public MarriageStateEnum MarriageState { get; set; }
+        public string MarriageState { get; set; }
 
         /// <summary>
         /// 居住
