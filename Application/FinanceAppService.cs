@@ -77,7 +77,8 @@
 
                 new UpdateBind().Bind(finance.FinanceProduce, model.FinanceProduce);
                 new UpdateBind().Bind(finance.Applicant, model.Applicant);
-
+                finance.CreateBy = userManager.CurrentUser();
+                finance.CreateOf = partnerRepository.GetByUser(userManager.CurrentUser());
                 repository.Modify(finance);
                 repository.Commit();
             }
