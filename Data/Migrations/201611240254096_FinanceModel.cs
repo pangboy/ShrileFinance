@@ -1,14 +1,45 @@
 namespace Data.Migrations
 {
-    using System;
     using System.Data.Entity.Migrations;
     
     public partial class FinanceModel : DbMigration
     {
         public override void Up()
         {
-            DropIndex("dbo.FANC_Finance", new[] { "Produce_Id" });
-            RenameColumn(table: "dbo.FANC_Finance", name: "Produce_Id", newName: "ProduceId");
+            CreateTable(
+                "dbo.FANC_Finance",
+                c => new
+                    {
+                        Id = c.Guid(nullable: false, identity: true),
+                        ProduceId = c.Guid(nullable: false),
+                        Principal = c.Decimal(precision: 18, scale: 2),
+                        RepaymentDate = c.Int(),
+                        RepaymentScheme = c.Byte(nullable: false),
+                        Bail = c.Decimal(precision: 18, scale: 2),
+                        OnePayInterest = c.Decimal(precision: 18, scale: 2),
+                        State = c.Byte(nullable: false),
+                        DateEffective = c.DateTime(),
+                        DateCreated = c.DateTime(nullable: false),
+                        Financing = c.Decimal(precision: 18, scale: 2),
+                        Poundage = c.Decimal(precision: 18, scale: 2),
+                        OncePayMonths = c.Int(),
+                        AdviceMoney = c.Decimal(precision: 18, scale: 2),
+                        AdviceRatio = c.Decimal(precision: 18, scale: 2),
+                        ApprovalMoney = c.Decimal(precision: 18, scale: 2),
+                        ApprovalRatio = c.Decimal(precision: 18, scale: 2),
+                        Payment = c.Decimal(precision: 18, scale: 2),
+                        RepayRentDate = c.DateTime(),
+                        CreateBy_Id = c.String(maxLength: 128),
+                        CreateOf_Id = c.Guid(),
+                    })
+                .PrimaryKey(t => t.Id)
+                .ForeignKey("dbo.AspNetUsers", t => t.CreateBy_Id)
+                .ForeignKey("dbo.CRET_Partner", t => t.CreateOf_Id)
+                .ForeignKey("dbo.PROD_Produce", t => t.ProduceId)
+                .Index(t => t.ProduceId)
+                .Index(t => t.CreateBy_Id)
+                .Index(t => t.CreateOf_Id);
+            
             CreateTable(
                 "dbo.FANC_Applicant",
                 c => new
@@ -67,15 +98,71 @@ namespace Data.Migrations
                 .Index(t => t.FinanceId);
             
             CreateTable(
+                "dbo.FANC_CreditExamine",
+                c => new
+                    {
+                        Id = c.Guid(nullable: false, identity: true),
+                        SubmitDataChannel = c.String(maxLength: 200),
+                        LicenseRegistration = c.String(maxLength: 20),
+                        CustomerCategory = c.String(maxLength: 20),
+                        DetailedIndustry = c.String(maxLength: 20),
+                        CensusRegisterSeat = c.String(maxLength: 20),
+                        LivingSituation = c.String(maxLength: 20),
+                        WorkingCondition = c.String(maxLength: 20),
+                        IncomeSourceBusiness = c.Int(),
+                        IncomeSourceWage = c.Int(),
+                        MonthlyIncome = c.Decimal(nullable: false, precision: 18, scale: 2),
+                        AccountingBasis = c.String(maxLength: 20),
+                        NetnuclearPrice = c.Decimal(nullable: false, precision: 18, scale: 2),
+                        NuclearGroupPrice = c.Decimal(nullable: false, precision: 18, scale: 2),
+                        FinalLine = c.Decimal(nullable: false, precision: 18, scale: 2),
+                        CreditCondition = c.String(maxLength: 10),
+                        SpecialInstructions = c.String(maxLength: 200),
+                        Margin = c.String(maxLength: 20),
+                        IncreaseMarginReson = c.String(maxLength: 400),
+                        AgeRange = c.String(maxLength: 20),
+                        AgeRangeOther = c.String(maxLength: 20),
+                        MarriageState = c.String(maxLength: 20),
+                        Live = c.String(maxLength: 20),
+                        RealEstate = c.String(maxLength: 20),
+                        Work = c.String(maxLength: 20),
+                        FamilyVisit = c.String(maxLength: 20),
+                        CapitalUse = c.String(maxLength: 400),
+                        CableInquiry = c.String(maxLength: 400),
+                        Conclusion = c.String(maxLength: 400),
+                        SurveyOpinion = c.String(maxLength: 20),
+                        SurveyOpinionReson = c.String(maxLength: 400),
+                        ApprovePersonId = c.String(maxLength: 128),
+                        FinalPersonId = c.String(maxLength: 128),
+                        ReviewPersonId = c.String(maxLength: 128),
+                        TrialPersonId = c.String(maxLength: 128),
+                        FinanceId = c.Guid(),
+                    })
+                .PrimaryKey(t => t.Id)
+                .ForeignKey("dbo.AspNetUsers", t => t.ApprovePersonId)
+                .ForeignKey("dbo.AspNetUsers", t => t.FinalPersonId)
+                .ForeignKey("dbo.AspNetUsers", t => t.ReviewPersonId)
+                .ForeignKey("dbo.AspNetUsers", t => t.TrialPersonId)
+                .ForeignKey("dbo.FANC_Finance", t => t.FinanceId, cascadeDelete: true)
+                .Index(t => t.ApprovePersonId)
+                .Index(t => t.FinalPersonId)
+                .Index(t => t.ReviewPersonId)
+                .Index(t => t.TrialPersonId)
+                .Index(t => t.FinanceId);
+            
+            CreateTable(
                 "dbo.FANC_FinanceExtension",
                 c => new
                     {
                         Id = c.Guid(nullable: false, identity: true),
-                        LoanPrincipal = c.String(),
-                        CreditAccountId = c.String(),
+                        LoanPrincipal = c.String(maxLength: 20),
+                        CreditAccountName = c.String(maxLength: 20),
                         CreditBankName = c.String(maxLength: 40),
                         CreditBankCard = c.String(maxLength: 40),
                         ContactJson = c.String(maxLength: 800),
+                        CustomerAccountName = c.String(maxLength: 40),
+                        CustomerBankName = c.String(maxLength: 40),
+                        CustomerBankCard = c.String(maxLength: 40),
                         FinanceId = c.Guid(),
                     })
                 .PrimaryKey(t => t.Id)
@@ -103,6 +190,7 @@ namespace Data.Migrations
                     {
                         Id = c.Guid(nullable: false, identity: true),
                         MakeCode = c.String(nullable: false, maxLength: 50),
+                        VehicleCondition = c.Int(nullable: false),
                         FamilyCode = c.String(nullable: false, maxLength: 50),
                         VehicleKey = c.String(nullable: false, maxLength: 20),
                         ManufacturerGuidePrice = c.Decimal(nullable: false, precision: 18, scale: 2),
@@ -111,104 +199,55 @@ namespace Data.Migrations
                         PlateNo = c.String(maxLength: 50),
                         FrameNo = c.String(maxLength: 50),
                         EngineNo = c.String(maxLength: 50),
-                        RegisterDate = c.DateTime(),
+                        RegisterDate = c.String(),
                         RunningMiles = c.Int(),
-                        FactoryDate = c.DateTime(),
+                        FactoryDate = c.String(),
                         BuyCarYears = c.Int(),
                         Color = c.String(maxLength: 50),
+                        Condition = c.Byte(nullable: false),
+                        BusinessType = c.Byte(nullable: false),
                         FinanceId = c.Guid(),
                     })
                 .PrimaryKey(t => t.Id)
                 .ForeignKey("dbo.FANC_Finance", t => t.FinanceId, cascadeDelete: true)
                 .Index(t => t.FinanceId);
-            
-            AddColumn("dbo.FANC_Finance", "RepaymentScheme", c => c.Byte(nullable: false));
-            AddColumn("dbo.FANC_Finance", "OnePayInterest", c => c.Decimal(precision: 18, scale: 2));
-            AddColumn("dbo.FANC_Finance", "IntentionPrincipal", c => c.Decimal(precision: 18, scale: 2));
-            AddColumn("dbo.FANC_Finance", "OncePayMonths", c => c.Int());
-            AddColumn("dbo.FANC_Finance", "AdviceMoney", c => c.Decimal(precision: 18, scale: 2));
-            AddColumn("dbo.FANC_Finance", "AdviceRatio", c => c.Decimal(precision: 18, scale: 2));
-            AddColumn("dbo.FANC_Finance", "ApprovalMoney", c => c.Decimal(precision: 18, scale: 2));
-            AddColumn("dbo.FANC_Finance", "ApprovalRatio", c => c.Decimal(precision: 18, scale: 2));
-            AddColumn("dbo.FANC_Finance", "Payment", c => c.Decimal(precision: 18, scale: 2));
-            AddColumn("dbo.FANC_Finance", "RepayDate", c => c.DateTime());
-            AddColumn("dbo.FANC_Finance", "RepayRentDate", c => c.DateTime());
-            AlterColumn("dbo.FANC_Finance", "Principal", c => c.Decimal(precision: 18, scale: 2));
-            AlterColumn("dbo.FANC_Finance", "InterestRate", c => c.Double());
-            AlterColumn("dbo.FANC_Finance", "Periods", c => c.Int());
-            AlterColumn("dbo.FANC_Finance", "RepaymentInterval", c => c.Int());
-            AlterColumn("dbo.FANC_Finance", "RepaymentDate", c => c.Int());
-            AlterColumn("dbo.FANC_Finance", "Bail", c => c.Decimal(precision: 18, scale: 2));
-            AlterColumn("dbo.FANC_Finance", "Cost", c => c.Decimal(precision: 18, scale: 2));
-            AlterColumn("dbo.FANC_Finance", "DateEffective", c => c.DateTime());
-            AlterColumn("dbo.FANC_Finance", "ProduceId", c => c.Guid(nullable: false));
-            AlterColumn("dbo.FANC_CreditExamine", "TrialPersonId", c => c.String(maxLength: 128));
-            AlterColumn("dbo.FANC_CreditExamine", "ReviewPersonId", c => c.String(maxLength: 128));
-            AlterColumn("dbo.FANC_CreditExamine", "ApprovePersonId", c => c.String(maxLength: 128));
-            AlterColumn("dbo.FANC_CreditExamine", "FinalPersonId", c => c.String(maxLength: 128));
-            CreateIndex("dbo.FANC_Finance", "ProduceId");
-            CreateIndex("dbo.FANC_CreditExamine", "ApprovePersonId");
-            CreateIndex("dbo.FANC_CreditExamine", "FinalPersonId");
-            CreateIndex("dbo.FANC_CreditExamine", "ReviewPersonId");
-            CreateIndex("dbo.FANC_CreditExamine", "TrialPersonId");
-            AddForeignKey("dbo.FANC_CreditExamine", "ApprovePersonId", "dbo.AspNetUsers", "Id");
-            AddForeignKey("dbo.FANC_CreditExamine", "FinalPersonId", "dbo.AspNetUsers", "Id");
-            AddForeignKey("dbo.FANC_CreditExamine", "ReviewPersonId", "dbo.AspNetUsers", "Id");
-            AddForeignKey("dbo.FANC_CreditExamine", "TrialPersonId", "dbo.AspNetUsers", "Id");
         }
         
         public override void Down()
         {
             DropForeignKey("dbo.FANC_Vehicle", "FinanceId", "dbo.FANC_Finance");
+            DropForeignKey("dbo.FANC_Finance", "ProduceId", "dbo.PROD_Produce");
             DropForeignKey("dbo.FANC_FinanceProduce", "FinanceId", "dbo.FANC_Finance");
             DropForeignKey("dbo.FANC_FinanceExtension", "FinanceId", "dbo.FANC_Finance");
+            DropForeignKey("dbo.FANC_CreditExamine", "FinanceId", "dbo.FANC_Finance");
             DropForeignKey("dbo.FANC_CreditExamine", "TrialPersonId", "dbo.AspNetUsers");
             DropForeignKey("dbo.FANC_CreditExamine", "ReviewPersonId", "dbo.AspNetUsers");
             DropForeignKey("dbo.FANC_CreditExamine", "FinalPersonId", "dbo.AspNetUsers");
             DropForeignKey("dbo.FANC_CreditExamine", "ApprovePersonId", "dbo.AspNetUsers");
+            DropForeignKey("dbo.FANC_Finance", "CreateOf_Id", "dbo.CRET_Partner");
+            DropForeignKey("dbo.FANC_Finance", "CreateBy_Id", "dbo.AspNetUsers");
             DropForeignKey("dbo.FANC_Contact", "FinanceId", "dbo.FANC_Finance");
             DropForeignKey("dbo.FANC_Applicant", "FinanceId", "dbo.FANC_Finance");
             DropIndex("dbo.FANC_Vehicle", new[] { "FinanceId" });
             DropIndex("dbo.FANC_FinanceProduce", new[] { "FinanceId" });
             DropIndex("dbo.FANC_FinanceExtension", new[] { "FinanceId" });
+            DropIndex("dbo.FANC_CreditExamine", new[] { "FinanceId" });
             DropIndex("dbo.FANC_CreditExamine", new[] { "TrialPersonId" });
             DropIndex("dbo.FANC_CreditExamine", new[] { "ReviewPersonId" });
             DropIndex("dbo.FANC_CreditExamine", new[] { "FinalPersonId" });
             DropIndex("dbo.FANC_CreditExamine", new[] { "ApprovePersonId" });
             DropIndex("dbo.FANC_Contact", new[] { "FinanceId" });
             DropIndex("dbo.FANC_Applicant", new[] { "FinanceId" });
+            DropIndex("dbo.FANC_Finance", new[] { "CreateOf_Id" });
+            DropIndex("dbo.FANC_Finance", new[] { "CreateBy_Id" });
             DropIndex("dbo.FANC_Finance", new[] { "ProduceId" });
-            AlterColumn("dbo.FANC_CreditExamine", "FinalPersonId", c => c.Guid(nullable: false));
-            AlterColumn("dbo.FANC_CreditExamine", "ApprovePersonId", c => c.Guid(nullable: false));
-            AlterColumn("dbo.FANC_CreditExamine", "ReviewPersonId", c => c.Guid(nullable: false));
-            AlterColumn("dbo.FANC_CreditExamine", "TrialPersonId", c => c.Guid(nullable: false));
-            AlterColumn("dbo.FANC_Finance", "ProduceId", c => c.Guid());
-            AlterColumn("dbo.FANC_Finance", "DateEffective", c => c.DateTime(nullable: false));
-            AlterColumn("dbo.FANC_Finance", "Cost", c => c.Decimal(nullable: false, precision: 18, scale: 2));
-            AlterColumn("dbo.FANC_Finance", "Bail", c => c.Decimal(nullable: false, precision: 18, scale: 2));
-            AlterColumn("dbo.FANC_Finance", "RepaymentDate", c => c.Int(nullable: false));
-            AlterColumn("dbo.FANC_Finance", "RepaymentInterval", c => c.Int(nullable: false));
-            AlterColumn("dbo.FANC_Finance", "Periods", c => c.Int(nullable: false));
-            AlterColumn("dbo.FANC_Finance", "InterestRate", c => c.Double(nullable: false));
-            AlterColumn("dbo.FANC_Finance", "Principal", c => c.Decimal(nullable: false, precision: 18, scale: 2));
-            DropColumn("dbo.FANC_Finance", "RepayRentDate");
-            DropColumn("dbo.FANC_Finance", "RepayDate");
-            DropColumn("dbo.FANC_Finance", "Payment");
-            DropColumn("dbo.FANC_Finance", "ApprovalRatio");
-            DropColumn("dbo.FANC_Finance", "ApprovalMoney");
-            DropColumn("dbo.FANC_Finance", "AdviceRatio");
-            DropColumn("dbo.FANC_Finance", "AdviceMoney");
-            DropColumn("dbo.FANC_Finance", "OncePayMonths");
-            DropColumn("dbo.FANC_Finance", "IntentionPrincipal");
-            DropColumn("dbo.FANC_Finance", "OnePayInterest");
-            DropColumn("dbo.FANC_Finance", "RepaymentScheme");
             DropTable("dbo.FANC_Vehicle");
             DropTable("dbo.FANC_FinanceProduce");
             DropTable("dbo.FANC_FinanceExtension");
+            DropTable("dbo.FANC_CreditExamine");
             DropTable("dbo.FANC_Contact");
             DropTable("dbo.FANC_Applicant");
-            RenameColumn(table: "dbo.FANC_Finance", name: "ProduceId", newName: "Produce_Id");
-            CreateIndex("dbo.FANC_Finance", "Produce_Id");
+            DropTable("dbo.FANC_Finance");
         }
     }
 }

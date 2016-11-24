@@ -1,9 +1,8 @@
 namespace Data.Migrations
 {
-    using System;
     using System.Data.Entity.Migrations;
     
-    public partial class Workflow : DbMigration
+    public partial class ProcessModel : DbMigration
     {
         public override void Up()
         {
@@ -94,7 +93,7 @@ namespace Data.Migrations
                 c => new
                     {
                         Id = c.Guid(nullable: false, identity: true),
-                        InstanceId = c.Guid(nullable: false),
+                        InstanceId = c.Guid(),
                         NodeId = c.Guid(nullable: false),
                         ActionId = c.Guid(nullable: false),
                         ProcessUserId = c.String(nullable: false, maxLength: 128),

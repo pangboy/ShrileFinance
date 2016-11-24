@@ -1,9 +1,8 @@
 namespace Data.Migrations
 {
-    using System;
     using System.Data.Entity.Migrations;
     
-    public partial class Identity : DbMigration
+    public partial class IdentityModel : DbMigration
     {
         public override void Up()
         {
@@ -13,6 +12,8 @@ namespace Data.Migrations
                     {
                         Id = c.String(nullable: false, maxLength: 128),
                         Name = c.String(nullable: false, maxLength: 256),
+                        Power = c.Int(),
+                        Discriminator = c.String(nullable: false, maxLength: 128),
                     })
                 .PrimaryKey(t => t.Id)
                 .Index(t => t.Name, unique: true, name: "RoleNameIndex");

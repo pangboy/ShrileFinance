@@ -7,13 +7,13 @@ namespace Data.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.3-40302")]
-    public sealed partial class AspNetRole : IMigrationMetadata
+    public sealed partial class ProcessModel : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(AspNetRole));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(ProcessModel));
         
         string IMigrationMetadata.Id
         {
-            get { return "201611110645384_AspNetRole"; }
+            get { return "201611240247116_ProcessModel"; }
         }
         
         string IMigrationMetadata.Source

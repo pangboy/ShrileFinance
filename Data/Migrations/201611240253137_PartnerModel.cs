@@ -1,6 +1,5 @@
 namespace Data.Migrations
 {
-    using System;
     using System.Data.Entity.Migrations;
     
     public partial class PartnerModel : DbMigration
@@ -25,6 +24,20 @@ namespace Data.Migrations
                         Remarks = c.String(maxLength: 200),
                     })
                 .PrimaryKey(t => t.Id);
+            
+            CreateTable(
+                "dbo.SYS_Draft",
+                c => new
+                    {
+                        Id = c.Guid(nullable: false, identity: true),
+                        UserId = c.String(nullable: false, maxLength: 128),
+                        PageLink = c.String(maxLength: 400),
+                        PageData = c.String(),
+                        DateCreated = c.DateTime(nullable: false),
+                    })
+                .PrimaryKey(t => t.Id)
+                .ForeignKey("dbo.AspNetUsers", t => t.UserId, cascadeDelete: true)
+                .Index(t => t.UserId);
             
             CreateTable(
                 "dbo.CRET_PartnerAccount",
@@ -68,6 +81,7 @@ namespace Data.Migrations
         
         public override void Down()
         {
+            DropForeignKey("dbo.SYS_Draft", "UserId", "dbo.AspNetUsers");
             DropForeignKey("dbo.CRET_PartnerProduce", "ProduceId", "dbo.PROD_Produce");
             DropForeignKey("dbo.CRET_PartnerProduce", "PartnerId", "dbo.CRET_Partner");
             DropForeignKey("dbo.CRET_PartnerApprover", "ApproverId", "dbo.AspNetUsers");
@@ -80,9 +94,11 @@ namespace Data.Migrations
             DropIndex("dbo.CRET_PartnerApprover", new[] { "PartnerId" });
             DropIndex("dbo.CRET_PartnerAccount", new[] { "AccountId" });
             DropIndex("dbo.CRET_PartnerAccount", new[] { "PartnerId" });
+            DropIndex("dbo.SYS_Draft", new[] { "UserId" });
             DropTable("dbo.CRET_PartnerProduce");
             DropTable("dbo.CRET_PartnerApprover");
             DropTable("dbo.CRET_PartnerAccount");
+            DropTable("dbo.SYS_Draft");
             DropTable("dbo.CRET_Partner");
         }
     }

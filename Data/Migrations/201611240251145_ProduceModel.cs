@@ -1,9 +1,8 @@
 namespace Data.Migrations
 {
-    using System;
     using System.Data.Entity.Migrations;
     
-    public partial class AddProduceModule : DbMigration
+    public partial class ProduceModel : DbMigration
     {
         public override void Up()
         {
