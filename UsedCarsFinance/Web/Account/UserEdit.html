@@ -122,12 +122,15 @@
 
 				<div>
 					<label>角色:</label>
-					<select name="Role" class="easyui-combobox" data-options="
-						method: 'GET',
-						url:'../api/Role/GetAll',
-						required:true,
-						editable:false
-					"></select>
+					<select name="Role" class="easyui-combobox" data-options="required:true,editable:false">
+                        <option value="管理员">管理员</option>
+                        <option value="初审员">初审员</option>
+                        <option value="复审员">复审员</option>
+                        <option value="运营初审">运营初审</option>
+                        <option value="运营复审">运营复审</option>
+                        <option value="财务">财务</option>
+                        <option value="总经理">总经理</option>
+                    </select>
 				</div>
 			</div>
 

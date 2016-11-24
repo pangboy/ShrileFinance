@@ -52,7 +52,7 @@
                 new AppRole { Id = "BC42BEE1-05A4-E611-80C5-507B9DE4A488", Name = "管理员", Power = 2 },
                 new AppRole { Id = "BD42BEE1-05A4-E611-80C5-507B9DE4A488", Name = "初审员", Power = 3 },
                 new AppRole { Id = "BE42BEE1-05A4-E611-80C5-507B9DE4A488", Name = "复审员", Power = 3 },
-                new AppRole { Id = "BF42BEE1-05A4-E611-80C5-507B9DE4A488", Name = "运营", Power = 3 },
+                new AppRole { Id = "BF42BEE1-05A4-E611-80C5-507B9DE4A488", Name = "运营初审", Power = 3 },
                 new AppRole { Id = "C042BEE1-05A4-E611-80C5-507B9DE4A488", Name = "运营复审", Power = 3 },
                 new AppRole { Id = "C142BEE1-05A4-E611-80C5-507B9DE4A488", Name = "财务", Power = 3 },
                 new AppRole { Id = "C242BEE1-05A4-E611-80C5-507B9DE4A488", Name = "总经理", Power = 2 },
@@ -66,8 +66,8 @@
                     UserName = "sysadmin",
                     Name = "系统管理员",
                     Email = "sysadmin@shrile.com",
-                    PasswordHash = "ACIJtS4jqQUARKbBSMOwza0fOQmx9WTAi1C3Y4K9cP7/nXzu5sfLCvNgppBKGHvgcQ==",
-                    SecurityStamp = "9312a299-ca53-43ee-9d03-b01dcd9cd2fe"
+                    PasswordHash = "AD/EZNhYovRqhYvh/wAyAwYt2YaBMJCZkRRHXrmycouws7v2CbYu/ik0HOWwL4Pe9Q==",
+                    SecurityStamp = "f7ed34ab-484b-4660-aa15-58d8384ef6fb"
                 },
                 new AppUser {
                     Id = "0175D0E3-53A6-E611-80C5-507B9DE4A488",
@@ -83,8 +83,8 @@
                     UserName = "admin",
                     Name = "管理员",
                     Email = "admin@shrile.com",
-                    PasswordHash = "ACIJtS4jqQUARKbBSMOwza0fOQmx9WTAi1C3Y4K9cP7/nXzu5sfLCvNgppBKGHvgcQ==",
-                    SecurityStamp = "9312a299-ca53-43ee-9d03-b01dcd9cd2fe"
+                    PasswordHash = "ABGSBqolk/br5dLd1Lb4XHrzh5WaZ3/f8EIns+n5dm0tUEbfbHU2n1shAMIi+cAOdA==",
+                    SecurityStamp = "527428b7-c5af-40f1-95b8-f2383c606057"
                 });
 
             context.Set<IdentityUserRole>().AddOrUpdate(
