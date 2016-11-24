@@ -71,10 +71,10 @@
             // 创建信审
             financeAppService.EditCreditExamine(financeCreditExmine);
 
-            repository.Commit();
-
             // 修改信审审核人
             financeAppService.SetApprover(financeAudit.FinanceId);
+
+            repository.Commit();
 
             // 如果执行失败则抛出异常, 或用返回值表示结果.
             if (false)
@@ -96,6 +96,8 @@
 
             // 修改信审审核人
             financeAppService.SetApprover(financeAudit.FinanceId);
+
+            repository.Commit();
 
             // 如果执行失败则抛出异常, 或用返回值表示结果.
             if (false)

@@ -370,9 +370,6 @@
             finance.CreditExamine.Margin = value.Margin1 + "-" + value.Margin2;
 
             repository.Modify(finance);
-
-            // 执行修改
-            repository.Commit();
         }
 
         /// <summary>
@@ -399,6 +396,8 @@
                 default:
                     break;
             }
+
+            repository.Modify(finance);
         }
 
         /// <summary>
@@ -475,9 +474,6 @@
             }
 
             repository.Modify(finance);
-
-            // 执行修改
-            // repository.Commit();
         }
 
         /// <summary>
