@@ -1,5 +1,6 @@
 namespace Data.Migrations
 {
+    using System;
     using System.Data.Entity.Migrations;
     
     public partial class FinanceModel : DbMigration
@@ -122,7 +123,6 @@ namespace Data.Migrations
                         IncreaseMarginReson = c.String(maxLength: 400),
                         AgeRange = c.String(maxLength: 20),
                         AgeRangeOther = c.String(maxLength: 20),
-                        MarriageState = c.String(maxLength: 20),
                         Live = c.String(maxLength: 20),
                         RealEstate = c.String(maxLength: 20),
                         Work = c.String(maxLength: 20),
@@ -211,6 +211,7 @@ namespace Data.Migrations
                 .PrimaryKey(t => t.Id)
                 .ForeignKey("dbo.FANC_Finance", t => t.FinanceId, cascadeDelete: true)
                 .Index(t => t.FinanceId);
+            
         }
         
         public override void Down()

@@ -77,7 +77,8 @@
 
                 new UpdateBind().Bind(finance.FinanceProduce, model.FinanceProduce);
                 new UpdateBind().Bind(finance.Applicant, model.Applicant);
-
+                finance.CreateBy = userManager.CurrentUser();
+                finance.CreateOf = partnerRepository.GetByUser(userManager.CurrentUser());
                 repository.Modify(finance);
                 repository.Commit();
             }
@@ -284,6 +285,9 @@
 
             // 融资标识
             creditExamineReportViewModel.FinanceId = finance.Id;
+
+            // 婚姻状况
+            creditExamineReportViewModel.MarriageState = finance.Applicant.ToList().Find(m => m.Type == Applicant.TypeEnum.主要申请人).MaritalStatus;
 
             // 保证金
             if (!string.IsNullOrEmpty(finance.CreditExamine.Margin))

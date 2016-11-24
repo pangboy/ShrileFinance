@@ -108,11 +108,6 @@
         public string AgeRangeOther { get; set; }
 
         /// <summary>
-        /// 婚姻
-        /// </summary>
-        public string MarriageState { get; set; }
-
-        /// <summary>
         /// 居住
         /// </summary>
         public string Live { get; set; }

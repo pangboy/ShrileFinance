@@ -239,7 +239,7 @@
                 <div class="row">
                     <div class="col-6">
                         <label>共借人姓名:</label>
-                        <input name="CommonBorrwerName1" class="easyui-textbox" data-options="validType:['ANC','length[1,20]'],required:false,readonly:true" />
+                        <input name="CommonBorrwerName" class="easyui-textbox" data-options="validType:['ANC','length[1,20]'],required:false,readonly:true" />
                     </div>
                 </div>
             </fieldset>
@@ -605,11 +605,11 @@
                 <legend> 十三、婚姻：</legend>
                 <div class="row">
                     <div class="col-12">
-                        <input name="MarriageState" class="" type="radio" value="0" /><span onclick="$(this).prev().click()">已婚</span>
+                        <input name="MarriageState" class="" type="radio" value="0" disabled /><span>已婚</span>
                         <span style="margin-left:40px;"></span>
-                        <input name="MarriageState" class="" type="radio" value="1" /><span onclick="$(this).prev().click()">离异</span>
+                        <input name="MarriageState" class="" type="radio" value="1" disabled /><span>离异</span>
                         <span style="margin-left:40px;"></span>
-                        <input name="MarriageState" class="" type="radio" value="2" checked /><span onclick="$(this).prev().click()">单身</span>
+                        <input name="MarriageState" class="" type="radio" value="2" disabled checked/><span>单身</span>
                     </div>
                 </div>
             </fieldset>

@@ -4,7 +4,7 @@
 
     public class VehicleViewModel
     {
-        public Guid Id { get; set; }
+        public Guid? Id { get; set; }
 
         /// <summary>
         /// 品牌
