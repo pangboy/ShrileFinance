@@ -635,7 +635,7 @@
         /// <returns></returns>
         private ICollection<FinanceProduce> EditFinanceAuidts(ICollection<FinanceProduce> financingItems, ICollection<KeyValuePair<Guid, KeyValuePair<string, decimal?>>> financingItemCollection)
         {
-            var financingItemList = financingItems.ToList().FindAll(m => m.IsFinancing);
+            var financingItemList = financingItems.ToList();//.FindAll(m => m.IsFinancing);
 
             // 更新融资项各金额
             financingItemList.ForEach(financingItem =>
