@@ -90,7 +90,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DraftAppService.cs" />
-    <Compile Include="FinanceAppService.cs" />
+    <Compile Include="FinanceAppService.cs">
+      <ExcludeFromStyleCop>False</ExcludeFromStyleCop>
+    </Compile>
     <Compile Include="FinanceScriptService.cs" />
     <Compile Include="FinancingProjectAppService.cs" />
     <Compile Include="Mappings\PagedListTypeConverter.cs" />
