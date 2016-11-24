@@ -10,7 +10,7 @@
     <script src="../Scripts/easyui/locale/easyui-lang-zh_CN.js"></script>
     <script src="../Scripts/usedcars.js"></script>
     <script>
-       // var query = $.extend(uc.GetParams(), parent.flow.InstanceData);
+        //var query = $.extend(uc.GetParams(), parent.flow.InstanceData);
 
        $(function () {
             SelectContrantType();
@@ -20,31 +20,37 @@
             $.ajax({
                 async: true,
                 method: "GET",
-                data: { id: 'C49ADB8F-E5AF-E611-80C7-507B9DE4A488' },
-                url: '../api/FinanceAuidt/GetContract',
+                data: { contractId: $("#ContrantType").combobox("getValue") },
+                url: '../api/FinanceAuidt/GetContractById',
                 statusCode: {
                     200: function (data) {
                         if (data) {
-                            var filepath = data[0].Path;
-                            var fp = filepath+data[0].Number+".pdf";//截取出 ~ 以后的字符串
-                            var path =fp;
-                            $("#iframe").attr("src", path);
+                            var fp = ".." + data.Path.substring(1, data.Path.length) + data.Number + ".pdf";//截取出 ~ 以后的字符串
+                            $("#iframe").attr("src", fp);
                         }
                     }
                 }
             });
-        }
+       }
+     
        function SelectContrantType() {
            $('#ContrantType').combobox({
                method: "GET",
-               onBeforeLoad: function (param) { param.id = 'C49ADB8F-E5AF-E611-80C7-507B9DE4A488' },
+               onBeforeLoad: function (param) { param.id = parent.flow.RootKey },
                url: '../api/FinanceAuidt/GetContract',
                valueField: 'Id',
                textField: 'Name'
            });
        }
+        // 用于测试是否打印
+       function ValidData() {
+           return true;
+       }
 
-      
+
+       function BuildData() {
+           return undefined;
+       }
     </script>
 </head>
 <body>

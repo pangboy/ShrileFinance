@@ -96,13 +96,16 @@
             return Ok(finance);
         }
 
+        public IHttpActionResult GetContractById(Guid contractId)
+        {
+            var contract = financeAppService.GetContract(contractId);
+
+            return Ok(contract);
+        }
         public IHttpActionResult GetContract(Guid id)
         {
             var finance = financeAppService.Get(id);
-            foreach (var item in finance.Contact)
-            {
-                item.Path = HttpContext.Current.Server.MapPath(item.Path);
-            }
+           
             return Ok(finance.Contact);
         }
 

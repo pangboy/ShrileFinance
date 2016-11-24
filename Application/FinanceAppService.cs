@@ -72,15 +72,16 @@
             try
             {
                 var finance = repository.Get(model.Id.Value);
+
                 Mapper.Map(model, finance);
 
                 new UpdateBind().Bind(finance.FinanceProduce, model.FinanceProduce);
                 new UpdateBind().Bind(finance.Applicant, model.Applicant);
-                finance.Produce = null;
+
                 repository.Modify(finance);
                 repository.Commit();
             }
-            catch (Exception ex)
+            catch
             {
                 throw new Core.Exceptions.InvalidOperationAppException("修改失败.");
             }
@@ -685,6 +686,11 @@
             });
 
             return outObj;
+        }
+
+        public Contract GetContract(Guid ContractId)
+        {
+            return contractRepository.Get(ContractId);
         }
     }
 }
