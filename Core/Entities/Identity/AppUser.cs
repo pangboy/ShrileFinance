@@ -9,7 +9,7 @@
     /// </summary>
     public class AppUser : IdentityUser
     {
-        public const string DEFAULTPASSWORD = "123456";
+        public const string DEFAULTPASSWORD = "s666666";
 
         public AppUser()
         {
