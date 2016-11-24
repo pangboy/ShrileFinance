@@ -37,22 +37,15 @@
 
         public void Create(FinanceApplyViewModel value)
         {
-            try
-            {
-                var finance = Mapper.Map<Finance>(value);
-                finance.FinanceProduce = Mapper.Map<ICollection<FinanceProduce>>(value.FinanceProduce);
-                finance.Applicant = Mapper.Map<ICollection<Applicant>>(value.Applicant);
-                finance.CreateBy = userManager.CurrentUser();
-                finance.CreateOf = partnerRepository.GetByUser(userManager.CurrentUser());
-                finance.Produce = null;
-                repository.Create(finance);
-                repository.Commit();
-                value.Id = finance.Id;
-            }
-            catch
-            {
-                throw new Core.Exceptions.InvalidOperationAppException("保存失败.");
-            }
+            var finance = Mapper.Map<Finance>(value);
+            finance.FinanceProduce = Mapper.Map<ICollection<FinanceProduce>>(value.FinanceProduce);
+            finance.Applicant = Mapper.Map<ICollection<Applicant>>(value.Applicant);
+            finance.CreateBy = userManager.CurrentUser();
+            finance.CreateOf = partnerRepository.GetByUser(userManager.CurrentUser());
+            finance.Produce = null;
+            repository.Create(finance);
+            repository.Commit();
+            value.Id = finance.Id;
         }
 
         public PartnerAndUser GetPartnerAndUser()
@@ -69,23 +62,16 @@
 
         public void Modify(FinanceApplyViewModel model)
         {
-            try
-            {
-                var finance = repository.Get(model.Id.Value);
+            var finance = repository.Get(model.Id.Value);
 
-                Mapper.Map(model, finance);
+            Mapper.Map(model, finance);
 
-                new UpdateBind().Bind(finance.FinanceProduce, model.FinanceProduce);
-                new UpdateBind().Bind(finance.Applicant, model.Applicant);
-                finance.CreateBy = userManager.CurrentUser();
-                finance.CreateOf = partnerRepository.GetByUser(userManager.CurrentUser());
-                repository.Modify(finance);
-                repository.Commit();
-            }
-            catch
-            {
-                throw new Core.Exceptions.InvalidOperationAppException("修改失败.");
-            }
+            new UpdateBind().Bind(finance.FinanceProduce, model.FinanceProduce);
+            new UpdateBind().Bind(finance.Applicant, model.Applicant);
+            finance.CreateBy = userManager.CurrentUser();
+            finance.CreateOf = partnerRepository.GetByUser(userManager.CurrentUser());
+            repository.Modify(finance);
+            repository.Commit();
         }
 
         public Contract GetContract(Guid contractId)
@@ -601,8 +587,8 @@
 
             repository.Modify(finance);
 
-            ////// 执行修改
-            ////repository.Commit();
+            // 执行修改
+            repository.Commit();
         }
 
         /// <summary>

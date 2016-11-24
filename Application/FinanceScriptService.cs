@@ -132,18 +132,19 @@
             // 获取数据
             var finance = GetData<OperationViewModel>("5ADC5FCF-18A4-E611-80C5-507B9DE4A488");
 
-            // 执行合同的生成
-            string path = @"~\upload\PDF\";
-            financeAppService.CreateLeaseInfoPdf(finance.FinanceId, path);
-
             // 如果执行失败则抛出异常, 或用返回值表示结果.
             if (false)
             {
                 throw new Core.Exceptions.InvalidOperationAppException("保存失败.");
+
             }
 
             // 创建或修改
             financeAppService.EditOperation(finance);
+
+            // 执行合同的生成
+            string path = @"~\upload\PDF\";
+            financeAppService.CreateLeaseInfoPdf(finance.FinanceId, path);
         }
 
         /// <summary>
