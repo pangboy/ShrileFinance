@@ -203,6 +203,7 @@
     <Content Include="Flow\FlowTest\Test2.html" />
     <Content Include="Flow\FlowTest\Test3.html" />
     <Content Include="Finance\images\minus.png" />
+    <Content Include="Flow\Frame.html" />
     <Content Include="Notice\NoticeList.html" />
     <Content Include="Scripts\dictionaryCode.js" />
     <Content Include="BankInfo\DictionaryCode\DictionaryCodeEdit.html" />
@@ -852,7 +853,6 @@
     <Content Include="System\DictionaryTypeList.html" />
     <Content Include="Flow\DoneList.html" />
     <Content Include="Flow\DoingList.html" />
-    <Content Include="Flow\Frame.html" />
     <Content Include="Global.asax" />
     <Content Include="index.html" />
     <Content Include="login.html" />
