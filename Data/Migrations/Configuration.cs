@@ -52,7 +52,7 @@
                 new AppRole { Id = "BC42BEE1-05A4-E611-80C5-507B9DE4A488", Name = "管理员", Power = 2 },
                 new AppRole { Id = "BD42BEE1-05A4-E611-80C5-507B9DE4A488", Name = "初审员", Power = 3 },
                 new AppRole { Id = "BE42BEE1-05A4-E611-80C5-507B9DE4A488", Name = "复审员", Power = 3 },
-                new AppRole { Id = "BF42BEE1-05A4-E611-80C5-507B9DE4A488", Name = "运营", Power = 3 },
+                new AppRole { Id = "BF42BEE1-05A4-E611-80C5-507B9DE4A488", Name = "运营初审", Power = 3 },
                 new AppRole { Id = "C042BEE1-05A4-E611-80C5-507B9DE4A488", Name = "运营复审", Power = 3 },
                 new AppRole { Id = "C142BEE1-05A4-E611-80C5-507B9DE4A488", Name = "财务", Power = 3 },
                 new AppRole { Id = "C242BEE1-05A4-E611-80C5-507B9DE4A488", Name = "总经理", Power = 2 },
