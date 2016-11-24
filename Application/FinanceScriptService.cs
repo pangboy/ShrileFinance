@@ -151,11 +151,10 @@
         /// </summary>
         public void FinalApproval()
         {
-           // // 获取融资数据
-           // //var finance = GetData<FinanceAuidtViewModel>("58DC5FCF-18A4-E611-80C5-507B9DE4A488");
+            // 修改信审审核人
+            financeAppService.SetApprover(Instance.RootKey.Value);
 
-           // // 修改信审审核人
-           //// financeAppService.SetApprover(finance.FinanceId);
+            repository.Commit();
         }
 
         private T GetData<T>(string formId) where T : class, new()

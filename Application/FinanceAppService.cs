@@ -631,16 +631,25 @@
         /// <returns></returns>
         private ICollection<FinanceProduce> EditFinanceAuidts(ICollection<FinanceProduce> financingItems, ICollection<KeyValuePair<Guid, KeyValuePair<string, decimal?>>> financingItemCollection)
         {
+            var dictionary = new Dictionary<Guid, decimal>();
+            financingItemCollection.ToList().ForEach(item =>
+            {
+                if (item.Value.Value != null)
+                {
+                    dictionary.Add(item.Key, item.Value.Value.Value);
+                }
+            });
+
             var financingItemList = financingItems.ToList();
 
             // 更新融资项各金额
             financingItemList.ForEach(financingItem =>
             {
-                // 获取融资项标识
-                var key = financingItem.Id;
-
-                // 更新指定融资项对应的金额
-                financingItem.Money = financingItemCollection.SingleOrDefault(m => m.Key.Equals(key)).Value.Value.Value;
+                if (dictionary.Keys.Contains(financingItem.Id))
+                {
+                    // 更新指定融资项对应的金额
+                    financingItem.Money = dictionary[financingItem.Id];
+                }
             });
 
             return financingItemList;
