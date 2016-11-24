@@ -14,7 +14,7 @@
     public class ImageUpload
     {
         private static readonly DAL.Finance.ImageUploadMapper Imageupload = new DAL.Finance.ImageUploadMapper();
-        private static readonly BLL.Sys.Reference Reference = new Sys.Reference();
+        private static readonly Sys.Reference Reference = new Sys.Reference();
 
         /// <summary>
         /// 获取引用数据
@@ -63,13 +63,20 @@
         }
 
         /// <summary>
-        /// 删除文件
+        /// 删除文件和相关引用
         /// </summary>
         /// cais    16.04.08
         /// <param name="referenceId">文件引用id</param>
-        public void Delete(int referenceId)
+        public void Delete(List<int> referenceIds)
         {
-            Imageupload.Delete(referenceId);
+            referenceIds.ForEach(item=> {
+                if (item > 0)
+                {
+                    Imageupload.Delete(item);
+
+                    Reference.Delete(item);
+                }
+            });
         }
 
         /// <summary>

@@ -1,49 +1,52 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.IO;
-using System.Net;
-using System.Net.Http;
-using System.Text;
-using System.Web;
-using Infrastructure.PDF;
-using PDFPrint;
-
-namespace Data.PDF
+﻿namespace Data.PDF
 {
+    using System.Collections.Generic;
+    using System.Data;
+    using System.IO;
+    using System.Text;
+    using Infrastructure.PDF;
+    using PDFPrint;
+
     public class CreatePdf
     {
-        Microsoft.Office.Interop.Word.Application app = null;
-        Microsoft.Office.Interop.Word.Document doc = null;
-        Microsoft.Office.Interop.Word.WdExportFormat wdPdf = Microsoft.Office.Interop.Word.WdExportFormat.wdExportFormatPDF;
-        object missing = System.Reflection.Missing.Value;
+        private Microsoft.Office.Interop.Word.Application app = null;
+        private Microsoft.Office.Interop.Word.Document doc = null;
+        private Microsoft.Office.Interop.Word.WdExportFormat wordPdf = Microsoft.Office.Interop.Word.WdExportFormat.wdExportFormatPDF;
+        private object missing = System.Reflection.Missing.Value;
 
         /// <summary>
         /// 远程转Pdf,并返回pdf保存路径
         /// </summary>
-        /// <param name="oldPath">word模板路径</param>
         /// <param name="newPath">新的pdf路径</param>
         /// <param name="fileName">合同模板名</param>
         /// <param name="param">参数</param>
         /// <param name="targetPdfName">需要生成的pdf的名字</param>
+        /// <returns>路径</returns>
         public string TransformPdf(string newPath, string fileName, string param, string targetPdfName)
         {
             PathManager path = new PathManager();
-            object oldPath = path.GetTemplatePath() + fileName;//模板
-            object newPdfPath =path.GetPath(newPath) + targetPdfName + ".docx";//新生成的
-            WordHelper wdHelp = new WordHelper();
-            //判断该文件是否存在，存在就删除，否则同名文件生成会报错
+
+            // 模板
+            object oldPath = path.GetTemplatePath() + fileName;
+
+            // 新生成的
+            object newPdfPath = path.GetPath(newPath) + targetPdfName + ".docx";
+            WordHelper wordHelp = new WordHelper();
+
+            // 判断该文件是否存在，存在就删除，否则同名文件生成会报错
             if (File.Exists(newPdfPath.ToString()))
             {
                 File.Delete(newPdfPath.ToString());
             }
+
             File.Copy(oldPath.ToString(), newPdfPath.ToString());
-            //将要导出的新word文件名
+
+            // 将要导出的新word文件名
             string physicNewFile = path.GetPath(newPath) + targetPdfName + ".pdf";
 
             try
             {
-                //判断该文件是否存在，存在就删除，否则同名文件生成会报错
+                // 判断该文件是否存在，存在就删除，否则同名文件生成会报错
                 if (File.Exists(physicNewFile))
                 {
                     File.Delete(physicNewFile);
@@ -52,48 +55,44 @@ namespace Data.PDF
                 // 处理成字典类型的占位符和数据
                 var placeholder = BuildPlaceholder(param);
 
-                //创建word应用程序
+                // 创建word应用程序
                 app = new Microsoft.Office.Interop.Word.Application();
-                object oMissing = System.Reflection.Missing.Value;
+
+                object missing = System.Reflection.Missing.Value;
 
                 // 打开Word文档
-                doc = app.Documents.Open(ref newPdfPath,
-                ref oMissing, ref oMissing, ref oMissing, ref oMissing, ref oMissing,
-                ref oMissing, ref oMissing, ref oMissing, ref oMissing, ref oMissing,
-                ref oMissing, ref oMissing, ref oMissing, ref oMissing, ref oMissing);
+                doc = app.Documents.Open(ref newPdfPath, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing);
 
                 object replace = Microsoft.Office.Interop.Word.WdReplace.wdReplaceAll;
                 foreach (var item in placeholder)
                 {
                     app.Selection.Find.Replacement.ClearFormatting();
                     app.Selection.Find.ClearFormatting();
-                    app.Selection.Find.Text = item.Key;//需要被替换的文本
-                    app.Selection.Find.Replacement.Text = item.Value;//替换文本 
 
-                    //执行替换操作
-                    app.Selection.Find.Execute(
-                    ref oMissing, ref oMissing,
-                    ref oMissing, ref oMissing,
-                    ref oMissing, ref oMissing,
-                    ref oMissing, ref oMissing, ref oMissing,
-                    ref oMissing, ref replace,
-                    ref oMissing, ref oMissing,
-                    ref oMissing, ref oMissing);
+                    // 需要被替换的文本
+                    app.Selection.Find.Text = item.Key;
+
+                    // 替换文本 
+                    app.Selection.Find.Replacement.Text = item.Value;
+
+                    // 执行替换操作
+                    app.Selection.Find.Execute(ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, ref replace, ref missing, ref missing, ref missing, ref missing);
                 }
-                object objWdPdf = wdPdf;
-                //保存PDF文档
-                doc.SaveAs(physicNewFile,
-                objWdPdf, oMissing, oMissing, oMissing, oMissing, oMissing, oMissing, oMissing, oMissing,
-                oMissing, oMissing, oMissing, oMissing, oMissing, oMissing);
-                doc.Close(ref missing, ref missing, ref missing);
-                app.Quit(ref missing, ref missing, ref missing);
+
+                object objWdPdf = wordPdf;
+
+                // 保存PDF文档
+                doc.SaveAs(physicNewFile, objWdPdf, missing, missing, missing, missing, missing, missing, missing, missing, missing, missing, missing, missing, missing, missing);
+                doc.Close(ref this.missing, ref this.missing, ref this.missing);
+                app.Quit(ref this.missing, ref this.missing, ref this.missing);
                 File.Delete(newPdfPath.ToString());
             }
-            catch(Exception ex)
+            catch
             {
                 return null;
                 throw new Core.Exceptions.InvalidOperationAppException("合同生成失败.");
             }
+
             return physicNewFile;
         }
 
@@ -104,8 +103,9 @@ namespace Data.PDF
         /// <returns></returns>
         public Dictionary<string, string> BuildPlaceholder(string param)
         {
-            //将获取的页面数据按'['进行分割
+            // 将获取的页面数据按'['进行分割
             string[] spilt = param.Split('&');
+
             // 构造数据，用于存放占位符数据
             Dictionary<string, string> placeholder = new Dictionary<string, string>();
             foreach (var item in spilt)
@@ -120,10 +120,12 @@ namespace Data.PDF
                         {
                             y = y.PadLeft(x.Length, ' ');
                         }
+
                         placeholder.Add(x, y);
                     }
                 }
             }
+
             return placeholder;
         }
 
@@ -131,7 +133,7 @@ namespace Data.PDF
         /// DataRow格式数据转成url参数
         /// </summary>
         /// wangpf  16.08.01
-        /// <param name="dt">DataRow</param>
+        /// <param name="dr">DataRow</param>
         /// <returns></returns>
         public string DataRowToParams(DataRow dr)
         {
@@ -146,8 +148,10 @@ namespace Data.PDF
                 {
                     sb.Append(dt.Rows[0][i].ToString());
                 }
+
                 sb.Append("&");
             }
+
             sb.Remove(sb.Length - 1, 1);
 
             return sb.ToString();

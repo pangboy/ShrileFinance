@@ -96,29 +96,24 @@
                         }
                     }
                 }
+
                 if (i == (j - 11) || i == (j - 3))
                 {
                     //如果该位是亿位或元位，则必须写上
                     ch2 = str2.Substring(i, 1);
                 }
-                str5 = str5 + ch1 + ch2;
 
+                str5 = str5 + ch1 + ch2;
             }
+
             if (num == 0)
             {
                 str5 = "零";
             }
+
             return str5;
         }
 
-        /// <summary>
-        /// 一个重载，将字符串先转换成数字在调用RMBToUpper(decimal num)
-        /// </summary>
-        ///  cais   16.04.25
-        ///  wangpf 16.09.14 
-        /// <param name="num">用户输入的金额，字符串形式未转成decimal</param>
-        /// <param name="digit">保留小数点位数</param>
-        /// <returns></returns>
         public string RMBToUpper(string numstr, int digit)
         {
             try
@@ -132,12 +127,6 @@
             }
         }
 
-        /// <summary>
-        /// 重载计算方法
-        /// </summary>
-        /// <param name="numstr"></param>
-        /// <param name="digit"></param>
-        /// <returns></returns>
         public string RMBToUpper(decimal numstr, int digit)
         {
             try

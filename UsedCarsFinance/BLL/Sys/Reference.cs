@@ -80,5 +80,10 @@
 
             return referenceMapper.Update(reference) > 0;
         }
+
+        public bool Delete(int referenceId)
+        {
+            return referenceMapper.Delete(referenceId) > 0;
+        }
     }
 }

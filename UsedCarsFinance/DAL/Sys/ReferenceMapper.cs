@@ -90,5 +90,15 @@ namespace DAL.Sys
 
 			return DHelper.ExecuteNonQuery(comm);
 		}
+
+        public int Delete(int referenceId)
+        {
+            SqlCommand comm = DHelper.GetSqlCommand(@"
+				DELETE SYS_ReferenceNew WHERE ReferenceId=@ReferenceId
+			");
+            DHelper.AddParameter(comm, "@ReferenceId", SqlDbType.Int, referenceId);
+
+            return DHelper.ExecuteNonQuery(comm);
+        }
 	}
 }

@@ -13,9 +13,6 @@
             Property(m => m.Id).HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
 
             Property(m => m.Principal);
-            Property(m => m.InterestRate);
-            Property(m => m.Periods);
-            Property(m => m.RepaymentInterval);
             Property(m => m.RepaymentDate);
             Property(m => m.RepaymentScheme);
             Property(m => m.Bail);
