@@ -446,10 +446,10 @@
 
             // 部分映射
             var array = new string[] { "AdviceMoney", "AdviceRatio", "ApprovalMoney", "ApprovalRatio", "Payment", "Poundage" };
-            financeAuditViewModel = PartialMapper(finance, financeAuditViewModel, array);
+            financeAuditViewModel = PartialMapper(refObj: finance, outObj: financeAuditViewModel, array: array);
 
             // 映射 融资比例区间
-            financeAuditViewModel = PartialMapper(finance.Produce, financeAuditViewModel, new string[] { "MinFinancingRatio", "MaxFinancingRatio" });
+            financeAuditViewModel = PartialMapper(refObj: finance.Produce, outObj: financeAuditViewModel, array: new string[] { "MinFinancingRatio", "MaxFinancingRatio" });
 
             return financeAuditViewModel;
         }
@@ -475,7 +475,7 @@
 
             // 建议融资金额、建议融资比例、审批融资金额、审批融资比例、月供额度、手续费
             var array = new string[] { "AdviceMoney", "AdviceRatio", "ApprovalMoney", "ApprovalRatio", "Payment", "Poundage" };
-            finance = PartialMapper(value, finance, array);
+            finance = PartialMapper(refObj: value, outObj: finance, array: array);
 
             // 初审 修改融资项各金额
             if (!value.IsReview)
@@ -523,7 +523,7 @@
 
             // 选择还款日、首次租金支付日期、保证金、一次性付息、
             var array = new string[] { "RepaymentDate", "Bail", "RepayRentDate", "OnePayInterest" };
-            operationReportViewModel = PartialMapper(finance, operationReportViewModel, array);
+            operationReportViewModel = PartialMapper(refObj: finance, outObj: operationReportViewModel, array: array);
 
             // 融资项
             operationReportViewModel.FinancingItems = GetFinancingItemsOrCosts(finance);
@@ -533,7 +533,7 @@
 
             // 车辆补充信息
             var array1 = new string[] { "RegisterDate", "RunningMiles", "FactoryDate", "BusinessType", "PlateNo", "FrameNo", "EngineNo", "RegisterCity", "Condition" };
-            operationReportViewModel = PartialMapper(finance.Vehicle, operationReportViewModel, array1);
+            operationReportViewModel = PartialMapper(refObj: finance.Vehicle, outObj: operationReportViewModel, array: array1);
 
             return operationReportViewModel;
         }
@@ -565,18 +565,18 @@
             {
                 // 还款信息
                 var customerArray = new string[] { "CustomerAccountName", "CustomerBankName", "CustomerBankCard" };
-                finance.FinanceExtension = PartialMapper(value, finance.FinanceExtension, customerArray);
+                finance.FinanceExtension = PartialMapper(refObj: value, outObj: finance.FinanceExtension, array: customerArray);
 
                 if (!value.LoanPrincipal.Equals("Channel"))
                 {
                     // 放款信息
                     var creditArray = new string[] { "CreditAccountName", "CreditBankName", "CreditBankCard" };
-                    finance.FinanceExtension = PartialMapper(value, finance.FinanceExtension, creditArray);
+                    finance.FinanceExtension = PartialMapper(refObj: value, outObj: finance.FinanceExtension, array: creditArray);
                 }
 
                 // 车辆补充信息
                 var array1 = new string[] { "RegisterDate", "RunningMiles", "FactoryDate", "BusinessType", "PlateNo", "FrameNo", "EngineNo", "RegisterCity", "Condition" };
-                finance.Vehicle = PartialMapper(value, finance.Vehicle, array1);
+                finance.Vehicle = PartialMapper(refObj: value, outObj: finance.Vehicle, array: array1);
             }
             else
             {
@@ -590,12 +590,12 @@
                 finance.FinanceExtension.ContactJson = value.ContactJson;
 
                 // 选择还款日、首次租金支付日期、保证金、先付月供、一次性付息、实际用款额
-                finance = PartialMapper(value, finance, new string[] { "RepaymentDate", "RepayRentDate", "Bail", "Payment", "OnePayInterest" });
+                finance = PartialMapper(refObj: value, outObj: finance, array: new string[] { "RepaymentDate", "RepayRentDate", "Bail", "Payment", "OnePayInterest" });
 
                 // 放款账户、放款账户开户行、放款账户卡号
                 if (value.LoanPrincipal.Equals("Channel"))
                 {
-                    finance.FinanceExtension = PartialMapper(value, finance.FinanceExtension, new string[] { "CreditAccountName", "CreditBankName", "CreditBankCard" });
+                    finance.FinanceExtension = PartialMapper(refObj: value, outObj: finance.FinanceExtension, array: new string[] { "CreditAccountName", "CreditBankName", "CreditBankCard" });
                 }
             }
 
