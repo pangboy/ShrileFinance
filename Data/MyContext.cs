@@ -17,11 +17,11 @@
             modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
             modelBuilder.Conventions.Remove<OneToManyCascadeDeleteConvention>();
 
-            // Identity Configuration
+            // Identity Configurations
             modelBuilder.Configurations
                 .Add(new AppUserConfiguration());
 
-            // Process Configuration
+            // Process Configurations
             modelBuilder.Configurations
                 .Add(new FlowConfiguration())
                 .Add(new NodeConfiguration())
@@ -32,30 +32,16 @@
                 .Add(new FormNodeConfiguration())
                 .Add(new FormRoleConfiguration());
 
-            modelBuilder.Configurations
-                .Add(new PartnerConfiguration())
-                .Add(new DraftConfiguration());
-
-            modelBuilder.Configurations
-                .Add(new OrganizationConfiguration())
-                .Add(new ManagerConfiguration())
-                .Add(new StockholderConfiguration())
-                .Add(new AssociatedEnterpriseConfiguration())
-                .Add(new FamilyMemberConfiguration())
-                .Add(new BigEventConfiguration())
-                .Add(new CashFlowConfiguration())
-                .Add(new InstitutionIncomeExpenditureConfiguration())
-                .Add(new InstitutionLiabilitiesConfiguration())
-                .Add(new LiabilitiesConfiguration())
-                .Add(new LitigationConfigruation())
-                .Add(new ProfitConfiguration())
-                .Add(new ParentConfigration())
-                .Add(new FinancialAffairsConfiguration());
-
+            // Produce Configurations
             modelBuilder.Configurations
                 .Add(new FinancingItemConfigration())
                 .Add(new FinancingProjectConfigration())
                 .Add(new ProduceConfigration());
+
+            // Partner and Draft Configurations
+            modelBuilder.Configurations
+                .Add(new PartnerConfiguration())
+                .Add(new DraftConfiguration());
 
             // Finance Configurations
             modelBuilder.Configurations
@@ -66,6 +52,23 @@
                 .Add(new FinanceExtensionConfiguration())
                 .Add(new ContactConfiguration())
                 .Add(new CreditExamineConfiguration());
+
+            // Organization Configurations
+            ////modelBuilder.Configurations
+            ////    .Add(new OrganizationConfiguration())
+            ////    .Add(new ManagerConfiguration())
+            ////    .Add(new StockholderConfiguration())
+            ////    .Add(new AssociatedEnterpriseConfiguration())
+            ////    .Add(new FamilyMemberConfiguration())
+            ////    .Add(new BigEventConfiguration())
+            ////    .Add(new CashFlowConfiguration())
+            ////    .Add(new InstitutionIncomeExpenditureConfiguration())
+            ////    .Add(new InstitutionLiabilitiesConfiguration())
+            ////    .Add(new LiabilitiesConfiguration())
+            ////    .Add(new LitigationConfigruation())
+            ////    .Add(new ProfitConfiguration())
+            ////    .Add(new ParentConfigration())
+            ////    .Add(new FinancialAffairsConfiguration());
 
             base.OnModelCreating(modelBuilder);
         }

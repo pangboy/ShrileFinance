@@ -64,81 +64,25 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Migrations\201610240308231_Identity.cs" />
-    <Compile Include="Migrations\201610240308231_Identity.Designer.cs">
-      <DependentUpon>201610240308231_Identity.cs</DependentUpon>
+    <Compile Include="Migrations\201611240238384_IdentityModel.cs" />
+    <Compile Include="Migrations\201611240238384_IdentityModel.Designer.cs">
+      <DependentUpon>201611240238384_IdentityModel.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201610260709237_Organization.cs" />
-    <Compile Include="Migrations\201610260709237_Organization.Designer.cs">
-      <DependentUpon>201610260709237_Organization.cs</DependentUpon>
+    <Compile Include="Migrations\201611240247116_ProcessModel.cs" />
+    <Compile Include="Migrations\201611240247116_ProcessModel.Designer.cs">
+      <DependentUpon>201611240247116_ProcessModel.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201610280239033_StockholderUpdate.cs" />
-    <Compile Include="Migrations\201610280239033_StockholderUpdate.Designer.cs">
-      <DependentUpon>201610280239033_StockholderUpdate.cs</DependentUpon>
+    <Compile Include="Migrations\201611240251145_ProduceModel.cs" />
+    <Compile Include="Migrations\201611240251145_ProduceModel.Designer.cs">
+      <DependentUpon>201611240251145_ProduceModel.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201610300351578_AddBorrow2.1.cs" />
-    <Compile Include="Migrations\201610300351578_AddBorrow2.1.Designer.cs">
-      <DependentUpon>201610300351578_AddBorrow2.1.cs</DependentUpon>
+    <Compile Include="Migrations\201611240253137_PartnerModel.cs" />
+    <Compile Include="Migrations\201611240253137_PartnerModel.Designer.cs">
+      <DependentUpon>201611240253137_PartnerModel.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201610310751231_UpdateFinanceAffairs.cs" />
-    <Compile Include="Migrations\201610310751231_UpdateFinanceAffairs.Designer.cs">
-      <DependentUpon>201610310751231_UpdateFinanceAffairs.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201611010205396_OrganizationReleation.cs" />
-    <Compile Include="Migrations\201611010205396_OrganizationReleation.Designer.cs">
-      <DependentUpon>201611010205396_OrganizationReleation.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201611010608095_InstitutionIncomeExpenditureUpdate.cs" />
-    <Compile Include="Migrations\201611010608095_InstitutionIncomeExpenditureUpdate.Designer.cs">
-      <DependentUpon>201611010608095_InstitutionIncomeExpenditureUpdate.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201611011134263_CreateParent.cs" />
-    <Compile Include="Migrations\201611011134263_CreateParent.Designer.cs">
-      <DependentUpon>201611011134263_CreateParent.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201611110645384_AspNetRole.cs" />
-    <Compile Include="Migrations\201611110645384_AspNetRole.Designer.cs">
-      <DependentUpon>201611110645384_AspNetRole.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201611060907042_AddProduceModule.cs" />
-    <Compile Include="Migrations\201611060907042_AddProduceModule.Designer.cs">
-      <DependentUpon>201611060907042_AddProduceModule.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201611090429237_AddFinanceAndCredit.cs" />
-    <Compile Include="Migrations\201611090429237_AddFinanceAndCredit.Designer.cs">
-      <DependentUpon>201611090429237_AddFinanceAndCredit.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201611110947526_Workflow.cs" />
-    <Compile Include="Migrations\201611110947526_Workflow.Designer.cs">
-      <DependentUpon>201611110947526_Workflow.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201611160138545_FinanceModel.cs" />
-    <Compile Include="Migrations\201611160138545_FinanceModel.Designer.cs">
-      <DependentUpon>201611160138545_FinanceModel.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201611160141176_PartnerModel.cs" />
-    <Compile Include="Migrations\201611160141176_PartnerModel.Designer.cs">
-      <DependentUpon>201611160141176_PartnerModel.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201611180224403_AddAttributeForFinanceExtension.cs" />
-    <Compile Include="Migrations\201611180224403_AddAttributeForFinanceExtension.Designer.cs">
-      <DependentUpon>201611180224403_AddAttributeForFinanceExtension.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201611181001478_Workflow_Log.cs" />
-    <Compile Include="Migrations\201611181001478_Workflow_Log.Designer.cs">
-      <DependentUpon>201611181001478_Workflow_Log.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201611200908369_DraftModel.cs" />
-    <Compile Include="Migrations\201611200908369_DraftModel.Designer.cs">
-      <DependentUpon>201611200908369_DraftModel.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201611210833545_UpdateFinanceModel.cs" />
-    <Compile Include="Migrations\201611210833545_UpdateFinanceModel.Designer.cs">
-      <DependentUpon>201611210833545_UpdateFinanceModel.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201611211250216_UpdateVehicle.cs" />
-    <Compile Include="Migrations\201611211250216_UpdateVehicle.Designer.cs">
-      <DependentUpon>201611211250216_UpdateVehicle.cs</DependentUpon>
+    <Compile Include="Migrations\201611240254096_FinanceModel.cs" />
+    <Compile Include="Migrations\201611240254096_FinanceModel.Designer.cs">
+      <DependentUpon>201611240254096_FinanceModel.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs">
       <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
@@ -305,65 +249,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201610240308231_Identity.resx">
-      <DependentUpon>201610240308231_Identity.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201610260709237_Organization.resx">
-      <DependentUpon>201610260709237_Organization.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201610280239033_StockholderUpdate.resx">
-      <DependentUpon>201610280239033_StockholderUpdate.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201610300351578_AddBorrow2.1.resx">
-      <DependentUpon>201610300351578_AddBorrow2.1.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201610310751231_UpdateFinanceAffairs.resx">
-      <DependentUpon>201610310751231_UpdateFinanceAffairs.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201611010205396_OrganizationReleation.resx">
-      <DependentUpon>201611010205396_OrganizationReleation.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201611010608095_InstitutionIncomeExpenditureUpdate.resx">
-      <DependentUpon>201611010608095_InstitutionIncomeExpenditureUpdate.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201611011134263_CreateParent.resx">
-      <DependentUpon>201611011134263_CreateParent.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201611110645384_AspNetRole.resx">
-      <DependentUpon>201611110645384_AspNetRole.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201611060907042_AddProduceModule.resx">
-      <DependentUpon>201611060907042_AddProduceModule.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201611090429237_AddFinanceAndCredit.resx">
-      <DependentUpon>201611090429237_AddFinanceAndCredit.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201611110947526_Workflow.resx">
-      <DependentUpon>201611110947526_Workflow.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201611160138545_FinanceModel.resx">
-      <DependentUpon>201611160138545_FinanceModel.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201611160141176_PartnerModel.resx">
-      <DependentUpon>201611160141176_PartnerModel.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201611180224403_AddAttributeForFinanceExtension.resx">
-      <DependentUpon>201611180224403_AddAttributeForFinanceExtension.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201611181001478_Workflow_Log.resx">
-      <DependentUpon>201611181001478_Workflow_Log.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201611200908369_DraftModel.resx">
-      <DependentUpon>201611200908369_DraftModel.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201611210833545_UpdateFinanceModel.resx">
-      <DependentUpon>201611210833545_UpdateFinanceModel.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201611211250216_UpdateVehicle.resx">
-      <DependentUpon>201611211250216_UpdateVehicle.cs</DependentUpon>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup>
@@ -375,6 +260,23 @@
       <Project>{6dee6ac9-2f19-4e2e-98cb-9638e0ccb78a}</Project>
       <Name>Infrastructure</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201611240238384_IdentityModel.resx">
+      <DependentUpon>201611240238384_IdentityModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611240247116_ProcessModel.resx">
+      <DependentUpon>201611240247116_ProcessModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611240251145_ProduceModel.resx">
+      <DependentUpon>201611240251145_ProduceModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611240253137_PartnerModel.resx">
+      <DependentUpon>201611240253137_PartnerModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611240254096_FinanceModel.resx">
+      <DependentUpon>201611240254096_FinanceModel.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
