@@ -1,11 +1,11 @@
-﻿using System.IO;
-namespace Infrastructure.PDF
+﻿namespace Infrastructure.PDF
 {
+    using System.IO;
     using System.Web;
 
     public class PathManager
     {
-        public  string GetPath(string virtualPath)
+        public string GetPath(string virtualPath)
         {
             string fullpath = HttpContext.Current.Server.MapPath(virtualPath);
             string directory = Directory.GetCurrentDirectory();
@@ -13,6 +13,7 @@ namespace Infrastructure.PDF
             {
                 Directory.CreateDirectory(fullpath);
             }
+
             return fullpath;
         }
 
