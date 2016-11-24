@@ -87,6 +87,11 @@
             }
         }
 
+        public Contract GetContract(Guid contractId)
+        {
+            return contractRepository.Get(contractId);
+        }
+
         public FinanceApplyViewModel Get(Guid id)
         {
             var finance = repository.Get(id);
@@ -127,26 +132,26 @@
             {
                 dt.Rows[0]["[融资租赁合同]"] = hz;
                 contractParams = pdf.DataRowToParams(dt.Rows[0]);
-                pdfName =  hz;
+                pdfName = hz;
             }
 
-            pdfPath = pdf.TransformPdf( newPath, contractName, contractParams, pdfName);
+            pdfPath = pdf.TransformPdf(newPath, contractName, contractParams, pdfName);
 
-            if(finance.Contact.FirstOrDefault(m => m.Name == "融资租赁合同") == null)
+            if (finance.Contact.FirstOrDefault(m => m.Name == "融资租赁合同") == null)
             {
-            if (pdfPath != null)
-            {
-                finance.Contact.Add(new Contract
+                if (pdfPath != null)
                 {
-                    Date = DateTime.Now,
-                    Name = "融资租赁合同",
-                    Number = pdfName,
+                    finance.Contact.Add(new Contract
+                    {
+                        Date = DateTime.Now,
+                        Name = "融资租赁合同",
+                        Number = pdfName,
                         Path = "~\\upload\\PDF\\"
-                });
+                    });
 
-                repository.Modify(finance);
-                repository.Commit();
-            }
+                    repository.Modify(finance);
+                    repository.Commit();
+                }
             }
 
             return pdfPath;
@@ -158,42 +163,44 @@
             string aaaa = string.Empty;
             string cccc = string.Empty;
             string dddd = string.Empty;
-            string ContractNumber = string.Empty;
+            string contractNumber = string.Empty;
+
             // 合作商编码
             var partnerCode = "01";
 
             var finance = repository.Get(financeid);
-            var contract =finance.Contact.FirstOrDefault(m=>m.Name=="融资租赁合同");
+            var contract = finance.Contact.FirstOrDefault(m => m.Name == "融资租赁合同");
 
             if (contract != null)
             {
-                ContractNumber = contract.Number;
+                contractNumber = contract.Number;
             }
             else
             {
-            // 查询合作商ID
-            Guid bb = FindByCreateOf(financeid, ref error);
-            if (bb != null && error == string.Empty)
-            {
-                aaaa = GetCityCode(bb);
+                // 查询合作商ID
+                Guid bb = FindByCreateOf(financeid, ref error);
+                if (bb != null && error == string.Empty)
+                {
+                    aaaa = GetCityCode(bb);
 
-                cccc = GetYYMM();
+                    cccc = GetYYMM();
 
-                // 获取月初
-                DateTime time = DateTime.Now.AddDays(1 - DateTime.Now.Day);
+                    // 获取月初
+                    DateTime time = DateTime.Now.AddDays(1 - DateTime.Now.Day);
 
-                // 月当渠道的流水号
-                // contract.FindCount(Time, BB).ToString();
-                int countBymonth = contractRepository.GetAll(m => m.Date >= time && m.Date <= DateTime.Now && m.Number.Contains(partnerCode)).ToList().Count;
+                    // 月当渠道的流水号
+                    // contract.FindCount(Time, BB).ToString();
+                    int countBymonth = contractRepository.GetAll(m => m.Date >= time && m.Date <= DateTime.Now && m.Number.Contains(partnerCode)).ToList().Count;
 
-                int ddlength = countBymonth + 1;
-                dddd = ddlength.ToString().PadLeft(3, '0');
+                    int ddlength = countBymonth + 1;
+                    dddd = ddlength.ToString().PadLeft(3, '0');
+                }
+
+                // 组成AAAABBCCCCDDD
+                contractNumber = type + aaaa + partnerCode + cccc + dddd;
             }
 
-            // 组成AAAABBCCCCDDD
-                ContractNumber = type+aaaa + partnerCode + cccc + dddd;
-            }
-            return ContractNumber;
+            return contractNumber;
         }
 
         /// <summary>
@@ -674,23 +681,18 @@
             var outObjType = outObj.GetType();
             container.ToList().ForEach(item =>
                     {
-                var outObjPropertyInfo = outObjType.GetProperty(item.Key.ToString());
+                        var outObjPropertyInfo = outObjType.GetProperty(item.Key.ToString());
 
-                try
-                {
-                    outObjPropertyInfo.SetValue(outObj, item.Value, null);
-                }
-                catch
-                {
-            }
-            });
+                        try
+                        {
+                            outObjPropertyInfo.SetValue(outObj, item.Value, null);
+                        }
+                        catch
+                        {
+                        }
+                    });
 
             return outObj;
-        }
-
-        public Contract GetContract(Guid ContractId)
-        {
-            return contractRepository.Get(ContractId);
         }
     }
 }

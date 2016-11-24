@@ -45,21 +45,6 @@
         public decimal? Principal { get; set; }
 
         /// <summary>
-        /// 利率
-        /// </summary>
-        public double? InterestRate { get; set; }
-
-        /// <summary>
-        /// 融资期限 (月)
-        /// </summary>
-        public int? Periods { get; set; }
-
-        /// <summary>
-        /// 还款间隔 (月)
-        /// </summary>
-        public int? RepaymentInterval { get; set; }
-
-        /// <summary>
         /// 还款日
         /// </summary>
         public int? RepaymentDate { get; set; }

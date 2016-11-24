@@ -138,26 +138,19 @@
 
         public IPagedList<ProduceListViewModel> GetPageList(string serach, int pageNumber, int pageSize)
         {
-
             var produces = repository.GetAll();
 
             if (!string.IsNullOrEmpty(serach))
             {
                 produces = produces.Where(m => m.Name.Contains(serach) || m.Code.Contains(serach));
             }
+
             produces = produces.OrderByDescending(m => m.Id);
             var pagedList = produces.ToPagedList(pageNumber, pageSize);
 
             var models = Mapper.Map<IPagedList<ProduceListViewModel>>(pagedList);
 
             return models;
-
-
-            //var produces  = repository.List(serach, pageNumber, pageSize);
-
-            //var models = Mapper.Map<PagedList<ProduceListViewModel>>(produces);
-
-            //return models;
         }
     }
 }

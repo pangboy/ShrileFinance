@@ -122,13 +122,13 @@
         /// </summary>
         public void FinanceCustomer()
         {
-
             // 获取数据
             var finance = GetData<OperationViewModel>("5ADC5FCF-18A4-E611-80C5-507B9DE4A488");
 
             // 执行合同的生成
             string path = @"~\upload\PDF\";
             financeAppService.CreateLeaseInfoPdf(finance.FinanceId, path);
+
             // 如果执行失败则抛出异常, 或用返回值表示结果.
             if (false)
             {
@@ -144,11 +144,11 @@
         /// </summary>
         public void FinalApproval()
         {
-            // 获取融资数据
-            //var finance = GetData<FinanceAuidtViewModel>("58DC5FCF-18A4-E611-80C5-507B9DE4A488");
+           // // 获取融资数据
+           // //var finance = GetData<FinanceAuidtViewModel>("58DC5FCF-18A4-E611-80C5-507B9DE4A488");
 
-            // 修改信审审核人
-           // financeAppService.SetApprover(finance.FinanceId);
+           // // 修改信审审核人
+           //// financeAppService.SetApprover(finance.FinanceId);
         }
 
         private T GetData<T>(string formId) where T : class, new()
