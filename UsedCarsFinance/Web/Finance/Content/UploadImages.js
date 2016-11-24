@@ -284,32 +284,37 @@ function Add() {
 //删除，ReferencedModule暂时为2
 function del() {
     var ckchecked = $("input:checked");
-    var picNum = -1;
+    var referenceIds = [];
     if (ckchecked.length > 0) {
         for (var i = 0; i < ckchecked.length; i++) {
-            var referenceId = $(ckchecked[i]).next().val();
-            if (referenceId.length > 0) {
-                picNum = i;
-                $.ajax({
-                    type: "Delete",
-                    url: "../api/ImageUpload/Delete?referenceId=" + referenceId,
-                    success: function (data) {
-                        for (var k = 0; k < ckchecked.length; k++) {
-                            var delthirdth = $(ckchecked[k]).parent().next().next().find("div");
-                            $(ckchecked[k]).attr("checked", false);
-
-                            // 隐藏图片文件名div容器
-                            delthirdth.hide();
-
-                            delthirdth.empty();
-                        }
-                    }
-                });
+            if ($(ckchecked[i]).next() != undefined && $(ckchecked[i]).next().val().length > 0) {
+                referenceIds.push($(ckchecked[i]).next().val());
             }
         }
+
+        if (referenceIds.length > 0) {
+            picNum = i;
+            $.ajax({
+                type: "Get",
+                data: { referenceIds: referenceIds.join(",") },
+                url: "../api/ImageUpload/Delete",
+                success: function (data) {
+                    for (var k = 0; k < ckchecked.length; k++) {
+                        var delthirdth = $(ckchecked[k]).parent().next().next().find("div");
+                        $(ckchecked[k]).attr("checked", false);
+
+                        // 隐藏图片文件名div容器
+                        delthirdth.hide();
+
+                        delthirdth.empty();
+                    }
+                }
+            });
+        }
+
     }
-    else if (picNum < 0) {
-        $.messager.show({ msg: "请至少选中一项!" });
+    else if (referenceIds.length == 0) {
+        $.messager.show({ msg: "请至少选中一项进行删除!" });
     }
 }
 

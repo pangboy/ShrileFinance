@@ -1,11 +1,13 @@
 ﻿namespace Web.Controllers.Finance
 {
     using System;
+    using System.Collections.Generic;
     using System.Data;
+    using System.Linq;
     using System.Net.Http;
     using System.Web.Http;
     using Models.Sys;
-    using Web.Controllers.Sys;
+    using Sys;
 
     public class ImageUploadController : ApiController
     {
@@ -27,7 +29,8 @@
         /// 根据FinanceId 获得所有申请人的引用ID
         /// </summary>
         /// cais    16.05.03
-        /// <param name="financeid"></param>
+        /// <param name="financeid">FinanceId</param>
+        /// <returns>引用列表</returns>
         [HttpGet]
         public DataTable GetAllRef(Guid financeid)
         {
@@ -50,16 +53,22 @@
         /// 删除文件
         /// </summary>
         /// cais    16.04.08
-        /// <param name="referenceId">文件引用id</param>
-        [HttpDelete]
-        public IHttpActionResult Delete(int? referenceId)
+        /// <param name="referenceIds">文件引用id</param>
+        [HttpGet]
+        public IHttpActionResult Delete(string referenceIds)
         {
-            if (referenceId == null)
+            if (referenceIds == null)
             {
                 return BadRequest("参数为null");
             }
 
-            ImageUploadInstance.Delete(referenceId.Value);
+            var referenceIdList = new List<int>();
+            referenceIds.Split(',').ToList().ForEach(item =>
+            {
+                referenceIdList.Add(Convert.ToInt32(item));
+            });
+
+            ImageUploadInstance.Delete(referenceIdList);
 
             return Ok();
         }

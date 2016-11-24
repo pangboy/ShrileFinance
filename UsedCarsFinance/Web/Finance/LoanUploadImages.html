@@ -32,9 +32,6 @@
             query.state = GetQueryString("state");
             query.FinanceId = parent.flow.RootKey;
 
-            // 切换页面状态
-            ChangeStatus(query);
-
             // 加载数据
             LoadData(query.FinanceId);
 
@@ -78,21 +75,12 @@
                     }
                 }
             });
-        }
-
-        // 切换页面状态
-        function ChangeStatus(query) {
-
-            if (query.Status == undefined) {
-                query.Status = "0";
-            }
 
             if (query.Status == "0") {
                 // 设置“添加”和“删除”按钮
-               // $("#add").hide();
-              //  $("#del").hide();
+                $("#add").remove();
+                $("#del").remove();
             }
-            
         }
 
         // 加载临时数据
