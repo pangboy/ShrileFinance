@@ -17,8 +17,12 @@
             modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
             modelBuilder.Conventions.Remove<OneToManyCascadeDeleteConvention>();
 
+            // Identity Configuration
             modelBuilder.Configurations
-                .Add(new AppUserConfiguration())
+                .Add(new AppUserConfiguration());
+
+            // Process Configuration
+            modelBuilder.Configurations
                 .Add(new FlowConfiguration())
                 .Add(new NodeConfiguration())
                 .Add(new ActionConfiguration())
@@ -26,7 +30,13 @@
                 .Add(new LogConfiguration())
                 .Add(new FormConfiguration())
                 .Add(new FormNodeConfiguration())
-                .Add(new FormRoleConfiguration())
+                .Add(new FormRoleConfiguration());
+
+            modelBuilder.Configurations
+                .Add(new PartnerConfiguration())
+                .Add(new DraftConfiguration());
+
+            modelBuilder.Configurations
                 .Add(new OrganizationConfiguration())
                 .Add(new ManagerConfiguration())
                 .Add(new StockholderConfiguration())
@@ -39,21 +49,23 @@
                 .Add(new LiabilitiesConfiguration())
                 .Add(new LitigationConfigruation())
                 .Add(new ProfitConfiguration())
-                .Add(new FinancialAffairsConfiguration())
                 .Add(new ParentConfigration())
+                .Add(new FinancialAffairsConfiguration());
+
+            modelBuilder.Configurations
                 .Add(new FinancingItemConfigration())
                 .Add(new FinancingProjectConfigration())
-                .Add(new ProduceConfigration())
+                .Add(new ProduceConfigration());
+
+            // Finance Configurations
+            modelBuilder.Configurations
                 .Add(new FinanceConfigration())
-                .Add(new CreditExamineConfiguration())
+                .Add(new FinanceProduceConfiguration())
                 .Add(new ApplicantConfiguration())
                 .Add(new VehicleConfigration())
-                .Add(new ContactConfiguration())
                 .Add(new FinanceExtensionConfiguration())
-                .Add(new FinanceProduceConfiguration())
-                .Add(new PartnerConfiguration())
-                .Add(new DraftConfiguration())
-                ;
+                .Add(new ContactConfiguration())
+                .Add(new CreditExamineConfiguration());
 
             base.OnModelCreating(modelBuilder);
         }
