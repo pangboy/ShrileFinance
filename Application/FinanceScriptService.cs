@@ -2,7 +2,6 @@
 {
     using System.Linq;
     using Core.Entities.Flow;
-    using Core.Interfaces.Repositories;
     using Newtonsoft.Json.Linq;
     using ViewModels.FinanceViewModels;
 
@@ -114,8 +113,6 @@
         {
             // 修改信审审核人
             financeAppService.SetApprover(Instance.RootKey.Value);
-
-            repository.Commit();
         }
 
         private T GetData<T>(string formId) where T : class, new()
