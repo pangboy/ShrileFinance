@@ -138,6 +138,18 @@
             }
         }
 
+        /// <summary>
+        /// 总经理审批
+        /// </summary>
+        public void FinalApproval()
+        {
+            // 获取融资数据
+            //var finance = GetData<FinanceAuidtViewModel>("58DC5FCF-18A4-E611-80C5-507B9DE4A488");
+
+            // 修改信审审核人
+           // financeAppService.SetApprover(finance.FinanceId);
+        }
+
         private T GetData<T>(string formId) where T : class, new()
         {
             return Data[formId.ToLower()].ToObject<T>();
