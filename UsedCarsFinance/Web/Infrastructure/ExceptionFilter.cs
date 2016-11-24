@@ -1,16 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Threading.Tasks;
-using System.Web;
-using System.Web.Http.Filters;
-using log4net;
-using log4net.Appender;
-using log4net.Core;
-
-namespace Web.Infrastructure
+﻿namespace Web.Infrastructure
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Net.Http;
+    using System.Threading.Tasks;
+    using System.Web;
+    using System.Web.Http.Filters;
+    using log4net;
+    using log4net.Appender;
+    using log4net.Core;
+
     public class Log4net
     {
         public static ILog Log
@@ -33,8 +33,9 @@ namespace Web.Infrastructure
             if (exception is Core.Exceptions.AppException)
             {
                 context.Response = context.Request.CreateErrorResponse(System.Net.HttpStatusCode.BadRequest, exception.Message);
-            }
 
+                return;
+            }
 
             var parameters = new Dictionary<String, Object>();
 
@@ -62,8 +63,6 @@ namespace Web.Infrastructure
 
             // 记录日志
             Log4net.Log.Error("Global", exception);
-
-            LogManager.GetLogger("Logger").Error("Global", new Exception("程序开始运行"));
         }
     }
 
