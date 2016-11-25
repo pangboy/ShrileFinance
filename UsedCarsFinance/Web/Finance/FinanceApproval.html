@@ -21,7 +21,7 @@
             // 获取参数
             query.state = GetQueryString("state");
             query.FinanceId = parent.flow.RootKey;
-            //debugger
+            
             if (query.FinanceId == undefined || query.FinanceId.length == 0) {
                 query.FinanceId = "ED468191-9FAB-E611-80C5-507B9DE4A488";
                 query.state = 1;
@@ -53,7 +53,6 @@
                 else if (query.state == 2) {
                     // 复审
                     Disabled($('fieldset[name=Operation]'));
-
                 }
             }
         }
@@ -85,7 +84,6 @@
             // 显示运营页面
             $('form[name=FinanceOperation]').append($('form[name=FinanceOperation] template#Operation').html());
             $.parser.parse($('form[name=FinanceOperation]'));
-
 
             // 加载远程数据
             if (query == undefined || query.FinanceId == undefined) {

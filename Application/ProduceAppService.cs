@@ -64,8 +64,10 @@
                     model.FinancingItems.Add(item);
                 }
             }
-
-            new UpdateBind().Bind(produce.FinancingItems, model.FinancingItems);
+            if (model.FinancingItems.Count > 0)
+            {
+                new UpdateBind().Bind(produce.FinancingItems, model.FinancingItems);
+            }
 
             repository.Modify(produce);
             repository.Commit();

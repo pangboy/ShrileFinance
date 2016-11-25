@@ -130,5 +130,12 @@
             var result =financeAppService.CreateLeaseInfoPdf(Id, fullpath);
             return Ok(result);
         }
+
+        public IHttpActionResult GetLoan(Guid id)
+        {
+            var result = financeAppService.GetLoan(id);
+
+            return Ok(result);
+        }
     }
 }

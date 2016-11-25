@@ -6,24 +6,11 @@ var GuaranteeTemp = "";
 // 联系人模版
 var ContactsTemp = "";
 
-// 全选
-var CAll = false;
-
 //全选、反选功能
-function checkall() {
-    var objectCb = $("input[name='cb']");
-    if (CAll == false) {
-        for (var i = 0; i < objectCb.length; i++) {
-            objectCb[i].checked = true;
-        }
-        CAll = true;
-    }
-    else {
-        for (var i = 0; i < objectCb.length; i++) {
-            objectCb[i].checked = false;
-        }
-        CAll = false;
-    }
+function checkall(Obj) {
+    $("input[name=cb]").each(function (i, e) {
+        $(e)[0].checked = Obj.checked;
+    });
 }
 
 //下载全部
@@ -113,12 +100,6 @@ function CopyTemp(name, Rcount, TempFieldsetLegend, applicantId) {
 function labelcheck(lab) {
     // 点击对应的checkbox
     $(lab).parent().parent().find("td>input[type=checkbox]").click();
-
-    //if ($(lab).parent().prev().children().first().prop("checked")) {
-    //    $(lab).parent().prev().children().first().removeProp("checked");
-    //} else {
-    //    $(lab).parent().prev().children().first().prop("checked", true);
-    //}
 }
 
 // 获取所有引用，并将引用Id设为对应checkbox的值

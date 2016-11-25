@@ -104,6 +104,19 @@
 
         function toUppers() {
             disction = true;
+
+            var fin = $("#Financing").datagrid("getSelected");
+            if (fin != null) {
+                if (fin.Name != "裸车价") {
+                    top.$.messager.show({ msg: "融资项中必须要有裸车价！" });
+                    return disction = false;
+                }
+            }
+            else {
+                top.$.messager.show({ msg: "融资项中必须要有裸车价！" });
+                return disction = false;
+            }
+          
             var CodeUpper = $("input[name='Code']").val().toUpperCase();
             var ProduceId = $("input[name='Id']").val();
             $("input[name='Code']").val(CodeUpper);
