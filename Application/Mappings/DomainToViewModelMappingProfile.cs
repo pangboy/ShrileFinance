@@ -73,7 +73,7 @@
             CreateMap<Vehicle, VehicleViewModel>();
             CreateMap<Applicant, ApplicationViewModel>();
             CreateMap<Contract, ContractViewModel>();
-
+            CreateMap<Finance, LoanViewModel>();
             CreateMap<CreditExamine, CreditExamineViewModel>();
             CreateMap<FinanceExtension, OperationViewModel>();
             CreateMap<FinanceProduce, FinanceProduceViewModel>();

@@ -11,7 +11,6 @@
     <script src="../Scripts/easyui/jquery.easyui.js"></script>
     <script src="../Scripts/easyui/locale/easyui-lang-zh_CN.js"></script>
     <script src="../Scripts/usedcars.js"></script>
-    <script src="Content/FinanceJs.js"></script>
 </head>
 <body>
     <script type="text/javascript">
@@ -26,7 +25,6 @@
             var query = {};
 
             // 获取参数
-            query.state = GetQueryString("state");
             query.FinanceId = parent.flow.RootKey;
 
             // 加载数据
@@ -36,11 +34,17 @@
         // 加载数据
         function LoadData(query)
         {
-            // 加载融资信息、融资扩展信息
-            LoadFinanceInfo(query.FinanceId);
-
-            // 加载放还款账号信息
-            LoadBankInfo(query.FinanceId);
+            $.ajax({
+                async: false,
+                method: "GET",
+                url: '../api/FinanceAuidt/GetLoan',
+                data: { id: query.FinanceId },
+                statusCode: {
+                    200: function (data) {
+                        uc.form.Load(data);
+                    }
+                }
+            });
         }
 
         // 验证数据
@@ -49,83 +53,7 @@
         }
         // 构建数据
         function BuildData() {
-            var value = {};
-
-            var result = {};
-            result["formName"] = "财务信息展示";
-            result["buildData"] = value;
-
-            return result;
-        }
-
-        // 加载融资信息、融资扩展信息
-        function LoadFinanceInfo(financeId) {
-            $.ajax({
-                async: false,
-                method: "GET",
-                url: '../api/Finance/Get',
-                data: { financeId: financeId },
-                statusCode: {
-                    200: function (data) {
-                        uc.form.Load(data.FinanceInfo);
-                        uc.form.Load(data.FinanceExtraInfo);
-                    }
-                }
-            });
-        }
-
-        // 加载放还款账号信息
-        function LoadBankInfo(financeId) {
-            $.ajax({
-                async: false,
-                method: "GET",
-                url: '../api/Finance/LoanBankInfoLoad',
-                data: { financeId: financeId },
-                statusCode: {
-                    200: function (data) {
-                        // 填充放还款款信息
-                        FillAccountInfo(data);
-                    }
-                }
-            });
-            // 还款账户
-            $.ajax({
-                method: "GET",
-                async: true,
-                url: "../api/Applicant/Option",
-                data: { financeId: financeId },
-                statusCode: {
-                    200: function (data) {
-                        if (data) {
-                            $("input[textboxname = 'ApplicantName']").textbox("setValue", data.Name);
-                            $("input[name='ApplicantId']").val(data.ApplicantId);
-                        }
-                    }
-                }
-            });
-        }
-
-        // 填充放还款人信息
-        function FillAccountInfo(data) {
-            // 分割放款人和还款人
-            var CreditBank = data[0];
-            var ApplicantBank = data[1];
-            if (data[0].CreditId == 0) {
-                CreditBank = data[1];
-                ApplicantBank = data[0];
-            }
-
-            // 账户名
-            $("#BankAccount Select[comboname='CreditId']").combobox("setValue", CreditBank.CreditId);
-            $("#BankAccount Select[comboname='ApplicantId']").combobox("setValue", ApplicantBank.ApplicantId);
-
-            // 开户行
-            $("#BankAccount :input[textboxname='BankName']").first().textbox("setValue", CreditBank.BankName);
-            $("#BankAccount :input[textboxname='BankName']").last().textbox("setValue", ApplicantBank.BankName);
-
-            // 卡号
-            $("#BankAccount :input[textboxname='BankCard']").first().textbox("setValue", CreditBank.BankCard);
-            $("#BankAccount :input[textboxname='BankCard']").last().textbox("setValue", ApplicantBank.BankCard);
+            return undefined;
         }
     </script>
     <form id="finance_fl" class="container">
@@ -138,26 +66,26 @@
             <div class="row">
                 <div class="col-6">
                     <label>保证金金额:</label>
-                    <input name="MarginMoney" class="easyui-textbox" data-options="readonly:true" />
-                    <span class="unit">万元</span>
+                    <input name="CustomerBail" class="easyui-textbox" data-options="readonly:true" />
+                    <span class="unit">元</span>
                 </div>
                 <div class="col-6">
                     <label>先付月供金额:</label>
-                    <input name="PaymonthlyMoney" class="easyui-textbox" data-options="readonly:true" />
-                    <span class="unit">万元</span>
+                    <input name="Payment" class="easyui-textbox" data-options="readonly:true" />
+                    <span class="unit">元</span>
                 </div>
             </div>
 
             <div class="row">
                 <div class="col-6">
                     <label>一次性付息金额:</label>
-                    <input name="OnepayInterestMoney" class="easyui-textbox" data-options="readonly:true" />
-                    <span class="unit">万元</span>
+                    <input name="OnePayInterest" class="easyui-textbox" data-options="readonly:true" />
+                    <span class="unit">元</span>
                 </div>
                 <div class="col-6">
                     <label>实际用款额:</label>
-                    <input name="ActualcashMoney" class="easyui-textbox" data-options="readonly:true" />
-                    <span class="unit">万元</span>
+                    <input name="ApprovalMoney" class="easyui-textbox" data-options="readonly:true" />
+                    <span class="unit">元</span>
                 </div>
             </div>
         </fieldset>
@@ -169,26 +97,19 @@
             <div class="row">
                 <div class="col-6">
                     <label>收款账户:</label>
-                    <select name="CreditId" class="easyui-combobox" disabled data-options="method:'GET',
-					        url:'../api/Credit/Option',
-					        editable:false,
-                            required:true,
-					"></select>
+                    <input name="CreditAccountName" class="easyui-textbox" data-options="readonly:true" />
                 </div>
+
                 <div class="col-6">
                     <label>开户行:</label>
-                    <input name="BankName" class="easyui-textbox" data-options="readonly:true" />
+                    <input name="CreditBankName" class="easyui-textbox" data-options="readonly:true" />
                 </div>
             </div>
 
             <div class="row">
                 <div class="col-6">
                     <label>卡号:</label>
-                    <input name="BankCard" class="easyui-textbox" data-options="readonly:true" />
-                </div>
-                <div class="hidden">
-                    <label>放款人ID:</label>
-                    <input name="CreditId" class="easyui-textbox" data-options="readonly:true" />
+                    <input name="CreditBankCard" class="easyui-textbox" data-options="readonly:true" />
                 </div>
             </div>
 
@@ -197,26 +118,19 @@
             <div class="row">
                 <div class="col-6">
                     <label>还款用户:</label>
-                    <input name="ApplicantId" type="hidden" />
-                    <input name="ApplicantName" class="easyui-textbox" disabled data-options="
-						    editable:false,
-                            required:true,
+                    <input name="CustomerAccountName" class="easyui-textbox" disabled data-options="editable:false,required:true,
 					"/>
                 </div>
                 <div class="col-6">
                     <label>开户行:</label>
-                    <input name="BankName" class="easyui-textbox" disabled data-options="readonly:true" />
+                    <input name="CustomerBankName" class="easyui-textbox" disabled data-options="readonly:true" />
                 </div>
             </div>
 
             <div class="row">
                 <div class="col-6">
                     <label>卡号:</label>
-                    <input name="BankCard" class="easyui-textbox" data-options="readonly:true" />
-                </div>
-                <div class="hidden">
-                    <label>还款人ID:</label>
-                    <input name="ApplicantId" class="easyui-textbox" data-options="readonly:true" />
+                    <input name="CustomerBankCard" class="easyui-textbox" data-options="readonly:true" />
                 </div>
             </div>
         </fieldset>
