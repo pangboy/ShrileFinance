@@ -22,11 +22,6 @@
             query.state = GetQueryString("state");
             query.FinanceId = parent.flow.RootKey;
             
-            if (query.FinanceId == undefined || query.FinanceId.length == 0) {
-                query.FinanceId = "ED468191-9FAB-E611-80C5-507B9DE4A488";
-                query.state = 1;
-            }
-
             // 初始化
             Init(query);
         });
@@ -62,6 +57,15 @@
                     $("input[textboxname = 'ApprovalRatio']").textbox({ validType: ["FratioLimit[" + radio + "]"] });
                 }
 
+                // 建议融资金额与审批融资金额 单位转换
+                if (data.AdviceMoney != undefined) {
+                    data.AdviceMoney /= 10000;
+                }
+                if (data.ApprovalMoney != undefined) {
+                    data.ApprovalMoney /= 10000;
+                }
+                
+                // 加载融资审核基本信息
                 FieldsetLoadDateFactory("FinanceAudit", 'text', data)
 
                 // 加载融资项
@@ -101,6 +105,10 @@
             // 序列化融资审核
             var value = $("fieldset[name=FinanceAudit]").serializeJson();
 
+            // 建议融资金额与审批融资金额 单位转换
+            value.AdviceMoney *= 10000;
+            value.ApprovalMoney *= 10000;
+
             if (value.FinanceId.length == 0) {
                 value.FinanceId = '683B6AB9-1CA7-E611-80C5-507B9DE4A488';
             }
@@ -113,6 +121,11 @@
                 FinancingItem.Value = {};
                 FinancingItem.Value.Key = $(e).find("label").text();
                 FinancingItem.Value.Value = $(e).find("input[textboxname=Money]").textbox('getValue');
+
+                if (FinancingItem.Value.Key == "裸车价")
+                {
+                    FinancingItem.Value.Value *= 10000;
+                }
 
                 value.FinancingItems.push(FinancingItem);
             });
@@ -183,6 +196,10 @@
                             validType: ['Money'],
                             onChange: SetRatio
                         });
+                        if (e.Value.Value != undefined)
+                        {
+                            e.Value.Value /= 10000;
+                        }
                     }
 
                     // 金额赋值

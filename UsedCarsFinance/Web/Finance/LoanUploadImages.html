@@ -22,11 +22,6 @@
 
         var query = {};
 
-        function GetParams() {
-            return query;
-            //return $.extend(uc.GetParams(), parent.flow.InstanceData);
-        }
-
         $(function () {
             // 获取参数
             query.state = GetQueryString("state");
@@ -45,6 +40,7 @@
         // 加载数据
         function LoadData(financeId) {
             $("input[name='ApplicantId']").val(financeId);
+            
             GetReferenceID();//绑定已经申请过得REf_ID
             
             // 隐藏所有图片文件名div容器
@@ -74,20 +70,11 @@
                     }
                 }
             });
-
-            if (query.Status == "0") {
+            
+            if (query.state == "0") {
                 // 设置“添加”和“删除”按钮
                 $("#add").remove();
                 $("#del").remove();
-            }
-        }
-
-        // 加载临时数据
-        function LoadTempData() {
-            var data = parent.flow.InstanceTempData.D5;
-
-            if (data) {
-                uc.form.Load(data, "#finance_ff");
             }
         }
 
@@ -118,7 +105,7 @@
                 <a id="downloadall" class="easyui-linkbutton" href="javascript:void(0)" data-options="onClick:downLoadall,width:100">下载全部</a>
                 <a id="add" class="easyui-linkbutton" href="javascript:void(0)" data-options="iconCls:'icon-add',width:100,onClick:Add">添加</a>
             </div>
-            <div style="width:200px;height:25px; padding-top:40px;"><input id="cball" style="float:left;width:30px " name="cball" type="checkbox" class="easyui-validatebox" onclick="checkall()"><label id="label1" style="width:30px;margin-top:2px;" for="" onclick="$(this).prev().click()">全选</label></div>
+            <div style="width:200px;height:25px; padding-top:40px;"><input id="cball" style="float:left;width:30px " name="cball" type="checkbox" class="easyui-validatebox" onclick="checkall(this)"><label id="label1" style="width:30px;margin-top:2px;" for="" onclick="$(this).prev().click()">全选</label></div>
         </div>
     </div>
     <!--上传控件-->

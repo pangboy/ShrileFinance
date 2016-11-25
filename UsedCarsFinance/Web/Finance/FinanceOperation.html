@@ -21,7 +21,7 @@
             // 获取参数
             query.state = GetQueryString("state");
             query.FinanceId = parent.flow.RootKey;
-            
+
             // 初始化
             Init(query);
         });
@@ -91,29 +91,29 @@
             // 序列化放款信息
             TraverseDateFactory(FieldsetSerializeFactory("CreditBankInfo", "text"), value, false, null);
 
-            if (value.NodeType == "Customer") {
-                // 记录融资标识
-                value.FinanceId = $('fieldset[name=Operation]>input[name=FinanceId]').val();
+            //if (value.NodeType == "Customer") {
+            // 记录融资标识
+            value.FinanceId = $('fieldset[name=Operation]>input[name=FinanceId]').val();
 
-                // 序列化还款信息
-                TraverseDateFactory(FieldsetSerializeFactory("CustomerBankInfo", "text"), value, false, null);
+            // 序列化还款信息
+            TraverseDateFactory(FieldsetSerializeFactory("CustomerBankInfo", "text"), value, false, null);
 
-                // 序列化车辆信息
-                TraverseDateFactory(FieldsetSerializeFactory("VehicleInfo", "text"), value, false, null);
-            }
-            else {
-                // 序列化租赁信息
-                TraverseDateFactory(FieldsetSerializeFactory('Operation', 'text'), value, false, null)
+            // 序列化车辆信息
+            TraverseDateFactory(FieldsetSerializeFactory("VehicleInfo", "text"), value, false, null);
+            //}
+            //else {
+            // 序列化租赁信息
+            TraverseDateFactory(FieldsetSerializeFactory('Operation', 'text'), value, false, null)
 
-                // 序列化合同信息
-                var array = [];
-                $(FieldsetSerializeFactory('Contact', 'table')).each(function (i, e) {
-                    if (e.Name.length > 0) {
-                        array.push(e);
-                    }
-                });
-                value.ContactJson = JSON.stringify(array);
-            }
+            // 序列化合同信息
+            var array = [];
+            $(FieldsetSerializeFactory('Contact', 'table')).each(function (i, e) {
+                if (e.Name.length > 0) {
+                    array.push(e);
+                }
+            });
+            value.ContactJson = JSON.stringify(array);
+            //}
 
             return value;
         }
@@ -160,10 +160,13 @@
                     FieldsetLoadDateFactory('Contact', 'table', JSON.parse(data.ContactJson));
                 }
                 else {
-                    var contactTempData = [
-                        { Name: "融资租赁合同" }, { Name: "保证合同" }, { Name: "车辆抵押合同" }, { Name: "建行授权书" },
-                        { Name: "收据" }, { Name: "付款指示函" }, { Name: "扣款委托书" }, { Name: "未婚申明书" }
-                    ];
+                    //var contactTempData = [
+                    //    { Name: "融资租赁合同" }, { Name: "保证合同" }, { Name: "车辆抵押合同" }, { Name: "建行授权书" },
+                    //    { Name: "收据" }, { Name: "付款指示函" }, { Name: "扣款委托书" }, { Name: "未婚申明书" }
+                    //];
+
+                    var contactTempData = [{ Name: "融资租赁合同" }, { Name: "保证合同" }, { Name: "车辆抵押合同" }];
+
                     FieldsetLoadDateFactory('Contact', 'table', contactTempData);
                 }
 
@@ -472,7 +475,7 @@
 
                         <div class="col-6">
                             <label>注册登记日期:</label>
-                            <input name="RegisterDate" class="easyui-datebox" data-options="validType:'Date',required:true,editable:false,width:410" />
+                            <input name="RegisterDate" class="easyui-textbox" data-options="validType:['YearMonth'],required:true" />
                         </div>
 
                         <div class="col-6">

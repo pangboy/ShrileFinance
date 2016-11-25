@@ -41,7 +41,7 @@
             return Mapper.Map<PartnerViewModel>(partner);
         }
 
-        public void Create(PartnerViewModel model)
+        public async void Create(PartnerViewModel model)
         {
             var partner = Mapper.Map<Partner>(model);
 
@@ -53,6 +53,21 @@
             if (partner.Approvers.Select(m => m.RoleId).Count() != 5)
             {
                 throw new Core.Exceptions.InvalidOperationAppException("每个角色有且仅有一个审批用户.");
+            }
+
+            foreach (var item in model.Accounts)
+            {
+                var idenResult = await accountService.CreateUserAsync(item);
+
+                if (!idenResult.Succeeded)
+                {
+                    throw new Core.Exceptions.ArgumentAppException(idenResult.Errors.First());
+                }
+
+                var entity = userManager.FindById(item.Id);
+                partner.Accounts.Add(entity);
+
+                Mapper.Map(entity, item);
             }
 
             repository.Create(partner);
@@ -97,7 +112,7 @@
                     partner.Accounts.Add(entity);
                 }
 
-                Mapper.Map(item, entity);
+                Mapper.Map(entity, item);
             }
 
             repository.Modify(partner);
