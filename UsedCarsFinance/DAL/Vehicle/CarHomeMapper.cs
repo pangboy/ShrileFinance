@@ -135,7 +135,7 @@ namespace DAL.Vehicle
         {
             ConfigInfo configInfo = new ConfigInfo();
             SqlCommand comm = carHomeHelper.GetSqlCommand(@"
-                SELECT * FROM Sys_Config WHERE VehicleCode = @VehicleKey
+                SELECT * FROM Sys_CarConfig WHERE VehicleCode = @VehicleKey
             ");
             carHomeHelper.AddInParameter(comm, "@VehicleKey", SqlDbType.NVarChar, vehicleKey);
 

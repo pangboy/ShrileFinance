@@ -31,7 +31,7 @@
             GetPageInfo();
 
             // 定时保存草稿数据
-            AutoSaveData();
+            //AutoSaveData();
         })
 
         window.onload = function () {
@@ -88,12 +88,13 @@
                             GetAddress();
                             // $("#F").hide();
                         }
-                        if (method == "mod" || method == "add") {
-                            LoadTempData();
-                        }
-                        if (method == "view") {
-                            LoadData();
-                        }
+                        LoadData();
+                        //if (method == "mod" || method == "add") {
+                        //   // LoadTempData();
+                        //}
+                        //if (method == "view") {
+                        //    LoadData();
+                        //}
                     }
                 }
             });
@@ -123,7 +124,7 @@
                 var templateId = "template" + value[i].ParagraphCode;//模板ID
                 $("#content").append(section);
                 // 获取临时数据标识
-                GetTempDataID();
+                //GetTempDataID();
                 if (method == "add" && TempInfoId == 0) {
                     //当必填项时将template中的内容克隆到fieldset中
                     if (value[i].Min > 0) {
@@ -270,7 +271,7 @@
                             $("#temp").linkbutton("disable");
                             $("#clear").linkbutton("disable");
                             // 删除临时数据
-                            DeleteTempRecord();
+                           // DeleteTempRecord();
                             top.$.messager.show({ msg: "保存成功！" });
                             setTimeout(function () {
                                 Cancel();
@@ -287,128 +288,128 @@
             });
         }
 
-        // 定时服务
-        function AutoSaveData() {
-            setTimeout(function () {
-                $("#temp").click();
-                AutoSaveData();
-            }, 300000);
-        }
+        //// 定时服务
+        //function AutoSaveData() {
+        //    setTimeout(function () {
+        //        $("#temp").click();
+        //        AutoSaveData();
+        //    }, 300000);
+        //}
 
-        // 保存临时数据
-        function SaveAsTemp() {
-            // 获取临时数据标识
-            GetTempDataID();
-            var data = {};
-            var section = $("#content").find("section");
-            // 序列化数据
-            var temp;
-            for (var i = 0; i < section.length; i++) {
-                var fs = new Array();
-                temp = $(section[i]).attr("id");
-                var fieldset = $(section[i]).children("fieldset");
-                for (var j = 0; j < fieldset.length; j++) {
-                    fs.push($(fieldset[j]).serializeJson())
-                }
-                data[temp] = fs;
-            }
-            var str = JSON.stringify(data);
-            $("#content").children().children(":hidden").find(":input.validatebox-text").validatebox("disableValidation");
-            // 保存临时数据
-            $.ajax({
-                async: true,
-                data: { Context: str, InfoTypeId: infoTypeId, ReportId: reportId, TempInfoId: TempInfoId },
-                method: "POST",
-                url: "../api/TempRecord/SaveAsTemp",
-                statusCode: {
-                    200: function (data) {
-                        if (data == true) {
-                            top.$.messager.show({ msg: "草稿保存成功！" });
-                        }
-                        else {
-                            top.$.messager.show({ msg: data });
-                        }
-                    }
-                }
-            });
-        }
-        // 加载临时数据
-        function LoadTempData() {
-            // 加载临时数据
-            $.ajax({
-                async: true,
-                data: { InfoTypeId: infoTypeId, ReportId: reportId },
-                method: "Get",
-                url: "../api/TempRecord/GetTempRecord",
-                statusCode: {
-                    200: function (data) {
-                        if (data != null) {
-                            for (var item in data) {
-                                for (var i = 0; i < data[item].length; i++) {
-                                    Add($("#" + item).children("template").attr("id"));
-                                    $("#" + item + "_" + (i + 1)).form("load", data[item][i]);
-                                    if (infoTypeId <= 32) {
-                                        InfoType();
-                                    }
-                                }
-                            }
-                        }
-                        else {
-                            // 如果临时数据为空，加载正式数据
-                            LoadData();
-                        }
-                    }
-                }
-            });
-        }
+        //// 保存临时数据
+        //function SaveAsTemp() {
+        //    // 获取临时数据标识
+        //    GetTempDataID();
+        //    var data = {};
+        //    var section = $("#content").find("section");
+        //    // 序列化数据
+        //    var temp;
+        //    for (var i = 0; i < section.length; i++) {
+        //        var fs = new Array();
+        //        temp = $(section[i]).attr("id");
+        //        var fieldset = $(section[i]).children("fieldset");
+        //        for (var j = 0; j < fieldset.length; j++) {
+        //            fs.push($(fieldset[j]).serializeJson())
+        //        }
+        //        data[temp] = fs;
+        //    }
+        //    var str = JSON.stringify(data);
+        //    $("#content").children().children(":hidden").find(":input.validatebox-text").validatebox("disableValidation");
+        //    // 保存临时数据
+        //    $.ajax({
+        //        async: true,
+        //        data: { Context: str, InfoTypeId: infoTypeId, ReportId: reportId, TempInfoId: TempInfoId },
+        //        method: "POST",
+        //        url: "../api/TempRecord/SaveAsTemp",
+        //        statusCode: {
+        //            200: function (data) {
+        //                if (data == true) {
+        //                    top.$.messager.show({ msg: "草稿保存成功！" });
+        //                }
+        //                else {
+        //                    top.$.messager.show({ msg: data });
+        //                }
+        //            }
+        //        }
+        //    });
+        //}
+        //// 加载临时数据
+        //function LoadTempData() {
+        //    // 加载临时数据
+        //    $.ajax({
+        //        async: true,
+        //        data: { InfoTypeId: infoTypeId, ReportId: reportId },
+        //        method: "Get",
+        //        url: "../api/TempRecord/GetTempRecord",
+        //        statusCode: {
+        //            200: function (data) {
+        //                if (data != null) {
+        //                    for (var item in data) {
+        //                        for (var i = 0; i < data[item].length; i++) {
+        //                            Add($("#" + item).children("template").attr("id"));
+        //                            $("#" + item + "_" + (i + 1)).form("load", data[item][i]);
+        //                            if (infoTypeId <= 32) {
+        //                                InfoType();
+        //                            }
+        //                        }
+        //                    }
+        //                }
+        //                else {
+        //                    // 如果临时数据为空，加载正式数据
+        //                    LoadData();
+        //                }
+        //            }
+        //        }
+        //    });
+        //}
 
-        // 获取临时数据标识
-        function GetTempDataID() {
-            // 获取临时数据标识，在保存草稿时用于判断草稿是否存在，以选择新增或删除草稿
-            $.ajax({
-                async: false,
-                data: { InfoTypeId: infoTypeId, ReportId: reportId },
-                method: "Get",
-                url: "../api/TempRecord/GetTempInfoId",
-                statusCode: {
-                    200: function (data) {
-                        if (data != null) {
-                            TempInfoId = data.TempInfoId;
-                        }
-                    }
-                }
-            });
-        }
+        //// 获取临时数据标识
+        //function GetTempDataID() {
+        //    // 获取临时数据标识，在保存草稿时用于判断草稿是否存在，以选择新增或删除草稿
+        //    $.ajax({
+        //        async: false,
+        //        data: { InfoTypeId: infoTypeId, ReportId: reportId },
+        //        method: "Get",
+        //        url: "../api/TempRecord/GetTempInfoId",
+        //        statusCode: {
+        //            200: function (data) {
+        //                if (data != null) {
+        //                    TempInfoId = data.TempInfoId;
+        //                }
+        //            }
+        //        }
+        //    });
+        //}
 
-        // 删除临时数据
-        function DeleteTempRecord() {
-            $.ajax({
-                async: false,
-                data: { InfoTypeId: infoTypeId, ReportId: reportId },
-                method: "Get",
-                url: "../api/TempRecord/DeleteTemp",
-                statusCode: {
-                    200: function (data) {
-                        TempInfoId = 0;
-                    }
-                }
-            });
-        }
+        //// 删除临时数据
+        //function DeleteTempRecord() {
+        //    $.ajax({
+        //        async: false,
+        //        data: { InfoTypeId: infoTypeId, ReportId: reportId },
+        //        method: "Get",
+        //        url: "../api/TempRecord/DeleteTemp",
+        //        statusCode: {
+        //            200: function (data) {
+        //                TempInfoId = 0;
+        //            }
+        //        }
+        //    });
+        //}
 
-        // 清空草稿
-        function ClearTempRecord() {
-            // 提示框
-            $.messager.confirm("操作提示", "“清空草稿”将清空该条记录的草稿，是否清空草稿？", function (data) {
-                if (data) {
-                    // 如果确认清空
-                    GetTempDataID();
-                    if (TempInfoId > 0) {
-                        DeleteTempRecord();
-                        window.location.reload();
-                    }
-                }
-            });
-        }
+        //// 清空草稿
+        //function ClearTempRecord() {
+        //    // 提示框
+        //    $.messager.confirm("操作提示", "“清空草稿”将清空该条记录的草稿，是否清空草稿？", function (data) {
+        //        if (data) {
+        //            // 如果确认清空
+        //            GetTempDataID();
+        //            if (TempInfoId > 0) {
+        //                DeleteTempRecord();
+        //                window.location.reload();
+        //            }
+        //        }
+        //    });
+        //}
 
         function Cancel() {
             window.opener.location.href = window.opener.location.href;

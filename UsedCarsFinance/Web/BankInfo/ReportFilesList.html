@@ -77,59 +77,76 @@
             if (this.id == "del") {
                 var row = uc.grid.GetSelected();
                 if (row) {
-                    if (row.ReportState != "已发送") {
-                        $.ajax({
-                            method: "GET",
-                            url: "../api/ReportFiles/GetByOperator?filesId=" + row.FileID,
-                            statusCode: {
-                                200: function (data) {
-                                    if (data) {
-                                        $.messager.confirm('确认', '确认删除该条报文文件吗?', function (r) {
-                                            if (r) {
-                                                $.ajax({
-                                                    method: "DELETE",
-                                                    url: "../api/ReportFiles/Delete?filesId=" + row.FileID,
-                                                    statusCode: {
-                                                        200: function (data) {
-                                                            uc.grid.Reload();
-                                                        }
-                                                    }
-                                                });
-                                            }
-                                        })
-                                    }
-                                    else {
-                                        top.$.messager.show({ msg: "只能删除该操作者下的记录！" });
+                    $.messager.confirm('确认', '确认删除该条报文文件吗?', function (r) {
+                        if (r) {
+                            $.ajax({
+                                method: "DELETE",
+                                url: "../api/ReportFiles/Delete?filesId=" + row.FileID,
+                                statusCode: {
+                                    200: function (data) {
+                                        uc.grid.Reload();
                                     }
                                 }
-                            }
-                        });
-                    }
-                    else {
-                        top.$.messager.show({ msg: "该报文已发送不能删除！" });
-                    }
+                            });
+                        }
+                    })
+                    //if (row.ReportState != "已发送") {
+                    //    $.ajax({
+                    //        method: "GET",
+                    //        url: "../api/ReportFiles/GetByOperator?filesId=" + row.FileID,
+                    //        statusCode: {
+                    //            200: function (data) {
+                    //                if (data) {
+                    //                    $.messager.confirm('确认', '确认删除该条报文文件吗?', function (r) {
+                    //                        if (r) {
+                    //                            $.ajax({
+                    //                                method: "DELETE",
+                    //                                url: "../api/ReportFiles/Delete?filesId=" + row.FileID,
+                    //                                statusCode: {
+                    //                                    200: function (data) {
+                    //                                        uc.grid.Reload();
+                    //                                    }
+                    //                                }
+                    //                            });
+                    //                        }
+                    //                    })
+                    //                }
+                    //                else {
+                    //                    top.$.messager.show({ msg: "只能删除该操作者下的记录！" });
+                    //                }
+                    //            }
+                    //        }
+                    //    });
+                    //}
+                    //else {
+                    //    top.$.messager.show({ msg: "该报文已发送不能删除！" });
+                    //}
                 }
 
             }
             else if (this.id == "mod" || this.id == "view") {
                 var row = uc.grid.GetSelected();
                 if (row) {
-                    $.ajax({
-                        method: "GET",
-                        url: "../api/ReportFiles/GetByOperator?filesId=" + row.FileID,
-                        statusCode: {
-                            200: function (data) {
-                                if (data) {
-                                    url += "&messageFileId=" + messageFileId; //文件ID
-                                    url += "&fileId=" + row.FileID //报文文件ID
-                                    uc.ShowWindow("报文详情列表", url);
-                                }
-                                else {
-                                    top.$.messager.show({ msg: "只能操作当前用户下的记录！" });
-                                }
-                            }
-                        }
-                    });
+                    // 由于系统重构,删除之前管理员用户,所以暂时删除该用户判断操作
+                    url += "&messageFileId=" + messageFileId; //文件ID
+                    url += "&fileId=" + row.FileID //报文文件ID
+                    uc.ShowWindow("报文详情列表", url);
+                    //$.ajax({
+                    //    method: "GET",
+                    //    url: "../api/ReportFiles/GetByOperator?filesId=" + row.FileID,
+                    //    statusCode: {
+                    //        200: function (data) {
+                    //            if (data) {
+                    //                url += "&messageFileId=" + messageFileId; //文件ID
+                    //                url += "&fileId=" + row.FileID //报文文件ID
+                    //                uc.ShowWindow("报文详情列表", url);
+                    //            }
+                    //            else {
+                    //                top.$.messager.show({ msg: "只能操作当前用户下的记录！" });
+                    //            }
+                    //        }
+                    //    }
+                    //});
                 }
                 else {
                     return;
@@ -142,34 +159,52 @@
             if (row) {
                 $.ajax({
                     method: "GET",
-                    url: "../api/ReportFiles/GetByOperator?filesId=" + row.FileID,
+                    url: "../api/ReportFiles/SendReportFile",
+                    data: { fileId: row.FileID },
                     statusCode: {
                         200: function (data) {
-                            if (data) {
-                                $.ajax({
-                                    method: "GET",
-                                    url: "../api/ReportFiles/SendReportFile",
-                                    data: { fileId: row.FileID },
-                                    statusCode: {
-                                        200: function (data) {
-                                            if (data == true) {
-                                                top.$.messager.show({ msg: "下载成功！" });
-                                                downLoadall(row.FileID)
-                                            }
-                                            else {
-                                                top.$.messager.show({ msg: "个人报文中空报文不能发送！" });
-                                            }
-
-                                        }
-                                    },
-                                });
+                            if (data == true) {
+                                top.$.messager.show({ msg: "下载成功！" });
+                                downLoadall(row.FileID)
                             }
                             else {
-                                top.$.messager.show({ msg: "只能操作当前用户下的记录！" });
+                                top.$.messager.show({ msg: "个人报文中空报文不能发送！" });
                             }
+
                         }
-                    }
+                    },
                 });
+
+                //$.ajax({
+                //    method: "GET",
+                //    url: "../api/ReportFiles/GetByOperator?filesId=" + row.FileID,
+                //    statusCode: {
+                //        200: function (data) {
+                //            if (data) {
+                //                $.ajax({
+                //                    method: "GET",
+                //                    url: "../api/ReportFiles/SendReportFile",
+                //                    data: { fileId: row.FileID },
+                //                    statusCode: {
+                //                        200: function (data) {
+                //                            if (data == true) {
+                //                                top.$.messager.show({ msg: "下载成功！" });
+                //                                downLoadall(row.FileID)
+                //                            }
+                //                            else {
+                //                                top.$.messager.show({ msg: "个人报文中空报文不能发送！" });
+                //                            }
+
+                //                        }
+                //                    },
+                //                });
+                //            }
+                //            else {
+                //                top.$.messager.show({ msg: "只能操作当前用户下的记录！" });
+                //            }
+                //        }
+                //    }
+                //});
             }
         }
 

@@ -79,7 +79,6 @@
       <Name>Core</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <None Include="Logger\log4net.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
