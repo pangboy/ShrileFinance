@@ -94,6 +94,8 @@
 
         function Submit() {
             if (!endEditing()) {
+                $.messager.show({ msg: "请先保存授信帐号." });
+
                 return false;
             }
 
