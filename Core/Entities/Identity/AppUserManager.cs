@@ -29,6 +29,11 @@
 
         public bool CheckUsername(string username)
         {
+            if (string.IsNullOrEmpty(username))
+            {
+                return false;
+            }
+
             var user = this.FindByName(username);
 
             return user != null;
