@@ -53,14 +53,14 @@
         /// <param name="model">值</param>
         /// <returns></returns>
         [HttpPost]
-        public IHttpActionResult Post(PartnerViewModel model)
+        public async Task<IHttpActionResult> Post(PartnerViewModel model)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            service.Create(model);
+            await service.Create(model);
 
             return Ok();
         }

@@ -31,7 +31,7 @@
                  ch.CarBrand AS '[品牌]', ch.Series AS '[型号]',
                  '' AS '[融资额大写]', fi.Principal AS '[融资额]', 
                  pi.FinancingPeriods AS '[融资期限]', '' AS '[手续费大写]', fi.Poundage AS '[手续费]',
-                 '' AS '[保证金大写]', (pi.CustomerBailRatio * fi.Principal)AS '[保证金]',
+                 '' AS '[保证金大写]', (pi.CustomerBailRatio * fi.ApprovalMoney)AS '[保证金]',
                  fi.RepaymentDate AS '[号]',
                  YEAR(DATEADD(MM, 1, fi.RepayRentDate)) AS '[年]', MONTH(DATEADD(MM, 1, fi.RepayRentDate)) AS '[月]', DAY(DATEADD(MM, 1, fi.RepayRentDate)) AS '[日]',
                  fe.CustomerAccountName AS '[户名]', fe.CustomerBankName AS '[乙方开户行地址]', fe.CustomerBankCard AS '[乙方开户行账号]'
