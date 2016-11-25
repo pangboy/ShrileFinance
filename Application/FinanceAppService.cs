@@ -433,8 +433,13 @@
             };
 
             // 部分映射
-            var array = new string[] { "AdviceMoney", "AdviceRatio", "ApprovalMoney", "ApprovalRatio", "Payment", "Poundage" };
+            var array = new string[] { "AdviceMoney", "AdviceRatio", "ApprovalMoney", "ApprovalRatio", "Payment"};
             financeAuditViewModel = PartialMapper(refObj: finance, outObj: financeAuditViewModel, array: array);
+
+            var cost = finance.FinanceProduce.ToList().FindAll(m => m.IsFinancing==false);
+            cost.ToList().ForEach(item=> {
+                financeAuditViewModel.Poundage += item.Money;
+            });
 
             // 映射 融资比例区间
             financeAuditViewModel = PartialMapper(refObj: finance.Produce, outObj: financeAuditViewModel, array: new string[] { "MinFinancingRatio", "MaxFinancingRatio" });
@@ -462,8 +467,14 @@
             }
 
             // 建议融资金额、建议融资比例、审批融资金额、审批融资比例、月供额度、手续费
-            var array = new string[] { "AdviceMoney", "AdviceRatio", "ApprovalMoney", "ApprovalRatio", "Payment", "Poundage" };
+            var array = new string[] { "AdviceMoney", "AdviceRatio", "ApprovalMoney", "ApprovalRatio", "Payment"};
             finance = PartialMapper(refObj: value, outObj: finance, array: array);
+
+            finance.Poundage = decimal.Parse("0.00");
+            var cost = finance.FinanceProduce.ToList().FindAll(m => m.IsFinancing==false);
+            cost.ToList().ForEach(item => {
+                finance.Poundage += item.Money;
+            });
 
             // 初审 修改融资项各金额
             if (!value.IsReview)
