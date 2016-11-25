@@ -407,68 +407,80 @@
 
         //当有自有住房时候追加
         function AddOwnHouse() {
-            ownhouse++;
-            var template = document.querySelector("#ownHouseTemplate");
-            var clone = document.importNode(template.content, true);
-            $(clone.querySelectorAll("input[type=radio]")).each(function () {
-                this.name += "_" + ownhouse;
-            });
-            $(clone.querySelector("input[name=ownHouseAddress]")).each(function () {
-                this.name += "_" + ownhouse;
-            });
-            $(clone.querySelector("input[name=ownHouseSize]")).each(function () {
-                this.name += "_" + ownhouse;
-            });
-            $(clone.querySelector("input[name=ownHouseRegisterDate]")).each(function () {
-                this.name += "_" + ownhouse;
-            });
+            if (uc.GetParams().state != 0) {
+                ownhouse++;
+                var template = document.querySelector("#ownHouseTemplate");
+                var clone = document.importNode(template.content, true);
+                $(clone.querySelectorAll("input[type=radio]")).each(function () {
+                    this.name += "_" + ownhouse;
+                });
+                $(clone.querySelector("input[name=ownHouseAddress]")).each(function () {
+                    this.name += "_" + ownhouse;
+                });
+                $(clone.querySelector("input[name=ownHouseSize]")).each(function () {
+                    this.name += "_" + ownhouse;
+                });
+                $(clone.querySelector("input[name=ownHouseRegisterDate]")).each(function () {
+                    this.name += "_" + ownhouse;
+                });
 
-            $("#OwnHouseCount").textbox("setValue", ownhouse);
-            $('<fieldset>').attr({ "id": "OwnHouse" + ownhouse, "class": "house", "style": "margin:20px 0" }).append(clone).appendTo("#ownHouse")
-            $.parser.parse('#ownHouse');
+                $("#OwnHouseCount").textbox("setValue", ownhouse);
+                $('<fieldset>').attr({ "id": "OwnHouse" + ownhouse, "class": "house", "style": "margin:20px 0" }).append(clone).appendTo("#ownHouse")
+                $.parser.parse('#ownHouse');
+            }
         }
         //移除自有住房
         function MinusOwnHouse(value) {
-            $(value).parent().parent().remove();
-            ownhouse--;
-            $("#OwnHouseCount").textbox("setValue", ownhouse);
+            if (uc.GetParams().state != 0) {
+                $(value).parent().parent().remove();
+                ownhouse--;
+                $("#OwnHouseCount").textbox("setValue", ownhouse);
+            }
         }
         //增加担保人
         function AddGuarantee() {
-            guarantees++;
-            var template = document.querySelector("#GuaranteeTemplate");
-            var clone = document.importNode(template.content, true);
-            $('<fieldset>').attr({ "id": "guarantee" + guarantees, "class": "applicant", "style": "margin-left:20px" }).append(clone).appendTo("#GuaranteeContent")
-            $.parser.parse('#guarantee' + guarantees);
+            if (uc.GetParams().state != 0) {
+                guarantees++;
+                var template = document.querySelector("#GuaranteeTemplate");
+                var clone = document.importNode(template.content, true);
+                $('<fieldset>').attr({ "id": "guarantee" + guarantees, "class": "applicant", "style": "margin-left:20px" }).append(clone).appendTo("#GuaranteeContent")
+                $.parser.parse('#guarantee' + guarantees);
+            }
         }
 
         //增加联系人
         function AddContact() {
-            contents++;
-            var template = document.querySelector("#contactTemplate");
-            var clone = document.importNode(template.content, true);
-            $('<fieldset>').attr({ "id": "contact" + contents, "class": "applicant", "style": "margin-left:20px" }).append(clone).appendTo("#ContactContent")
-            $.parser.parse('#contact' + contents);
+            if (uc.GetParams().state != 0) {
+                contents++;
+                var template = document.querySelector("#contactTemplate");
+                var clone = document.importNode(template.content, true);
+                $('<fieldset>').attr({ "id": "contact" + contents, "class": "applicant", "style": "margin-left:20px" }).append(clone).appendTo("#ContactContent")
+                $.parser.parse('#contact' + contents);
+            }
         }
         //增加共同申请人
         function AddJoint() {
-            if (joints < 1) {
-                joints++;
-                var template = document.querySelector("#jointTemplate");
-                var clone = document.importNode(template.content, true);
-                $('<fieldset>').attr({ "id": "joint" + joints, "class": "applicant", "style": "margin-left:20px" }).append(clone).appendTo("#JointContent")
-                $.parser.parse('#joint' + joints);
-            }
-            else {
-                $.messager.show({ msg: "共同申请人只能有一个!" });
+            if (uc.GetParams().state != 0) {
+                if (joints < 1) {
+                    joints++;
+                    var template = document.querySelector("#jointTemplate");
+                    var clone = document.importNode(template.content, true);
+                    $('<fieldset>').attr({ "id": "joint" + joints, "class": "applicant", "style": "margin-left:20px" }).append(clone).appendTo("#JointContent")
+                    $.parser.parse('#joint' + joints);
+                }
+                else {
+                    $.messager.show({ msg: "共同申请人只能有一个!" });
+                }
             }
         }
         //移除联系人
         function MinusContacts(value, count) {
-            if ($($(value).parents("fieldset")[1]).attr("id") == "joint") joints--;
-            if ($($(value).parents("fieldset")[1]).attr("id") == "Guarantee") guarantees--;
-            if ($($(value).parents("fieldset")[1]).attr("id") == "contacts") contents--;
-            $(value).parent().parent().remove();
+            if (uc.GetParams().state != 0) {
+                if ($($(value).parents("fieldset")[1]).attr("id") == "joint") joints--;
+                if ($($(value).parents("fieldset")[1]).attr("id") == "Guarantee") guarantees--;
+                if ($($(value).parents("fieldset")[1]).attr("id") == "contacts") contents--;
+                $(value).parent().parent().remove();
+            }
         }
         uc.grid = new UCGrid("#dg");
         function CheckProduct() {
@@ -557,7 +569,7 @@
             for (var i = 0; i < $('#Poundagedg').datagrid('getRows').length; i++) {
                 data["FinanceProduce"].push($('#Poundagedg').datagrid('getRows')[i])
             }
-            debugger
+            
             return data;
         }
         //选择通讯地址类型时候加载单位地址和住宅地址
@@ -1150,6 +1162,7 @@
                             <div class="col-6">
                                 <label>自有住房面积:</label>
                                 <input id="ownHouseSize" name="OwnHouseSize" class="easyui-textbox" />
+                                <span class="unit">㎡</span>
                             </div>
 
                             <div class="col-6">

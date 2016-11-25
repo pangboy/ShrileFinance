@@ -109,7 +109,6 @@
                 value.IncreaseMarginReson = "";
                 $("fieldset[id=f11] input[textboxname=IncreaseMarginReson]").textbox('setValue', '');
             }
-            debugger
 
             return value;
         }
@@ -177,7 +176,7 @@
                 </div>
                 <div class="row">
                     <div class="col-12">
-                        <span>牌照登记至：</span>
+                        <span>牌照登记至</span>
                         <input name="LicenseRegistration" class="" type="radio" value="0" /><span onclick="$(this).prev().click()">承租人名下</span>&nbsp;&nbsp;&nbsp;&nbsp;
                         <input name="LicenseRegistration" class="" type="radio" value="1" /><span onclick="$(this).prev().click()">渠道个人名下</span>&nbsp;&nbsp;&nbsp;&nbsp;
                         <input name="LicenseRegistration" class="" type="radio" value="2" /><span onclick="$(this).prev().click()">渠道企业名下</span>&nbsp;&nbsp;&nbsp;&nbsp;
@@ -187,7 +186,7 @@
             </fieldset>
 
             <fieldset id="f1">
-                <legend>一：产品种类：</legend>
+                <legend>一产品种类</legend>
                 <div class="row">
                     <div class="col-12">
                         <input name="ProductCategorie" class="" type="radio" value="新车交易贷" disabled /><span onclick="$(this).prev().click()">新车交易贷</span>&nbsp;&nbsp;&nbsp;&nbsp;
@@ -201,7 +200,7 @@
             </fieldset>
 
             <fieldset id="f2">
-                <legend>二：产品编号：</legend>
+                <legend>二产品编号</legend>
                 <div class="row">
                     <div class="col-12">
                         <label>编号:</label>
@@ -215,7 +214,7 @@
             </fieldset>
 
             <fieldset id="f3">
-                <legend>三、承租人信息：</legend>
+                <legend>三、承租人信息</legend>
                 <div class="row">
                     <div class="col-6">
                         <label>姓名:</label>
@@ -236,7 +235,7 @@
             </fieldset>
 
             <fieldset id="f4">
-                <legend>四、共借人信息：</legend>
+                <legend>四、共借人信息</legend>
                 <div class="row">
                     <div class="col-6">
                         <label>共借人姓名:</label>
@@ -246,7 +245,7 @@
             </fieldset>
 
             <fieldset id="f5">
-                <legend>五、保证人信息（除渠道外的保证人）：</legend>
+                <legend>五、保证人信息（除渠道外的保证人）</legend>
                 <div class="row">
                     <div class="col-6">
                         <label>保证人姓名:</label>
@@ -262,7 +261,7 @@
             </fieldset>
 
             <fieldset id="f6">
-                <legend>六、客户类别：</legend>
+                <legend>六、客户类别</legend>
                 <div class="row">
                     <div class="col-12">
                         <input name="CustomerCategory" class="" type="radio" value="0" /><span onclick="$(this).prev().click()">优良职业</span>&nbsp;&nbsp;&nbsp;&nbsp;
@@ -278,10 +277,10 @@
             </fieldset>
 
             <fieldset id="f7">
-                <legend>七、本地常住：</legend>
+                <legend>七、本地常住</legend>
                 <div class="row">
                     <div class="col-6">
-                        <label>户籍所在地：</label>
+                        <label>户籍所在地</label>
                         <select name="CensusRegisterSeat" class="easyui-combobox  combobox-f combo-f textbox-f" data-options="value:'',required:true,editable:false,onSelect:F7check1">
                             <!--<option value="">　</option>-->
                             <option value="0">本地户籍</option>
@@ -289,13 +288,13 @@
                         </select>
                     </div>
                     <div class="col-6">
-                        <label>居住情况：</label>
+                        <label>居住情况</label>
                         <input name="LivingSituation" class="easyui-combobox  combobox-f combo-f textbox-f" data-options="validType:[],value:'',editable:false,onSelect:F7check2" />
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-6">
-                        <label>工作情况：</label>
+                        <label>工作情况</label>
                         <input name="WorkingCondition" class="easyui-combobox  combobox-f combo-f textbox-f" data-options="value:'',editable:false" />
                     </div>
                 </div>
@@ -428,22 +427,22 @@
             </fieldset>
 
             <fieldset id="f8">
-                <legend>八、收入来源：</legend>
+                <legend>八、收入来源</legend>
                 <div class="row">
                     <div class="col-6">
-                        <label>收入来源类型：</label>
+                        <label>收入来源类型</label>
                         <input id="IncomeSourceBusiness" name="IncomeSourceBusiness" type="checkbox" onclick="f8input(this)" value="1" /><span onclick="$(this).prev().click()">经营</span>
                         <span style="margin-left:40px;"></span>
                         <input id="IncomeSourceWage" name="IncomeSourceWage" type="checkbox" onclick="f8input(this)" checked value="1" /><span onclick="$(this).prev().click()">工资</span>
                     </div>
                     <div class="col-6">
-                        <label>月收入：</label>
+                        <label>月收入</label>
                         <input name="MonthlyIncome" class="easyui-textbox" data-options="validType:['Money','length[1,20]'],required:true" />
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-12">
-                        <label>核算依据：</label>
+                        <label>核算依据</label>
                         <input name="AccountingBasis" class="easyui-textbox" data-options="validType:['ANC','length[1,20]'],required:true,multiline:true,height:100" />
                     </div>
                 </div>
@@ -472,27 +471,27 @@
             </fieldset>
 
             <fieldset id="f9">
-                <legend>九、评估价格：</legend>
+                <legend>九、评估价格</legend>
                 <div class="row">
                     <div class="col-6">
-                        <label>网核价格：</label>
+                        <label>网核价格</label>
                         <input name="NetnuclearPrice" class="easyui-textbox" data-options="value:'0.00',validType:['Money'],required:true" />
                     </div>
                     <div class="col-6">
-                        <label>核批价格：</label>
+                        <label>核批价格</label>
                         <input name="NuclearGroupPrice" class="easyui-textbox" data-options="value:'0.00',validType:['Money'],required:true" />
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-6">
-                        <label>终审额度：</label>
+                        <label>终审额度</label>
                         <input name="FinalLine" class="easyui-textbox" data-options="value:'0.00',validType:['Money'],required:true" />
                     </div>
                 </div>
             </fieldset>
 
             <fieldset id="f10">
-                <legend>十、信用状况：</legend>
+                <legend>十、信用状况</legend>
                 <div class="row">
                     <div class="col-12">
                         <input name="CreditCondition" class="" type="radio" value="良好" /><span onclick="$(this).prev().click()">良好</span>
@@ -506,14 +505,14 @@
                         <input name="CreditCondition" class="" type="radio" checked value="呆账" /><span onclick="$(this).prev().click()">呆账</span>
                     </div>
                     <div class="col-12">
-                        <label>特别说明：</label>
+                        <label>特别说明</label>
                         <input name="SpecialInstructions" class="easyui-textbox" data-options="validType:['ANC','length[1,20]'],required:true" />
                     </div>
                 </div>
             </fieldset>
 
             <fieldset id="f11">
-                <legend>十一、保证金：</legend>
+                <legend>十一、保证金</legend>
                 <div class="row">
                     <div class="col-12">
                         <input name="Margin1" class="" type="checkbox" value="5%保证金" onclick="f11MarginClick(this)" /><span onclick="$(this).prev().click()">5%保证金</span>
@@ -521,7 +520,7 @@
                         <input name="Margin2" class="" type="checkbox" value="10%保证金" onclick="f11MarginClick(this)" /><span onclick="$(this).prev().click()">10%保证金</span>
                     </div>
                     <div class="col-12">
-                        <label>增加保证金原因：</label>
+                        <label>增加保证金原因</label>
                         <input name="IncreaseMarginReson" class="easyui-textbox" data-options="validType:['ANC','length[0,400]'],required:false,multiline:true,height:100" />
                     </div>
                 </div>
@@ -532,6 +531,19 @@
                     }
 
                     function f11MarginClick(Obj) {
+                        var Margin1 = $("fieldset[id=f11]").find("input[name=Margin1]");
+                        var Margin2 = $("fieldset[id=f11]").find("input[name=Margin2]");
+
+                        if ($(Margin1)[0].checked == true && $(Margin2)[0].checked == true)
+                        {
+                            if ($(Obj).attr("name") == "Margin1") {
+                                Margin2.click();
+                            }
+                            else {
+                                Margin1.click();
+                            }
+                        }
+
                         var inputs = $("fieldset[id=f11]").find("input[name*=Margin]");
 
                         if (inputs[0].checked == false && inputs[1].checked == false) {
@@ -540,7 +552,8 @@
                                 required: false,
                                 multiline: true,
                                 readonly: true,
-                                height: 100
+                                height: 100,
+                                value:''
                             });
                         }
                         else {
@@ -549,7 +562,8 @@
                                 required: true,
                                 multiline: true,
                                 readonly: false,
-                                height: 100
+                                height: 100,
+                                value: ''
                             });
                         }
                     }
@@ -557,7 +571,7 @@
             </fieldset>
 
             <fieldset id="f12">
-                <legend>十二、年龄：</legend>
+                <legend>十二、年龄</legend>
                 <div class="row">
                     <div class="col-12">
                         <input name="AgeRange" class="" type="radio" onclick="f12Rd(this)" value="20-28岁" /><span onclick="$(this).prev().click()">20-28岁</span>
@@ -603,7 +617,7 @@
             </fieldset>
 
             <fieldset id="f13">
-                <legend> 十三、婚姻：</legend>
+                <legend> 十三、婚姻</legend>
                 <div class="row">
                     <div class="col-12">
                         <input name="MarriageState" class="" type="radio" value="0" disabled /><span>已婚</span>
@@ -616,7 +630,7 @@
             </fieldset>
 
             <fieldset id="f14">
-                <legend> 十四、居住：</legend>
+                <legend> 十四、居住</legend>
                 <div class="row">
                     <div class="col-12">
                         <input name="Live" class="" type="radio" value="0" /><span onclick="$(this).prev().click()">自有房产</span>
@@ -631,7 +645,7 @@
             </fieldset>
 
             <fieldset id="f15">
-                <legend> 十五、房产：</legend>
+                <legend> 十五、房产</legend>
                 <div class="row">
                     <div class="col-12">
                         <input name="RealEstate" class="" type="radio" value="60平以上" /><span onclick="$(this).prev().click()">60平以上</span>
@@ -646,7 +660,7 @@
             </fieldset>
 
             <fieldset id="f16">
-                <legend> 十六、工作：</legend>
+                <legend> 十六、工作</legend>
                 <div class="row">
                     <div class="col-12">
                         <input name="Work" class="" type="radio" value="0" /><span onclick="$(this).prev().click()">同一单位5年以上</span>
@@ -659,12 +673,12 @@
             </fieldset>
 
             <fieldset id="f17">
-                <legend> 十七、家访：</legend>
+                <legend> 十七、家访</legend>
                 <div class="row">
                     <div class="col-12">
                         <input name="FamilyVisit" class="" type="radio" value="0" /><span onclick="$(this).prev().click()">无需家访</span>
                         <span style="margin-left:60px;"></span>
-                        <span>需要家访：</span>
+                        <span>需要家访</span>
                         <input name="FamilyVisit" class="" type="radio" value="1" /><span onclick="$(this).prev().click()">信息符合</span>
                         <span style="margin-left:20px;"></span>
                         <input name="FamilyVisit" class="" type="radio" value="2" checked /><span onclick="$(this).prev().click()">信息不符合</span>
@@ -673,7 +687,7 @@
             </fieldset>
 
             <fieldset id="f18">
-                <legend> 十八、资金用途：</legend>
+                <legend> 十八、资金用途</legend>
                 <div class="row">
                     <div class="col-12">
                         <label>用途</label>
@@ -683,7 +697,7 @@
             </fieldset>
 
             <fieldset id="f19">
-                <legend> 十九、电询说明：</legend>
+                <legend> 十九、电询说明</legend>
                 <div class="row">
                     <div class="col-12">
                         <label>电询</label>
@@ -693,7 +707,7 @@
             </fieldset>
 
             <fieldset id="f20">
-                <legend> 二十、结论：</legend>
+                <legend> 二十、结论</legend>
                 <div class="row">
                     <div class="col-12">
                         <label>结论</label>
@@ -713,8 +727,9 @@
                         <input name="SurveyOpinion" class="" type="radio" onclick="f21Rd(this)" value="2" /><span onclick="$(this).prev().click()">例外通过</span>
                         <span style="margin-left:30px;"></span>
 
-                        <input name="SurveyOpinion" class="" type="radio" onclick="f21RdOther(this)" value="3" checked /><span onclick="$(this).prev().click()">拒单</span>&nbsp;&nbsp;&nbsp;
-                        <span>原因</span><input name="SurveyOpinionReson" class="easyui-textbox col-2" style="width:530px" data-options="validType:['ANC','length[1,20]'],required:true" />
+                        <input name="SurveyOpinion" class="" type="radio" onclick="f21RdOther(this)" value="3" checked /><span onclick="$(this).prev().click()">拒单</span>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <span>原因</span><input name="SurveyOpinionReson" class="easyui-textbox col-2" style="width:500px" data-options="validType:['ANC','length[1,200]'],required:true" />
                     </div>
                 </div>
                 <script>

@@ -236,6 +236,30 @@
         }
 
         /// <summary>
+        /// 获取财务信息
+        /// </summary>
+        /// <param name="financeId">融资标识</param>
+        /// <returns>财务Model</returns>
+        public LoanViewModel GetLoan(Guid financeId)
+        {
+            var finance = repository.Get(financeId);
+            LoanViewModel loan = Mapper.Map<LoanViewModel>(finance);
+            return new LoanViewModel()
+            {
+                CreditAccountName = finance.FinanceExtension.CreditAccountName,
+                ApprovalMoney = finance.ApprovalMoney,
+                CreditBankCard = finance.FinanceExtension.CreditBankCard,
+                CreditBankName = finance.FinanceExtension.CreditBankName,
+                CustomerAccountName = finance.FinanceExtension.CustomerAccountName,
+                CustomerBail = Math.Round(Convert.ToDouble(finance.Produce.CustomerBailRatio * finance.ApprovalMoney)),
+                CustomerBankCard = finance.FinanceExtension.CustomerBankCard,
+                CustomerBankName = finance.FinanceExtension.CustomerBankName,
+                OnePayInterest = finance.OnePayInterest,
+                Payment = Convert.ToDouble(finance.ApprovalMoney * finance.OncePayMonths / finance.Produce.FinancingPeriods),
+            };
+        }
+
+        /// <summary>
         /// 通过融资标识获取信审ViewModel
         /// </summary>
         /// <param name="financeId">融资标识</param>
@@ -462,8 +486,15 @@
             }
 
             // 建议融资金额、建议融资比例、审批融资金额、审批融资比例、月供额度、手续费
-            var array = new string[] { "AdviceMoney", "AdviceRatio", "ApprovalMoney", "ApprovalRatio", "Payment", "Poundage" };
+            var array = new string[] { "AdviceMoney", "AdviceRatio", "ApprovalMoney", "ApprovalRatio", "Payment" };
             finance = PartialMapper(refObj: value, outObj: finance, array: array);
+
+            finance.Poundage = decimal.Parse("0.00");
+            var cost = finance.FinanceProduce.ToList().FindAll(m => m.IsFinancing == false);
+            cost.ToList().ForEach(item =>
+            {
+                finance.Poundage += item.Money;
+            });
 
             // 初审 修改融资项各金额
             if (!value.IsReview)
@@ -649,7 +680,7 @@
         /// <param name="outObj">输出对象</param>
         /// <param name="array">属性名数组</param>
         /// <returns>输出对象（地址不变）</returns>
-        private outT PartialMapper<refT, outT>(refT refObj, outT outObj, string[] array = null)
+        private outT PartialMapper<refT, outT>(refT refObj, outT outObj, string[] array = null) where outT : new()
         {
             if (refObj == null)
             {
@@ -658,7 +689,8 @@
 
             if (outObj == null)
             {
-                outObj = Activator.CreateInstance<outT>();
+                ////outObj = Activator.CreateInstance<outT>();
+                outObj = new outT();
             }
 
             // 字典记录属性的值
@@ -687,25 +719,6 @@
                     });
 
             return outObj;
-        }
-
-        public LoanViewModel GetLoan(Guid financeId)
-        {
-            var finance = repository.Get(financeId);
-            LoanViewModel loan = Mapper.Map<LoanViewModel>(finance);
-            return new LoanViewModel()
-            {
-                CreditAccountName = finance.FinanceExtension.CreditAccountName,
-                ApprovalMoney = finance.ApprovalMoney,
-                CreditBankCard = finance.FinanceExtension.CreditBankCard,
-                CreditBankName = finance.FinanceExtension.CreditBankName,
-                CustomerAccountName = finance.FinanceExtension.CustomerAccountName,
-                CustomerBail =Math.Round(Convert.ToDouble(finance.Produce.CustomerBailRatio * finance.ApprovalMoney)),
-                CustomerBankCard = finance.FinanceExtension.CustomerBankCard,
-                CustomerBankName = finance.FinanceExtension.CustomerBankName,
-                OnePayInterest = finance.OnePayInterest,
-                Payment = Convert.ToDouble(finance.ApprovalMoney*finance.OncePayMonths/finance.Produce.FinancingPeriods),
-            };
         }
     }
 }
