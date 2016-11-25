@@ -433,13 +433,8 @@
             };
 
             // 部分映射
-            var array = new string[] { "AdviceMoney", "AdviceRatio", "ApprovalMoney", "ApprovalRatio", "Payment"};
+            var array = new string[] { "AdviceMoney", "AdviceRatio", "ApprovalMoney", "ApprovalRatio", "Payment", "Poundage" };
             financeAuditViewModel = PartialMapper(refObj: finance, outObj: financeAuditViewModel, array: array);
-
-            var cost = finance.FinanceProduce.ToList().FindAll(m => m.IsFinancing==false);
-            cost.ToList().ForEach(item=> {
-                financeAuditViewModel.Poundage += item.Money;
-            });
 
             // 映射 融资比例区间
             financeAuditViewModel = PartialMapper(refObj: finance.Produce, outObj: financeAuditViewModel, array: new string[] { "MinFinancingRatio", "MaxFinancingRatio" });
