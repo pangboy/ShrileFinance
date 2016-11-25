@@ -54,7 +54,7 @@ function LoadFinanceList() {
     $.ajax({
         async: false,
         type: "Get",
-        data: { financeId: GetParams().FinanceId },
+        data: { financeId: query.FinanceId },
         url: "../api/Finance/Get",
         success: function (data) {
             var getdata = data.Applicants;
@@ -107,7 +107,7 @@ function GetReferenceID() {
     $.ajax({
         async: false,
         type: "Get",
-        data: { financeid: GetParams().FinanceId },
+        data: { financeid: query.FinanceId },
         url: "../api/ImageUpload/GetAllRef",
         success: function (data) {
             var fieldset = $(".container").find("fieldset");
@@ -247,7 +247,7 @@ function Add() {
         var financeId = "";
         //RefModule==2未融资id,否则为申请人id
         if (RefModule == 2) {
-            financeId = GetParams().FinanceId;
+            financeId = query.FinanceId;
         } else {
             var applicantid = $("input:checked").parents("fieldset").find("input[name='ApplicantId']").val();
             financeId = applicantid;
