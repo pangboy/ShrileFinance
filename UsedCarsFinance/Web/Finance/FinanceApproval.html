@@ -21,11 +21,6 @@
             // 获取参数
             query.state = GetQueryString("state");
             query.FinanceId = parent.flow.RootKey;
-            
-            if (query.FinanceId == undefined || query.FinanceId.length == 0) {
-                query.FinanceId = "ED468191-9FAB-E611-80C5-507B9DE4A488";
-                query.state = 1;
-            }
 
             // 初始化
             Init(query);
@@ -39,9 +34,12 @@
 
                 // 加载运营
                 FieldsetLoadDateFactory('Operation', 'text', data);
-
+                
                 // 加载融资项
                 LoadFinancingItem(data.FinancingItems);
+
+                // 加载手续费
+                LoadFinancingCost(data.FinanceCosts);
 
                 if (query.state == 0) {
                     // 禁用所有
@@ -104,20 +102,6 @@
             });
         }
 
-        // 运营基础信息加载
-        function LoadDataBase(data) {
-            if (data) {
-                // 加载运营
-                FieldsetLoadDateFactory('Operation', 'text', data);
-
-                // 加载融资项
-                LoadFinancingItem(data.FinancingItems);
-
-                // 加载手续费
-                LoadFinancingCost(data.FinanceCosts);
-            }
-        }
-
         // 运营复审
         function LoadData_Review(data) {
             // 禁用运营
@@ -136,13 +120,14 @@
             var tableData = [];
             $(dataKV).each(function (i, e) {
                 if (e.Value.Key == "裸车价") {
-                    tableData.push({ Name: e.Value.Key, Money: e.Value.Value + " 万元" });
+                    tableData.push({ Name: e.Value.Key, Money: e.Value.Value/10000 + " 万元" });
                 }
                 else {
                     tableData.push({ Name: e.Value.Key, Money: e.Value.Value + " 元" });
                 }
             });
-
+            //$("fieldset").find("#FinancingCosts_dg").datagrid('loadData', tableData);
+            
             FieldsetLoadDateFactory('FinancingItems', 'table', tableData);
         }
 
@@ -151,13 +136,13 @@
             if (dataKV == null) {
                 return;
             }
-
+            
             var tableData = [];
             $(dataKV).each(function (i, e) {
                 tableData.push({ Name: e.Value.Key, Money: e.Value.Value + " 元" });
             });
 
-            FieldsetLoadDateFactory('FinancingCosts', 'table', tableData);
+            $("fieldset").find("#FinancingCosts_dg").datagrid('loadData', tableData);
         }
     </script>
 </head>

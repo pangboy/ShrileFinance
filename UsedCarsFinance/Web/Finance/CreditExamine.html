@@ -109,7 +109,6 @@
                 value.IncreaseMarginReson = "";
                 $("fieldset[id=f11] input[textboxname=IncreaseMarginReson]").textbox('setValue', '');
             }
-            debugger
 
             return value;
         }
@@ -728,8 +727,9 @@
                         <input name="SurveyOpinion" class="" type="radio" onclick="f21Rd(this)" value="2" /><span onclick="$(this).prev().click()">例外通过</span>
                         <span style="margin-left:30px;"></span>
 
-                        <input name="SurveyOpinion" class="" type="radio" onclick="f21RdOther(this)" value="3" checked /><span onclick="$(this).prev().click()">拒单</span>&nbsp;&nbsp;&nbsp;
-                        <span>原因</span><input name="SurveyOpinionReson" class="easyui-textbox col-2" style="width:530px" data-options="validType:['ANC','length[1,20]'],required:true" />
+                        <input name="SurveyOpinion" class="" type="radio" onclick="f21RdOther(this)" value="3" checked /><span onclick="$(this).prev().click()">拒单</span>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <span>原因</span><input name="SurveyOpinionReson" class="easyui-textbox col-2" style="width:500px" data-options="validType:['ANC','length[1,200]'],required:true" />
                     </div>
                 </div>
                 <script>
