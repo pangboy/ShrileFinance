@@ -247,11 +247,11 @@
             return new LoanViewModel()
             {
                 CreditAccountName = finance.FinanceExtension.CreditAccountName,
-                ApprovalMoney = finance.ApprovalMoney,
+                ApprovalMoney = finance.Principal,
                 CreditBankCard = finance.FinanceExtension.CreditBankCard,
                 CreditBankName = finance.FinanceExtension.CreditBankName,
                 CustomerAccountName = finance.FinanceExtension.CustomerAccountName,
-                CustomerBail = Math.Round(Convert.ToDouble(finance.Produce.CustomerBailRatio * finance.ApprovalMoney)),
+                CustomerBail = Math.Round(Convert.ToDouble(finance.Produce.CustomerBailRatio * finance.Principal)),
                 CustomerBankCard = finance.FinanceExtension.CustomerBankCard,
                 CustomerBankName = finance.FinanceExtension.CustomerBankName,
                 OnePayInterest = finance.OnePayInterest,

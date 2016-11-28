@@ -212,6 +212,9 @@
                     $("#contact" + contents).form("load", data.Applicant[i]);
                 }
             }
+            if (uc.GetParams().state == 0) {
+                $('*[btn="add"]').hide();
+            }
         }
 
         //加载融资产品的值
@@ -407,7 +410,6 @@
 
         //当有自有住房时候追加
         function AddOwnHouse() {
-            if (uc.GetParams().state != 0) {
                 ownhouse++;
                 var template = document.querySelector("#ownHouseTemplate");
                 var clone = document.importNode(template.content, true);
@@ -426,40 +428,32 @@
                 $("#OwnHouseCount").textbox("setValue", ownhouse);
                 $('<fieldset>').attr({ "id": "OwnHouse" + ownhouse, "class": "house", "style": "margin:20px 0" }).append(clone).appendTo("#ownHouse")
                 $.parser.parse('#ownHouse');
-            }
         }
         //移除自有住房
         function MinusOwnHouse(value) {
-            if (uc.GetParams().state != 0) {
                 $(value).parent().parent().remove();
                 ownhouse--;
                 $("#OwnHouseCount").textbox("setValue", ownhouse);
-            }
         }
         //增加担保人
         function AddGuarantee() {
-            if (uc.GetParams().state != 0) {
                 guarantees++;
                 var template = document.querySelector("#GuaranteeTemplate");
                 var clone = document.importNode(template.content, true);
                 $('<fieldset>').attr({ "id": "guarantee" + guarantees, "class": "applicant", "style": "margin-left:20px" }).append(clone).appendTo("#GuaranteeContent")
                 $.parser.parse('#guarantee' + guarantees);
-            }
         }
 
         //增加联系人
         function AddContact() {
-            if (uc.GetParams().state != 0) {
                 contents++;
                 var template = document.querySelector("#contactTemplate");
                 var clone = document.importNode(template.content, true);
                 $('<fieldset>').attr({ "id": "contact" + contents, "class": "applicant", "style": "margin-left:20px" }).append(clone).appendTo("#ContactContent")
                 $.parser.parse('#contact' + contents);
-            }
         }
         //增加共同申请人
         function AddJoint() {
-            if (uc.GetParams().state != 0) {
                 if (joints < 1) {
                     joints++;
                     var template = document.querySelector("#jointTemplate");
@@ -470,7 +464,6 @@
                 else {
                     $.messager.show({ msg: "共同申请人只能有一个!" });
                 }
-            }
         }
         //移除联系人
         function MinusContacts(value, count) {
@@ -681,7 +674,7 @@
                     <div class="row">
                         <div class="col-6">
                             <label>业务类型:</label>
-                            <select id="BusinessType" name="BusinessType" class="easyui-combobox" data-options="editable:false,value:''">
+                            <select id="BusinessType" name="BusinessType" class="easyui-combobox" data-options="editable:false">
                                 <option value="0">新车交易贷</option>
                                 <option value="1">二手车交易贷</option>
                                 <option value="2">车抵贷</option>
@@ -701,7 +694,7 @@
                     <div class="row">
                         <div class="col-6">
                             <label>车架号:</label>
-                            <input name="FrameNo" class="easyui-textbox" />
+                            <input name="FrameNo" class="easyui-textbox" data-options="validType:['AN','length[17,17]']" />
                         </div>
 
                         <div class="col-6">
@@ -1109,7 +1102,7 @@
                     </div>
 
                     <div class="row">
-                        <div style="height: 30px;width: 95%; margin-left: 15px;">
+                        <div btn ="add" style="height: 30px;width: 95%; margin-left: 15px;">
                             <span style="font-size:18px">自有住房</span>
                             <a class="add" onclick="AddOwnHouse()">
                                 <img src="images/add.png" />
@@ -1127,7 +1120,7 @@
                     <div id="ownHouse"></div>
 
                     <template id="ownHouseTemplate">
-                        <div class="minusdiv">
+                        <div btn ="add" class="minusdiv">
                             <a class="add" onclick="MinusOwnHouse(this)">
                                 <img src="images/minus.png" />
                             </a>
@@ -1177,7 +1170,7 @@
 
                 <fieldset id="joint">
                     <legend>共同申请人
-                        <a class="add" onclick="AddJoint()">
+                        <a btn ="add" class="add" onclick="AddJoint()">
                             <img src="images/add.png" />
                         </a>
                     </legend>
@@ -1189,7 +1182,7 @@
                             <input name="Id" type="hidden" />
                         </div>
 
-                        <div class="minusdiv">
+                        <div btn ="add" class="minusdiv">
                             <a class="add" onclick="MinusContacts(this, joints)">
                                 <img src="images/minus.png" />
                             </a>
@@ -1306,7 +1299,7 @@
 
                 <fieldset id="Guarantee">
                     <legend>担保人
-                        <a class="add" onclick="AddGuarantee()">
+                        <a btn ="add" class="add" onclick="AddGuarantee()">
                             <img src="images/add.png" />
                         </a>
                     </legend>
@@ -1318,7 +1311,7 @@
                             <input name="Id" type="hidden" />
                         </div>
 
-                        <div class="minusdiv">
+                        <div btn ="add" class="minusdiv">
                             <a class="add" onclick="MinusContacts(this, guarantees)">
                                 <img src="images/minus.png" />
                             </a>
@@ -1438,7 +1431,7 @@
                 <fieldset id="contacts">
                     <legend>
                         联系人
-                        <a class="add" onclick="AddContact()">
+                        <a btn ="add" class="add" onclick="AddContact()">
                             <img src="images/add.png" />
                         </a>
                     </legend>
@@ -1450,7 +1443,7 @@
                             <input name="Type" type="hidden" value="4" />
                             <input name="Id" type="hidden" />
                         </div>
-                        <div class="minusdiv">
+                        <div btn ="add" class="minusdiv">
                             <a class="add" onclick="MinusContacts(this, contacts)">
                                 <img src="images/minus.png" />
                             </a>
