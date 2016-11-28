@@ -595,6 +595,14 @@
                     $("#" + $(this).parents("fieldset")[0].id).find("div").find("#OfficeAddress").textbox("setValue", $("#WifeOfficeAddress").textbox("getValue"));
                 }
             }
+            else {
+                $("#" + $(this).parents("fieldset")[0].id).find("div").find("#Name").textbox("setValue", "");
+                $("#" + $(this).parents("fieldset")[0].id).find("div").find("#Mobile").textbox("setValue", "");
+                if ($(this).parents("fieldset")[1].id == "Guarantee" || $(this).parents("fieldset")[1].id == "joint") {
+                    $("#" + $(this).parents("fieldset")[0].id).find("div").find("#OfficeName").textbox("setValue", "");
+                    $("#" + $(this).parents("fieldset")[0].id).find("div").find("#OfficeAddress").textbox("setValue", "");
+                }
+            }
         }
 
         function BindColor(index, row) {
