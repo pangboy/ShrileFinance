@@ -414,16 +414,15 @@
                 $(clone.querySelectorAll("input[type=radio]")).each(function () {
                     this.name += "_" + ownhouse;
                 });
-                $(clone.querySelector("input[name=ownHouseAddress]")).each(function () {
+                $(clone.querySelector("input[name=OwnHouseAddress]")).each(function () {
                     this.name += "_" + ownhouse;
                 });
-                $(clone.querySelector("input[name=ownHouseSize]")).each(function () {
+                $(clone.querySelector("input[name=OwnHouseSize]")).each(function () {
                     this.name += "_" + ownhouse;
                 });
-                $(clone.querySelector("input[name=ownHouseRegisterDate]")).each(function () {
+                $(clone.querySelector("input[name=OwnHouseRegisterDate]")).each(function () {
                     this.name += "_" + ownhouse;
                 });
-
                 $("#OwnHouseCount").textbox("setValue", ownhouse);
                 $('<fieldset>').attr({ "id": "OwnHouse" + ownhouse, "class": "house", "style": "margin:20px 0" }).append(clone).appendTo("#ownHouse")
                 $.parser.parse('#ownHouse');
@@ -487,7 +486,7 @@
             FindProduce();
            
             $("#dd").dialog('open');
-            $("#dd").panel({ top: (document).scrollTop() + Math.abs(($(window).height()) * 0.5) });
+            $("#dd").panel({ top: $(document).scrollTop() + Math.abs(($(window).height()-300) * 0.5) });
         }
         function FindProduce() {
             $.ajax({
@@ -682,13 +681,13 @@
                     <div class="row">
                         <div class="col-6">
                             <label>业务类型:</label>
-                            <select id="Type" name="Type" class="easyui-combobox" data-options="editable:false">
-                                <option value="1">以租代购</option>
-                                <option value="2">快速贷</option>
+                            <select id="BusinessType" name="BusinessType" class="easyui-combobox" data-options="editable:false,value:''">
+                                <option value="0">新车交易贷</option>
+                                <option value="1">二手车交易贷</option>
+                                <option value="2">车抵贷</option>
                                 <option value="3">押车贷</option>
-                                <option value="4">车抵贷</option>
-                                <option value="5">二手车交易贷</option>
-                                <option value="6">新车交易贷</option>
+                                <option value="4">快速贷</option>
+                                <option value="5">以租代购</option>
                             </select>
                         </div>
 
@@ -1167,7 +1166,7 @@
 
                             <div class="col-6">
                                 <label>自有住房登记日期:</label>
-                                <input id="ownHouseRegisterDate" name="OwnHouseRegisterDate" class="easyui-datebox" data-options="validType:'Date',width:380"/>
+                                <input id="ownHouseRegisterDate" name="OwnHouseRegisterDate" class="easyui-textbox" data-options="validType:'Date'"/>
                             </div>
                         </div>
 
