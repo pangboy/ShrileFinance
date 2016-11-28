@@ -60,9 +60,18 @@
                 // 建议融资金额与审批融资金额 单位转换
                 if (data.AdviceMoney != undefined) {
                     data.AdviceMoney /= 10000;
+
+                    if (/^\d+(\.\d{1,1}$)/.test(data.AdviceMoney.toString()))
+                    {
+                        data.AdviceMoney += '0';
+                    }
                 }
                 if (data.ApprovalMoney != undefined) {
                     data.ApprovalMoney /= 10000;
+
+                    if (/^\d+(\.\d{1,1}$)/.test(data.ApprovalMoney.toString())) {
+                        data.ApprovalMoney += '0';
+                    }
                 }
                 
                 // 加载融资审核基本信息
@@ -199,6 +208,10 @@
                         if (e.Value.Value != undefined)
                         {
                             e.Value.Value /= 10000;
+
+                            if (/^\d+(\.\d{1,1}$)/.test(e.Value.Value.toString())) {
+                                e.Value.Value += '0';
+                            }
                         }
                     }
 
