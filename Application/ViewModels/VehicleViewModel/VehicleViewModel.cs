@@ -1,6 +1,7 @@
 ﻿namespace Application.ViewModels.VehicleViewModel
 {
     using System;
+    using static Core.Entities.Vehicle.Vehicle;
 
     public class VehicleViewModel
     {
@@ -80,5 +81,11 @@
         /// 车身颜色
         /// </summary>
         public string Color { get; set; }
+
+
+        /// <summary>
+        /// 业务种类
+        /// </summary>
+        public BusinessTypeEnum BusinessType { get; set; }
     }
 }
