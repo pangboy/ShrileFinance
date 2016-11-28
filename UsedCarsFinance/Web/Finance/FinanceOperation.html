@@ -115,21 +115,19 @@
 
             // 序列化合同信息
             var array = [];
-            $($('#Contact_dg').datagrid('getSelections')).each(function (i, e) {
-                debugger
-                if (e.Name.length > 0) {
-                    array.push(e);
-                }
-            });
-            if (array.length == 0)
+            var rows = $('#Contact_dg').datagrid('getRows');
+            if (rows.length > 0)
             {
-                var rows = $('#Contact_dg').datagrid('getRows');
-                if (rows.length > 0)
-                {
+                if ($.inArray(rows[0], $('#Contact_dg').datagrid('getSelections')) == -1) {
                     array.push(rows[0]);
                 }
-            }
 
+                $($('#Contact_dg').datagrid('getSelections')).each(function (i, e) {
+                    if (e.Name.length > 0) {
+                        array.push(e);
+                    }
+                });
+            }
             value.ContactJson = JSON.stringify(array);
             //}
 
