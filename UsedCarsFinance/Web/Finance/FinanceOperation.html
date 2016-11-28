@@ -65,6 +65,12 @@
                 else if (query.state == 1) {
                     // 运营
                     LoadData_Opera(data);
+
+                    if ($('#Contact_dg').datagrid('getSelections').length == 0)
+                    {
+                        // 合同全选
+                        $('#Contact_dg').datagrid('selectAll')
+                    }
                 }
                 else if (query.state == 2) {
                     // 客户
@@ -100,18 +106,30 @@
 
             // 序列化车辆信息
             TraverseDateFactory(FieldsetSerializeFactory("VehicleInfo", "text"), value, false, null);
-            //}
-            //else {
+
             // 序列化租赁信息
-            TraverseDateFactory(FieldsetSerializeFactory('Operation', 'text'), value, false, null)
+            TraverseDateFactory(FieldsetSerializeFactory('Operation', 'text'), value, false, null);
+            if (value.ActualAmount != undefined && value.ActualAmount.toString().length > 0) {
+                value.ActualAmount *= 10000;
+            }
 
             // 序列化合同信息
             var array = [];
-            $(FieldsetSerializeFactory('Contact', 'table')).each(function (i, e) {
+            $($('#Contact_dg').datagrid('getSelections')).each(function (i, e) {
+                debugger
                 if (e.Name.length > 0) {
                     array.push(e);
                 }
             });
+            if (array.length == 0)
+            {
+                var rows = $('#Contact_dg').datagrid('getRows');
+                if (rows.length > 0)
+                {
+                    array.push(rows[0]);
+                }
+            }
+
             value.ContactJson = JSON.stringify(array);
             //}
 
@@ -153,6 +171,13 @@
                 FieldsetLoadDateFactory('CustomerBankInfo', 'text', data);
 
                 // 加载运营
+                if (data.ActualAmount != undefined && data.ActualAmount.toString().length > 0) {
+                    data.ActualAmount /= 10000;
+
+                    if (/^\d+(\.\d{1,1}$)/.test(data.ActualAmount.toString())) {
+                        data.ActualAmount += '0';
+                    }
+                }
                 FieldsetLoadDateFactory('Operation', 'text', data);
 
                 // 加载合同
@@ -565,7 +590,7 @@
             </fieldset>
 
             <fieldset name="Contact">
-                <legend>合同</legend>
+                <legend>所需合同及文件资料</legend>
                 <table id="Contact_dg" class="easyui-datagrid" style="width:820px;" data-options="toolbar: '#Contact_tb',
                            rownumbers:true,
                            onSelect:ContactSelect,
@@ -591,7 +616,7 @@
                 <script type="text/javascript">
                     // table onSelect事件
                     function ContactSelect(index, row) {
-                        if (index == 0 || ContactCheck == false) {
+                        if (index == -1 || ContactCheck == false) {
                             $('#Contact_dg').datagrid('uncheckRow', index);
                             return false;
                         }
@@ -601,7 +626,9 @@
                                 ContactSave();
                             }
 
-                            $("#Contact_del").linkbutton("enable");
+                            if (index != 0) {
+                                $("#Contact_del").linkbutton("enable");
+                            }
                         }
                     }
                     var ContactCheck = true;
@@ -613,9 +640,15 @@
                                 ContactSave();
                             }
 
-                            var selectRow = $('#Contact_dg').datagrid('getSelected');
-                            if (selectRow != null) {
+                            var selectRows = $('#Contact_dg').datagrid('getSelections');
+                            if (selectRows.length > 0) {
                                 $("#Contact_del").linkbutton("enable");
+
+                                if (selectRows.length == 1) {
+                                    if ($('#Contact_dg').datagrid('getRowIndex', selectRows[0]) == 0) {
+                                        $("#Contact_del").linkbutton("disable");
+                                    }
+                                }
                             }
                             else {
                                 $("#Contact_del").linkbutton("disable");
@@ -641,7 +674,7 @@
                                             // 保存指定行
                                             ContactSave(rowIndex, true);
 
-                                            if ($('#Contact_dg').datagrid('validateRow', rowIndex)) {
+                                            if ($('#Contact_dg').datagrid('validateRow', rowIndex) && rowIndex != 0) {
                                                 $('#Contact_dg').datagrid('deleteRow', rowIndex);
                                             }
                                         }
@@ -772,7 +805,7 @@
 
                     // table 选择所有
                     function SelectAll() {
-                        $('#Contact_dg').datagrid('uncheckRow', 0)
+                        //$('#Contact_dg').datagrid('uncheckRow', 0)
 
                         var rows = $('#Contact_dg').datagrid('getSelections');
 
