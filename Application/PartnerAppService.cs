@@ -55,7 +55,7 @@
                 throw new Core.Exceptions.InvalidOperationAppException("每个角色有且仅有一个审批用户.");
             }
 
-            if (model.Accounts.Count() > 0)
+            if (model.Accounts != null && model.Accounts.Count() > 0)
             {
                 foreach (var item in model.Accounts)
                 {
@@ -94,29 +94,34 @@
                 throw new Core.Exceptions.InvalidOperationAppException("每个角色有且仅有一个审批用户.");
             }
 
-            var modelIds = model.Accounts.Select(m => m.Id);
-            partner.Accounts.Where(m => !modelIds.Contains(m.Id)).ToList()
-                .ForEach(m => partner.Accounts.Remove(m));
-
-            foreach (var item in model.Accounts)
+            if (model.Accounts == null)
             {
-                var entity = partner.Accounts.SingleOrDefault(m => m.Id == item.Id);
+                model.Accounts = new UserViewModel[] { };
+            }
 
-                if (entity == null)
+            var modelIds = model.Accounts.Select(m => m.Id);
+                partner.Accounts.Where(m => !modelIds.Contains(m.Id)).ToList()
+                    .ForEach(m => partner.Accounts.Remove(m));
+
+                foreach (var item in model.Accounts)
                 {
-                    var idenResult = await accountService.CreateUserAsync(item);
+                    var entity = partner.Accounts.SingleOrDefault(m => m.Id == item.Id);
 
-                    if (!idenResult.Succeeded)
+                    if (entity == null)
                     {
-                        throw new Core.Exceptions.ArgumentAppException(idenResult.Errors.First());
+                        var idenResult = await accountService.CreateUserAsync(item);
+
+                        if (!idenResult.Succeeded)
+                        {
+                            throw new Core.Exceptions.ArgumentAppException(idenResult.Errors.First());
+                        }
+
+                        entity = userManager.FindById(item.Id);
+                        partner.Accounts.Add(entity);
                     }
 
-                    entity = userManager.FindById(item.Id);
-                    partner.Accounts.Add(entity);
+                    Mapper.Map(entity, item);
                 }
-
-                Mapper.Map(entity, item);
-            }
 
             repository.Modify(partner);
             repository.Commit();
