@@ -120,7 +120,7 @@
         [HttpGet]
         public IHttpActionResult GetFrameView(Guid instanceId)
         {
-            var frame = service.GetFrameView(instanceId);
+            var frame = service.GetFrame(instanceId, true);
 
             return Ok(frame);
         }

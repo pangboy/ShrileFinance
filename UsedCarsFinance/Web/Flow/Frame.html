@@ -19,7 +19,9 @@
         var flow = {
             InstanceId: "",
             RootKey: "",
-            Forms: []
+            Forms: [],
+            InnerOpinions: [],
+            ExnerOpinions: []
         };
         var draft = new Draft(BuildData, LoadData);
 
@@ -50,6 +52,9 @@
                         if (data.HasInnerOpinion) {
                             $("#InOpinion").parent().show();
                         }
+
+                        flow.InnerOpinions = data.InnerOpinions;
+                        flow.ExnerOpinions = data.ExnerOpinions;
                     }
                 }
             });
@@ -133,8 +138,8 @@
             var dataPosted = {
                 InstanceId: flow.InstanceId,
                 ActionId: this.id.substr(7),
-                InOpinion: $("#InOpinion").textbox("getValue"),
-                ExOpinion: $("#ExOpinion").textbox("getValue"),
+                InternalOpinion: $("#InOpinion").textbox("getValue"),
+                ExnernalOpinion: $("#ExOpinion").textbox("getValue"),
                 Data: dataString
             };
 

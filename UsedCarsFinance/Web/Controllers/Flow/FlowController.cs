@@ -11,20 +11,6 @@ namespace Web.Controllers.Flow
     public class FlowController : ApiController
     {
         /// <summary>
-        /// 流程记录列表
-        /// </summary>
-        /// qiy     16.05.09
-        /// <param name="instanceId">实例标识</param>
-        /// <returns></returns>
-        [HttpGet]
-        public object LogList(int instanceId)
-        {
-            var _log = new BLL.Flow.Log();
-
-            return _log.GetOpinion(instanceId);
-        }
-
-        /// <summary>
         /// 节点选项
         /// </summary>
         /// qiy     16.05.09

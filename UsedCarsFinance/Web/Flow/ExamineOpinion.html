@@ -12,69 +12,44 @@
     <script src="../Scripts/easyui/locale/easyui-lang-zh_CN.js"></script>
     <script src="../Scripts/usedcars.js"></script>
     <script>
-        uc.grid = new UCGrid("#InOpinion");
-
         $(function () {
+            $("#ExOpinion").datagrid("loadData", parent.flow.ExnerOpinions);
 
-            $("#InOpinion").datagrid("resize");
-            var instanceId = parent.flow.InstanceId;
+            if (parent.flow.InnerOpinions) {
+                $("#In_div").show();
 
-            LoadOpinion(instanceId);
-
+                $("#InOpinion").datagrid("resize");
+                $("#InOpinion").datagrid("loadData", parent.flow.InnerOpinions);
+            }
         });
-
-        function LoadOpinion(index) {
-            $.ajax({
-                anysc: false,
-                type: "GET",
-                url: "../api/Flow/LogList",
-                data: { instanceId: index },
-                statusCode: {
-                    200: function (data) {
-                        if (data) {
-                            $("#ExOpinion").datagrid("loadData", data.ExOpinion);
-                            if (data.InOpinion) {
-                                $("#In_div").show();
-                                $("#InOpinion").datagrid("resize");
-                                $("#InOpinion").datagrid("loadData", data.InOpinion);
-                            }
-                        }
-                    }
-                }
-            });
-        }
     </script>
 </head>
 <body>
-	<div class="container" id="Ex_div">
-		<label>意见</label>
-		<table id="ExOpinion" class="easyui-datagrid" data-options="height:300">
+    <div class="container" id="Ex_div">
+        <label>意见</label>
+        <table id="ExOpinion" class="easyui-datagrid" data-options="height:300">
             <thead>
                 <tr>
-                    <th data-options="field:'LogId',hidden:true">Log_ID</th>
-                    <th data-options="field:'RoleName',width:150,align:'center'">角色</th>
                     <th data-options="field:'ProcessUser',width:150,align:'center'">操作人</th>
-                    <th data-options="field:'Name',width:150,align:'center'">节点</th>
-					<th data-options="field:'ExOpinion',width:150,align:'center'">意见</th>
+                    <th data-options="field:'Node',width:150,align:'center'">节点</th>
+                    <th data-options="field:'Action',width:150,align:'center'">操作</th>
                     <th data-options="field:'ProcessTime',width:150,align:'center'">时间</th>
-                    <th data-options="field:'Content',align:'center'">内容</th>
+                    <th data-options="field:'Opinion',align:'center',width:330">意见</th>
                 </tr>
             </thead>
         </table>
     </div>
 
-	<div class="container" id="In_div" style="display:none;">
-		<label>内部意见</label>
-		<table id="InOpinion" class="easyui-datagrid" data-options="height:300">
+    <div class="container" id="In_div" style="display:none;">
+        <label>内部意见</label>
+        <table id="InOpinion" class="easyui-datagrid" data-options="height:300">
             <thead>
                 <tr>
-                    <th data-options="field:'LogId',hidden:true">Log_ID</th>
-                    <th data-options="field:'RoleName',width:150,align:'center'">角色</th>
                     <th data-options="field:'ProcessUser',width:150,align:'center'">操作人</th>
-                    <th data-options="field:'Name',width:150,align:'center'">节点</th>
-					<th data-options="field:'InOpinion',width:150,align:'center'">内部意见</th>
+                    <th data-options="field:'Node',width:150,align:'center'">节点</th>
+                    <th data-options="field:'Action',width:150,align:'center'">操作</th>
                     <th data-options="field:'ProcessTime',width:150,align:'center'">时间</th>
-                    <th data-options="field:'Content',align:'center'">内容</th>
+                    <th data-options="field:'Opinion',align:'center',width:330">意见</th>
                 </tr>
             </thead>
         </table>

@@ -14,7 +14,9 @@
 
 		var flow = {
 		    InstanceId: "",
-            RootKey: ""
+		    RootKey: "",
+		    InnerOpinions: [],
+            ExnerOpinions: []
 		};
 
 		$(function () {
@@ -36,6 +38,9 @@
 					    flow.RootKey = data.RootKey;
 
 					    RanderTabs(data.Forms);
+
+					    flow.InnerOpinions = data.InnerOpinions;
+					    flow.ExnerOpinions = data.ExnerOpinions;
 					}
 				}
 			});
