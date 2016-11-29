@@ -156,7 +156,7 @@
                 url: '../api/CreditExamine/GetCreditExamine',
                 statusCode: {
                     200: function (data) {
-                       LoadData(data);
+                      LoadData(data);
                     }
                 }
             });
@@ -753,12 +753,7 @@
                 </div>
                 <script>
                     function f21Rd(Obj) {
-                        // 禁用“拒单”输入框
-                        $("form fieldset[id=f21]").find("input[textboxname=SurveyOpinionReson]").textbox({
-                            readonly: true,
-                            required: false,
-                            value: ''
-                        });
+                        $("input[textboxname=SurveyOpinionReson]").textbox("readonly", true).textbox("reset").textbox("disableValidation");
                     }
 
                     function f21RdOther(Obj) {
