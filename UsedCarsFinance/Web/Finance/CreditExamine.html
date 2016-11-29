@@ -44,26 +44,43 @@
                         // 加载审批者
                         LoadAduitPerson(data);
                     }
-                    else if ($(e).attr("id") != "f5") {
+
+                    else if ($(e).attr("id") == "f5") {
+                        if (data.Guarantor != undefined) {
+                            for (var i in data.Guarantor) {
+                                if (i > 0) {
+                                    // 新增保证人数据展示容器
+                                    $("form[id=CreditExamineReportFrom] fieldset#f5>div.row").append($("form[id=CreditExamineReportFrom] fieldset#f5 template#Guarantor").html());
+                                    $.parser.parse($("form[id=CreditExamineReportFrom] fieldset#f5>div.row>div.col-6:last"));
+                                }
+
+                                var number = parseInt(i) + 1;
+
+                                $("form[id=CreditExamineReportFrom] fieldset#f5>div.row>div.col-6:last>label").text("保证人" + number + " 姓名：");
+                                $("form[id=CreditExamineReportFrom] fieldset#f5>div.row>div.col-6:last>input[textboxname=Guarantor]").textbox('setValue', data.Guarantor[i]);
+                            }
+                            if (data.Guarantor.length <= 1) {
+                                $("form[id=CreditExamineReportFrom] fieldset#f5>div.row>div.col-6:last>lable").text("保证人姓名：");
+                            }
+                        }
+                    }
+                    else if ($(e).attr("id") == "f11") {
+                        if (data.Margin1!=undefined && data.Margin1.toString().length > 0) {
+                            if ($(e).find("input[name=Margin1]")[0].checked) {
+                                $(e).find("input[name=Margin1]").click();
+                            }
+                            $(e).find("input[name=Margin1]").click();
+                        }
+                        if (data.Margin1 != undefined && data.Margin2.toString().length > 0) {
+                            if ($(e).find("input[name=Margin2]")[0].checked) {
+                                $(e).find("input[name=Margin2]").click();
+                            }
+                            $(e).find("input[name=Margin2]").click();
+                        }
                         $(e).form('load', data);
                     }
                     else {
-                        for (var i in data.Guarantor) {
-                            if (i > 0) {
-                                // 新增保证人数据展示容器
-                                $("form[id=CreditExamineReportFrom] fieldset#f5>div.row").append($("form[id=CreditExamineReportFrom] fieldset#f5 template#Guarantor").html());
-                                $.parser.parse($("form[id=CreditExamineReportFrom] fieldset#f5>div.row>div.col-6:last"));
-                            }
-
-                            var number = parseInt(i) + 1;
-
-                            $("form[id=CreditExamineReportFrom] fieldset#f5>div.row>div.col-6:last>label").text("保证人" + number + " 姓名：");
-                            $("form[id=CreditExamineReportFrom] fieldset#f5>div.row>div.col-6:last>input[textboxname=Guarantor]").textbox('setValue', data.Guarantor[i]);
-                        }
-
-                        if (data.Guarantor.length <= 1) {
-                            $("form[id=CreditExamineReportFrom] fieldset#f5>div.row>div.col-6:last>lable").text("保证人姓名：");
-                        }
+                        $(e).form('load', data);
                     }
                 });
 
@@ -104,10 +121,13 @@
             value.FinanceId = $("form[id=CreditExamineReportFrom]>input[name=FinanceId]").val();
             $("form[id=CreditExamineReportFrom] fieldset[id*=f]").each(function (i, e) {
                 if ($.inArray($(e).attr("id"), ["f1", "f2", "f3", "f4", "f5", , "f22"]) == -1) {
+                    if ($(e).attr("id") == "f11") {
+                        debugger
+                    }
                     TraverseDateFactory($(e).serializeJson(), value, false, null);
                 };
             });
-
+            debugger
             // 保证金
             if (value.Margin1 == undefined && value.Margin2 == undefined) {
                 value.IncreaseMarginReson = "";
@@ -138,7 +158,7 @@
                 url: '../api/CreditExamine/GetCreditExamine',
                 statusCode: {
                     200: function (data) {
-                        LoadData(data);
+                       // LoadData(data);
                     }
                 }
             });
