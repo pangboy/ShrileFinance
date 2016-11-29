@@ -258,15 +258,15 @@
         /// 获取当前实例的所以表单和行为
         /// </summary>
         /// <param name="instanceId">实例标识</param>
+        /// <param name="forView">表单信息是否为查看视图的</param>
         /// <returns></returns>
-        public FrameViewModel GetFrame(Guid instanceId)
+        public FrameViewModel GetFrame(Guid instanceId, bool forView = false)
         {
             var frame = new FrameViewModel();
 
             var instance = instanceReopsitory.Get(instanceId);
 
-            frame.Actions = Mapper.Map<IEnumerable<ActionViewModel>>(instance.CurrentNode.Actions);
-            frame.Forms = formRepository.GetByNode(instance.CurrentNodeId.Value)
+            var nodeForms = formRepository.GetByNode(instance.CurrentNodeId.Value)
                 .Select(m => new FormViewModel {
                     Id = m.FormId,
                     Name = m.Form.Name,
@@ -275,31 +275,44 @@
                     IsHandler = m.IsHandler,
                     IsOpen = m.IsOpen
                 });
+            if (!forView)
+            {
+                frame.Actions = Mapper.Map<IEnumerable<ActionViewModel>>(instance.CurrentNode.Actions);
+                frame.Forms = nodeForms;
+            }
+            else
+            {
+                var roleForms = formRepository.GetByRole(CurrentUser.RoleId)
+                    .Select(m => new FormViewModel {
+                        Id = m.FormId,
+                        Name = m.Form.Name,
+                        Link = m.Form.Link,
+                        State = m.State
+                    });
+
+                frame.Forms = roleForms.Intersect(nodeForms, new FormViewModelEquality());
+            }
 
             frame.HasInnerOpinion = roleManager.FindByIdAsync(CurrentUser.RoleId).Result.Power < 4;
-            frame.RootKey = instance.RootKey;
+            frame.ExnerOpinions = instance.Logs.Select(m => new OpinionViewModel {
+                ProcessUser = m.ProcessUser.Name,
+                Node = m.Node.Name,
+                Action = m.Action.Name,
+                ProcessTime = m.ProcessTime,
+                Opinion = m.Opinion.ExnernalOpinion
+            });
 
-            return frame;
-        }
-
-        /// <summary>
-        /// 以当前角色获取框架信息
-        /// </summary>
-        /// <param name="instanceId">实例标识</param>
-        /// <returns></returns>
-        public FrameViewModel GetFrameView(Guid instanceId)
-        {
-            var frame = new FrameViewModel();
-
-            var instance = instanceReopsitory.Get(instanceId);
-
-            frame.Forms = formRepository.GetByRole(CurrentUser.RoleId)
-                .Select(m => new FormViewModel {
-                    Id = m.FormId,
-                    Name = m.Form.Name,
-                    Link = m.Form.Link,
-                    State = m.State
+            if (frame.HasInnerOpinion)
+            {
+                frame.InnerOpinions = instance.Logs.Select(m => new OpinionViewModel {
+                    ProcessUser = m.ProcessUser.Name,
+                    Node = m.Node.Name,
+                    Action = m.Action.Name,
+                    ProcessTime = m.ProcessTime,
+                    Opinion = m.Opinion.InternalOpinion
                 });
+            }
+
             frame.RootKey = instance.RootKey;
 
             return frame;
