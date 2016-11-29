@@ -163,7 +163,7 @@
                 FinanceProduce(data.FinanceProduce);
                 if (data.CreateBy != undefined && data.CreateBy != undefined) {
                     $("#Phone").textbox("setValue", data.CreateBy.Phone)
-                    $("#UserName").textbox("setValue", data.CreateBy.Username)
+                    $("#Name").textbox("setValue", data.CreateBy.Name)
                     $("#PartnerName").textbox("setValue", data.CreateOf.Name)
                 }
                 $("#Vehicle").form("load", data.Vehicle);
@@ -635,7 +635,7 @@
 
                         <div class="col-6">
                             <label>联系人:</label>
-                            <input name="UserName" id="UserName" class="easyui-textbox" readonly />
+                            <input name="Name" id="Name" class="easyui-textbox" readonly />
                         </div>
                     </div>
                     <div class="row">

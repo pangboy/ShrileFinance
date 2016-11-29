@@ -255,7 +255,7 @@
                 CustomerBankCard = finance.FinanceExtension.CustomerBankCard,
                 CustomerBankName = finance.FinanceExtension.CustomerBankName,
                 OnePayInterest = finance.OnePayInterest,
-                Payment = Convert.ToDouble(finance.ApprovalMoney * finance.OncePayMonths / finance.Produce.FinancingPeriods),
+                Payment = Convert.ToDouble(finance.Principal * finance.OncePayMonths / finance.Produce.FinancingPeriods),
             };
         }
 
