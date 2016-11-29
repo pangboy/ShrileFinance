@@ -109,9 +109,9 @@
 
             // 序列化租赁信息
             TraverseDateFactory(FieldsetSerializeFactory('Operation', 'text'), value, false, null);
-            if (value.ActualAmount != undefined && value.ActualAmount.toString().length > 0) {
-                value.ActualAmount *= 10000;
-            }
+            //if (value.ActualAmount != undefined && value.ActualAmount.toString().length > 0) {
+            //    value.ActualAmount *= 10000;
+            //}
 
             // 序列化合同信息
             var array = [];
@@ -169,12 +169,12 @@
                 FieldsetLoadDateFactory('CustomerBankInfo', 'text', data);
 
                 // 加载运营（租赁信息）
-                if (data.ActualAmount != undefined && data.ActualAmount.toString().length > 0) {
-                    data.ActualAmount /= 10000;
-                    if (/^\d+(\.\d{1,1}$)/.test(data.ActualAmount.toString())) {
-                        data.ActualAmount += '0';
-                    }
-                }
+                //if (data.ActualAmount != undefined && data.ActualAmount.toString().length > 0) {
+                //    data.ActualAmount /= 10000;
+                //    if (/^\d+(\.\d{1,1}$)/.test(data.ActualAmount.toString())) {
+                //        data.ActualAmount += '0';
+                //    }
+                //}
                 FieldsetLoadDateFactory('Operation', 'text', data);
                 SetBail();
 
@@ -254,16 +254,16 @@
 
             var tableData = [];
             $(dataKV).each(function (i, e) {
-                if (e.Value.Key == "裸车价") {
-                    e.Value.Value /= 10000;
-                    if (/^\d+(\.\d{1,1}$)/.test(e.Value.Value.toString())) {
-                        e.Value.Value += '0';
-                    }
-                    tableData.push({ Name: e.Value.Key, Money: e.Value.Value + " 万元" });
-                }
-                else {
+                //if (e.Value.Key == "裸车价") {
+                //    e.Value.Value /= 10000;
+                //    if (/^\d+(\.\d{1,1}$)/.test(e.Value.Value.toString())) {
+                //        e.Value.Value += '0';
+                //    }
+                //    tableData.push({ Name: e.Value.Key, Money: e.Value.Value + " 万元" });
+                //}
+                //else {
                     tableData.push({ Name: e.Value.Key, Money: e.Value.Value + " 元" });
-                }
+                //}
             });
 
             $("fieldset[name=FinancingItemsOrCosts] table#FinancingItems_dg").datagrid("loadData", tableData);
@@ -290,7 +290,7 @@
             var ActualAmount = $("fieldset[name=Operation] input[textboxname=ActualAmount]").textbox("getValue");
 
             if ((!isNaN(bailRatio)) && (!isNaN(ActualAmount))) {
-                $("fieldset[name=Operation] input[textboxname=Bail]").textbox("setValue", bailRatio * ActualAmount * 100);
+                $("fieldset[name=Operation] input[textboxname=Bail]").textbox("setValue", bailRatio * ActualAmount/100);
             }
             else {
                 $("fieldset[name=Operation] input[textboxname=Bail]").textbox("setValue","");
@@ -476,7 +476,7 @@
                     <div class="col-6">
                         <label>实际用款额：</label>
                         <input name="ActualAmount" class="easyui-textbox" data-options="required:true,validType:'Money',readonly:false,onChange:SetBail"/>
-                        <span name="uint">万元</span>
+                        <span name="uint"><!--万元-->元</span>
                     </div>
                    
                     <div class="col-6">

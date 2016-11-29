@@ -57,22 +57,22 @@
                     $("input[textboxname = 'ApprovalRatio']").textbox({ validType: ["FratioLimit[" + radio + "]"] });
                 }
 
-                // 建议融资金额与审批融资金额 单位转换
-                if (data.AdviceMoney != undefined) {
-                    data.AdviceMoney /= 10000;
+                //// 建议融资金额与审批融资金额 单位转换
+                //if (data.AdviceMoney != undefined) {
+                //    data.AdviceMoney /= 10000;
 
-                    if (/^\d+(\.\d{1,1}$)/.test(data.AdviceMoney.toString()))
-                    {
-                        data.AdviceMoney += '0';
-                    }
-                }
-                if (data.ApprovalMoney != undefined) {
-                    data.ApprovalMoney /= 10000;
+                //    if (/^\d+(\.\d{1,1}$)/.test(data.AdviceMoney.toString()))
+                //    {
+                //        data.AdviceMoney += '0';
+                //    }
+                //}
+                //if (data.ApprovalMoney != undefined) {
+                //    data.ApprovalMoney /= 10000;
 
-                    if (/^\d+(\.\d{1,1}$)/.test(data.ApprovalMoney.toString())) {
-                        data.ApprovalMoney += '0';
-                    }
-                }
+                //    if (/^\d+(\.\d{1,1}$)/.test(data.ApprovalMoney.toString())) {
+                //        data.ApprovalMoney += '0';
+                //    }
+                //}
                 
                 // 加载融资审核基本信息
                 FieldsetLoadDateFactory("FinanceAudit", 'text', data)
@@ -114,9 +114,9 @@
             // 序列化融资审核
             var value = $("fieldset[name=FinanceAudit]").serializeJson();
 
-            // 建议融资金额与审批融资金额 单位转换
-            value.AdviceMoney *= 10000;
-            value.ApprovalMoney *= 10000;
+            //// 建议融资金额与审批融资金额 单位转换
+            //value.AdviceMoney *= 10000;
+            //value.ApprovalMoney *= 10000;
 
             if (value.FinanceId.length == 0) {
                 value.FinanceId = '683B6AB9-1CA7-E611-80C5-507B9DE4A488';
@@ -131,10 +131,10 @@
                 FinancingItem.Value.Key = $(e).find("label").text();
                 FinancingItem.Value.Value = $(e).find("input[textboxname=Money]").textbox('getValue');
 
-                if (FinancingItem.Value.Key == "裸车价")
-                {
-                    FinancingItem.Value.Value *= 10000;
-                }
+                //if (FinancingItem.Value.Key == "裸车价")
+                //{
+                //    FinancingItem.Value.Value *= 10000;
+                //}
 
                 value.FinancingItems.push(FinancingItem);
             });
@@ -198,21 +198,21 @@
                     // 裸车价
                     if ($.inArray(e.Value.Key, ["裸车价"]) != -1) {
                         div.attr("name", "NakedCar")
-                        div.find("span[name=unit]").text("万元");
+                        //div.find("span[name=unit]").text("万元");
                         div.find("input[textboxname=Money]").textbox({
                             readonly: false,
                             required: true,
                             validType: ['Money'],
                             onChange: SetRatio
                         });
-                        if (e.Value.Value != undefined)
-                        {
-                            e.Value.Value /= 10000;
+                        //if (e.Value.Value != undefined)
+                        //{
+                        //    e.Value.Value /= 10000;
 
-                            if (/^\d+(\.\d{1,1}$)/.test(e.Value.Value.toString())) {
-                                e.Value.Value += '0';
-                            }
-                        }
+                        //    if (/^\d+(\.\d{1,1}$)/.test(e.Value.Value.toString())) {
+                        //        e.Value.Value += '0';
+                        //    }
+                        //}
                     }
 
                     // 金额赋值
@@ -283,7 +283,7 @@
                 <div class="col-6">
                     <label>建议融资金额：</label>
                     <input name="AdviceMoney" class="easyui-textbox" data-options="required:true,validType:'Money',onChange:SetRatio" />
-                    <span>万元</span>
+                    <span><!--万元-->元</span>
                 </div>
                 <div class="col-6">
                     <label>建议融资比例：</label>
@@ -296,7 +296,7 @@
                 <div class="col-6">
                     <label>审批融资金额：</label>
                     <input name="ApprovalMoney" class="easyui-textbox" data-options="required:true,validType:'Money',onChange:SetRatio" />
-                    <span>万元</span>
+                    <span><!--万元-->元</span>
                 </div>
                 <div class="col-6">
                     <label>审批融资比例：</label>
