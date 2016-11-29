@@ -133,7 +133,7 @@
                     statusCode: {
                         200: function (data) {
                             $("#Phone").textbox("setValue", data.Phone)
-                            $("#UserName").textbox("setValue", data.UserName)
+                            $("#UserName").textbox("setValue", data.Name)
                             $("#PartnerName").textbox("setValue", data.PartnerName)
                         }
                     }
@@ -163,7 +163,7 @@
                 FinanceProduce(data.FinanceProduce);
                 if (data.CreateBy != undefined && data.CreateBy != undefined) {
                     $("#Phone").textbox("setValue", data.CreateBy.Phone)
-                    $("#UserName").textbox("setValue", data.CreateBy.Username)
+                    $("#UserName").textbox("setValue", data.CreateBy.Name)
                     $("#PartnerName").textbox("setValue", data.CreateOf.Name)
                 }
                 $("#Vehicle").form("load", data.Vehicle);
@@ -177,6 +177,7 @@
                     $("select[comboname='VehicleKey']").combobox("select", data.Vehicle.VehicleKey);
                 }
                 $("#ManufacturerGuidePrice").textbox("setValue", data.Vehicle.ManufacturerGuidePrice);
+                $("#Financing").textbox("setValue", data.Financing)
                 //加载联系人
                 LoadApplicant(data);
             }
@@ -595,6 +596,14 @@
                     $("#" + $(this).parents("fieldset")[0].id).find("div").find("#OfficeAddress").textbox("setValue", $("#WifeOfficeAddress").textbox("getValue"));
                 }
             }
+            else {
+                $("#" + $(this).parents("fieldset")[0].id).find("div").find("#Name").textbox("setValue", "");
+                $("#" + $(this).parents("fieldset")[0].id).find("div").find("#Mobile").textbox("setValue", "");
+                if ($(this).parents("fieldset")[1].id == "Guarantee" || $(this).parents("fieldset")[1].id == "joint") {
+                    $("#" + $(this).parents("fieldset")[0].id).find("div").find("#OfficeName").textbox("setValue", "");
+                    $("#" + $(this).parents("fieldset")[0].id).find("div").find("#OfficeAddress").textbox("setValue", "");
+                }
+            }
         }
 
         function BindColor(index, row) {
@@ -627,7 +636,7 @@
 
                         <div class="col-6">
                             <label>联系人:</label>
-                            <input name="UserName" id="UserName" class="easyui-textbox" readonly />
+                            <input name="Name" id="UserName" class="easyui-textbox" readonly />
                         </div>
                     </div>
                     <div class="row">

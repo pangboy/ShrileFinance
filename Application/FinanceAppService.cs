@@ -251,11 +251,11 @@
                 CreditBankCard = finance.FinanceExtension.CreditBankCard,
                 CreditBankName = finance.FinanceExtension.CreditBankName,
                 CustomerAccountName = finance.FinanceExtension.CustomerAccountName,
-                CustomerBail = Math.Round(Convert.ToDouble(finance.Produce.CustomerBailRatio * finance.Principal)),
+                CustomerBail = finance.Bail,
                 CustomerBankCard = finance.FinanceExtension.CustomerBankCard,
                 CustomerBankName = finance.FinanceExtension.CustomerBankName,
                 OnePayInterest = finance.OnePayInterest,
-                Payment = Convert.ToDouble(finance.ApprovalMoney * finance.OncePayMonths / finance.Produce.FinancingPeriods),
+                Payment = Convert.ToDouble(finance.Principal * finance.OncePayMonths / finance.Produce.FinancingPeriods),
             };
         }
 

@@ -39,7 +39,7 @@
                 });
                 $("input[name=Id]").val(query.ProduceId);
                 $.ajax({
-                    async: false,
+                    async: true,
                     type: "Get",
                     data: { id: query.ProduceId },
                     url: "../api/Produce/Get",
