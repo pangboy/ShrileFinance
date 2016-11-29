@@ -12,7 +12,7 @@ namespace Application.ViewModels.FinanceViewModels
         /// <summary>
         /// 保证金金额
         /// </summary>
-        public double CustomerBail { get; set; }
+        public decimal? CustomerBail { get; set; }
 
         /// <summary>
         /// 月供金额

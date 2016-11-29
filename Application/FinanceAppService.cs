@@ -251,7 +251,7 @@
                 CreditBankCard = finance.FinanceExtension.CreditBankCard,
                 CreditBankName = finance.FinanceExtension.CreditBankName,
                 CustomerAccountName = finance.FinanceExtension.CustomerAccountName,
-                CustomerBail = Math.Round(Convert.ToDouble(finance.Produce.CustomerBailRatio * finance.Principal)),
+                CustomerBail = finance.Bail,
                 CustomerBankCard = finance.FinanceExtension.CustomerBankCard,
                 CustomerBankName = finance.FinanceExtension.CustomerBankName,
                 OnePayInterest = finance.OnePayInterest,
