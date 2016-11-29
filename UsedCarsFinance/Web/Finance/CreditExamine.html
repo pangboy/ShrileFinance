@@ -44,32 +44,50 @@
                         // 加载审批者
                         LoadAduitPerson(data);
                     }
-                    else if ($(e).attr("id") != "f5") {
+
+                    else if ($(e).attr("id") == "f5") {
+                        if (data.Guarantor != undefined) {
+                            for (var i in data.Guarantor) {
+                                if (i > 0) {
+                                    // 新增保证人数据展示容器
+                                    $("form[id=CreditExamineReportFrom] fieldset#f5>div.row").append($("form[id=CreditExamineReportFrom] fieldset#f5 template#Guarantor").html());
+                                    $.parser.parse($("form[id=CreditExamineReportFrom] fieldset#f5>div.row>div.col-6:last"));
+                                }
+
+                                var number = parseInt(i) + 1;
+
+                                $("form[id=CreditExamineReportFrom] fieldset#f5>div.row>div.col-6:last>label").text("保证人" + number + " 姓名：");
+                                $("form[id=CreditExamineReportFrom] fieldset#f5>div.row>div.col-6:last>input[textboxname=Guarantor]").textbox('setValue', data.Guarantor[i]);
+                            }
+                            if (data.Guarantor.length <= 1) {
+                                $("form[id=CreditExamineReportFrom] fieldset#f5>div.row>div.col-6:last>lable").text("保证人姓名：");
+                            }
+                        }
+                    }
+                    else if ($(e).attr("id") == "f11") {
+                        f11_InitLiving();
+
+                        if (data.Margin1!=undefined && data.Margin1.toString().length > 0) {
+                            if ($(e).find("input[name=Margin1]")[0].checked) {
+                                $(e).find("input[name=Margin1]").click();
+                            }
+                            $(e).find("input[name=Margin1]").click();
+                        }
+                        if (data.Margin1 != undefined && data.Margin2.toString().length > 0) {
+                            if ($(e).find("input[name=Margin2]")[0].checked) {
+                                $(e).find("input[name=Margin2]").click();
+                            }
+                            $(e).find("input[name=Margin2]").click();
+                        }
                         $(e).form('load', data);
                     }
                     else {
-                        for (var i in data.Guarantor) {
-                            if (i > 0) {
-                                // 新增保证人数据展示容器
-                                $("form[id=CreditExamineReportFrom] fieldset#f5>div.row").append($("form[id=CreditExamineReportFrom] fieldset#f5 template#Guarantor").html());
-                                $.parser.parse($("form[id=CreditExamineReportFrom] fieldset#f5>div.row>div.col-6:last"));
-                            }
-
-                            var number = parseInt(i) + 1;
-
-                            $("form[id=CreditExamineReportFrom] fieldset#f5>div.row>div.col-6:last>label").text("保证人" + number + " 姓名：");
-                            $("form[id=CreditExamineReportFrom] fieldset#f5>div.row>div.col-6:last>input[textboxname=Guarantor]").textbox('setValue', data.Guarantor[i]);
-                        }
-
-                        if (data.Guarantor.length <= 1) {
-                            $("form[id=CreditExamineReportFrom] fieldset#f5>div.row>div.col-6:last>lable").text("保证人姓名：");
-                        }
+                        $(e).form('load', data);
                     }
                 });
 
                 // 初始化radio
                 f7_InitLiving(data);
-                f11_InitLiving();
                 f12_InitAgeRange(data);
                 f21_InitSurvey(data);
 
@@ -107,7 +125,7 @@
                     TraverseDateFactory($(e).serializeJson(), value, false, null);
                 };
             });
-
+            
             // 保证金
             if (value.Margin1 == undefined && value.Margin2 == undefined) {
                 value.IncreaseMarginReson = "";
@@ -138,7 +156,7 @@
                 url: '../api/CreditExamine/GetCreditExamine',
                 statusCode: {
                     200: function (data) {
-                        LoadData(data);
+                       LoadData(data);
                     }
                 }
             });

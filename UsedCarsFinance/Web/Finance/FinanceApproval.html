@@ -119,12 +119,12 @@
 
             var tableData = [];
             $(dataKV).each(function (i, e) {
-                if (e.Value.Key == "裸车价") {
-                    tableData.push({ Name: e.Value.Key, Money: e.Value.Value/10000 + " 万元" });
-                }
-                else {
+                //if (e.Value.Key == "裸车价") {
+                //    tableData.push({ Name: e.Value.Key, Money: e.Value.Value/10000 + " 万元" });
+                //}
+                //else {
                     tableData.push({ Name: e.Value.Key, Money: e.Value.Value + " 元" });
-                }
+                //}
             });
             //$("fieldset").find("#FinancingCosts_dg").datagrid('loadData', tableData);
             
@@ -168,9 +168,9 @@
                         <input name="RepayRentDate" class="easyui-datebox" data-options="required:true,validType:'',readonly:false,editable:false,width:410" />
                     </div>
                     <div class="col-6">
-                        <label>保证金：</label>
-                        <input name="Bail" class="easyui-textbox" data-options="required:true,validType:'Money',readonly:false" />
-                        <span name="uint">元</span>
+                        <label>实际用款额：</label>
+                        <input name="ActualAmount" class="easyui-textbox" data-options="required:true,validType:'Money',readonly:false" />
+                        <span name="uint"><!--万元-->元</span>
                     </div>
                     <div class="col-6">
                         <label><!--先付月供：-->月供金额</label>
@@ -183,9 +183,9 @@
                         <span name="uint">元</span>
                     </div>
                     <div class="col-6">
-                        <label>实际用款额：</label>
-                        <input name="ActualAmount" class="easyui-textbox" data-options="required:true,validType:'Money',readonly:false" />
-                        <span name="uint">万元</span>
+                        <label>保证金：</label>
+                        <input name="Bail" class="easyui-textbox" data-options="required:true,validType:'Money',readonly:false" />
+                        <span name="uint">元</span>
                     </div>
                 </div>
             </fieldset>

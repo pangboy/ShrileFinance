@@ -133,7 +133,7 @@
                     statusCode: {
                         200: function (data) {
                             $("#Phone").textbox("setValue", data.Phone)
-                            $("#UserName").textbox("setValue", data.Name)
+                            $("#UserName").textbox("setValue", data.UserName)
                             $("#PartnerName").textbox("setValue", data.PartnerName)
                         }
                     }
@@ -177,7 +177,6 @@
                     $("select[comboname='VehicleKey']").combobox("select", data.Vehicle.VehicleKey);
                 }
                 $("#ManufacturerGuidePrice").textbox("setValue", data.Vehicle.ManufacturerGuidePrice);
-                $("#Financing").textbox("setValue", data.Financing)
                 //加载联系人
                 LoadApplicant(data);
             }
@@ -810,7 +809,7 @@
                     <div class="row">
                         <div class="col-6">
                             <label>融资期限:</label>
-                            <input name="FinancingPeriods" class="easyui-textbox" readonly />
+                            <input name="FinancingPeriods" id="FinancingPeriods" class="easyui-textbox" readonly />
                             <span class="unit">月</span>
                         </div>
 
@@ -881,17 +880,27 @@
                     <div class="row">
                         <div class="col-6">
                             <label>融资额:</label>
-                            <input id="Financing" name="Financing" class="easyui-textbox" data-options="validType:'Price',required:true" />
+                            <input id="Financing" name="Financing" class="easyui-textbox" readonly data-options="validType:'Price',required:true" />
                             <span class="unit">元</span>
                         </div>
                         <div class="col-6" id="OncePayMonthsDiv">
                             <label>月供先付期数:</label>
-                            <input name="OncePayMonths" id="OncePayMonths" class="easyui-textbox" data-options="validType:'Integer'" value="0"/>
+                            <input name="OncePayMonths" id="OncePayMonths" class="easyui-textbox" data-options="validType:['Integer','CompareTime']" value="0"/>
                             <span class="unit">期</span>
                         </div>
                     </div>
                 </fieldset>
-
+                <script>
+                    $.extend($.fn.validatebox.defaults.rules, {
+                        CompareTime: {
+                            validator: function (value) {
+                                return value < $("#FinancingPeriods").textbox("getValue")==true? true:false ;
+                            },
+                            message: '先付月供期数不能大于融资期限'
+                        }
+                    });
+                </script>
+              
             </article>
         </div>
         <div>

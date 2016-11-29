@@ -84,10 +84,10 @@ function FieldsetLoadDateFactory(name, type, data) {
         }
         else {
             // 加载数据 table
-            $(data).each(function (index, item) {
-                // 加载数据 table
-                $("fieldset[name=" + name + "]").find("[id=" + name + "_dg" + "]").datagrid('appendRow', item);
-            });
+            //$(data).each(function (index, item) {
+            //    // 加载数据 table
+            //    $("fieldset[name=" + name + "]").find("[id=" + name + "_dg" + "]").datagrid('appendRow', item);
+            //});
 
             $("fieldset[name=" + name + "]").find("[id=" + name + "_dg" + "]").datagrid('loadData', data);
         }
