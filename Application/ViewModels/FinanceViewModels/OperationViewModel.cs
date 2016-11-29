@@ -62,6 +62,11 @@
         public decimal? ActualAmount { get; set; }
 
         /// <summary>
+        /// 客户保证金比例
+        /// </summary>
+        public decimal CustomerBailRatio { get; set; }
+
+        /// <summary>
         /// 放款主体
         /// </summary>
         [Required(ErrorMessage = "放款主体 不可为空")]

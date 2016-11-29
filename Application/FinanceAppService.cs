@@ -460,6 +460,16 @@
             var array = new string[] { "AdviceMoney", "AdviceRatio", "ApprovalMoney", "ApprovalRatio", "Payment", "Poundage" };
             financeAuditViewModel = PartialMapper(refObj: finance, outObj: financeAuditViewModel, array: array);
 
+            if (financeAuditViewModel.Poundage == null)
+            {
+                financeAuditViewModel.Poundage = decimal.Parse("0.00");
+                var cost = finance.FinanceProduce.ToList().FindAll(m => m.IsFinancing == false);
+                cost.ToList().ForEach(item =>
+                {
+                    financeAuditViewModel.Poundage += item.Money;
+                });
+            }
+
             // 映射 融资比例区间
             financeAuditViewModel = PartialMapper(refObj: finance.Produce, outObj: financeAuditViewModel, array: new string[] { "MinFinancingRatio", "MaxFinancingRatio" });
 
@@ -486,15 +496,8 @@
             }
 
             // 建议融资金额、建议融资比例、审批融资金额、审批融资比例、月供额度、手续费
-            var array = new string[] { "AdviceMoney", "AdviceRatio", "ApprovalMoney", "ApprovalRatio", "Payment" };
+            var array = new string[] { "AdviceMoney", "AdviceRatio", "ApprovalMoney", "ApprovalRatio", "Payment", "Poundage" };
             finance = PartialMapper(refObj: value, outObj: finance, array: array);
-
-            finance.Poundage = decimal.Parse("0.00");
-            var cost = finance.FinanceProduce.ToList().FindAll(m => m.IsFinancing == false);
-            cost.ToList().ForEach(item =>
-            {
-                finance.Poundage += item.Money;
-            });
 
             // 初审 修改融资项各金额
             if (!value.IsReview)
@@ -537,9 +540,12 @@
             // 实际用款额
             operationReportViewModel.ActualAmount = finance.Principal;
 
-            // 选择还款日、首次租金支付日期、保证金、一次性付息、
+            // 选择还款日、保证金、首次租金支付日期、一次性付息、
             var array = new string[] { "RepaymentDate", "Bail", "RepayRentDate", "OnePayInterest" };
             operationReportViewModel = PartialMapper(refObj: finance, outObj: operationReportViewModel, array: array);
+
+            // 客户保证金比例
+            operationReportViewModel.CustomerBailRatio = finance.Produce.CustomerBailRatio;
 
             // 融资项
             operationReportViewModel.FinancingItems = GetFinancingItemsOrCosts(finance);

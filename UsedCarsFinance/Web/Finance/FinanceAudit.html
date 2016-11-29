@@ -187,7 +187,7 @@
                     $.parser.parse(div);
 
                     // 设置属性
-                    div.find("label").text(e.Value.Key);
+                    div.find("label").text(e.Value.Key+"：");
                     div.find("input[name=Id]").val(e.Key);
                     div.find("input[textboxname=Money]").textbox({
                         readonly: false,
@@ -259,7 +259,7 @@
 <body>
     <form class="container" name="FinanceAudit">
         <fieldset name="FinancingItems" style="display:none;">
-            <legend>融资项：</legend>
+            <legend>融资项</legend>
             <div class="row">
             </div>
 

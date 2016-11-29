@@ -168,10 +168,9 @@
                 FieldsetLoadDateFactory('CreditBankInfo', 'text', data);
                 FieldsetLoadDateFactory('CustomerBankInfo', 'text', data);
 
-                // 加载运营
+                // 加载运营（租赁信息）
                 if (data.ActualAmount != undefined && data.ActualAmount.toString().length > 0) {
                     data.ActualAmount /= 10000;
-
                     if (/^\d+(\.\d{1,1}$)/.test(data.ActualAmount.toString())) {
                         data.ActualAmount += '0';
                     }
@@ -255,6 +254,10 @@
             var tableData = [];
             $(dataKV).each(function (i, e) {
                 if (e.Value.Key == "裸车价") {
+                    e.Value.Value /= 10000;
+                    if (/^\d+(\.\d{1,1}$)/.test(e.Value.Value.toString())) {
+                        e.Value.Value += '0';
+                    }
                     tableData.push({ Name: e.Value.Key, Money: e.Value.Value + " 万元" });
                 }
                 else {
@@ -277,6 +280,20 @@
             });
 
             $("fieldset[name=FinancingItemsOrCosts] table#FinancingCosts_dg").datagrid("loadData", tableData);
+        }
+
+        // 设置保证金
+        function SetBail()
+        {
+            var bailRatio = $("fieldset[name=Operation]>input[name=CustomerBailRatio]").val();
+            var ActualAmount = $("fieldset[name=Operation] input[textboxname=ActualAmount]").textbox("getValue");
+
+            if ((!isNaN(bailRatio)) && (!isNaN(ActualAmount))) {
+                $("fieldset[name=Operation] input[textboxname=Bail]").textbox("setValue", bailRatio * ActualAmount * 100);
+            }
+            else {
+                $("fieldset[name=Operation] input[textboxname=Bail]").textbox("setValue","");
+            }
         }
     </script>
 </head>
@@ -441,6 +458,7 @@
             <fieldset name="Operation">
                 <legend><!--运营-->租赁信息</legend>
                 <input type="hidden" name="FinanceId" value="00000000-0000-0000-0000-000000000000" placeholder="融资标识" />
+                <input type="hidden" name="CustomerBailRatio" value="0" placeholder="客户保证金比例" />
 
                 <div class="row">
                     <div class="col-6">
@@ -455,10 +473,11 @@
                         <input name="RepayRentDate" class="easyui-datebox" data-options="required:true,validType:'',readonly:false,editable:false,width:410" />
                     </div>
                     <div class="col-6">
-                        <label>保证金：</label>
-                        <input name="Bail" class="easyui-textbox" data-options="required:true,validType:'Money',readonly:false" />
-                        <span name="uint">元</span>
+                        <label>实际用款额：</label>
+                        <input name="ActualAmount" class="easyui-textbox" data-options="required:true,validType:'Money',readonly:false,onChange:SetBail"/>
+                        <span name="uint">万元</span>
                     </div>
+                   
                     <div class="col-6">
                         <label><!--先付月供：-->月供金额</label>
                         <input name="PayMonthly" class="easyui-textbox" data-options="required:true,validType:'Money',readonly:false" />
@@ -470,9 +489,9 @@
                         <span name="uint">元</span>
                     </div>
                     <div class="col-6">
-                        <label>实际用款额：</label>
-                        <input name="ActualAmount" class="easyui-textbox" data-options="required:true,validType:'Money',readonly:false" />
-                        <span name="uint">万元</span>
+                        <label>保证金：</label>
+                        <input name="Bail" class="easyui-textbox" data-options="required:false,validType:[],readonly:true" />
+                        <span name="uint">元</span>
                     </div>
                 </div>
             </fieldset>
@@ -609,7 +628,7 @@
                 <div id="Contact_tb" style="height:30px;">
                     <a id="Contact_add" class="easyui-linkbutton" href="javascript:void(0)" data-options="onClick:ContactAdd,iconCls:'icon-add',plain:true">添加</a>
                     <a id="Contact_del" class="easyui-linkbutton" href="javascript:void(0)" data-options="onClick:ContactDelete,iconCls:'icon-remove',plain:true,disabled:true">删除</a>
-                    <a id="Contact_Save" class="easyui-linkbutton" href="javascript:void(0)" data-options="onClick:ContactSave,iconCls:'icon-save',plain:true,disabled:true">保存</a>
+                    <a id="Contact_Save" style="display:none" class="easyui-linkbutton" href="javascript:void(0)" data-options="onClick:ContactSave,iconCls:'icon-save',plain:true,disabled:true,">保存</a>
                 </div>
                 <script type="text/javascript">
                     // table onSelect事件
