@@ -12,5 +12,10 @@ namespace Core.Entities.Loan
     public class GuarantyOrganization : Entity, IGuarantor
     {
         public string Name { get; set; }
+
+        /// <summary>
+        /// 贷款卡编码
+        /// </summary>
+        public string CreditcardCode { get; set; }
     }
 }

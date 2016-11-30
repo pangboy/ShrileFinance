@@ -12,5 +12,15 @@ namespace Core.Entities.Loan
     public class GuarantyPerson : Entity, IGuarantor
     {
         public string Name{ get;set;}
+
+        /// <summary>
+        /// 证件类型
+        /// </summary>
+        public string CertificateType { get; set; }
+
+        /// <summary>
+        /// 证件号码
+        /// </summary>
+        public string CertificateNumber { get; set; }
     }
 }
