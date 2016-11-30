@@ -122,6 +122,7 @@
     <Compile Include="ViewModels\FinanceViewModels\OperationViewModel.cs" />
     <Compile Include="ViewModels\FinanceViewModels\PartnerAndUser.cs" />
     <Compile Include="ViewModels\IEntityViewModel.cs" />
+    <Compile Include="ViewModels\LoanViewModels\LoanViewModel.cs" />
     <Compile Include="ViewModels\OrganizationViewModels\BigEventViewModel.cs" />
     <Compile Include="ViewModels\OrganizationViewModels\CashFlowViewModel.cs" />
     <Compile Include="ViewModels\OrganizationViewModels\FamilyMemberViewModel.cs" />

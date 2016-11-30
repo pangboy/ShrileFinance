@@ -65,6 +65,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Entities\Loan\Loan.cs" />
     <Compile Include="Entities\Other\Draft.cs" />
     <Compile Include="Entities\Finance\FinanceProduce.cs" />
     <Compile Include="Entities\Flow\Action.cs" />
@@ -133,6 +134,7 @@
     <Compile Include="Interfaces\Repositories\IInstanceRepository.cs" />
     <Compile Include="Interfaces\Repositories\IFinanceRepository.cs" />
     <Compile Include="Interfaces\Repositories\IFinancingProjectRepository.cs" />
+    <Compile Include="Interfaces\Repositories\ILoanRepository.cs" />
     <Compile Include="Interfaces\Repositories\IOrganizationRepository.cs" />
     <Compile Include="Interfaces\ILogger.cs" />
     <Compile Include="Interfaces\Repositories\IProduceRepository.cs" />
@@ -145,7 +147,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Entities\Borrower\" />
-    <Folder Include="Entities\Loan\" />
     <Folder Include="Services\" />
   </ItemGroup>
   <ItemGroup>

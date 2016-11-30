@@ -82,7 +82,6 @@
         /// </summary>
         public string Color { get; set; }
 
-
         /// <summary>
         /// 业务种类
         /// </summary>
