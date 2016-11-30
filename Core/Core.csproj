@@ -144,7 +144,8 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Entities\Concern\" />
+    <Folder Include="Entities\Borrower\" />
+    <Folder Include="Entities\Loan\" />
     <Folder Include="Services\" />
   </ItemGroup>
   <ItemGroup>
