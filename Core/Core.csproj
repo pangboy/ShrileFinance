@@ -65,6 +65,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Entities\Loan\GuarantyOrganization.cs" />
+    <Compile Include="Entities\Loan\GuarantyPerson.cs" />
+    <Compile Include="Entities\Loan\IGuarantor.cs" />
+    <Compile Include="Entities\Loan\GuarantyContract.cs" />
     <Compile Include="Entities\Other\Draft.cs" />
     <Compile Include="Entities\Finance\FinanceProduce.cs" />
     <Compile Include="Entities\Flow\Action.cs" />
@@ -145,7 +149,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Entities\Borrower\" />
-    <Folder Include="Entities\Loan\" />
     <Folder Include="Services\" />
   </ItemGroup>
   <ItemGroup>
