@@ -1,16 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Core.Entities.Loan
+﻿namespace Core.Entities.Loan
 {
     /// <summary>
-    /// 机构（担保人）
+    /// 机构（继承于担保人）
     /// </summary>
     public class GuarantyOrganization : Entity, IGuarantor
     {
+        /// <summary>
+        /// 机构名称
+        /// </summary>
         public string Name { get; set; }
 
         /// <summary>

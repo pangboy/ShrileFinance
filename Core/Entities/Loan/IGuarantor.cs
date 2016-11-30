@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Core.Entities.Loan
+﻿namespace Core.Entities.Loan
 {
+    /// <summary>
+    /// 担保人
+    /// </summary>
     public interface IGuarantor
     {
+        /// <summary>
+        /// 担保人名称
+        /// </summary>
         string Name { get; set; }
     }
 }
