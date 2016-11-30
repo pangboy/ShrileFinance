@@ -12,27 +12,110 @@
     <script src="../Scripts/usedcars.js"></script>
     <script type="text/javascript"></script>
     <script>
-        $.ajax({
-            async: true,
-            data: { Id: 'c49adb8f-e5af-e611-80c7-507b9de4a488' },
-            method: "GET",
-            //url: "../api/PdfContract/GetPath",
-            url: "../api/FinanceAuidt/LeaseeContract",
-            statusCode: {
-                200: function (data) {
-                    
-                    for (var i = 0; i < data.length; i++) {
-                        var filepath = data[i].FilePath;
-                        var fp = filepath.substring(1);//截取出 ~ 以后的字符串
-                        var path = ".." + fp + data[i].OldName + data[i].ExtName;
-                        window.open(path);
-                    }
-                }
-            }
+        $(function () {
+            var data = [{
+                "id": 1,
+                "name": "C",
+                "size": "",
+                "date": "02/19/2010",
+                "type": "folder",
+                "children": [{
+                    "id": 2,
+                    "name": "Program Files",
+                    "size": "120 MB",
+                    "date": "03/20/2010",
+                    "type": "folder",
+                    "children": [{
+                        "id": 21,
+                        "name": "Java",
+                        "size": "",
+                        "date": "01/13/2010",
+                        "state": "closed",
+                        "type": "folder",
+                        "children": [{
+                            "id": 211,
+                            "name": "java.exe",
+                            "size": "142 KB",
+                            "date": "01/13/2010",
+                            "type": "pack"
+                        }, {
+                            "id": 212,
+                            "name": "jawt.dll",
+                            "size": "5 KB",
+                            "date": "01/13/2010",
+                            "type": "pack"
+                        }]
+                    }, {
+                        "id": 22,
+                        "name": "MySQL",
+                        "size": "",
+                        "date": "01/13/2010",
+                        "state": "closed",
+                        "type": "folder",
+                        "children": [{
+                            "id": 221,
+                            "name": "my.ini",
+                            "size": "10 KB",
+                            "date": "02/26/2009",
+                            "type": "pack"
+                        }, {
+                            "id": 222,
+                            "name": "my-huge.ini",
+                            "size": "5 KB",
+                            "date": "02/26/2009",
+                            "type": "pack"
+                        }, {
+                            "id": 223,
+                            "name": "my-large.ini",
+                            "size": "5 KB",
+                            "date": "02/26/2009",
+                            "type": "pack"
+                        }]
+                    }]
+                }, {
+                    "id": 3,
+                    "name": "eclipse",
+                    "size": "",
+                    "date": "01/20/2010",
+                    "type": "folder",
+                    "children": [{
+                        "id": 31,
+                        "name": "eclipse.exe",
+                        "size": "56 KB",
+                        "date": "05/19/2009",
+                        "type": "pack"
+                    }, {
+                        "id": 32,
+                        "name": "eclipse.ini",
+                        "size": "1 KB",
+                        "date": "04/20/2010",
+                        "type": "pack"
+                    }, {
+                        "id": 33,
+                        "name": "notice.html",
+                        "size": "7 KB",
+                        "date": "03/17/2005",
+                        "type": "pack"
+                    }]
+                }]
+            }];
+            $("#tt").treegrid("loadData", data);
         });
+
+       
     </script>
 </head>
 <body>
-
+    <table id="tt" class="easyui-treegrid" style="width:600px;height:400px"
+           data-options="idField:'id',treeField:'name'">
+        <thead>
+            <tr>
+                <th data-options="field:'name',width:180">Task Name</th>
+                <th data-options="field:'persons',width:60,align:'right'">Persons</th>
+                <th data-options="field:'begin',width:80">Begin Date</th>
+                <th data-options="field:'end',width:80">End Date</th>
+            </tr>
+        </thead>
+    </table> 
 </body>
 </html>
