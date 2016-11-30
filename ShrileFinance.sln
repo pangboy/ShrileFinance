@@ -25,7 +25,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Model", "UsedCarsFinance\Mo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Web", "UsedCarsFinance\Web\Web.csproj", "{51793ED4-958F-49CC-A631-1946CF20ADD2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application.Test", "Application.Test\Application.Test.csproj", "{72FEBEAB-7B78-4C7C-B73A-E5095032AFAD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core.Tests", "Core.Tests\Core.Tests.csproj", "{8C3CA377-21EE-46AE-B6C3-988074822CDF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -69,10 +69,10 @@ Global
 		{51793ED4-958F-49CC-A631-1946CF20ADD2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{51793ED4-958F-49CC-A631-1946CF20ADD2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{51793ED4-958F-49CC-A631-1946CF20ADD2}.Release|Any CPU.Build.0 = Release|Any CPU
-		{72FEBEAB-7B78-4C7C-B73A-E5095032AFAD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{72FEBEAB-7B78-4C7C-B73A-E5095032AFAD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{72FEBEAB-7B78-4C7C-B73A-E5095032AFAD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{72FEBEAB-7B78-4C7C-B73A-E5095032AFAD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8C3CA377-21EE-46AE-B6C3-988074822CDF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8C3CA377-21EE-46AE-B6C3-988074822CDF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8C3CA377-21EE-46AE-B6C3-988074822CDF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8C3CA377-21EE-46AE-B6C3-988074822CDF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
