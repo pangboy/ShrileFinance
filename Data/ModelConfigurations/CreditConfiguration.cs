@@ -3,9 +3,10 @@
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.ModelConfiguration;
     using Core.Entities.Loan;
-    public class LoanConfiguration: EntityTypeConfiguration<Loan>
+
+    public class CreditConfiguration: EntityTypeConfiguration<Credit>
     {
-        public LoanConfiguration()
+        public CreditConfiguration()
         {
             HasKey(m => m.Id);
             Property(m => m.Id).HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
@@ -17,6 +18,7 @@
             Property(m => m.CreditBalance);
             Property(m => m.ValidStatus);
             Property(m => m.IsGuarantee);
+            HasMany(m => m.GuarantyContract).WithOptional().Map(m => m.MapKey("LoanId")).WillCascadeOnDelete();
 
             ToTable("LOAN_LoanContranct");
         }

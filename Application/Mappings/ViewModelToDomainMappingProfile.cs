@@ -5,6 +5,7 @@
     using Core.Entities;
     using Core.Entities.Customers.Enterprise;
     using Core.Entities.Finance;
+    using Core.Entities.Loan;
     using Core.Entities.Produce;
     using Core.Entities.Vehicle;
     using ViewModels.AccountViewModels;
@@ -66,6 +67,8 @@
                 .ForMember(d => d.FinanceProduce, opt => opt.Ignore())
                 .ForMember(d => d.Applicant, opt => opt.Ignore());
             CreateMap<FinanceProduceViewModel, FinanceProduce>();
+
+            CreateMap<CreditExamineViewModel, Credit>();
         }
     }
 }

@@ -1,16 +1,17 @@
-﻿namespace Core.Entities.Loan
+﻿namespace Application.ViewModels.LoanViewModels
 {
     using System;
-    using Interfaces;
 
-    public class Loan : Entity, IAggregateRoot
+    public class CreditViewModel
     {
-        public enum StutusEnum : byte
+        public enum StatusEnum : byte
         {
             生效 = 0,
             失效 = 1,
             未结清 = 2
         }
+
+        public Guid? Id { get; set; }
 
         /// <summary>
         /// 合同编码
