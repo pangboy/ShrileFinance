@@ -7,10 +7,12 @@
     using Core.Entities.Flow;
     using Core.Entities.Produce;
     using Core.Entities.Vehicle;
+    using Core.Entities.Loan;
     using ViewModels.AccountViewModels;
     using ViewModels.FinanceViewModels;
     using ViewModels.OrganizationViewModels;
     using ViewModels.PartnerViewModels;
+    using ViewModels.LoanViewModels;
     using ViewModels.VehicleViewModel;
     using X.PagedList;
 
@@ -25,7 +27,8 @@
                 .ForMember(d => d.Phone, opt => opt.MapFrom(s => s.PhoneNumber));
 
             CreateMap<Instance, ViewModels.ProcessViewModels.InstanceViewModel>()
-                .ConvertUsing(s => new ViewModels.ProcessViewModels.InstanceViewModel {
+                .ConvertUsing(s => new ViewModels.ProcessViewModels.InstanceViewModel
+                {
                     Id = s.Id,
                     Title = s.Title,
                     Flow = s.Flow.Name,
@@ -77,6 +80,12 @@
             CreateMap<CreditExamine, CreditExamineViewModel>();
             CreateMap<FinanceExtension, OperationViewModel>();
             CreateMap<FinanceProduce, FinanceProduceViewModel>();
+
+            CreateMap<GuarantyContract, GuarantyContractViewModel>();
+            CreateMap<MortgageGuarantyContract, MortgageGuarantyContractViewModel>();
+            CreateMap<PledgeGuarantyContract, PledgeGuarantyContractViewModel>();
+            CreateMap<GuarantyPerson, GuarantyPersonViewModel>();
+            CreateMap<GuarantyOrganization, GuarantyOrganizationViewModel>();
         }
     }
 }

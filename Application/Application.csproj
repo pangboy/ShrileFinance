@@ -123,6 +123,11 @@
     <Compile Include="ViewModels\FinanceViewModels\OperationViewModel.cs" />
     <Compile Include="ViewModels\FinanceViewModels\PartnerAndUser.cs" />
     <Compile Include="ViewModels\IEntityViewModel.cs" />
+    <Compile Include="ViewModels\LoanViewModels\GuarantyContractViewModel.cs" />
+    <Compile Include="ViewModels\LoanViewModels\GuarantyOrganizationViewModel.cs" />
+    <Compile Include="ViewModels\LoanViewModels\GuarantyPersonViewModel.cs" />
+    <Compile Include="ViewModels\LoanViewModels\MortgageGuarantyContractViewModel.cs" />
+    <Compile Include="ViewModels\LoanViewModels\PledgeGuarantyContractViewModel.cs" />
     <Compile Include="ViewModels\LoanViewModels\CreditViewModel.cs" />
     <Compile Include="ViewModels\OrganizationViewModels\BigEventViewModel.cs" />
     <Compile Include="ViewModels\OrganizationViewModels\CashFlowViewModel.cs" />

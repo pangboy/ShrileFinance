@@ -103,6 +103,9 @@
     <Compile Include="ModelConfigurations\FormConfiguration.cs" />
     <Compile Include="ModelConfigurations\FormNodeConfiguration.cs" />
     <Compile Include="ModelConfigurations\FormRoleConfiguration.cs" />
+    <Compile Include="ModelConfigurations\GuarantyContractConfiguration.cs" />
+    <Compile Include="ModelConfigurations\GuarantyOrganizationConfiguration.cs" />
+    <Compile Include="ModelConfigurations\GuarantyPersonConfiguration.cs" />
     <Compile Include="ModelConfigurations\InstanceConfiguration.cs" />
     <Compile Include="ModelConfigurations\LiabilitiesConfiguration.cs" />
     <Compile Include="ModelConfigurations\LitigationConfigruation.cs" />
@@ -110,6 +113,7 @@
     <Compile Include="ModelConfigurations\LogConfiguration.cs" />
     <Compile Include="ModelConfigurations\ManagerConfiguration.cs" />
     <Compile Include="ModelConfigurations\FamilyMemberConfiguration.cs" />
+    <Compile Include="ModelConfigurations\MortgageGuarantyContractConfiguration.cs" />
     <Compile Include="ModelConfigurations\NodeConfiguration.cs" />
     <Compile Include="ModelConfigurations\OrganizationConfiguration.cs">
       <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
@@ -117,6 +121,7 @@
     <Compile Include="ModelConfigurations\ParentConfigration.cs" />
     <Compile Include="ModelConfigurations\PartnerConfiguration.cs" />
     <Compile Include="ModelConfigurations\FinancingItemConfigration.cs" />
+    <Compile Include="ModelConfigurations\PledgeGuarantyContractConfiguration.cs" />
     <Compile Include="ModelConfigurations\ProfitConfiguration.cs" />
     <Compile Include="ModelConfigurations\ProduceConfigration.cs" />
     <Compile Include="ModelConfigurations\StockholderConfiguration.cs" />
