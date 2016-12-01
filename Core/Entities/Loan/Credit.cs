@@ -7,7 +7,17 @@
 
     public class Credit : Entity, IAggregateRoot
     {
-        private readonly ICreditRepository repository;
+        public Credit()
+        {
+            if (EffectiveDate < ExpirationDate)
+            {
+                throw new Core.Exceptions.ArgumentAppException("合同已经失效不允许变更.");
+            }
+            if(CreditBalance> CreditLimit)
+            {
+                throw new Core.Exceptions.ArgumentAppException("授信余额不能大于授信额度.");
+            }
+        }
 
         public enum StatusEnum : byte
         {
@@ -62,7 +72,14 @@
         /// <param name="limit">新授信额度</param>
         public void ChangeLimit(decimal limit)
         {
-            CreditLimit = limit;
+            if (ValidStatus != StatusEnum.失效)
+            {
+                CreditLimit = limit;
+            }
+            else
+            {
+                throw new Core.Exceptions.ArgumentAppException("合同已经失效不允许变更.");
+            }
         }
 
         /// <summary>
@@ -79,7 +96,7 @@
         /// </summary>
         /// <param name="limit">金额</param>
         /// <returns></returns>
-        public bool IsCredit(decimal limit)
+        public bool CanApplyCredit(decimal limit)
         {
             var result = true;
 
@@ -106,7 +123,7 @@
         {
             if (CreditBalance < amount)
             {
-                throw new Core.Exceptions.InvalidOperationAppException("授信余额不足.");
+                throw new Core.Exceptions.ArgumentAppException("授信余额不足.");
             }
 
             return true;
@@ -133,7 +150,8 @@
         private bool IsEffective()
         {
             var result = true;
-            if (ValidStatus == StatusEnum.失效)
+
+            if (IsEffectiveDate()== true &&ValidStatus == StatusEnum.失效)
             {
                 result = false;
             }

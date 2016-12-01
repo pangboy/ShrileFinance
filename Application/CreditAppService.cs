@@ -1,5 +1,6 @@
 ﻿namespace Application
 {
+    using System;
     using AutoMapper;
     using Core.Entities.Loan;
     using Core.Interfaces.Repositories;
@@ -14,22 +15,41 @@
             this.repository = repository;
         }
 
-        public Credit Create(CreditViewModel model)
+        public void Create(CreditViewModel model)
         {
             var credit = Mapper.Map<Credit>(model);
             repository.Create(credit);
             repository.Commit();
-
-            return credit;
         }
 
-        public Credit Recredit(CreditViewModel model)
+        public CreditViewModel Get(Guid id)
         {
-            var credit = Mapper.Map<Credit>(model);
+            var credit = repository.Get(id);
+            CreditViewModel creditViewModel = Mapper.Map<CreditViewModel>(credit);
+
+            return creditViewModel;
+        }
+
+        /// <summary>
+        /// 额度变更
+        /// </summary>
+        /// <param name="model"></param>
+        public void ChangeEffective(CreditViewModel model)
+        {
+            var creditmodel = Mapper.Map<Credit>(model);
+            Credit credit = new Credit();
+            credit.ChangeLimit(creditmodel.CreditLimit);
             repository.Modify(credit);
             repository.Commit();
+        }
 
-            return credit;
+        public void ChangeExpirationDate(CreditViewModel model)
+        {
+            var creditmodel = Mapper.Map<Credit>(model);
+            Credit credit = new Credit();
+            credit.ChangeLimit(creditmodel.CreditLimit);
+            repository.Modify(credit);
+            repository.Commit();
         }
     }
 }
