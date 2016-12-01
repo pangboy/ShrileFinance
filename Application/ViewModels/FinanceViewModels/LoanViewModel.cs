@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Application.ViewModels.FinanceViewModels
+﻿namespace Application.ViewModels.FinanceViewModels
 {
     public class LoanViewModel
     {

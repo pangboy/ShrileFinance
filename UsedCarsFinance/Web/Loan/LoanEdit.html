@@ -1,0 +1,64 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>贷款合同</title>
+    <link href="../Content/easyui/themes/bootstrap/easyui.css" rel="stylesheet" />
+    <link href="../Content/easyui/themes/icon.css" rel="stylesheet" />
+    <link href="../Content/form-bootstrap.css" rel="stylesheet" />
+    <script src="../Scripts/jquery/jquery.js"></script>
+    <script src="../Scripts/easyui/jquery.easyui.js"></script>
+    <script src="../Scripts/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../Scripts/usedcars.js"></script>
+    <script>
+
+    </script>
+</head>
+<body>
+    <form id="ff" class="container">
+        <fieldset>
+            <legend>贷款合同</legend>
+
+            <div class="row">
+                <div class="col-6">
+                    <label>合同编码:</label>
+                    <input name="LoanCode" id="LoanCode" class="easyui-textbox" data-options="required:true" />
+                </div>
+
+                <div class="col-6">
+                    <label>合同有效状态:</label>
+                    <select id="ValidStatus" name="ValidStatus" class="easyui-combobox" data-options="required:true">
+                        <option value="0">生效</option>
+                        <option value="1">失效</option>
+                        <option value="2">未结清</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6">
+                    <label>授信额度:</label>
+                    <input name="CreditLimit" id="CreditLimit" class="easyui-textbox" data-options="required:true"  />
+                </div>
+
+                <div class="col-6">
+                    <label>授信余额:</label>
+                    <input name="CreditBalance" id="CreditBalance" class="easyui-textbox" data-options="required:true"  />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6">
+                    <label>授信合同生效日期:</label>
+                    <input name="EffectiveDate" id="EffectiveDate" class="easyui-datebox" data-options="required:true,width:410"  />
+                </div>
+
+                <div class="col-6">
+                    <label>授信合同终止日期:</label>
+                    <input name="ExpirationDate" id="ExpirationDate" class="easyui-datebox" data-options="required:true,width:410" />
+                </div>
+            </div>
+        </fieldset>
+    </form>
+</body>
+</html>
