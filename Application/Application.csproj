@@ -126,6 +126,7 @@
     <Compile Include="ViewModels\LoanViewModels\GuarantyContractViewModel.cs" />
     <Compile Include="ViewModels\LoanViewModels\GuarantyOrganizationViewModel.cs" />
     <Compile Include="ViewModels\LoanViewModels\GuarantyPersonViewModel.cs" />
+    <Compile Include="ViewModels\LoanViewModels\GuranteeContractViewModel.cs" />
     <Compile Include="ViewModels\LoanViewModels\MortgageGuarantyContractViewModel.cs" />
     <Compile Include="ViewModels\LoanViewModels\PledgeGuarantyContractViewModel.cs" />
     <Compile Include="ViewModels\LoanViewModels\CreditViewModel.cs" />
@@ -198,7 +199,9 @@
     <Compile Include="Startup\Startup.Auth.cs" />
     <Compile Include="Startup\Startup.AutoMapper.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="ViewModels\Unused\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
