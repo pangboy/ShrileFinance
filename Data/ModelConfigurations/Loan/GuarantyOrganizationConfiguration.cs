@@ -4,7 +4,7 @@
     using System.Data.Entity.ModelConfiguration;
     using Core.Entities.Loan;
 
-    public class GuarantyOrganizationConfiguration:EntityTypeConfiguration<GuarantyOrganization>
+    public class GuarantyOrganizationConfiguration:EntityTypeConfiguration<GuarantorOrganization>
     {
         public GuarantyOrganizationConfiguration()
         {

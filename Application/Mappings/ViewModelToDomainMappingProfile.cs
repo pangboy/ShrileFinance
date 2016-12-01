@@ -71,9 +71,9 @@
 
             CreateMap<GuarantyContractViewModel, GuarantyContract>();
             CreateMap<GuarantyContractMortgageViewModel,GuarantyContractMortgage>();
-            CreateMap<GuarantyContractPledgeViewModel,GuarantorContractPledge>();
-            CreateMap<GuarantyPersonViewModel,GuarantyPerson>();
-            CreateMap<GuarantyOrganizationViewModel,GuarantyOrganization>();
+            CreateMap<GuarantyContractPledgeViewModel,GuarantyContractPledge>();
+            CreateMap<GuarantyPersonViewModel,GuarantorPerson>();
+            CreateMap<GuarantyOrganizationViewModel,GuarantorOrganization>();
 
             CreateMap<CreditExamineViewModel, CreditContract>();
         }

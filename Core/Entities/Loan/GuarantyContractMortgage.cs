@@ -2,21 +2,21 @@
 {
     using System;
 
+    public enum CollateralTypeEnum : byte
+    {
+        房产 = 1,
+        土地使用权 = 2,
+        在建工程 = 3,
+        交通工具 = 4,
+        机器设备 = 5,
+        其他类 = 6,
+    }
+
     /// <summary>
     /// 抵押保证合同
     /// </summary>
     public class GuarantyContractMortgage : GuarantyContract
     {
-        public enum CollateralTypeEnum : byte
-        {
-            房产 = 1,
-            土地使用权 = 2,
-            在建工程 = 3,
-            交通工具 = 4,
-            机器设备 = 5,
-            其他类 = 6,
-        }
-
         /// <summary>
         /// 抵押序号
         /// </summary>

@@ -12,8 +12,8 @@
             Property(m => m.Id).HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
             Property(m => m.Name).IsRequired().HasMaxLength(80);
 
-            Map<GuarantyOrganization>(t => t.Requires("Type").HasValue("GuarantyOrganization"));
-            Map<GuarantyPerson>(t => t.Requires("Type").HasValue("GuarantyPerson"));
+            Map<GuarantorOrganization>(t => t.Requires("Type").HasValue("GuarantyOrganization"));
+            Map<GuarantorPerson>(t => t.Requires("Type").HasValue("GuarantyPerson"));
 
             ToTable("LOAN_Guarantor");
         }

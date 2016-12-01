@@ -205,7 +205,7 @@
     <Content Include="Finance\images\minus.png" />
     <Content Include="Flow\Frame.html" />
     <Content Include="Loan\CreditContractEdit.html" />
-    <Content Include="Loan\GuarantyContractEdit.html" />
+    <Content Include="Loan\GuarantorContractEdit.html" />
     <Content Include="Notice\NoticeList.html" />
     <Content Include="Scripts\dictionaryCode.js" />
     <Content Include="BankInfo\DictionaryCode\DictionaryCodeEdit.html" />
