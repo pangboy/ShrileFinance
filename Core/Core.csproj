@@ -123,6 +123,7 @@
     <Compile Include="Exceptions\AppException.cs" />
     <Compile Include="Exceptions\ArgumentAppException.cs" />
     <Compile Include="Exceptions\ArgumentNullAppException.cs" />
+    <Compile Include="Exceptions\ArgumentOutOfRangeAppException.cs" />
     <Compile Include="Exceptions\InvalidOperationAppException.cs" />
     <Compile Include="Interfaces\IAggregateRoot.cs" />
     <Compile Include="Interfaces\IEntity.cs" />
