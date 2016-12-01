@@ -118,14 +118,13 @@
         {
             if (payment.ActualPaymentPrincipal > Balance)
             {
-                throw new ArgumentOutOfRangeAppException("实际偿还本金必须少于借据余额.");
+                throw new ArgumentOutOfRangeAppException(nameof(payment.ActualPaymentPrincipal), "实际偿还本金必须少于借据余额.");
             }
 
             var lastPayment = Payments.LastOrDefault();
             if (lastPayment != null && payment.DatePayment > lastPayment.DatePayment)
             {
-                throw new ArgumentOutOfRangeAppException("还款日期必须晚于最后一次还款的日期.");
-                ArgumentOutOfRangeException
+                throw new ArgumentOutOfRangeAppException(nameof(payment.ActualPaymentPrincipal), "还款日期必须晚于最后一次还款的日期.");
             }
 
             Payments.Add(payment);
