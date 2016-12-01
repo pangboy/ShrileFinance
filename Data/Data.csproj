@@ -109,6 +109,7 @@
     <Compile Include="ModelConfigurations\InstanceConfiguration.cs" />
     <Compile Include="ModelConfigurations\LiabilitiesConfiguration.cs" />
     <Compile Include="ModelConfigurations\LitigationConfigruation.cs" />
+    <Compile Include="ModelConfigurations\CreditConfiguration.cs" />
     <Compile Include="ModelConfigurations\LogConfiguration.cs" />
     <Compile Include="ModelConfigurations\ManagerConfiguration.cs" />
     <Compile Include="ModelConfigurations\FamilyMemberConfiguration.cs" />

@@ -115,7 +115,7 @@
     <Compile Include="Entities\Identity\AppUser.cs" />
     <Compile Include="Entities\Finance\Applicant.cs" />
     <Compile Include="Entities\Finance\Contract.cs" />
-    <Compile Include="Entities\Finance\Credit.cs" />
+    <Compile Include="Entities\Loan\Credit.cs" />
     <Compile Include="Entities\Finance\CreditExamine.cs" />
     <Compile Include="Entities\Finance\Finance.cs" />
     <Compile Include="Entities\Finance\FinanceExtension.cs" />
@@ -139,6 +139,7 @@
     <Compile Include="Interfaces\Repositories\IInstanceRepository.cs" />
     <Compile Include="Interfaces\Repositories\IFinanceRepository.cs" />
     <Compile Include="Interfaces\Repositories\IFinancingProjectRepository.cs" />
+    <Compile Include="Interfaces\Repositories\ICreditRepository.cs" />
     <Compile Include="Interfaces\Repositories\IOrganizationRepository.cs" />
     <Compile Include="Interfaces\ILogger.cs" />
     <Compile Include="Interfaces\Repositories\IProduceRepository.cs" />

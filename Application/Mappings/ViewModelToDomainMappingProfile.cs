@@ -5,6 +5,7 @@
     using Core.Entities;
     using Core.Entities.Customers.Enterprise;
     using Core.Entities.Finance;
+    using Core.Entities.Loan;
     using Core.Entities.Produce;
     using Core.Entities.Vehicle;
     using Core.Entities.Loan;
@@ -74,6 +75,8 @@
             CreateMap<PledgeGuarantyContractViewModel,PledgeGuarantyContract>();
             CreateMap<GuarantyPersonViewModel,GuarantyPerson>();
             CreateMap<GuarantyOrganizationViewModel,GuarantyOrganization>();
+
+            CreateMap<CreditExamineViewModel, Credit>();
         }
     }
 }
