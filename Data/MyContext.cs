@@ -71,6 +71,14 @@
             ////    .Add(new ParentConfigration())
             ////    .Add(new FinancialAffairsConfiguration());
 
+            // Loan Configurations
+            modelBuilder.Configurations
+                .Add(new GuarantyOrganizationConfiguration())
+                .Add(new GuarantyPersonConfiguration())
+                .Add(new GuarantyContractConfiguration())
+                .Add(new PledgeGuarantyContractConfiguration())
+                .Add(new MortgageGuarantyContractConfiguration());
+
             base.OnModelCreating(modelBuilder);
         }
     }
