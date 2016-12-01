@@ -3,11 +3,11 @@
     /// <summary>
     /// 担保人
     /// </summary>
-    public interface IGuarantor
+    public abstract class Guarantor : Entity
     {
         /// <summary>
         /// 担保人名称
         /// </summary>
-        string Name { get; set; }
+        public string Name { get; set; }
     }
 }

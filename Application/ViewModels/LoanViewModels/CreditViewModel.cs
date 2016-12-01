@@ -1,6 +1,7 @@
 ﻿namespace Application.ViewModels.LoanViewModels
 {
     using System;
+    using System.Collections.Generic;
 
     public class CreditViewModel
     {
@@ -47,5 +48,7 @@
         /// 是否有担保
         /// </summary>
         public bool IsGuarantee { get; set; }
+
+        public ICollection<GuarantyContractViewModel> GuarantyContract { get; set; }
     }
 }

@@ -3,13 +3,8 @@
     /// <summary>
     /// 自然人（继承于担保人）
     /// </summary>
-    public class GuarantyPerson : Entity, IGuarantor
+    public class GuarantyPerson : Guarantor
     {
-        /// <summary>
-        /// 姓名
-        /// </summary>
-        public string Name { get; set; }
-
         /// <summary>
         /// 证件类型
         /// </summary>

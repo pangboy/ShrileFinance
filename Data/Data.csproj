@@ -83,6 +83,10 @@
     <Compile Include="Migrations\201611240554135_FinanceModel.Designer.cs">
       <DependentUpon>201611240554135_FinanceModel.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201612010718553_LoanModel.cs" />
+    <Compile Include="Migrations\201612010718553_LoanModel.Designer.cs">
+      <DependentUpon>201612010718553_LoanModel.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs">
       <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
     </Compile>
@@ -103,13 +107,14 @@
     <Compile Include="ModelConfigurations\FormConfiguration.cs" />
     <Compile Include="ModelConfigurations\FormNodeConfiguration.cs" />
     <Compile Include="ModelConfigurations\FormRoleConfiguration.cs" />
-    <Compile Include="ModelConfigurations\GuarantyContractConfiguration.cs" />
-    <Compile Include="ModelConfigurations\GuarantyOrganizationConfiguration.cs" />
-    <Compile Include="ModelConfigurations\GuarantyPersonConfiguration.cs" />
+    <Compile Include="ModelConfigurations\Loan\GuarantorConfiguration.cs" />
+    <Compile Include="ModelConfigurations\Loan\GuarantyContractConfiguration.cs" />
+    <Compile Include="ModelConfigurations\Loan\GuarantyOrganizationConfiguration.cs" />
+    <Compile Include="ModelConfigurations\Loan\GuarantyPersonConfiguration.cs" />
     <Compile Include="ModelConfigurations\InstanceConfiguration.cs" />
     <Compile Include="ModelConfigurations\LiabilitiesConfiguration.cs" />
     <Compile Include="ModelConfigurations\LitigationConfigruation.cs" />
-    <Compile Include="ModelConfigurations\CreditConfiguration.cs" />
+    <Compile Include="ModelConfigurations\Loan\CreditConfiguration.cs" />
     <Compile Include="ModelConfigurations\LogConfiguration.cs" />
     <Compile Include="ModelConfigurations\ManagerConfiguration.cs" />
     <Compile Include="ModelConfigurations\FamilyMemberConfiguration.cs" />
@@ -281,6 +286,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201611240554135_FinanceModel.resx">
       <DependentUpon>201611240554135_FinanceModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612010718553_LoanModel.resx">
+      <DependentUpon>201612010718553_LoanModel.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

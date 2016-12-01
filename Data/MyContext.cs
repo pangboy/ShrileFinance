@@ -4,6 +4,7 @@
     using System.Data.Entity.ModelConfiguration.Conventions;
     using Microsoft.AspNet.Identity.EntityFramework;
     using ModelConfigurations;
+    using ModelConfigurations.Loan;
 
     public class MyContext : IdentityDbContext
     {
@@ -73,6 +74,8 @@
 
             // Loan Configurations
             modelBuilder.Configurations
+                .Add(new CreditConfiguration())
+                .Add(new GuarantorConfiguration())
                 .Add(new GuarantyOrganizationConfiguration())
                 .Add(new GuarantyPersonConfiguration())
                 .Add(new GuarantyContractConfiguration())

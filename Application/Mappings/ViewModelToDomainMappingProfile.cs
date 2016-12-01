@@ -8,7 +8,6 @@
     using Core.Entities.Loan;
     using Core.Entities.Produce;
     using Core.Entities.Vehicle;
-    using Core.Entities.Loan;
     using ViewModels.AccountViewModels;
     using ViewModels.FinanceViewModels;
     using ViewModels.OrganizationViewModels;
@@ -76,7 +75,7 @@
             CreateMap<GuarantyPersonViewModel,GuarantyPerson>();
             CreateMap<GuarantyOrganizationViewModel,GuarantyOrganization>();
 
-            CreateMap<CreditExamineViewModel, Credit>();
+            CreateMap<CreditExamineViewModel, CreditContract>();
         }
     }
 }

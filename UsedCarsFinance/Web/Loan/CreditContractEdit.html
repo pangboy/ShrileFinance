@@ -11,7 +11,7 @@
     <script src="../Scripts/easyui/locale/easyui-lang-zh_CN.js"></script>
     <script src="../Scripts/usedcars.js"></script>
     <script>
-
+        
     </script>
 </head>
 <body>
@@ -56,6 +56,16 @@
                 <div class="col-6">
                     <label>授信合同终止日期:</label>
                     <input name="ExpirationDate" id="ExpirationDate" class="easyui-datebox" data-options="required:true,width:410" />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6">
+                    <label>是否有担保:</label>
+                    <select id="IsGuarantee" name="IsGuarantee" class="easyui-combobox" data-options="required:true">
+                        <option value="0">是</option>
+                        <option value="1">否</option>
+                    </select>
                 </div>
             </div>
         </fieldset>

@@ -1,4 +1,4 @@
-﻿namespace Data.ModelConfigurations
+﻿namespace Data.ModelConfigurations.Loan
 {
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.ModelConfiguration;
@@ -8,9 +8,9 @@
     {
         public GuarantyOrganizationConfiguration()
         {
-            HasKey(m => m.Id);
-            Property(m => m.Id).HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
-            Property(m => m.Name).IsOptional().HasMaxLength(80);
+            //HasKey(m => m.Id);
+            //Property(m => m.Id).HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
+            //Property(m => m.Name).IsRequired().HasMaxLength(80);
             Property(m => m.CreditcardCode).IsRequired().HasMaxLength(16);
         }
     }

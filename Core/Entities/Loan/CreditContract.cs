@@ -3,17 +3,20 @@
     using System;
     using System.Collections.Generic;
     using Core.Interfaces;
-    using Core.Interfaces.Repositories;
 
-    public class Credit : Entity, IAggregateRoot
+    public class CreditContract : Entity, IAggregateRoot
     {
-        private readonly ICreditRepository repository;
-
-        public enum StatusEnum : byte
+        public CreditContract()
         {
-            生效 = 0,
-            失效 = 1,
-            未结清 = 2
+            if (EffectiveDate < ExpirationDate)
+            {
+                throw new Core.Exceptions.ArgumentAppException("合同已经失效不允许变更.");
+            }
+
+            if (CreditBalance > CreditLimit)
+            {
+                throw new Core.Exceptions.ArgumentAppException("授信余额不能大于授信额度.");
+            }
         }
 
         /// <summary>
@@ -44,7 +47,7 @@
         /// <summary>
         /// 合同有效状态
         /// </summary>
-        public StatusEnum ValidStatus { get; set; }
+        public Status.StatusEnum ValidStatus { get; set; }
 
         /// <summary>
         /// 是否有担保
@@ -62,7 +65,14 @@
         /// <param name="limit">新授信额度</param>
         public void ChangeLimit(decimal limit)
         {
-            CreditLimit = limit;
+            if (ValidStatus != Status.StatusEnum.失效)
+            {
+                CreditLimit = limit;
+            }
+            else
+            {
+                throw new Core.Exceptions.ArgumentAppException("合同已经失效不允许变更.");
+            }
         }
 
         /// <summary>
@@ -79,7 +89,7 @@
         /// </summary>
         /// <param name="limit">金额</param>
         /// <returns></returns>
-        public bool IsCredit(decimal limit)
+        public bool CanApplyCredit(decimal limit)
         {
             var result = true;
 
@@ -94,7 +104,7 @@
         /// </summary>
         public void ChangeStutus()
         {
-            ValidStatus = StatusEnum.失效;
+            ValidStatus = Status.StatusEnum.失效;
         }
 
         /// <summary>
@@ -106,7 +116,7 @@
         {
             if (CreditBalance < amount)
             {
-                throw new Core.Exceptions.InvalidOperationAppException("授信余额不足.");
+                throw new Core.Exceptions.ArgumentAppException("授信余额不足.");
             }
 
             return true;
@@ -133,7 +143,8 @@
         private bool IsEffective()
         {
             var result = true;
-            if (ValidStatus == StatusEnum.失效)
+
+            if (IsEffectiveDate() == true && ValidStatus == Status.StatusEnum.失效)
             {
                 result = false;
             }
@@ -145,9 +156,19 @@
         /// 更改合同有效状态
         /// </summary>
         /// <param name="status">合同状态</param>
-        private void ChangeEffective(StatusEnum status)
+        private void ChangeEffective(Status.StatusEnum status)
         {
             ValidStatus = status;
+        }
+    }
+
+    public class Status
+    {
+        public enum StatusEnum : byte
+        {
+            生效 = 0,
+            失效 = 1,
+            未结清 = 2
         }
     }
 }

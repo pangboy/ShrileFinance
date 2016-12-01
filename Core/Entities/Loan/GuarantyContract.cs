@@ -5,7 +5,7 @@
     /// <summary>
     /// 担保合同
     /// </summary>
-    public abstract class GuarantyContract : Entity
+    public class GuarantyContract : Entity
     {
         public enum EffectiveStateEnum : byte
         {
@@ -43,6 +43,6 @@
         /// <summary>
         /// 担保人
         /// </summary>
-        public IGuarantor IGuarantor { get; set; }
+        public virtual Guarantor Guarantor { get; set; }
     }
 }

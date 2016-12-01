@@ -36,6 +36,6 @@
         /// <summary>
         /// 担保人
         /// </summary>
-        public IGuarantor IGuarantor { get; set; }
+        public Guarantor Guarantor { get; set; }
     }
 }
