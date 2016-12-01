@@ -204,6 +204,7 @@
     <Content Include="Flow\FlowTest\Test3.html" />
     <Content Include="Finance\images\minus.png" />
     <Content Include="Flow\Frame.html" />
+    <Content Include="Loan\GuarantyContractEdit.html" />
     <Content Include="Loan\LoanEdit.html" />
     <Content Include="Notice\NoticeList.html" />
     <Content Include="Scripts\dictionaryCode.js" />

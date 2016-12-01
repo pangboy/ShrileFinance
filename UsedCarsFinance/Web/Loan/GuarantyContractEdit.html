@@ -1,0 +1,147 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>担保合同编辑页</title>
+    <link href="../Content/easyui/themes/bootstrap/easyui.css" rel="stylesheet" />
+    <link href="../Content/easyui/themes/icon.css" rel="stylesheet" />
+    <link href="../Content/form-bootstrap.css" rel="stylesheet" />
+    <script src="../Scripts/jquery/jquery.js"></script>
+    <script src="../Scripts/easyui/jquery.easyui.js"></script>
+    <script src="../Scripts/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../Finance/Content/FinanceJs.js"></script>
+
+    <script type="text/javascript">
+        $(function () {
+
+        });
+
+        function LoadData(data)
+        {
+
+        }
+
+        function BuildData()
+        {
+            var value = {};
+
+            return value;
+        }
+
+        function ValidData()
+        {
+            return $("form").form("validate");
+        }
+    </script>
+
+    <script type="text/javascript">
+        function ChangeGuarantorType() {
+            $.messager.show({ msg: "保证人类型：" + $(this).combobox('getValue') });
+        }
+
+        function ChangeContractType() {
+            $.messager.show({ msg: "合同类型：" + $(this).combobox('getValue') });
+        }
+
+        function Submit()
+        {
+            $.messager.show({ msg: "提交！" });
+        }
+    </script>
+</head>
+<body>
+    <form id="GuarantyContractEdit" class="container">
+        <fieldset>
+            <legend>担保合同</legend>
+            <div class="row" name="Type">
+                <div class="col-6">
+                    <label>合同类型：</label>
+                    <select name="ContractType" class="easyui-combobox" data-options="required:true,value:'',editable:false,onChange:ChangeContractType">
+                        <option value="1">自然人</option>
+                        <option value="2">机构</option>
+                    </select>
+                </div>
+                <div class="col-6">
+                    <label>保证人类型：</label>
+                    <select name="GuarantorType" class="easyui-combobox" data-options="required:true,value:'',editable:false,onChange:ChangeGuarantorType">
+                        <option value="1">自然人</option>
+                        <option value="2">机构</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row" name="ContractInfo">
+                <input name="Id" type="hidden" placeholder="担保合同标识" />
+                <div class="col-6">
+                    <label>担保形式</label>
+                    <select name="" class="easyui-combobox" data-options="required:true,value:'',editable:false">
+                        <option value=""></option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row" name="GuarantorInfo">
+                <input name="Id" type="hidden" placeholder="保证人标识" />
+                <div class="col-12" id="base">
+                    <label>保证人名称：</label>
+                    <input name="Name" class="easyui-textbox" data-options="validType:['length[0,80]'],required:true" />
+                </div>
+                <template id="GuarantorInfo_Person">
+                    <div class="col-6">
+                        <label>证件类型：</label>
+                        <input name="CertificateType" class="easyui-textbox" data-options="validType:['length[0,80]'],required:true" />
+                        <select name="CertificateType" class="easyui-combobox" data-options="required:true,value:'',editable:false">
+                            <option value="0">身份证</option>
+                            <option value="1">户口簿</option>
+                            <option value="2">护照</option>
+                            <option value="3">军官证</option>
+                            <option value="4">士兵证</option>
+                            <option value="5">港澳居民来往内地通行证</option>
+                            <option value="6">台湾同胞来往内地通行证</option>
+                            <option value="7">临时身份证</option>
+                            <option value="8">外国人居留证</option>
+                            <option value="9">警官证</option>
+                            <option value="a">组织机构代码证</option>
+                            <option value="b">营业执照</option>
+                            <option value="c">贷款卡</option>
+                            <option value="X">其他证件</option>
+                            <option value="A">香港身份证</option>
+                            <option value="B">澳门身份证</option>
+                            <option value="C">台湾身份证</option>
+                        </select>
+                    </div>
+                    <div class="col-6">
+                        <label>证件号码：</label>
+                        <input name="CertificateNumber" class="easyui-textbox" data-options="validType:['length[0,18]'],required:true" />
+                    </div>
+                </template>
+
+                <template id="GuarantorInfo_Person">
+                    <div class="col-6">
+                        <label>贷款卡编码：</label>
+                        <input name="CreditcardCode" class="easyui-textbox" data-options="validType:['length[0,16]'],required:true" />
+                    </div>
+                </template>
+            </div>
+
+            
+
+
+
+
+
+
+
+
+
+
+
+        </fieldset>
+
+        <div id="btn">
+            <a href="javascript:void(0)" id="save" class="easyui-linkbutton" data-options="iconCls:'icon-save',onClick:Submit">保存</a>
+            <a href="javascript:void(0)" id="back" class="easyui-linkbutton" data-options="iconCls:'icon-redo'">返回</a>
+        </div>
+    </form>
+</body>
+</html>
