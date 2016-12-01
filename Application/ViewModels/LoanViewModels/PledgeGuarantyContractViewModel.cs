@@ -20,6 +20,6 @@
         /// <summary>
         /// 质押物种类
         /// </summary>
-        public PledgeGuarantyContract.PledgeTypeEnum? PledgeType { get; set; }
+        public PledgeTypeEnum? PledgeType { get; set; }
     }
 }

@@ -24,12 +24,5 @@ namespace Web.Controllers.Finance
 
             return Ok();
         }
-
-        public IHttpActionResult Recreate(CreditViewModel model)
-        {
-            creditAppService.Recredit(model);
-
-            return Ok();
-        }
     }
 }

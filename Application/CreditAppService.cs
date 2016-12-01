@@ -17,7 +17,7 @@
 
         public void Create(CreditViewModel model)
         {
-            var credit = Mapper.Map<Credit>(model);
+            var credit = Mapper.Map<CreditContract>(model);
             repository.Create(credit);
             repository.Commit();
         }
@@ -36,8 +36,8 @@
         /// <param name="model"></param>
         public void ChangeEffective(CreditViewModel model)
         {
-            var creditmodel = Mapper.Map<Credit>(model);
-            Credit credit = new Credit();
+            var creditmodel = Mapper.Map<CreditContract>(model);
+            CreditContract credit = new CreditContract();
             credit.ChangeLimit(creditmodel.CreditLimit);
             repository.Modify(credit);
             repository.Commit();
@@ -45,8 +45,8 @@
 
         public void ChangeExpirationDate(CreditViewModel model)
         {
-            var creditmodel = Mapper.Map<Credit>(model);
-            Credit credit = new Credit();
+            var creditmodel = Mapper.Map<CreditContract>(model);
+            CreditContract credit = new CreditContract();
             credit.ChangeLimit(creditmodel.CreditLimit);
             repository.Modify(credit);
             repository.Commit();

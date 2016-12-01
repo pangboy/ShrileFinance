@@ -1,10 +1,10 @@
-﻿namespace Data.ModelConfigurations
+﻿namespace Data.ModelConfigurations.Loan
 {
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.ModelConfiguration;
     using Core.Entities.Loan;
 
-    public class CreditConfiguration: EntityTypeConfiguration<Credit>
+    public class CreditConfiguration: EntityTypeConfiguration<CreditContract>
     {
         public CreditConfiguration()
         {
@@ -18,9 +18,9 @@
             Property(m => m.CreditBalance);
             Property(m => m.ValidStatus);
             Property(m => m.IsGuarantee);
-            HasMany(m => m.GuarantyContract).WithOptional().Map(m => m.MapKey("LoanId")).WillCascadeOnDelete();
+            HasMany(m => m.GuarantyContract).WithOptional().Map(m => m.MapKey("CreditId")).WillCascadeOnDelete();
 
-            ToTable("LOAN_LoanContranct");
+            ToTable("LOAN_CreditContranct");
         }
     }
 }

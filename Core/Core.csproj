@@ -67,7 +67,7 @@
   <ItemGroup>
     <Compile Include="Entities\Loan\GuarantyOrganization.cs" />
     <Compile Include="Entities\Loan\GuarantyPerson.cs" />
-    <Compile Include="Entities\Loan\IGuarantor.cs" />
+    <Compile Include="Entities\Loan\Guarantor.cs" />
     <Compile Include="Entities\Loan\GuarantyContract.cs" />
     <Compile Include="Entities\Loan\MortgageGuarantyContract.cs" />
     <Compile Include="Entities\Loan\PledgeGuarantyContract.cs" />
@@ -115,7 +115,7 @@
     <Compile Include="Entities\Identity\AppUser.cs" />
     <Compile Include="Entities\Finance\Applicant.cs" />
     <Compile Include="Entities\Finance\Contract.cs" />
-    <Compile Include="Entities\Loan\Credit.cs" />
+    <Compile Include="Entities\Loan\CreditContract.cs" />
     <Compile Include="Entities\Finance\CreditExamine.cs" />
     <Compile Include="Entities\Finance\Finance.cs" />
     <Compile Include="Entities\Finance\FinanceExtension.cs" />

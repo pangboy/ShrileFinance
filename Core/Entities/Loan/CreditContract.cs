@@ -3,27 +3,20 @@
     using System;
     using System.Collections.Generic;
     using Core.Interfaces;
-    using Core.Interfaces.Repositories;
 
-    public class Credit : Entity, IAggregateRoot
+    public class CreditContract : Entity, IAggregateRoot
     {
-        public Credit()
+        public CreditContract()
         {
             if (EffectiveDate < ExpirationDate)
             {
                 throw new Core.Exceptions.ArgumentAppException("合同已经失效不允许变更.");
             }
-            if(CreditBalance> CreditLimit)
+
+            if (CreditBalance > CreditLimit)
             {
                 throw new Core.Exceptions.ArgumentAppException("授信余额不能大于授信额度.");
             }
-        }
-
-        public enum StatusEnum : byte
-        {
-            生效 = 0,
-            失效 = 1,
-            未结清 = 2
         }
 
         /// <summary>
@@ -54,7 +47,7 @@
         /// <summary>
         /// 合同有效状态
         /// </summary>
-        public StatusEnum ValidStatus { get; set; }
+        public Status.StatusEnum ValidStatus { get; set; }
 
         /// <summary>
         /// 是否有担保
@@ -72,7 +65,7 @@
         /// <param name="limit">新授信额度</param>
         public void ChangeLimit(decimal limit)
         {
-            if (ValidStatus != StatusEnum.失效)
+            if (ValidStatus != Status.StatusEnum.失效)
             {
                 CreditLimit = limit;
             }
@@ -111,7 +104,7 @@
         /// </summary>
         public void ChangeStutus()
         {
-            ValidStatus = StatusEnum.失效;
+            ValidStatus = Status.StatusEnum.失效;
         }
 
         /// <summary>
@@ -151,7 +144,7 @@
         {
             var result = true;
 
-            if (IsEffectiveDate()== true &&ValidStatus == StatusEnum.失效)
+            if (IsEffectiveDate() == true && ValidStatus == Status.StatusEnum.失效)
             {
                 result = false;
             }
@@ -163,9 +156,19 @@
         /// 更改合同有效状态
         /// </summary>
         /// <param name="status">合同状态</param>
-        private void ChangeEffective(StatusEnum status)
+        private void ChangeEffective(Status.StatusEnum status)
         {
             ValidStatus = status;
+        }
+    }
+
+    public class Status
+    {
+        public enum StatusEnum : byte
+        {
+            生效 = 0,
+            失效 = 1,
+            未结清 = 2
         }
     }
 }

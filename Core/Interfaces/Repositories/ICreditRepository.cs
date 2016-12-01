@@ -2,7 +2,7 @@
 {
     using Entities.Loan;
 
-    public interface ICreditRepository : IRepository<Credit>
+    public interface ICreditRepository : IRepository<CreditContract>
     {
     }
 }
