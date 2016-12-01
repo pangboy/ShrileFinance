@@ -7,12 +7,14 @@
     using Core.Entities.Finance;
     using Core.Entities.Produce;
     using Core.Entities.Vehicle;
+    using Core.Entities.Loan;
     using ViewModels.AccountViewModels;
     using ViewModels.FinanceViewModels;
     using ViewModels.OrganizationViewModels;
     using ViewModels.PartnerViewModels;
     using ViewModels.ProduceViewModel;
     using ViewModels.VehicleViewModel;
+    using ViewModels.LoanViewModels;
 
     public class ViewModelToDomainMappingProfile : Profile
     {
@@ -66,6 +68,12 @@
                 .ForMember(d => d.FinanceProduce, opt => opt.Ignore())
                 .ForMember(d => d.Applicant, opt => opt.Ignore());
             CreateMap<FinanceProduceViewModel, FinanceProduce>();
+
+            CreateMap<GuarantyContractViewModel, GuarantyContract>();
+            CreateMap<MortgageGuarantyContractViewModel,MortgageGuarantyContract>();
+            CreateMap<PledgeGuarantyContractViewModel,PledgeGuarantyContract>();
+            CreateMap<GuarantyPersonViewModel,GuarantyPerson>();
+            CreateMap<GuarantyOrganizationViewModel,GuarantyOrganization>();
         }
     }
 }
