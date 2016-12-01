@@ -56,6 +56,7 @@
         /// 登记日期
         /// </summary>
         public DateTime? RegistrateDate { get; set; }
+
         /// <summary>
         /// 抵押物说明
         /// </summary>

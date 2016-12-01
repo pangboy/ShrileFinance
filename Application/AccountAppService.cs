@@ -76,7 +76,7 @@
         {
             if (string.IsNullOrEmpty(roleId))
             {
-                throw new ArgumentNullAppException(roleId);
+                throw new ArgumentNullAppException(nameof(roleId));
             }
 
             return userManager.Users.Where(m => m.Roles.Any(n => n.RoleId == roleId));
@@ -223,7 +223,7 @@
 
             if (user == null)
             {
-                throw new ArgumentNullAppException("用户名或密码无效.");
+                throw new ArgumentNullAppException(message: "用户名或密码无效.");
             }
 
             return await userManager.CreateIdentityAsync(user, DefaultAuthenticationTypes.ApplicationCookie);
