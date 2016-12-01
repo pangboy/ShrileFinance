@@ -1,20 +1,11 @@
-﻿namespace Core.Entities.Loan
+﻿namespace Application.ViewModels.LoanViewModels
 {
-    public enum PledgeTypeEnum : byte
-    {
-        存单 = 1,
-        票据 = 2,
-        保单 = 3,
-        国债 = 4,
-        股权 = 5,
-        股票 = 6,
-        其他权利 = 7
-    }
+    using Core.Entities.Loan;
 
     /// <summary>
     /// 质押保证合同
     /// </summary>
-    public class PledgeGuarantyContract : GuarantyContract
+    public class GuarantyContractPledgeViewModel : GuarantyContractViewModel
     {
         /// <summary>
         /// 质押序号

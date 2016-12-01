@@ -33,12 +33,12 @@
         /// <summary>
         /// 抵押
         /// </summary>
-        public MortgageGuarantyContractViewModel MortgageGuarantyContractViewModel { get; set; }
+        public GuarantyContractMortgageViewModel MortgageGuarantyContractViewModel { get; set; }
 
         /// <summary>
         /// 质押
         /// </summary>
-        public PledgeGuarantyContractViewModel PledgeGuarantyContractViewModel { get; set; }
+        public GuarantyContractPledgeViewModel PledgeGuarantyContractViewModel { get; set; }
 
         /// <summary>
         /// 保证人类型

@@ -69,8 +69,8 @@
     <Compile Include="Entities\Loan\GuarantyPerson.cs" />
     <Compile Include="Entities\Loan\Guarantor.cs" />
     <Compile Include="Entities\Loan\GuarantyContract.cs" />
-    <Compile Include="Entities\Loan\MortgageGuarantyContract.cs" />
-    <Compile Include="Entities\Loan\PledgeGuarantyContract.cs" />
+    <Compile Include="Entities\Loan\GuarantyContractMortgage.cs" />
+    <Compile Include="Entities\Loan\GuarantorContractPledge.cs" />
     <Compile Include="Entities\Loan\Loan.cs" />
     <Compile Include="Entities\Loan\PaymentHistory.cs" />
     <Compile Include="Entities\Other\Draft.cs" />
@@ -157,8 +157,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Entities\Borrower\" />
-    <Folder Include="Entities\Loan\" />
-    <Folder Include="Services\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -2,24 +2,24 @@
 {
     using System;
 
+    public enum EffectiveStateEnum : byte
+    {
+        是 = 1,
+        否 = 2
+    }
+
+    public enum GuaranteeFormEnum : byte
+    {
+        单人担保 = 1,
+        多人联保 = 2,
+        多人分保 = 3
+    }
+
     /// <summary>
     /// 担保合同
     /// </summary>
     public class GuarantyContract : Entity
     {
-        public enum EffectiveStateEnum : byte
-        {
-            是 = 1,
-            否 = 2
-        }
-
-        public enum GuaranteeFormEnum : byte
-        {
-            单人担保 = 1,
-            多人联保 = 2,
-            多人分保 = 3
-        }
-
         /// <summary>
         /// 签订日期
         /// </summary>

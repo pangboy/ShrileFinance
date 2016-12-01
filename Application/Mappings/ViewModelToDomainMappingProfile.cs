@@ -70,8 +70,8 @@
             CreateMap<FinanceProduceViewModel, FinanceProduce>();
 
             CreateMap<GuarantyContractViewModel, GuarantyContract>();
-            CreateMap<MortgageGuarantyContractViewModel,MortgageGuarantyContract>();
-            CreateMap<PledgeGuarantyContractViewModel,PledgeGuarantyContract>();
+            CreateMap<GuarantyContractMortgageViewModel,GuarantyContractMortgage>();
+            CreateMap<GuarantyContractPledgeViewModel,GuarantorContractPledge>();
             CreateMap<GuarantyPersonViewModel,GuarantyPerson>();
             CreateMap<GuarantyOrganizationViewModel,GuarantyOrganization>();
 
