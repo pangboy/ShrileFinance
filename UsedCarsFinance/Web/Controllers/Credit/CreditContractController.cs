@@ -4,7 +4,7 @@
     using System.Web.Http;
     using Application;
     using Application.ViewModels;
-    using Application.ViewModels.LoanViewModels;
+    using Application.ViewModels.Loan.CreditViewModel;
 
     public class CreditContractController : ApiController
     {

@@ -1,11 +1,13 @@
 ﻿namespace Application
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using AutoMapper;
     using Core.Entities.Loan;
     using Core.Interfaces.Repositories;
-    using ViewModels.LoanViewModels;
+    using ViewModels.Loan;
+    using ViewModels.Loan.CreditViewModel;
     using X.PagedList;
 
     public class CreditContractAppService
@@ -30,6 +32,7 @@
             repository.Modify(credit);
             repository.Commit();
         }
+
 
         public CreditContractViewModel Get(Guid id)
         {
@@ -72,12 +75,19 @@
             return credit.CanApplyLoan(limit);
         }
 
-        public IPagedList<CreditContractViewModel> GetPageList(string serach,int page ,int size)
+        /// <summary>
+        /// 根据合同号和机构客户号筛选
+        /// </summary>
+        /// <param name="serach">筛选条件</param>
+        /// <param name="page">页码</param>
+        /// <param name="size">每页数量</param>
+        /// <returns></returns>
+        public IPagedList<CreditContractViewModel> GetPageList(string serach, int page, int size)
         {
             var creditContract = repository.GetAll();
             if (!string.IsNullOrEmpty(serach))
             {
-                creditContract = creditContract.Where(m=>m.LoanCode.Contains(serach));
+                creditContract = creditContract.Where(m => m.LoanCode.Contains(serach) || m.Organization.CustomerNumber.Contains(serach));
             }
 
             creditContract = creditContract.OrderByDescending(m => m.Id);

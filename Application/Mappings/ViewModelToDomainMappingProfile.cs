@@ -14,7 +14,7 @@
     using ViewModels.PartnerViewModels;
     using ViewModels.ProduceViewModel;
     using ViewModels.VehicleViewModel;
-    using ViewModels.LoanViewModels;
+    using ViewModels.Loan.CreditViewModel;
 
     public class ViewModelToDomainMappingProfile : Profile
     {

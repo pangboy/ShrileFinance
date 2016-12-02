@@ -42,7 +42,7 @@
                 async: false,
                 method: "POST",
                 data: model,
-                url: "../api/CreditContract/Modify",
+                url: "../api/CreditContract/Create",
                 success: function (data) {
                     top.$.messager.show({ msg: "提交成功！" });
                 }
@@ -70,6 +70,7 @@
         <fieldset>
             <legend>贷款合同</legend>
             <input id="id" name="Id" hidden />
+            <input id="OrganizationId" name="OrganizationId" hidden value="F1BA3A48-65B8-E611-80C7-507B9DE4A488">
             <div class="row">
                 <div class="col-6">
                     <label>合同编码:</label>

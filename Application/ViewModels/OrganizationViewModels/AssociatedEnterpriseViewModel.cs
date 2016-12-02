@@ -9,7 +9,7 @@
     [MainAssociatedEnterprisePerid_ROI(ErrorMessage = "主要关联企业段 登记注册号码、组织机构代码和机构信用代码不能同时为空")]
     public class AssociatedEnterpriseViewModel
     {
-        public Guid Id { get; set; }
+        public Guid? Id { get; set; }
 
         /// <summary>
         /// 关联类型
