@@ -66,14 +66,56 @@ namespace Data.Migrations
                 .ForeignKey("dbo.LOAN_GuarantyContract", t => t.GuarantyContractId)
                 .Index(t => t.GuarantyContractId);
             
+            CreateTable(
+                "dbo.LOAN_Loan",
+                c => new
+                    {
+                        Id = c.Guid(nullable: false, identity: true),
+                        Principle = c.Decimal(nullable: false, precision: 18, scale: 2),
+                        SpecialDate = c.DateTime(nullable: false),
+                        MatureDate = c.DateTime(nullable: false),
+                        InterestRate = c.Decimal(nullable: false, precision: 18, scale: 2),
+                        FourCategoryAssetsClassification = c.Int(),
+                        FiveCategoryAssetsClassification = c.Int(nullable: false),
+                        ContractNumber = c.String(nullable: false, maxLength: 128),
+                        Status = c.Int(nullable: false),
+                        LoanBusinessTypes = c.String(maxLength: 1),
+                        LoanForm = c.String(maxLength: 1),
+                        LoanNature = c.String(maxLength: 1),
+                        LoansTo = c.String(maxLength: 5),
+                        LoanTypes = c.String(maxLength: 2),
+                    })
+                .PrimaryKey(t => t.Id);
+            
+            CreateTable(
+                "dbo.LOAN_PaymentHistory",
+                c => new
+                    {
+                        Id = c.Guid(nullable: false, identity: true),
+                        LoanId = c.Guid(nullable: false),
+                        ScheduledPaymentPrincipal = c.Decimal(nullable: false, precision: 18, scale: 2),
+                        ScheduledPaymentInterest = c.Decimal(nullable: false, precision: 18, scale: 2),
+                        ActualPaymentPrincipal = c.Decimal(nullable: false, precision: 18, scale: 2),
+                        ActualPaymentInterest = c.Decimal(nullable: false, precision: 18, scale: 2),
+                        DatePayment = c.DateTime(nullable: false),
+                        PaymentTypes = c.String(maxLength: 2),
+                    })
+                .PrimaryKey(t => t.Id)
+                .ForeignKey("dbo.LOAN_Loan", t => t.LoanId)
+                .Index(t => t.LoanId);
+            
         }
         
         public override void Down()
         {
+            DropForeignKey("dbo.LOAN_PaymentHistory", "LoanId", "dbo.LOAN_Loan");
             DropForeignKey("dbo.LOAN_GuarantyContract", "CreditId", "dbo.LOAN_CreditContranct");
             DropForeignKey("dbo.LOAN_Guarantor", "GuarantyContractId", "dbo.LOAN_GuarantyContract");
+            DropIndex("dbo.LOAN_PaymentHistory", new[] { "LoanId" });
             DropIndex("dbo.LOAN_Guarantor", new[] { "GuarantyContractId" });
             DropIndex("dbo.LOAN_GuarantyContract", new[] { "CreditId" });
+            DropTable("dbo.LOAN_PaymentHistory");
+            DropTable("dbo.LOAN_Loan");
             DropTable("dbo.LOAN_Guarantor");
             DropTable("dbo.LOAN_GuarantyContract");
             DropTable("dbo.LOAN_CreditContranct");

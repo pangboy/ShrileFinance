@@ -1,0 +1,93 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>借据列表</title>
+    <meta charset="utf-8" />
+    <link href="../Content/easyui/themes/gray/easyui.css" rel="stylesheet" />
+    <link href="../Content/easyui/themes/icon.css" rel="stylesheet" />
+    <script src="../Scripts/jquery/jquery.js"></script>
+    <script src="../Scripts/easyui/jquery.easyui.js"></script>
+    <script src="../Scripts/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../Scripts/usedcars.js"></script>
+    <script>
+        uc.grid = new UCGrid("#dg");
+
+        $(function () {
+        });
+
+        function SetFilters(params) {
+            if (!$("#search_form").form("validate")) {
+                return false;
+            }
+
+            var searchParams = $("#search_form").serializeJson();
+
+            $.extend(params, searchParams);
+        }
+
+        function Start() {
+            $.ajax({
+                method: "POST",
+                url: "../api/Instance/StartProcess",
+                statusCode: {
+                    200: function (data) {
+                        uc.ShowWindow("详情页", "Flow/Frame.html?instanceId=" + data);
+                    }
+                }
+            });
+        }
+
+        function Process() {
+            var url = "Flow/Frame.html";
+
+            var row = uc.grid.GetSelected();
+            if (row) {
+                url += "?instanceId=" + row.Id;
+
+                uc.ShowWindow("详情页", url);
+            }
+        }
+    </script>
+</head>
+
+<body>
+    <table id="dg" class="easyui-datagrid" data-options="toolbar: '#tb', 
+           rownumbers: true, singleSelect: true, 
+           fitColumns: true, nowrap: true, height: 630, striped: true,
+           pagination: true, pageSize: 20, pageList: [10,20,30,40,50],
+           url: '../api/Instance/DoingList', method: 'GET', onBeforeLoad: SetFilters, loadMsg: '正在加载，请稍候...'">
+        <thead>
+            <tr>
+                <th data-options="field:'ContractNumber',width:150,align:'left'">借据编号</th>
+                <th data-options="field:'SpecialDate',width:150,align:'left'">放款日期</th>
+                <th data-options="field:'MatureDate',width:150,align:'left'">到期日期</th>
+                <th data-options="field:'Principle',width:150,align:'right'">借据金额</th>
+                <th data-options="field:'Balance',width:150,align:'right'">借据余额</th>
+                <th data-options="field:'Status',width:150,align:'center'">借据状态</th>
+            </tr>
+        </thead>
+    </table>
+
+    <div id="tb">
+        <form id="search_form">
+            <input name="searchString" class="easyui-textbox" data-options="width:200,prompt: '输入借据编号查询'" />
+            <label for="status">借据状态:</label>
+            <select name="status" class="easyui-combobox" data-options="width:120,editable:false">
+                <option>全部</option>
+                <option value="1">正常</option>
+                <option value="3">逾期</option>
+                <option value="2">已还清</option>
+            </select>
+
+            <a class="easyui-linkbutton" href="javascript:void(0)" data-options="onClick:uc.grid.Reload,iconCls:'icon-search',plain:true">搜索</a>
+            <a class="easyui-linkbutton" href="javascript:void(0)" data-options="onClick:uc.grid.Reset,iconCls:'icon-reload',plain:true">重置</a>
+        </form>
+
+        <div>
+            <a id="add" class="easyui-linkbutton" href="javascript:void(0)" data-options="onClick:Start,iconCls:'icon-add',plain:true">新增借据</a>
+            <a id="edit" class="easyui-linkbutton" href="javascript:void(0)" data-options="onClick:Process,iconCls:'icon-edit',plain:true">编辑</a>
+            <a id="view" class="easyui-linkbutton" href="javascript:void(0)" data-options="onClick:Process,iconCls:'icon-search',plain:true">查看</a>
+        </div>
+    </div>
+</body>
+</html>

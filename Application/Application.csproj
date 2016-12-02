@@ -94,6 +94,7 @@
     <Compile Include="FinanceAppService.cs" />
     <Compile Include="FinanceScriptService.cs" />
     <Compile Include="FinancingProjectAppService.cs" />
+    <Compile Include="LoanAppService.cs" />
     <Compile Include="Mappings\PagedListTypeConverter.cs" />
     <Compile Include="PartnerAppService.cs" />
     <Compile Include="ProcessAppService.cs" />
@@ -130,6 +131,8 @@
     <Compile Include="ViewModels\LoanViewModels\GuranteeContractViewModel.cs" />
     <Compile Include="ViewModels\LoanViewModels\GuarantyContractMortgageViewModel.cs" />
     <Compile Include="ViewModels\LoanViewModels\GuarantyContractPledgeViewModel.cs" />
+    <Compile Include="ViewModels\Loan\LoanViewModels\LoanViewModel.cs" />
+    <Compile Include="ViewModels\Loan\LoanViewModels\PaymentHistoryViewModel.cs" />
     <Compile Include="ViewModels\OrganizationViewModels\BigEventViewModel.cs" />
     <Compile Include="ViewModels\OrganizationViewModels\CashFlowViewModel.cs" />
     <Compile Include="ViewModels\OrganizationViewModels\FamilyMemberViewModel.cs" />

@@ -207,6 +207,7 @@
     <Content Include="Loan\CreditConreactList.html" />
     <Content Include="Loan\CreditContractEdit.html" />
     <Content Include="Loan\GuarantorContractEdit.html" />
+    <Content Include="Loan\LoanList.html" />
     <Content Include="Notice\NoticeList.html" />
     <Content Include="Scripts\dictionaryCode.js" />
     <Content Include="BankInfo\DictionaryCode\DictionaryCodeEdit.html" />

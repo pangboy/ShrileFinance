@@ -115,6 +115,8 @@
     <Compile Include="ModelConfigurations\LiabilitiesConfiguration.cs" />
     <Compile Include="ModelConfigurations\LitigationConfigruation.cs" />
     <Compile Include="ModelConfigurations\Loan\CreditContractConfiguration.cs" />
+    <Compile Include="ModelConfigurations\Loan\LoanConfiguration.cs" />
+    <Compile Include="ModelConfigurations\Loan\PaymentHistoryConfiguration.cs" />
     <Compile Include="ModelConfigurations\LogConfiguration.cs" />
     <Compile Include="ModelConfigurations\ManagerConfiguration.cs" />
     <Compile Include="ModelConfigurations\FamilyMemberConfiguration.cs" />
@@ -247,6 +249,7 @@
     <Compile Include="Repositories\FormRepository.cs" />
     <Compile Include="Repositories\InstanceRepository.cs" />
     <Compile Include="Repositories\FinancingProjectRepository.cs" />
+    <Compile Include="Repositories\LoanRepository.cs" />
     <Compile Include="Repositories\OrganizationRepository.cs" />
     <Compile Include="Repositories\ProduceRepository.cs" />
     <Compile Include="Repositories\FinanceRepository.cs" />

@@ -143,6 +143,7 @@
     <Compile Include="Interfaces\Repositories\IFinanceRepository.cs" />
     <Compile Include="Interfaces\Repositories\IFinancingProjectRepository.cs" />
     <Compile Include="Interfaces\Repositories\ICreditContractRepository.cs" />
+    <Compile Include="Interfaces\Repositories\ILoanRepository.cs" />
     <Compile Include="Interfaces\Repositories\IOrganizationRepository.cs" />
     <Compile Include="Interfaces\ILogger.cs" />
     <Compile Include="Interfaces\Repositories\IProduceRepository.cs" />

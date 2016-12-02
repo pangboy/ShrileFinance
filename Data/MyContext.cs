@@ -80,7 +80,9 @@
                 .Add(new GuarantyPersonConfiguration())
                 .Add(new GuarantyContractConfiguration())
                 .Add(new PledgeGuarantyContractConfiguration())
-                .Add(new MortgageGuarantyContractConfiguration());
+                .Add(new MortgageGuarantyContractConfiguration())
+                .Add(new LoanConfiguration())
+                .Add(new PaymentHistoryConfiguration());
 
             base.OnModelCreating(modelBuilder);
         }
