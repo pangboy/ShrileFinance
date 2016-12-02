@@ -1,4 +1,4 @@
-﻿namespace Application.ViewModels.LoanViewModels
+﻿namespace Application.ViewModels.Loan.CreditViewModel
 {
     using System;
     using System.Collections.Generic;
@@ -14,6 +14,7 @@
 
         public Guid? Id { get; set; }
 
+        public Guid OrganizationId { get; set; }
         /// <summary>
         /// 合同编码
         /// </summary>

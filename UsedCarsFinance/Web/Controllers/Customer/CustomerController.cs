@@ -8,10 +8,12 @@
     public class CustomerController : ApiController
     {
         private readonly OrganizationAppService customerAppService;
+        private readonly TreeGridAppService treeGridService;
 
-        public CustomerController(OrganizationAppService service)
+        public CustomerController(OrganizationAppService service , TreeGridAppService treeGridService)
         {
             this.customerAppService = service;
+            this.treeGridService = treeGridService;
         }
         /// <summary>
         /// 提交
@@ -22,10 +24,10 @@
         [HttpPost]
         public IHttpActionResult Add(OrganizationViewModel value)
         {
-            //if (!ModelState.IsValid)
-            //{
-            //     return BadRequest(ValidModel.ShowErrorFirst(ModelState));
-            //}
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ValidModel.ShowErrorFirst(ModelState));
+            }
 
 
             customerAppService.Create(value);
@@ -70,6 +72,13 @@
 
             return org;
         }
+        public IHttpActionResult GetAll()
+        {
+            var cusCombo = customerAppService.GetAll();
+
+            return Ok(cusCombo);
+        }
+
 
         /// <summary>
         /// 查询带分页
@@ -83,6 +92,21 @@
         public IHttpActionResult GetPageList(string Search, int page ,int rows)
         {
             var list = customerAppService.GetPageList(Search, page, rows);
+
+            return Ok(list);
+        }
+
+        /// <summary>
+        /// 统计
+        /// </summary>
+        /// <param name="orgaizateId"></param>
+        /// <param name="page"></param>
+        /// <param name="rows"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public IHttpActionResult TreeGridPageList(Guid? organizateId, int page ,int rows)
+        {
+            var list = treeGridService.TreeGridPageList(organizateId, page, rows);
 
             return Ok(list);
         }

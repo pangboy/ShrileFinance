@@ -1,8 +1,10 @@
 ﻿namespace Application
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using AutoMapper;
+    using Core.Entities.Customers.Enterprise;
     using Core.Interfaces.Repositories;
     using ViewModels;
     using ViewModels.OrganizationViewModels;
@@ -23,7 +25,15 @@
 
             customer = Mapper.Map(model, customer);
             repository.Create(customer);
-            repository.Commit();
+
+            try
+            {
+                repository.Commit();
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
         }
 
         public void Modify(OrganizationViewModel model)
@@ -43,6 +53,24 @@
             model.Base = Mapper.Map<BaseViewModel>(customer);
 
             return model;
+        }
+
+        public List<OrganizateComboViewModel> GetAll()
+        {
+            var customer = repository.GetAll();
+            List<OrganizateComboViewModel> custviewmodelList = new List<OrganizateComboViewModel>();
+            if (customer != null)
+            {
+                foreach (var item in customer)
+                {
+                    custviewmodelList.Add(new OrganizateComboViewModel()
+                    {
+                        InstitutionChName = item.Property.InstitutionChName,
+                        Id = item.Id
+                    });
+                }
+            }
+            return custviewmodelList;
         }
 
         /// <summary>

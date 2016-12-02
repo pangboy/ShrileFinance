@@ -1,4 +1,4 @@
-﻿namespace Application.ViewModels.LoanViewModels
+﻿namespace Application.ViewModels.Loan.CreditViewModel
 {
     public class GuranteeContractViewModel
     {

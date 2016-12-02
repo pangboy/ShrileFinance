@@ -10,7 +10,7 @@
     [BasePeriod_TN(ErrorMessage = "基础信息 登记注册号类型和登记注册号码需成对出现")]
     public class BaseViewModel
     {
-        public Guid Id { get; set; }
+        public Guid? Id { get; set; }
 
         /// <summary>
         /// 客户号

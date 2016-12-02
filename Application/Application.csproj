@@ -108,6 +108,7 @@
     </Compile>
     <Compile Include="Startup.cs" />
     <Compile Include="AccountAppService.cs" />
+    <Compile Include="TreeGridAppService.cs" />
     <Compile Include="UpdateBind.cs" />
     <Compile Include="ViewModels\AccountViewModels\ChangePasswordViewModel.cs" />
     <Compile Include="ViewModels\AccountViewModels\LoginViewModel.cs" />
@@ -124,13 +125,14 @@
     <Compile Include="ViewModels\FinanceViewModels\OperationViewModel.cs" />
     <Compile Include="ViewModels\FinanceViewModels\PartnerAndUser.cs" />
     <Compile Include="ViewModels\IEntityViewModel.cs" />
-    <Compile Include="ViewModels\LoanViewModels\CreditContractViewModel.cs" />
-    <Compile Include="ViewModels\LoanViewModels\GuarantyContractViewModel.cs" />
-    <Compile Include="ViewModels\LoanViewModels\GuarantyOrganizationViewModel.cs" />
-    <Compile Include="ViewModels\LoanViewModels\GuarantyPersonViewModel.cs" />
-    <Compile Include="ViewModels\LoanViewModels\GuranteeContractViewModel.cs" />
-    <Compile Include="ViewModels\LoanViewModels\GuarantyContractMortgageViewModel.cs" />
-    <Compile Include="ViewModels\LoanViewModels\GuarantyContractPledgeViewModel.cs" />
+    <Compile Include="ViewModels\TreeGridViewModel\CreditCountViewModel.cs" />
+    <Compile Include="ViewModels\Loan\CreditViewModels\CreditContractViewModel.cs" />
+    <Compile Include="ViewModels\Loan\CreditViewModels\GuarantyContractViewModel.cs" />
+    <Compile Include="ViewModels\Loan\CreditViewModels\GuarantyOrganizationViewModel.cs" />
+    <Compile Include="ViewModels\Loan\CreditViewModels\GuarantyPersonViewModel.cs" />
+    <Compile Include="ViewModels\Loan\CreditViewModels\GuranteeContractViewModel.cs" />
+    <Compile Include="ViewModels\Loan\CreditViewModels\GuarantyContractMortgageViewModel.cs" />
+    <Compile Include="ViewModels\Loan\CreditViewModels\GuarantyContractPledgeViewModel.cs" />
     <Compile Include="ViewModels\Loan\LoanViewModels\LoanViewModel.cs" />
     <Compile Include="ViewModels\Loan\LoanViewModels\PaymentHistoryViewModel.cs" />
     <Compile Include="ViewModels\OrganizationViewModels\BigEventViewModel.cs" />
@@ -140,6 +142,7 @@
     <Compile Include="ViewModels\OrganizationViewModels\LiabilitiesViewModel.cs" />
     <Compile Include="ViewModels\OrganizationViewModels\LitigationViewModel.cs" />
     <Compile Include="ViewModels\OrganizationViewModels\OragnizateListView.cs" />
+    <Compile Include="ViewModels\OrganizationViewModels\OrganizateComboViewModel.cs" />
     <Compile Include="ViewModels\OrganizationViewModels\OrganizateViewModel.cs" />
     <Compile Include="ViewModels\OrganizationViewModels\BaseViewModel.cs" />
     <Compile Include="ViewModels\OrganizationViewModels\ProfitViewModel.cs" />
