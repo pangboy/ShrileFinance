@@ -5,14 +5,14 @@
     using Core.Entities.Customers.Enterprise;
     using Core.Entities.Finance;
     using Core.Entities.Flow;
+    using Core.Entities.Loan;
     using Core.Entities.Produce;
     using Core.Entities.Vehicle;
-    using Core.Entities.Loan;
     using ViewModels.AccountViewModels;
     using ViewModels.FinanceViewModels;
+    using ViewModels.LoanViewModels;
     using ViewModels.OrganizationViewModels;
     using ViewModels.PartnerViewModels;
-    using ViewModels.LoanViewModels;
     using ViewModels.VehicleViewModel;
     using X.PagedList;
 
@@ -81,6 +81,8 @@
             CreateMap<FinanceExtension, OperationViewModel>();
             CreateMap<FinanceProduce, FinanceProduceViewModel>();
 
+            // Loan
+            CreateMap<Loan, ViewModels.Loan.LoanViewModels.LoanViewModel>();
             CreateMap<GuarantyContract, GuarantyContractViewModel>();
             CreateMap<GuarantyContractMortgage, GuarantyContractMortgageViewModel>();
             CreateMap<GuarantyContractPledge, GuarantyContractPledgeViewModel>();

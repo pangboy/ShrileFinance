@@ -1,30 +1,13 @@
-﻿namespace Core.Entities.Loan
+﻿namespace Application.ViewModels.Loan.LoanViewModels
 {
     using System;
-    using Interfaces;
 
-    /// <summary>
-    /// 还款记录
-    /// </summary>
-    public class PaymentHistory : Entity, IAggregateRoot
+    public class PaymentHistoryViewModel
     {
-        public PaymentHistory(
-            decimal schedulePaymentPrincipal,
-            decimal scheduledPaymentInterest,
-            decimal actualPaymentPrincipal,
-            decimal actualPaymentInterest)
-        {
-            ScheduledPaymentPrincipal = ScheduledPaymentPrincipal;
-            ScheduledPaymentInterest = scheduledPaymentInterest;
-            ActualPaymentPrincipal = actualPaymentPrincipal;
-            ActualPaymentInterest = actualPaymentInterest;
-            DatePayment = DateTime.Now;
-        }
-
         /// <summary>
-        /// 借据标识
+        /// 还款记录标识
         /// </summary>
-        public Guid LoanId { get; private set; }
+        public Guid? Id { get; private set; }
 
         /// <summary>
         /// 应还本金

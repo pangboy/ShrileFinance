@@ -7,6 +7,16 @@
     using Interfaces;
 
     /// <summary>
+    /// 借据状态枚举
+    /// </summary>
+    public enum LoanStatusEnum
+    {
+        正常 = 1,
+        已还清 = 2,
+        逾期 = 3
+    }
+
+    /// <summary>
     /// 四级分类枚举
     /// </summary>
     public enum FourCategoryAssetsClassificationEnum
@@ -66,9 +76,14 @@
         public DateTime MatureDate { get; private set; }
 
         /// <summary>
+        /// 日利率
+        /// </summary>
+        public decimal InterestRate { get; private set; }
+
+        /// <summary>
         /// 四级分类
         /// </summary>
-        public FourCategoryAssetsClassificationEnum FourCategoryAssetsClassification { get; private set; }
+        public FourCategoryAssetsClassificationEnum? FourCategoryAssetsClassification { get; private set; }
 
         /// <summary>
         /// 五级分类
@@ -76,9 +91,14 @@
         public FiveCategoryAssetsClassificationEnum FiveCategoryAssetsClassification { get; private set; }
 
         /// <summary>
-        /// 合同编号
+        /// 借据编号
         /// </summary>
         public string ContractNumber { get; private set; }
+
+        /// <summary>
+        /// 借据状态
+        /// </summary>
+        public LoanStatusEnum Status { get; private set; }
 
         /// <summary>
         /// 贷款业务种类
@@ -128,6 +148,8 @@
             }
 
             Payments.Add(payment);
+
+            ChangeStatus();
         }
 
         /// <summary>
@@ -137,11 +159,13 @@
         public void SetFourCategoryAssetsClassification(FourCategoryAssetsClassificationEnum fourCategoryAssetsClassification)
         {
             FourCategoryAssetsClassification = fourCategoryAssetsClassification;
+            Status = LoanStatusEnum.逾期;
 
             switch (fourCategoryAssetsClassification)
             {
                 case FourCategoryAssetsClassificationEnum.正常:
                     FiveCategoryAssetsClassification = FiveCategoryAssetsClassificationEnum.正常;
+                    Status = LoanStatusEnum.正常;
                     break;
                 case FourCategoryAssetsClassificationEnum.逾期:
                 case FourCategoryAssetsClassificationEnum.逾期天数在30天及以下:
@@ -172,6 +196,24 @@
             var balance = Principle - Payments.Sum(m => m.ActualPaymentPrincipal);
 
             return balance;
+        }
+
+        /// <summary>
+        /// 变更借据状态
+        /// </summary>
+        private void ChangeStatus()
+        {
+            if (Balance > 0)
+            {
+                if (Status != LoanStatusEnum.逾期)
+                {
+                    Status = LoanStatusEnum.正常;
+                }
+            }
+            else
+            {
+                Status = LoanStatusEnum.已还清;
+            }
         }
     }
 }

@@ -87,6 +87,10 @@
     <Compile Include="Migrations\201612010718553_LoanModel.Designer.cs">
       <DependentUpon>201612010718553_LoanModel.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201612020244144_OrganizationModel.cs" />
+    <Compile Include="Migrations\201612020244144_OrganizationModel.Designer.cs">
+      <DependentUpon>201612020244144_OrganizationModel.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs">
       <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
     </Compile>
@@ -115,6 +119,8 @@
     <Compile Include="ModelConfigurations\LiabilitiesConfiguration.cs" />
     <Compile Include="ModelConfigurations\LitigationConfigruation.cs" />
     <Compile Include="ModelConfigurations\Loan\CreditContractConfiguration.cs" />
+    <Compile Include="ModelConfigurations\Loan\LoanConfiguration.cs" />
+    <Compile Include="ModelConfigurations\Loan\PaymentHistoryConfiguration.cs" />
     <Compile Include="ModelConfigurations\LogConfiguration.cs" />
     <Compile Include="ModelConfigurations\ManagerConfiguration.cs" />
     <Compile Include="ModelConfigurations\FamilyMemberConfiguration.cs" />
@@ -247,6 +253,7 @@
     <Compile Include="Repositories\FormRepository.cs" />
     <Compile Include="Repositories\InstanceRepository.cs" />
     <Compile Include="Repositories\FinancingProjectRepository.cs" />
+    <Compile Include="Repositories\LoanRepository.cs" />
     <Compile Include="Repositories\OrganizationRepository.cs" />
     <Compile Include="Repositories\ProduceRepository.cs" />
     <Compile Include="Repositories\FinanceRepository.cs" />
@@ -290,6 +297,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201612010718553_LoanModel.resx">
       <DependentUpon>201612010718553_LoanModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612020244144_OrganizationModel.resx">
+      <DependentUpon>201612020244144_OrganizationModel.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
