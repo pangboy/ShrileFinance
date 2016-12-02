@@ -463,7 +463,6 @@ namespace Data.Migrations
                 .ForeignKey("dbo.CUST_Organization", t => t.OrganizationId)
                 .Index(t => t.OrganizationId);
             
-            AddColumn("dbo.LOAN_CreditContranct", "OrganizationId", c => c.Guid(nullable: false));
             CreateIndex("dbo.LOAN_CreditContranct", "OrganizationId");
             AddForeignKey("dbo.LOAN_CreditContranct", "OrganizationId", "dbo.CUST_Organization", "Id");
         }
@@ -500,7 +499,6 @@ namespace Data.Migrations
             DropIndex("dbo.CUST_FinancialAffairs", new[] { "OrganizationId" });
             DropIndex("dbo.CUST_BigEvent", new[] { "OrganizationId" });
             DropIndex("dbo.CUST_AssociatedEnterprise", new[] { "OrganizationId" });
-            DropColumn("dbo.LOAN_CreditContranct", "OrganizationId");
             DropTable("dbo.CUST_Stockholder");
             DropTable("dbo.CUST_Parent");
             DropTable("dbo.CUST_FamilyMember");
