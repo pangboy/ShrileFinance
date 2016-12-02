@@ -6,12 +6,12 @@
     /// <summary>
     /// 担保合同
     /// </summary>
-    public abstract class GuarantyContractViewModel
+    public abstract class GuarantyContractViewModel : IEntityViewModel
     {
         /// <summary>
         /// 标识
         /// </summary>
-        public Guid Id { get; set; }
+        public Guid? Id { get; set; }
 
         /// <summary>
         /// 签订日期

@@ -3,6 +3,15 @@
     public class GuranteeContractViewModel
     {
         /// <summary>
+        /// 合同类型
+        /// </summary>
+        public enum ContractTypeEnum : byte
+        {
+            抵押 = 1,
+            质押 = 2
+        }
+
+        /// <summary>
         /// 保证人类型
         /// </summary>
         public enum GuarantorTypeEnum : byte
@@ -12,14 +21,15 @@
         }
 
         /// <summary>
-        /// 合同类型
+        /// 抵押
         /// </summary>
-        public enum ContractTypeEnum : byte
-        {
-            抵押 = 1,
-            质押 = 2
-        }
-        
+        public GuarantyContractMortgageViewModel MortgageGuarantyContractViewModel { get; set; }
+
+        /// <summary>
+        /// 质押
+        /// </summary>
+        public GuarantyContractPledgeViewModel PledgeGuarantyContractViewModel { get; set; }
+
         /// <summary>
         /// 自然人
         /// </summary>
@@ -29,16 +39,6 @@
         /// 机构
         /// </summary>
         public GuarantyOrganizationViewModel GuarantyOrganizationViewModel { get; set; }
-
-        /// <summary>
-        /// 质押
-        /// </summary>
-        public GuarantyContractPledgeViewModel PledgeGuarantyContractViewModel { get; set; }
-
-        /// <summary>
-        /// 抵押
-        /// </summary>
-        public GuarantyContractMortgageViewModel MortgageGuarantyContractViewModel { get; set; }
 
         /// <summary>
         /// 保证人类型

@@ -26,7 +26,47 @@
 
         public void Modify(CreditContractViewModel model)
         {
-            var credit = Mapper.Map<CreditContract>(model);
+            if (model == null || model.Id == null)
+            {
+                return;
+            }
+
+            var credit = repository.Get(model.Id.Value);
+
+            if (credit == null)
+            {
+                return;
+            }
+
+            Mapper.Map(model, credit);
+
+            model.GuranteeContract.ToList().ForEach(item=> {
+                if (item.ContractType == GuranteeContractViewModel.ContractTypeEnum.抵押)
+                {
+                    if (item.GuarantorType == GuranteeContractViewModel.GuarantorTypeEnum.机构)
+                    {
+                        item.MortgageGuarantyContractViewModel.Guarantor = item.GuarantyOrganizationViewModel;
+                    }
+                    else if (item.GuarantorType == GuranteeContractViewModel.GuarantorTypeEnum.自然人)
+                    {
+                        item.MortgageGuarantyContractViewModel.Guarantor = item.GuarantyPersonViewModel;
+                    }
+                }
+                else if (item.ContractType == GuranteeContractViewModel.ContractTypeEnum.质押)
+                {
+                    if (item.GuarantorType == GuranteeContractViewModel.GuarantorTypeEnum.机构)
+                    {
+                        item.MortgageGuarantyContractViewModel.Guarantor = item.GuarantyOrganizationViewModel;
+                    }
+                    else if (item.GuarantorType == GuranteeContractViewModel.GuarantorTypeEnum.自然人)
+                    {
+                        item.MortgageGuarantyContractViewModel.Guarantor = item.GuarantyPersonViewModel;
+                    }
+                }
+            });
+
+           // new UpdateBind().Bind(credit.GuarantyContract,model.GuranteeContract);
+
             repository.Modify(credit);
             repository.Commit();
         }
@@ -72,12 +112,12 @@
             return credit.CanApplyLoan(limit);
         }
 
-        public IPagedList<CreditContractViewModel> GetPageList(string serach,int page ,int size)
+        public IPagedList<CreditContractViewModel> GetPageList(string serach, int page, int size)
         {
             var creditContract = repository.GetAll();
             if (!string.IsNullOrEmpty(serach))
             {
-                creditContract = creditContract.Where(m=>m.LoanCode.Contains(serach));
+                creditContract = creditContract.Where(m => m.LoanCode.Contains(serach));
             }
 
             creditContract = creditContract.OrderByDescending(m => m.Id);

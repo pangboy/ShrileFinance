@@ -49,6 +49,9 @@
         /// </summary>
         public bool IsGuarantee { get; set; }
 
-        public ICollection<GuarantyContractViewModel> GuarantyContract { get; set; }
+        /// <summary>
+        /// 担保合同
+        /// </summary>
+        public ICollection<GuranteeContractViewModel> GuranteeContract { get; set; }
     }
 }
