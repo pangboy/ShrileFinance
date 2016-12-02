@@ -3,7 +3,7 @@
     using System.Data.Entity.ModelConfiguration;
     using Core.Entities.Loan;
 
-    public class GuarantyPersonConfiguration:EntityTypeConfiguration<GuarantyPerson>
+    public class GuarantyPersonConfiguration:EntityTypeConfiguration<GuarantorPerson>
     {
         public GuarantyPersonConfiguration()
         {

@@ -36,7 +36,7 @@
         /// <summary>
         /// 抵押物种类
         /// </summary>
-        public GuarantyContractMortgage.CollateralTypeEnum? CollateralType { get; set; }
+        public CollateralTypeEnum? CollateralType { get; set; }
 
         /// <summary>
         /// 登记机关

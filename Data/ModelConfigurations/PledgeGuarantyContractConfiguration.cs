@@ -3,7 +3,7 @@
     using System.Data.Entity.ModelConfiguration;
     using Core.Entities.Loan;
 
-    class PledgeGuarantyContractConfiguration : EntityTypeConfiguration<GuarantorContractPledge>
+    class PledgeGuarantyContractConfiguration : EntityTypeConfiguration<GuarantyContractPledge>
     {
         public PledgeGuarantyContractConfiguration()
         {

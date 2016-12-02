@@ -19,6 +19,11 @@
             抵押 = 1,
             质押 = 2
         }
+        
+        /// <summary>
+        /// 自然人
+        /// </summary>
+        public GuarantyPersonViewModel GuarantyPersonViewModel { get; set; }
 
         /// <summary>
         /// 机构
@@ -26,19 +31,14 @@
         public GuarantyOrganizationViewModel GuarantyOrganizationViewModel { get; set; }
 
         /// <summary>
-        /// 自然人
+        /// 质押
         /// </summary>
-        public GuarantyPersonViewModel GuarantyPersonViewModel { get; set; }
+        public GuarantyContractPledgeViewModel PledgeGuarantyContractViewModel { get; set; }
 
         /// <summary>
         /// 抵押
         /// </summary>
         public GuarantyContractMortgageViewModel MortgageGuarantyContractViewModel { get; set; }
-
-        /// <summary>
-        /// 质押
-        /// </summary>
-        public GuarantyContractPledgeViewModel PledgeGuarantyContractViewModel { get; set; }
 
         /// <summary>
         /// 保证人类型

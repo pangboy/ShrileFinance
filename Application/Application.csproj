@@ -89,7 +89,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CreditAppService.cs" />
+    <Compile Include="CreditContractAppService.cs" />
     <Compile Include="DraftAppService.cs" />
     <Compile Include="FinanceAppService.cs" />
     <Compile Include="FinanceScriptService.cs" />
@@ -124,6 +124,7 @@
     <Compile Include="ViewModels\FinanceViewModels\OperationViewModel.cs" />
     <Compile Include="ViewModels\FinanceViewModels\PartnerAndUser.cs" />
     <Compile Include="ViewModels\IEntityViewModel.cs" />
+    <Compile Include="ViewModels\LoanViewModels\CreditContractViewModel.cs" />
     <Compile Include="ViewModels\LoanViewModels\GuarantyContractViewModel.cs" />
     <Compile Include="ViewModels\LoanViewModels\GuarantyOrganizationViewModel.cs" />
     <Compile Include="ViewModels\LoanViewModels\GuarantyPersonViewModel.cs" />

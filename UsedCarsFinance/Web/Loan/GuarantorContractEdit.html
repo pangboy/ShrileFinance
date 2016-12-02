@@ -1,0 +1,315 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>担保合同</title>
+    <link href="../Content/easyui/themes/bootstrap/easyui.css" rel="stylesheet" />
+    <link href="../Content/easyui/themes/icon.css" rel="stylesheet" />
+    <link href="../Content/form-bootstrap.css" rel="stylesheet" />
+    <script src="../Scripts/jquery/jquery.js"></script>
+    <script src="../Scripts/easyui/jquery.easyui.js"></script>
+    <script src="../Scripts/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../Finance/Content/FinanceJs.js"></script>
+    <script src="../BankInfo/JS/validType.js"></script>
+
+    <script type="text/javascript">
+        $(function () {
+            var Id = GetQueryString("GuarantorContactId");
+
+        });
+
+        function LoadData(data) {
+            if (data) {
+                if (data.ContractType != undefined) {
+                    $("fieldset[name=Contract]").combobox('unselect', data.ContractType).combobox('select', data.ContractType);
+
+                    if (data.ContractType == 1) {
+                        $("fieldset[name=Contract]").form('load', data.PledgeGuarantyContractViewModel);
+                    }
+                    else if (data.ContractType == 2) {
+                        $("fieldset[name=Contract]").form('load', data.MortgageGuarantyContractViewModel);
+                    }
+                }
+
+                if (data.GuarantorType != undefined)
+                {
+                    $("fieldset[name=Contract]").combobox('unselect', data.GuarantorType).combobox('select', data.GuarantorType);
+
+                    if (data.GuarantorType == 1) {
+                        $("fieldset[name=Contract]").form('load', data.GuarantyPersonViewModel);
+                    }
+                    else if (data.GuarantorType == 2) {
+                        $("fieldset[name=Contract]").form('load', data.GuarantyOrganizationViewModel);
+                    }
+                }
+            }
+        }
+
+        function BuildData() {
+            // 序列化合同
+            var Contract = $("fieldset[name=Contract]").serializeJson();
+
+            // 序列化保证人
+            var Guarantor = $("fieldset[name=Guarantor]").serializeJson();
+
+            var value = {};
+
+            // 映射合同
+            if (Contract != undefined && Contract.ContractType != undefined) {
+                if (Contract.ContractType == 1) {
+                    value.PledgeGuarantyContractViewModel = {};
+                    TraverseDateFactory(Contract, value.PledgeGuarantyContractViewModel, false, null);
+                }
+                else if (Contract.ContractType == 2) {
+                    value.MortgageGuarantyContractViewModel = {};
+                    TraverseDateFactory(Contract, value.MortgageGuarantyContractViewModel, false, null);
+                }
+
+                value.ContractTypeTxt = $("fieldset[name=Contract] input[textboxname=ContractType]").combobox('getText');
+                value.GuarantorTypeTxt = $("fieldset[name=Contract] input[textboxname=GuarantorType]").combobox('getText');
+                value.EffectiveStateTxt = $("fieldset[name=Contract] input[textboxname=EffectiveState]").combobox('getText');
+                value.SigningDateTxt = $("fieldset[name=Contract] input[textboxname=SigningDate]").combobox('getText');
+            }
+
+            // 映射保证人
+            if (Guarantor != undefined && Guarantor.GuarantorType != undefined) {
+                if (Contract.GuarantorType == 1) {
+                    value.GuarantyPersonViewModel = {};
+                    TraverseDateFactory(Guarantor, value.GuarantyPersonViewModel, false, null);
+                }
+                else if (Contract.GuarantorType == 2) {
+                    value.GuarantyOrganizationViewModel = {};
+                    TraverseDateFactory(Guarantor, value.GuarantyOrganizationViewModel, false, null);
+                }
+            }
+
+            return value;
+        }
+
+        function ValidData() {
+            return $("form").form("validate");
+        }
+    </script>
+
+    <script type="text/javascript">
+        function Init()
+        {
+
+        }
+
+        function ChangeGuarantorType() {
+            //$.messager.show({ msg: "保证人类型：" + $(this).combobox('getValue') });
+
+            $("div[name=GuarantorInfo]>div[id!=base]").remove();
+
+            if ($(this).combobox('getValue') == "1") {
+                $("div[name=GuarantorInfo]").append($("div[name=GuarantorInfo] template#GuarantorInfo_Person").html());
+            }
+            else {
+                $("div[name=GuarantorInfo]").append($("div[name=GuarantorInfo] template#GuarantorInfo_Organization").html());
+            }
+
+            $.parser.parse($("div[name=GuarantorInfo]>div[id!=base]"));
+        }
+
+        function ChangeContractType() {
+            //$.messager.show({ msg: "合同类型：" + $(this).combobox('getValue') });
+
+            $("div[name=ContractInfo]>div[id!=base]").remove();
+
+            if ($(this).combobox('getValue') == "1") {
+                $("div[name=ContractInfo]").append($("div[name=ContractInfo] template#ContractInfo_Pledge").html());
+            }
+            else {
+                $("div[name=ContractInfo]").append($("div[name=ContractInfo] template#ContractInfo_Mortgage").html());
+            }
+
+            $.parser.parse($("div[name=ContractInfo]>div[id!=base]"));
+        }
+
+        function Submit() {
+            var data = BuildData();
+            debugger
+            if (ValidData()) {
+                $.messager.show({ msg: "提交！" });
+            }
+            else {
+                $.messager.show({ msg: "验证未通过！" });
+            }
+        }
+
+        function Cancel() {
+
+        }
+    </script>
+</head>
+<body>
+    <form id="GuarantyContractEdit" class="container">
+        <fieldset name="Contract">
+            <legend>担保合同</legend>
+            <div class="row" name="Type">
+                <div class="col-6">
+                    <label>合同类型：</label>
+                    <select name="ContractType" class="easyui-combobox" data-options="required:true,value:'',editable:false,onChange:ChangeContractType">
+                        <option value="1">质押合同</option>
+                        <option value="2">抵押合同</option>
+                    </select>
+                </div>
+                <div class="col-6">
+                    <label>保证人类型：</label>
+                    <select name="GuarantorType" class="easyui-combobox" data-options="required:true,value:'',editable:false,onChange:ChangeGuarantorType">
+                        <option value="1">自然人</option>
+                        <option value="2">机构</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row" name="ContractInfo">
+                <input name="Id" type="hidden" placeholder="担保合同标识" />
+                <div class="col-6" id="base">
+                    <label>担保形式：</label>
+                    <select name="GuaranteeForm" class="easyui-combobox" data-options="required:true,value:'',editable:false">
+                        <option value="1">单人担保</option>
+                        <option value="2">多人联保</option>
+                        <option value="4">多人分保</option>
+                    </select>
+                </div>
+                <div class="col-6" id="base">
+                    <label>保证金额：</label>
+                    <input name="Margin" class="easyui-textbox" data-options="validType:['length[0,20]','Amount'],required:true" />
+                    <span class="unit">元</span>
+                </div>
+                <div class="col-6" id="base">
+                    <label>合同有效状态：</label>
+                    <select name="EffectiveState" class="easyui-combobox" data-options="required:true,value:'',editable:false">
+                        <option value="1">是</option>
+                        <option value="2">否</option>
+                    </select>
+                </div>
+                <div class="col-6" id="base">
+                    <label>合同签订日期：</label>
+                    <input name="SigningDate" class="easyui-datebox" data-options="required:true,value:'',editable:false,width:410" />
+                </div>
+                <template id="ContractInfo_Pledge">
+                    <div class="col-6">
+                        <label>质押序号：</label>
+                        <input name="PledgeNumber" class="easyui-textbox" data-options="required:true,value:'',validType:['length[2,2]']" />
+                    </div>
+                    <div class="col-6">
+                        <label>质押物种类</label>
+                        <select name="PledgeType" class="easyui-combobox" data-options="required:true,value:'',editable:false">
+                            <option value="1">存单</option>
+                            <option value="2">票据</option>
+                            <option value="3">保单</option>
+                            <option value="4">国债</option>
+                            <option value="5">股权</option>
+                            <option value="6">股票</option>
+                            <option value="7">其他权利</option>
+                        </select>
+                    </div>
+                    <div class="col-6">
+                        <label>质押物价值：</label>
+                        <input name="CollateralValue" class="easyui-textbox" data-options="required:true,value:'',validType:['length[0,20]','Amount']" />
+                        <span class="unit">元</span>
+                    </div>
+                </template>
+                <template id="ContractInfo_Mortgage">
+                    <div class="col-6">
+                        <label>抵押序号：</label>
+                        <input name="PledgeNumber" class="easyui-textbox" data-options="required:true,value:'',validType:['length[2,2]']" />
+                    </div>
+                    <div class="col-6">
+                        <label>抵押物种类：</label>
+                        <select name="CollateralType" class="easyui-combobox" data-options="required:true,value:'',editable:false">
+                            <option value="1">房产</option>
+                            <option value="2">土地使用权</option>
+                            <option value="3">在建工程</option>
+                            <option value="4">交通工具</option>
+                            <option value="5">机器设备</option>
+                            <option value="6">其他类</option>
+                        </select>
+                    </div>
+                    <div class="col-6">
+                        <label>抵押物评估价值：</label>
+                        <input name="AssessmentValue" class="easyui-textbox" data-options="required:true,value:'',validType:['length[0,20]','Amount']" />
+                        <span class="unit">元</span>
+                    </div>
+                    <div class="col-12">
+                        <label>抵押物说明</label>
+                        <input name="CollateralInstruction" class="easyui-textbox" data-options="required:true,value:'',validType:['length[0,400]','ANC'],multiline:true,height:80" />
+                    </div>
+                    <div class="col-12">
+                        <label>评估机构名称：</label>
+                        <input name="AssessmentName" class="easyui-textbox" data-options="required:true,value:'',validType:['length[0,80]','ANC']" />
+                    </div>
+                    <div class="col-6">
+                        <label>评估机构组织机构代码：</label>
+                        <input name="AssessmentOrganizationCode" class="easyui-textbox" data-options="required:false,value:'',validType:['length[0,10]','OrganizateCode']" />
+                    </div>
+                    <div class="col-6">
+                        <label>抵押物评估日期：</label>
+                        <input name="AssessmentDate" class="easyui-datebox" data-options="required:true,value:'',editable:false,width:410" />
+                    </div>
+
+                    <div class="col-6">
+                        <label>登记机关：</label>
+                        <input name="RegistrateAuthorit" class="easyui-textbox" data-options="required:true,value:'',validType:['length[0,80]','ANC']" />
+                    </div>
+                    <div class="col-6">
+                        <label>登记日期：</label>
+                        <input name="RegistrateDate" class="easyui-datebox" data-options="required:true,value:'',editable:false,width:410" />
+                    </div>
+                </template>
+            </div>
+        </fieldset>
+
+        <fieldset name="Guarantor">
+            <div class="row" name="GuarantorInfo">
+                <input name="Id" type="hidden" placeholder="保证人标识" />
+                <div class="col-12" id="base">
+                    <label>保证人名称：</label>
+                    <input name="Name" class="easyui-textbox" data-options="validType:['length[0,80]'],required:true" />
+                </div>
+                <template id="GuarantorInfo_Person">
+                    <div class="col-6">
+                        <label>证件类型：</label>
+                        <select name="CertificateType" class="easyui-combobox" data-options="required:true,value:'',editable:false">
+                            <option value="0">身份证</option>
+                            <option value="1">户口簿</option>
+                            <option value="2">护照</option>
+                            <option value="3">军官证</option>
+                            <option value="4">士兵证</option>
+                            <option value="5">港澳居民来往内地通行证</option>
+                            <option value="6">台湾同胞来往内地通行证</option>
+                            <option value="7">临时身份证</option>
+                            <option value="8">外国人居留证</option>
+                            <option value="9">警官证</option>
+                            <option value="a">组织机构代码证</option>
+                            <option value="b">营业执照</option>
+                            <option value="c">贷款卡</option>
+                            <option value="X">其他证件</option>
+                            <option value="A">香港身份证</option>
+                            <option value="B">澳门身份证</option>
+                            <option value="C">台湾身份证</option>
+                        </select>
+                    </div>
+                    <div class="col-6">
+                        <label>证件号码：</label>
+                        <input name="CertificateNumber" class="easyui-textbox" data-options="validType:['length[0,18]','ANC'],required:true" />
+                    </div>
+                </template>
+                <template id="GuarantorInfo_Organization">
+                    <div class="col-6">
+                        <label>贷款卡编码：</label>
+                        <input name="CreditcardCode" class="easyui-textbox" data-options="validType:['length[0,16]','CreditCard'],required:true" />
+                    </div>
+                </template>
+            </div>
+        </fieldset>
+
+        <div id="btn">
+            <a href="javascript:void(0)" id="save" class="easyui-linkbutton" data-options="iconCls:'icon-save',onClick:Submit">保存</a>
+            <a href="javascript:void(0)" id="back" class="easyui-linkbutton" data-options="iconCls:'icon-redo',onClick:Cancel">返回</a>
+        </div>
+    </form>
+</body>
+</html>

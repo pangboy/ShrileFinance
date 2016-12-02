@@ -3,7 +3,7 @@
     using System;
     using System.Collections.Generic;
 
-    public class CreditViewModel
+    public class CreditContractViewModel
     {
         public enum StatusEnum : byte
         {
@@ -42,7 +42,7 @@
         /// <summary>
         /// 合同有效状态
         /// </summary>
-        public int ValidStatus { get; set; }
+        public StatusEnum ValidStatus { get; set; }
 
         /// <summary>
         /// 是否有担保

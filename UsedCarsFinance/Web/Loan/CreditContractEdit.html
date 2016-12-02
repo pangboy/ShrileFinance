@@ -11,14 +11,45 @@
     <script src="../Scripts/easyui/locale/easyui-lang-zh_CN.js"></script>
     <script src="../Scripts/usedcars.js"></script>
     <script>
-        
+        $(function () {
+            $.ajax({
+                async: false,
+                method: "GET",
+                data: { id: "C6750644-A9B7-E611-80C7-507B9DE4A488" },
+                url: "../api/CreditContract/Get",
+                success: function (data) {
+                    $("#ff").form("load", data)
+                }
+            });
+        })
+        function Submit() {
+            var model = $("#ff").serializeJson();
+            if (model.IsGuarantee == "0") model.IsGuarantee = false; else model.IsGuarantee = true
+            $.ajax({
+                async: false,
+                method: "POST",
+                data: model,
+                url: "../api/CreditContract/Modify",
+                success: function (data) {
+                    top.$.messager.show({ msg: "提交成功！" });
+                }
+            });
+        }
+        function ChooseGuarantee() {
+            if ($("#IsGuarantee").textbox("getValue") == "1" || $("#IsGuarantee").textbox("getValue") == "true") {
+                $("#panelID").panel("open");
+            }
+            else {
+                $("#panelID").panel("close");
+            }
+        }
     </script>
 </head>
 <body>
     <form id="ff" class="container">
         <fieldset>
             <legend>贷款合同</legend>
-
+            <input id="id" name="Id" hidden />
             <div class="row">
                 <div class="col-6">
                     <label>合同编码:</label>
@@ -38,19 +69,19 @@
             <div class="row">
                 <div class="col-6">
                     <label>授信额度:</label>
-                    <input name="CreditLimit" id="CreditLimit" class="easyui-textbox" data-options="required:true"  />
+                    <input name="CreditLimit" id="CreditLimit" class="easyui-textbox" data-options="required:true" />
                 </div>
 
                 <div class="col-6">
                     <label>授信余额:</label>
-                    <input name="CreditBalance" id="CreditBalance" class="easyui-textbox" data-options="required:true"  />
+                    <input name="CreditBalance" id="CreditBalance" class="easyui-textbox" data-options="required:true" />
                 </div>
             </div>
 
             <div class="row">
                 <div class="col-6">
                     <label>授信合同生效日期:</label>
-                    <input name="EffectiveDate" id="EffectiveDate" class="easyui-datebox" data-options="required:true,width:410"  />
+                    <input name="EffectiveDate" id="EffectiveDate" class="easyui-datebox" data-options="required:true,width:410" />
                 </div>
 
                 <div class="col-6">
@@ -62,13 +93,120 @@
             <div class="row">
                 <div class="col-6">
                     <label>是否有担保:</label>
-                    <select id="IsGuarantee" name="IsGuarantee" class="easyui-combobox" data-options="required:true">
-                        <option value="0">是</option>
-                        <option value="1">否</option>
+                    <select id="IsGuarantee" name="IsGuarantee" class="easyui-combobox" data-options="required:true,onChange:ChooseGuarantee">
+                        <option value="0">否</option>
+                        <option value="1">是</option>
                     </select>
                 </div>
             </div>
         </fieldset>
+
+        <fieldset id="GuarantorContract">
+            <!--高管及主要关系人-->
+            <table id="Managers_dg" class="easyui-datagrid" style="width:890px;" data-options="toolbar: '#ExecutivesMajorParticipant_tb',
+                   rownumbers:true,
+                   singleSelect:true,
+                   onSelect:ExecutivesMajorParticipantSelect,
+                   title:'高管及主要关系人'
+                   ">
+                <thead>
+                    <tr>
+                        <th data-options="field:'InformationCategories',hidden:true">信息类别</th>
+                        <th data-options="field:'Id',hidden:true">GuId</th>
+
+                        <th data-options="field:'Type',width:200,align:'center',hidden:true">关系人类型</th>
+                        <th data-options="field:'Type_Txt',width:200,align:'center'">关系人类型</th>
+                        <th data-options="field:'Name',width:200,align:'center'">姓名</th>
+                        <th data-options="field:'CertificateType',width:200,align:'center',hidden:true">证件类型</th>
+                        <th data-options="field:'CertificateType_Txt',width:200,align:'center'">证件类型</th>
+                        <th data-options="field:'CertificateCode',width:240,align:'center'">证件号码</th>
+                        <th data-options="field:'FamilyMembers',hidden:true">家族成员信息json</th>
+                    </tr>
+                </thead>
+            </table>
+
+            <div id="ExecutivesMajorParticipant_tb" style="height:30px;">
+                <a id="ExecutivesMajorParticipant_add" class="easyui-linkbutton" href="javascript:void(0)" data-options="onClick:ExecutivesMajorParticipantEdit,iconCls:'icon-add',plain:true">添加</a>
+                <a id="ExecutivesMajorParticipant_mod" class="easyui-linkbutton" href="javascript:void(0)" data-options="onClick:ExecutivesMajorParticipantEdit,iconCls:'icon-edit',plain:true,disabled:true">编辑</a>
+                <a id="ExecutivesMajorParticipant_del" class="easyui-linkbutton" href="javascript:void(0)" data-options="onClick:ExecutivesMajorParticipantDelete,iconCls:'icon-remove',plain:true,disabled:true">删除</a>
+                <a id="ExecutivesMajorParticipant_view" class="easyui-linkbutton" href="javascript:void(0)" data-options="onClick:ExecutivesMajorParticipantEdit,iconCls:'icon-search',plain:true,disabled:true">查看</a>
+            </div>
+            <script type="text/javascript">
+                // table onSelect事件
+                function ExecutivesMajorParticipantSelect(index, row) {
+                    if (row) {
+                        $("#ExecutivesMajorParticipant_mod").linkbutton("enable");
+                        $("#ExecutivesMajorParticipant_del").linkbutton("enable");
+                        $("#ExecutivesMajorParticipant_view").linkbutton("enable");
+                    }
+                }
+
+                // table 删除按钮
+                function ExecutivesMajorParticipantDelete() {
+                    var row = $('#Managers_dg').datagrid('getSelected');
+
+                    if (row) {
+                        $.messager.confirm('确认', '确认删除该担保合同信息?', function (r) {
+                            if (r) {
+                                var rowIndex = $('#Managers_dg').datagrid('getRowIndex', row);
+
+                                $('#Managers_dg').datagrid('deleteRow', rowIndex);
+                            }
+                        });
+                    }
+                }
+
+                // table 添加/编辑按钮
+                function ExecutivesMajorParticipantEdit() {
+                    var url = "ContentPages/ExecutivesMajorParticipantPage.html?method=" + this.id;
+
+                    if (this.id != "ExecutivesMajorParticipant_add") {
+                        var row = $('#Managers_dg').datagrid('getSelected');
+
+                        if (!row) {
+                            return false;
+                        }
+                    }
+
+                    $("#ExecutivesMajorParticipant_frame").attr("src", url);
+
+                    // 打开弹窗
+                    $("#ExecutivesMajorParticipant_dd").dialog({ closed: false });
+                }
+            </script>
+            <div id="ExecutivesMajorParticipant_dd" class="easyui-dialog" data-options="title:'高管及主要关系人',width:'100%',height:'800px',top:0,modal:true,closed:true">
+                <iframe id="ExecutivesMajorParticipant_frame" name="family_frame" src="about:blank" style="width:100%;height:99%; border:0;"></iframe>
+            </div>
+        </fieldset>
+        <div id="panelID" class="easyui-panel" data-options="closed:true">
+            <table id="dg" hidden="hidden" class="easyui-datagrid" data-options="height:330,hidden:true,toolbar:'#tb',rownumbers:true,
+        singleSelect: true,
+        ">
+                <thead>
+                    <tr>
+                        <th data-options="field:'Id',hidden:true">ProduceId</th>
+                        <th data-options="field:'LoanCode',width:150,align:'center'">合同编码</th>
+                        <th data-options="field:'CreditLimit',width:100,align:'center'">授信额度</th>
+                        <th data-options="field:'CreditBalance',width:100,align:'center'">授信余额</th>
+                        <th data-options="field:'EffectiveDate',width:150,align:'center'">合同生效日期</th>
+                        <th data-options="field:'ExpirationDate',width:150,align:'center'">合同终止日期</th>
+                        <th data-options="field:'ValidStatus',width:60,align:'center'">合同状态</th>
+                    </tr>
+                </thead>
+            </table>
+            <div id="tb">
+                <div style="height:30px;">
+                    <div style="height:30px; width:auto;">
+                        <a id="add" class="easyui-linkbutton" href="javascript:void(0)" style="height:25px; margin-top:3px;" data-options="iconCls:'icon-add',plain:true">添加</a>
+                        <a id="mod" class="easyui-linkbutton" href="javascript:void(0)" style="height:25px; margin-top:3px;" data-options="iconCls:'icon-edit',plain:true">修改</a>
+                        <a id="del" class="easyui-linkbutton" href="javascript:void(0)" style="height:25px; margin-top:3px;" data-options="iconCls:'icon-remove',plain:true">删除</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="btn">
+            <a id="save" class="easyui-linkbutton" href="javascript:void(0)" data-options="iconCls:'icon-save',onClick:Submit">保存</a>
+        </div>
     </form>
 </body>
 </html>

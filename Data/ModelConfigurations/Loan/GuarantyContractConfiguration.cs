@@ -17,7 +17,7 @@
 
             Map<GuarantyContract>(m => m.Requires("Type").HasValue("GuarantyContract"))
                 .Map<GuarantyContractMortgage>(t => t.Requires("Type").HasValue("MortgageGuarantyContract"))
-                .Map<GuarantorContractPledge>(t => t.Requires("Type").HasValue("PledgeGuarantyContract"));
+                .Map<GuarantyContractPledge>(t => t.Requires("Type").HasValue("PledgeGuarantyContract"));
 
             ToTable("LOAN_GuarantyContract");
         }
