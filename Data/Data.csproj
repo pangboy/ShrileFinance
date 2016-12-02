@@ -87,6 +87,10 @@
     <Compile Include="Migrations\201612010718553_LoanModel.Designer.cs">
       <DependentUpon>201612010718553_LoanModel.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201612020244144_OrganizationModel.cs" />
+    <Compile Include="Migrations\201612020244144_OrganizationModel.Designer.cs">
+      <DependentUpon>201612020244144_OrganizationModel.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs">
       <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
     </Compile>
@@ -293,6 +297,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201612010718553_LoanModel.resx">
       <DependentUpon>201612010718553_LoanModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612020244144_OrganizationModel.resx">
+      <DependentUpon>201612020244144_OrganizationModel.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
