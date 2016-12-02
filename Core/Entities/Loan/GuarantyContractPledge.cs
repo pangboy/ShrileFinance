@@ -14,7 +14,7 @@
     /// <summary>
     /// 质押保证合同
     /// </summary>
-    public class PledgeGuarantyContract : GuarantyContract
+    public class GuarantyContractPledge : GuarantyContract
     {
         /// <summary>
         /// 质押序号

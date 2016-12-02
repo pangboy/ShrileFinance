@@ -65,12 +65,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Entities\Loan\GuarantyOrganization.cs" />
-    <Compile Include="Entities\Loan\GuarantyPerson.cs" />
+    <Compile Include="Entities\Loan\GuarantorOrganization.cs" />
+    <Compile Include="Entities\Loan\GuarantorPerson.cs" />
     <Compile Include="Entities\Loan\Guarantor.cs" />
     <Compile Include="Entities\Loan\GuarantyContract.cs" />
-    <Compile Include="Entities\Loan\MortgageGuarantyContract.cs" />
-    <Compile Include="Entities\Loan\PledgeGuarantyContract.cs" />
+    <Compile Include="Entities\Loan\GuarantyContractMortgage.cs" />
+    <Compile Include="Entities\Loan\GuarantyContractPledge.cs" />
     <Compile Include="Entities\Loan\Loan.cs" />
     <Compile Include="Entities\Loan\PaymentHistory.cs" />
     <Compile Include="Entities\Other\Draft.cs" />

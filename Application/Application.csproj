@@ -127,9 +127,9 @@
     <Compile Include="ViewModels\LoanViewModels\GuarantyOrganizationViewModel.cs" />
     <Compile Include="ViewModels\LoanViewModels\GuarantyPersonViewModel.cs" />
     <Compile Include="ViewModels\LoanViewModels\GuranteeContractViewModel.cs" />
-    <Compile Include="ViewModels\LoanViewModels\MortgageGuarantyContractViewModel.cs" />
-    <Compile Include="ViewModels\LoanViewModels\PledgeGuarantyContractViewModel.cs" />
-    <Compile Include="ViewModels\LoanViewModels\CreditContractViewModel.cs" />
+    <Compile Include="ViewModels\LoanViewModels\GuarantyContractMortgageViewModel.cs" />
+    <Compile Include="ViewModels\LoanViewModels\GuarantyContractPledgeViewModel.cs" />
+    <Compile Include="ViewModels\LoanViewModels\CreditViewModel.cs" />
     <Compile Include="ViewModels\OrganizationViewModels\BigEventViewModel.cs" />
     <Compile Include="ViewModels\OrganizationViewModels\CashFlowViewModel.cs" />
     <Compile Include="ViewModels\OrganizationViewModels\FamilyMemberViewModel.cs" />

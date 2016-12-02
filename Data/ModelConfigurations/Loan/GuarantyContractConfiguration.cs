@@ -16,8 +16,8 @@
             HasOptional(m => m.Guarantor).WithOptionalPrincipal().Map(m => m.MapKey("GuarantyContractId")).WillCascadeOnDelete(false);
 
             Map<GuarantyContract>(m => m.Requires("Type").HasValue("GuarantyContract"))
-                .Map<MortgageGuarantyContract>(t => t.Requires("Type").HasValue("MortgageGuarantyContract"))
-                .Map<PledgeGuarantyContract>(t => t.Requires("Type").HasValue("PledgeGuarantyContract"));
+                .Map<GuarantyContractMortgage>(t => t.Requires("Type").HasValue("MortgageGuarantyContract"))
+                .Map<GuarantyContractPledge>(t => t.Requires("Type").HasValue("PledgeGuarantyContract"));
 
             ToTable("LOAN_GuarantyContract");
         }

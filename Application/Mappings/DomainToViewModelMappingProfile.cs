@@ -82,11 +82,11 @@
             CreateMap<FinanceProduce, FinanceProduceViewModel>();
 
             CreateMap<GuarantyContract, GuarantyContractViewModel>();
-            CreateMap<MortgageGuarantyContract, MortgageGuarantyContractViewModel>();
-            CreateMap<PledgeGuarantyContract, PledgeGuarantyContractViewModel>();
-            CreateMap<GuarantyPerson, GuarantyPersonViewModel>();
-            CreateMap<GuarantyOrganization, GuarantyOrganizationViewModel>();
-            CreateMap<CreditContract,CreditContractViewModel>();
+            CreateMap<GuarantyContractMortgage, GuarantyContractMortgageViewModel>();
+            CreateMap<GuarantyContractPledge, GuarantyContractPledgeViewModel>();
+            CreateMap<GuarantorPerson, GuarantyPersonViewModel>();
+            CreateMap<GuarantorOrganization, GuarantyOrganizationViewModel>();
+            CreateMap<CreditContract, CreditContractViewModel>();
         }
     }
 }

@@ -5,7 +5,7 @@
     /// <summary>
     /// 质押保证合同
     /// </summary>
-    public class PledgeGuarantyContractViewModel : GuarantyContractViewModel
+    public class GuarantyContractPledgeViewModel : GuarantyContractViewModel
     {
         /// <summary>
         /// 质押序号

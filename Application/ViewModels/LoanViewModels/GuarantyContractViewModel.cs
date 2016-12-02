@@ -21,12 +21,12 @@
         /// <summary>
         /// 担保形式
         /// </summary>
-        public GuarantyContract.GuaranteeFormEnum? GuaranteeForm { get; set; }
+        public GuaranteeFormEnum? GuaranteeForm { get; set; }
 
         /// <summary>
         /// 有效状态
         /// </summary>
-        public GuarantyContract.EffectiveStateEnum? EffectiveState { get; set; }
+        public EffectiveStateEnum? EffectiveState { get; set; }
 
         /// <summary>
         /// 保证金额

@@ -1,22 +1,13 @@
-﻿namespace Core.Entities.Loan
+﻿namespace Application.ViewModels.LoanViewModels
 {
     using System;
+    using Core.Entities.Loan;
 
     /// <summary>
     /// 抵押保证合同
     /// </summary>
-    public class MortgageGuarantyContract : GuarantyContract
+    public class GuarantyContractMortgageViewModel : GuarantyContractViewModel
     {
-        public enum CollateralTypeEnum : byte
-        {
-            房产 = 1,
-            土地使用权 = 2,
-            在建工程 = 3,
-            交通工具 = 4,
-            机器设备 = 5,
-            其他类 = 6,
-        }
-
         /// <summary>
         /// 抵押序号
         /// </summary>
