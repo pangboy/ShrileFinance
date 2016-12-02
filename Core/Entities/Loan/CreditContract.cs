@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using Core.Interfaces;
+    using Customers.Enterprise;
     using Exceptions;
 
     public enum StatusEnum : byte
@@ -28,6 +29,8 @@
 
             GuarantyContract = new HashSet<GuarantyContract>();
         }
+
+        public Guid OrganizationId { get; set; }
 
         /// <summary>
         /// 合同编码
@@ -67,7 +70,12 @@
         /// <summary>
         /// 担保合同
         /// </summary>
-        public ICollection<GuarantyContract> GuarantyContract { get; set; }
+        public virtual ICollection<GuarantyContract> GuarantyContract { get; set; }
+
+        /// <summary>
+        /// 组织机构
+        /// </summary>
+        public virtual Organization Organization { get; set; }
 
         /// <summary>
         /// 额度变更
