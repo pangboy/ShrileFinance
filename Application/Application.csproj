@@ -131,7 +131,6 @@
     <Compile Include="ViewModels\LoanViewModels\GuranteeContractViewModel.cs" />
     <Compile Include="ViewModels\LoanViewModels\GuarantyContractMortgageViewModel.cs" />
     <Compile Include="ViewModels\LoanViewModels\GuarantyContractPledgeViewModel.cs" />
-    <Compile Include="ViewModels\LoanViewModels\CreditViewModel.cs" />
     <Compile Include="ViewModels\Loan\LoanViewModels\LoanViewModel.cs" />
     <Compile Include="ViewModels\Loan\LoanViewModels\PaymentHistoryViewModel.cs" />
     <Compile Include="ViewModels\OrganizationViewModels\BigEventViewModel.cs" />

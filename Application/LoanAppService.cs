@@ -9,7 +9,7 @@
 
     public class LoanAppService
     {
-        private readonly ICreditRepository creditRepository;
+        private readonly ICreditContractRepository creditRepository;
         private readonly LoanService loanService;
         private readonly PaymentService paymentService;
         private readonly ILoanRepository repository;
@@ -18,7 +18,7 @@
             LoanService loanService,
             PaymentService paymentService,
             ILoanRepository repository,
-            ICreditRepository creditRepository)
+            ICreditContractRepository creditRepository)
         {
             this.loanService = loanService;
             this.paymentService = paymentService;
