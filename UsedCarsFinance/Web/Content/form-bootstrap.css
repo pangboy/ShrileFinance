@@ -50,9 +50,11 @@ label { display: inline-block; max-width: 100%; width: 100%; margin-bottom: 5px;
 
 fieldset > .row > div { margin-bottom: 15px; }
 .col-6 .easyui-textbox,
-.col-6 .easyui-combobox { width: 410px; }
+.col-6 .easyui-combobox,
+.col-6 .easyui-datebox { width: 410px; }
 .col-12 .easyui-textbox,
-.col-12 .easyui-combobox { width: 895px; }
+.col-12 .easyui-combobox,
+.col-12 .easyui-datebox { width: 895px; }
 .textbox > .textbox-text { display: block; color: #555; background-color: #fff; background-image: none; margin: 0; }
 .textbox > .textbox-text:focus { border-color: #66afe9; outline: 0; }
 .textbox[style*="height: 22px;"] { height: 34px !important; }
