@@ -100,6 +100,84 @@
                 </div>
             </div>
         </fieldset>
+
+        <fieldset id="GuarantorContract">
+            <!--高管及主要关系人-->
+            <table id="Managers_dg" class="easyui-datagrid" style="width:890px;" data-options="toolbar: '#ExecutivesMajorParticipant_tb',
+                   rownumbers:true,
+                   singleSelect:true,
+                   onSelect:ExecutivesMajorParticipantSelect,
+                   title:'高管及主要关系人'
+                   ">
+                <thead>
+                    <tr>
+                        <th data-options="field:'InformationCategories',hidden:true">信息类别</th>
+                        <th data-options="field:'Id',hidden:true">GuId</th>
+
+                        <th data-options="field:'Type',width:200,align:'center',hidden:true">关系人类型</th>
+                        <th data-options="field:'Type_Txt',width:200,align:'center'">关系人类型</th>
+                        <th data-options="field:'Name',width:200,align:'center'">姓名</th>
+                        <th data-options="field:'CertificateType',width:200,align:'center',hidden:true">证件类型</th>
+                        <th data-options="field:'CertificateType_Txt',width:200,align:'center'">证件类型</th>
+                        <th data-options="field:'CertificateCode',width:240,align:'center'">证件号码</th>
+                        <th data-options="field:'FamilyMembers',hidden:true">家族成员信息json</th>
+                    </tr>
+                </thead>
+            </table>
+
+            <div id="ExecutivesMajorParticipant_tb" style="height:30px;">
+                <a id="ExecutivesMajorParticipant_add" class="easyui-linkbutton" href="javascript:void(0)" data-options="onClick:ExecutivesMajorParticipantEdit,iconCls:'icon-add',plain:true">添加</a>
+                <a id="ExecutivesMajorParticipant_mod" class="easyui-linkbutton" href="javascript:void(0)" data-options="onClick:ExecutivesMajorParticipantEdit,iconCls:'icon-edit',plain:true,disabled:true">编辑</a>
+                <a id="ExecutivesMajorParticipant_del" class="easyui-linkbutton" href="javascript:void(0)" data-options="onClick:ExecutivesMajorParticipantDelete,iconCls:'icon-remove',plain:true,disabled:true">删除</a>
+                <a id="ExecutivesMajorParticipant_view" class="easyui-linkbutton" href="javascript:void(0)" data-options="onClick:ExecutivesMajorParticipantEdit,iconCls:'icon-search',plain:true,disabled:true">查看</a>
+            </div>
+            <script type="text/javascript">
+                // table onSelect事件
+                function ExecutivesMajorParticipantSelect(index, row) {
+                    if (row) {
+                        $("#ExecutivesMajorParticipant_mod").linkbutton("enable");
+                        $("#ExecutivesMajorParticipant_del").linkbutton("enable");
+                        $("#ExecutivesMajorParticipant_view").linkbutton("enable");
+                    }
+                }
+
+                // table 删除按钮
+                function ExecutivesMajorParticipantDelete() {
+                    var row = $('#Managers_dg').datagrid('getSelected');
+
+                    if (row) {
+                        $.messager.confirm('确认', '确认删除该担保合同信息?', function (r) {
+                            if (r) {
+                                var rowIndex = $('#Managers_dg').datagrid('getRowIndex', row);
+
+                                $('#Managers_dg').datagrid('deleteRow', rowIndex);
+                            }
+                        });
+                    }
+                }
+
+                // table 添加/编辑按钮
+                function ExecutivesMajorParticipantEdit() {
+                    var url = "ContentPages/ExecutivesMajorParticipantPage.html?method=" + this.id;
+
+                    if (this.id != "ExecutivesMajorParticipant_add") {
+                        var row = $('#Managers_dg').datagrid('getSelected');
+
+                        if (!row) {
+                            return false;
+                        }
+                    }
+
+                    $("#ExecutivesMajorParticipant_frame").attr("src", url);
+
+                    // 打开弹窗
+                    $("#ExecutivesMajorParticipant_dd").dialog({ closed: false });
+                }
+            </script>
+            <div id="ExecutivesMajorParticipant_dd" class="easyui-dialog" data-options="title:'高管及主要关系人',width:'100%',height:'800px',top:0,modal:true,closed:true">
+                <iframe id="ExecutivesMajorParticipant_frame" name="family_frame" src="about:blank" style="width:100%;height:99%; border:0;"></iframe>
+            </div>
+        </fieldset>
         <div id="panelID" class="easyui-panel" data-options="closed:true">
             <table id="dg" hidden="hidden" class="easyui-datagrid" data-options="height:330,hidden:true,toolbar:'#tb',rownumbers:true,
         singleSelect: true,
