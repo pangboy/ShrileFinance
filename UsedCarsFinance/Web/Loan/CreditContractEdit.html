@@ -21,6 +21,19 @@
                     $("#ff").form("load", data)
                 }
             });
+
+            // 显示/隐藏 担保合同列表
+            var isGuarantee = $("#IsGuarantee").combobox("getValue");
+            if (isGuarantee != undefined)
+            {
+                if (isGuarantee==true || isGuarantee==1) {
+                    isGuarantee = 1;
+                }
+                else {
+                    isGuarantee = 0;
+                }
+                $("#IsGuarantee").combobox("unselect", isGuarantee).combobox('select', isGuarantee);
+            }
         })
         function Submit() {
             var model = $("#ff").serializeJson();
@@ -36,11 +49,18 @@
             });
         }
         function ChooseGuarantee() {
-            if ($("#IsGuarantee").textbox("getValue") == "1" || $("#IsGuarantee").textbox("getValue") == "true") {
-                $("#panelID").panel("open");
+            ////if ($("#IsGuarantee").textbox("getValue") == "1" || $("#IsGuarantee").textbox("getValue") == "true") {
+            ////    $("#panelID").panel("open");
+            ////}
+            ////else {
+            ////    $("#panelID").panel("close");
+            ////}
+
+            if ($("#IsGuarantee").combobox("getValue") == "1") {
+                $("fieldset#GuarantorContract").show();
             }
             else {
-                $("#panelID").panel("close");
+                $("fieldset#GuarantorContract").hide();
             }
         }
     </script>
@@ -93,7 +113,7 @@
             <div class="row">
                 <div class="col-6">
                     <label>是否有担保:</label>
-                    <select id="IsGuarantee" name="IsGuarantee" class="easyui-combobox" data-options="required:true,onChange:ChooseGuarantee">
+                    <select id="IsGuarantee" name="IsGuarantee" class="easyui-combobox" data-options="required:true,editable:false,onChange:ChooseGuarantee">
                         <option value="0">否</option>
                         <option value="1">是</option>
                     </select>
@@ -102,83 +122,81 @@
         </fieldset>
 
         <fieldset id="GuarantorContract">
-            <!--高管及主要关系人-->
-            <table id="Managers_dg" class="easyui-datagrid" style="width:890px;" data-options="toolbar: '#ExecutivesMajorParticipant_tb',
+            <legend>担保合同</legend>
+            <!--担保合同-->
+            <table id="GuarantorContract_dg" class="easyui-datagrid" style="width:890px;" data-options="toolbar: '#GuarantorContract_tb',
                    rownumbers:true,
                    singleSelect:true,
-                   onSelect:ExecutivesMajorParticipantSelect,
-                   title:'高管及主要关系人'
+                   onSelect:GuarantorContractSelect,
+                   title:'担保合同列表'
                    ">
                 <thead>
                     <tr>
-                        <th data-options="field:'InformationCategories',hidden:true">信息类别</th>
-                        <th data-options="field:'Id',hidden:true">GuId</th>
-
-                        <th data-options="field:'Type',width:200,align:'center',hidden:true">关系人类型</th>
-                        <th data-options="field:'Type_Txt',width:200,align:'center'">关系人类型</th>
-                        <th data-options="field:'Name',width:200,align:'center'">姓名</th>
-                        <th data-options="field:'CertificateType',width:200,align:'center',hidden:true">证件类型</th>
-                        <th data-options="field:'CertificateType_Txt',width:200,align:'center'">证件类型</th>
-                        <th data-options="field:'CertificateCode',width:240,align:'center'">证件号码</th>
-                        <th data-options="field:'FamilyMembers',hidden:true">家族成员信息json</th>
+                        <th data-options="field:'ContractTypeTxt',width:120,align:'center'">合同类型</th>
+                        <th data-options="field:'GuarantorTypeTxt',width:120,align:'center'">保证人类型</th>
+                        <th data-options="field:'GuaranteeFormTxt',width:120,align:'center'">担保形式</th>
+                        <th data-options="field:'MarginTxt',width:120,align:'center'">保证金额</th>
+                        <th data-options="field:'EffectiveStateTxt',width:120,align:'center'">合同有效状态</th>
+                        <th data-options="field:'SigningDateTxt',width:120,align:'center'">合同签订日期</th>
+                        <th data-options="field:'ContractNumber',width:120,align:'center'">合同序号</th>
                     </tr>
                 </thead>
             </table>
 
-            <div id="ExecutivesMajorParticipant_tb" style="height:30px;">
-                <a id="ExecutivesMajorParticipant_add" class="easyui-linkbutton" href="javascript:void(0)" data-options="onClick:ExecutivesMajorParticipantEdit,iconCls:'icon-add',plain:true">添加</a>
-                <a id="ExecutivesMajorParticipant_mod" class="easyui-linkbutton" href="javascript:void(0)" data-options="onClick:ExecutivesMajorParticipantEdit,iconCls:'icon-edit',plain:true,disabled:true">编辑</a>
-                <a id="ExecutivesMajorParticipant_del" class="easyui-linkbutton" href="javascript:void(0)" data-options="onClick:ExecutivesMajorParticipantDelete,iconCls:'icon-remove',plain:true,disabled:true">删除</a>
-                <a id="ExecutivesMajorParticipant_view" class="easyui-linkbutton" href="javascript:void(0)" data-options="onClick:ExecutivesMajorParticipantEdit,iconCls:'icon-search',plain:true,disabled:true">查看</a>
+            <div id="GuarantorContract_tb" style="height:30px;">
+                <a id="GuarantorContract_add" class="easyui-linkbutton" href="javascript:void(0)" data-options="onClick:GuarantorContractEdit,iconCls:'icon-add',plain:true">添加</a>
+                <a id="GuarantorContract_mod" class="easyui-linkbutton" href="javascript:void(0)" data-options="onClick:GuarantorContractEdit,iconCls:'icon-edit',plain:true,disabled:true">编辑</a>
+                <a id="GuarantorContract_del" class="easyui-linkbutton" href="javascript:void(0)" data-options="onClick:GuarantorContractDelete,iconCls:'icon-remove',plain:true,disabled:true">删除</a>
+                <a id="GuarantorContract_view" class="easyui-linkbutton" href="javascript:void(0)" data-options="onClick:GuarantorContractEdit,iconCls:'icon-search',plain:true,disabled:true">查看</a>
             </div>
             <script type="text/javascript">
                 // table onSelect事件
-                function ExecutivesMajorParticipantSelect(index, row) {
+                function GuarantorContractSelect(index, row) {
                     if (row) {
-                        $("#ExecutivesMajorParticipant_mod").linkbutton("enable");
-                        $("#ExecutivesMajorParticipant_del").linkbutton("enable");
-                        $("#ExecutivesMajorParticipant_view").linkbutton("enable");
+                        $("#GuarantorContract_mod").linkbutton("enable");
+                        $("#GuarantorContract_del").linkbutton("enable");
+                        $("#GuarantorContract_view").linkbutton("enable");
                     }
                 }
 
                 // table 删除按钮
-                function ExecutivesMajorParticipantDelete() {
-                    var row = $('#Managers_dg').datagrid('getSelected');
+                function GuarantorContractDelete() {
+                    var row = $('#GuarantorContract_dg').datagrid('getSelected');
 
                     if (row) {
                         $.messager.confirm('确认', '确认删除该担保合同信息?', function (r) {
                             if (r) {
-                                var rowIndex = $('#Managers_dg').datagrid('getRowIndex', row);
+                                var rowIndex = $('#GuarantorContract_dg').datagrid('getRowIndex', row);
 
-                                $('#Managers_dg').datagrid('deleteRow', rowIndex);
+                                $('#GuarantorContract_dg').datagrid('deleteRow', rowIndex);
                             }
                         });
                     }
                 }
 
                 // table 添加/编辑按钮
-                function ExecutivesMajorParticipantEdit() {
-                    var url = "ContentPages/ExecutivesMajorParticipantPage.html?method=" + this.id;
+                function GuarantorContractEdit() {
+                    var url = "GuarantorContractEdit.html?method=" + this.id;
 
-                    if (this.id != "ExecutivesMajorParticipant_add") {
-                        var row = $('#Managers_dg').datagrid('getSelected');
+                    if (this.id != "GuarantorContract_add") {
+                        var row = $('#GuarantorContract_dg').datagrid('getSelected');
 
                         if (!row) {
                             return false;
                         }
                     }
 
-                    $("#ExecutivesMajorParticipant_frame").attr("src", url);
+                    $("#GuarantorContract_frame").attr("src", url);
 
                     // 打开弹窗
-                    $("#ExecutivesMajorParticipant_dd").dialog({ closed: false });
+                    $("#GuarantorContract_dd").dialog({ closed: false });
                 }
             </script>
-            <div id="ExecutivesMajorParticipant_dd" class="easyui-dialog" data-options="title:'高管及主要关系人',width:'100%',height:'800px',top:0,modal:true,closed:true">
-                <iframe id="ExecutivesMajorParticipant_frame" name="family_frame" src="about:blank" style="width:100%;height:99%; border:0;"></iframe>
+            <div id="GuarantorContract_dd" class="easyui-dialog" data-options="title:'担保合同',width:'100%',height:'1000px',top:0,modal:true,closed:true">
+                <iframe id="GuarantorContract_frame" name="family_frame" src="about:blank" style="width:100%;height:99%; border:0;"></iframe>
             </div>
         </fieldset>
-        <div id="panelID" class="easyui-panel" data-options="closed:true">
+        <!--<!--<div id="panelID" class="easyui-panel" data-options="closed:true">
             <table id="dg" hidden="hidden" class="easyui-datagrid" data-options="height:330,hidden:true,toolbar:'#tb',rownumbers:true,
         singleSelect: true,
         ">
@@ -203,7 +221,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div>-->
         <div id="btn">
             <a id="save" class="easyui-linkbutton" href="javascript:void(0)" data-options="iconCls:'icon-save',onClick:Submit">保存</a>
         </div>

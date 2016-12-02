@@ -14,14 +14,13 @@
 
     <script type="text/javascript">
         $(function () {
-            var Id = GetQueryString("GuarantorContactId");
-
+            Init();
         });
 
         function LoadData(data) {
             if (data) {
                 if (data.ContractType != undefined) {
-                    $("fieldset[name=Contract]").combobox('unselect', data.ContractType).combobox('select', data.ContractType);
+                    $("fieldset[name=Contract] select[textboxname=ContractType]").combobox('unselect', data.ContractType).combobox('select', data.ContractType);
 
                     if (data.ContractType == 1) {
                         $("fieldset[name=Contract]").form('load', data.PledgeGuarantyContractViewModel);
@@ -31,15 +30,14 @@
                     }
                 }
 
-                if (data.GuarantorType != undefined)
-                {
-                    $("fieldset[name=Contract]").combobox('unselect', data.GuarantorType).combobox('select', data.GuarantorType);
+                if (data.GuarantorType != undefined) {
+                    $("fieldset[name=Contract] select[textboxname=GuarantorType]").combobox('unselect', data.GuarantorType).combobox('select', data.GuarantorType);
 
                     if (data.GuarantorType == 1) {
-                        $("fieldset[name=Contract]").form('load', data.GuarantyPersonViewModel);
+                        $("fieldset[name=Guarantor]").form('load', data.GuarantyPersonViewModel);
                     }
                     else if (data.GuarantorType == 2) {
-                        $("fieldset[name=Contract]").form('load', data.GuarantyOrganizationViewModel);
+                        $("fieldset[name=Guarantor]").form('load', data.GuarantyOrganizationViewModel);
                     }
                 }
             }
@@ -57,27 +55,34 @@
             // 映射合同
             if (Contract != undefined && Contract.ContractType != undefined) {
                 if (Contract.ContractType == 1) {
+                    value.ContractType = 1;
                     value.PledgeGuarantyContractViewModel = {};
                     TraverseDateFactory(Contract, value.PledgeGuarantyContractViewModel, false, null);
                 }
                 else if (Contract.ContractType == 2) {
+                    value.ContractType = 2;
                     value.MortgageGuarantyContractViewModel = {};
                     TraverseDateFactory(Contract, value.MortgageGuarantyContractViewModel, false, null);
                 }
 
-                value.ContractTypeTxt = $("fieldset[name=Contract] input[textboxname=ContractType]").combobox('getText');
-                value.GuarantorTypeTxt = $("fieldset[name=Contract] input[textboxname=GuarantorType]").combobox('getText');
-                value.EffectiveStateTxt = $("fieldset[name=Contract] input[textboxname=EffectiveState]").combobox('getText');
+                value.ContractTypeTxt = $("fieldset[name=Contract] select[textboxname=ContractType]").combobox('getText');
+                value.GuarantorTypeTxt = $("fieldset[name=Contract] select[textboxname=GuarantorType]").combobox('getText');
+                value.GuaranteeFormTxt = $("fieldset[name=Contract] select[textboxname=GuaranteeForm]").combobox('getText');
+                value.MarginTxt = $("fieldset[name=Contract] input[textboxname=Margin]").combobox('getText');
+                value.EffectiveStateTxt = $("fieldset[name=Contract] select[textboxname=EffectiveState]").combobox('getText');
                 value.SigningDateTxt = $("fieldset[name=Contract] input[textboxname=SigningDate]").combobox('getText');
+                value.ContractNumber = $("fieldset[name=Contract] input[textboxname*=Number]").textbox('getValue');
             }
 
             // 映射保证人
-            if (Guarantor != undefined && Guarantor.GuarantorType != undefined) {
+            if (Guarantor != undefined && Contract.GuarantorType != undefined) {
                 if (Contract.GuarantorType == 1) {
+                    value.GuarantorType = 1;
                     value.GuarantyPersonViewModel = {};
                     TraverseDateFactory(Guarantor, value.GuarantyPersonViewModel, false, null);
                 }
                 else if (Contract.GuarantorType == 2) {
+                    value.GuarantorType = 2;
                     value.GuarantyOrganizationViewModel = {};
                     TraverseDateFactory(Guarantor, value.GuarantyOrganizationViewModel, false, null);
                 }
@@ -87,31 +92,40 @@
         }
 
         function ValidData() {
-            return $("form").form("validate");
+            var validResult = $("form").form("validate");
+
+            if (!validResult)
+            {
+                $.messager.show({ msg: "验证未通过！" });
+            }
+
+            return validResult;
         }
     </script>
 
     <script type="text/javascript">
-        function Init()
-        {
+        function Init() {
+            var method = GetQueryString("method");
 
-        }
+            if (method == "GuarantorContract_mod" || method == "GuarantorContract_view") {
+                // 获取选中行
+                var row = self.parent.$("#GuarantorContract_dg").datagrid('getSelected');
+                if (row) {
+                    // 加载数据
+                    LoadData(row);
+                }
 
-        function ChangeGuarantorType() {
-            //$.messager.show({ msg: "保证人类型：" + $(this).combobox('getValue') });
+                if (method == "GuarantorContract_view") {
+                    // 禁用fieldset
+                    Disabled($("fieldset"));
 
-            $("div[name=GuarantorInfo]>div[id!=base]").remove();
-
-            if ($(this).combobox('getValue') == "1") {
-                $("div[name=GuarantorInfo]").append($("div[name=GuarantorInfo] template#GuarantorInfo_Person").html());
+                    // 禁用保存按钮
+                    $("#save").linkbutton("disable");
+                }
             }
-            else {
-                $("div[name=GuarantorInfo]").append($("div[name=GuarantorInfo] template#GuarantorInfo_Organization").html());
-            }
-
-            $.parser.parse($("div[name=GuarantorInfo]>div[id!=base]"));
         }
-
+        
+        // 选择合同类型
         function ChangeContractType() {
             //$.messager.show({ msg: "合同类型：" + $(this).combobox('getValue') });
 
@@ -127,19 +141,60 @@
             $.parser.parse($("div[name=ContractInfo]>div[id!=base]"));
         }
 
-        function Submit() {
-            var data = BuildData();
-            debugger
-            if (ValidData()) {
-                $.messager.show({ msg: "提交！" });
+        // 保证人类型
+        function ChangeGuarantorType() {
+            //$.messager.show({ msg: "保证人类型：" + $(this).combobox('getValue') });
+
+            $("div[name=GuarantorInfo]>div[id!=base]").remove();
+
+            if ($(this).combobox('getValue') == "1") {
+                $("div[name=GuarantorInfo]").append($("div[name=GuarantorInfo] template#GuarantorInfo_Person").html());
             }
             else {
-                $.messager.show({ msg: "验证未通过！" });
+                $("div[name=GuarantorInfo]").append($("div[name=GuarantorInfo] template#GuarantorInfo_Organization").html());
             }
+
+            $.parser.parse($("div[name=GuarantorInfo]>div[id!=base]"));
+        }
+
+        function Submit() {
+            if (!ValidData()) {
+                return false;
+            }
+
+            // 更新担保合同表
+            var method = GetQueryString("method");
+            var data = BuildData();
+
+            if (method == "GuarantorContract_mod") {
+                //获取选中行
+                var row = self.parent.$("#GuarantorContract_dg").datagrid('getSelected');
+
+                if (row) {
+                    var RowIndex = self.parent.$("#GuarantorContract_dg").datagrid('getRowIndex', row);
+
+                    //更新行
+                    self.parent.$("#GuarantorContract_dg").datagrid('updateRow', { index: RowIndex, row: data });
+                }
+            }
+            else if (method == "GuarantorContract_add") {
+                //追加一行
+                self.parent.$("#GuarantorContract_dg").datagrid('appendRow', data);
+            }
+
+            // 清空表单，避免再次打开时闪现之前填入的数据
+            $('input[type=reset]').click();
+
+            // 关闭弹窗
+            self.parent.$("#GuarantorContract_dd").dialog({ closed: true });
         }
 
         function Cancel() {
+            // 清空表单，避免再次打开时闪现之前填入的数据
+            $('input[type=reset]').click();
 
+            // 关闭弹窗
+            self.parent.$("#GuarantorContract_dd").dialog({ closed: true });
         }
     </script>
 </head>
@@ -215,7 +270,7 @@
                 <template id="ContractInfo_Mortgage">
                     <div class="col-6">
                         <label>抵押序号：</label>
-                        <input name="PledgeNumber" class="easyui-textbox" data-options="required:true,value:'',validType:['length[2,2]']" />
+                        <input name="MortgageNumber" class="easyui-textbox" data-options="required:true,value:'',validType:['length[2,2]']" />
                     </div>
                     <div class="col-6">
                         <label>抵押物种类：</label>
@@ -309,6 +364,7 @@
         <div id="btn">
             <a href="javascript:void(0)" id="save" class="easyui-linkbutton" data-options="iconCls:'icon-save',onClick:Submit">保存</a>
             <a href="javascript:void(0)" id="back" class="easyui-linkbutton" data-options="iconCls:'icon-redo',onClick:Cancel">返回</a>
+            <input type="reset" style="display:none" />
         </div>
     </form>
 </body>
