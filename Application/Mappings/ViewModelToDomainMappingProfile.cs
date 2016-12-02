@@ -69,6 +69,8 @@
                 .ForMember(d => d.Applicant, opt => opt.Ignore());
             CreateMap<FinanceProduceViewModel, FinanceProduce>();
 
+            // Loan
+            CreateMap<ViewModels.Loan.LoanViewModels.LoanViewModel, Loan>();
             CreateMap<GuarantyContractViewModel, GuarantyContract>();
             CreateMap<GuarantyContractMortgageViewModel,GuarantyContractMortgage>();
             CreateMap<GuarantyContractPledgeViewModel,GuarantorContractPledge>();
