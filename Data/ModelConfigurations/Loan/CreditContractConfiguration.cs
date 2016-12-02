@@ -4,9 +4,9 @@
     using System.Data.Entity.ModelConfiguration;
     using Core.Entities.Loan;
 
-    public class CreditConfiguration: EntityTypeConfiguration<CreditContract>
+    public class CreditContractConfiguration: EntityTypeConfiguration<CreditContract>
     {
-        public CreditConfiguration()
+        public CreditContractConfiguration()
         {
             HasKey(m => m.Id);
             Property(m => m.Id).HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);

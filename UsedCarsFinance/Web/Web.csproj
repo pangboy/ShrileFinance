@@ -204,6 +204,7 @@
     <Content Include="Flow\FlowTest\Test3.html" />
     <Content Include="Finance\images\minus.png" />
     <Content Include="Flow\Frame.html" />
+    <Content Include="Loan\CreditConreactList.html" />
     <Content Include="Loan\CreditContractEdit.html" />
     <Content Include="Notice\NoticeList.html" />
     <Content Include="Scripts\dictionaryCode.js" />
@@ -941,7 +942,7 @@
     <Compile Include="Controllers\Customer\CustomerController.cs" />
     <Compile Include="Controllers\Finance\ApplicantController.cs" />
     <Compile Include="Controllers\Finance\BorrowController.cs" />
-    <Compile Include="Controllers\Finance\CreditController.cs" />
+    <Compile Include="Controllers\Credit\CreditContractController.cs" />
     <Compile Include="Controllers\Unused\CreditExamineReportController.cs" />
     <Compile Include="Controllers\Finance\FinanceAuidtController.cs" />
     <Compile Include="Controllers\Finance\FinanceController.cs" />

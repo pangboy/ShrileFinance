@@ -86,6 +86,7 @@
             CreateMap<PledgeGuarantyContract, PledgeGuarantyContractViewModel>();
             CreateMap<GuarantyPerson, GuarantyPersonViewModel>();
             CreateMap<GuarantyOrganization, GuarantyOrganizationViewModel>();
+            CreateMap<CreditContract,CreditContractViewModel>();
         }
     }
 }

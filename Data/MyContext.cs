@@ -74,7 +74,7 @@
 
             // Loan Configurations
             modelBuilder.Configurations
-                .Add(new CreditConfiguration())
+                .Add(new CreditContractConfiguration())
                 .Add(new GuarantorConfiguration())
                 .Add(new GuarantyOrganizationConfiguration())
                 .Add(new GuarantyPersonConfiguration())

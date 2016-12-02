@@ -142,7 +142,7 @@
     <Compile Include="Interfaces\Repositories\IInstanceRepository.cs" />
     <Compile Include="Interfaces\Repositories\IFinanceRepository.cs" />
     <Compile Include="Interfaces\Repositories\IFinancingProjectRepository.cs" />
-    <Compile Include="Interfaces\Repositories\ICreditRepository.cs" />
+    <Compile Include="Interfaces\Repositories\ICreditContractRepository.cs" />
     <Compile Include="Interfaces\Repositories\IOrganizationRepository.cs" />
     <Compile Include="Interfaces\ILogger.cs" />
     <Compile Include="Interfaces\Repositories\IProduceRepository.cs" />
@@ -157,8 +157,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Entities\Borrower\" />
-    <Folder Include="Entities\Loan\" />
-    <Folder Include="Services\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
