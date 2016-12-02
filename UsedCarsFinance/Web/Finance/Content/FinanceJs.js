@@ -102,6 +102,11 @@ function TraverseDateFactory(RefObj, OutObj, isFunction, array) {
         return OutObj;
     }
 
+    if (OutObj == null)
+    {
+        OutObj = {};
+    }
+    
     if (isFunction == true) {
         for (var name in RefObj) {
             if (typeof (RefObj[name]) == "function" && (array == null || $.inArray(name, array))) {
