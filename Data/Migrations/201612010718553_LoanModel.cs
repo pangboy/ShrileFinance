@@ -12,6 +12,7 @@ namespace Data.Migrations
                 c => new
                     {
                         Id = c.Guid(nullable: false, identity: true),
+                        OrganizationId = c.Guid(nullable: false),
                         LoanCode = c.String(maxLength: 60),
                         EffectiveDate = c.DateTime(nullable: false),
                         ExpirationDate = c.DateTime(nullable: false),
@@ -71,6 +72,7 @@ namespace Data.Migrations
                 c => new
                     {
                         Id = c.Guid(nullable: false, identity: true),
+                        CreditId = c.Guid(nullable: false),
                         Principle = c.Decimal(nullable: false, precision: 18, scale: 2),
                         SpecialDate = c.DateTime(nullable: false),
                         MatureDate = c.DateTime(nullable: false),
@@ -85,7 +87,9 @@ namespace Data.Migrations
                         LoansTo = c.String(maxLength: 5),
                         LoanTypes = c.String(maxLength: 2),
                     })
-                .PrimaryKey(t => t.Id);
+                .PrimaryKey(t => t.Id)
+                .ForeignKey("dbo.LOAN_CreditContranct", t => t.CreditId, cascadeDelete: true)
+                .Index(t => t.CreditId);
             
             CreateTable(
                 "dbo.LOAN_PaymentHistory",
@@ -103,15 +107,16 @@ namespace Data.Migrations
                 .PrimaryKey(t => t.Id)
                 .ForeignKey("dbo.LOAN_Loan", t => t.LoanId)
                 .Index(t => t.LoanId);
-            
         }
         
         public override void Down()
         {
+            DropForeignKey("dbo.LOAN_Loan", "CreditId", "dbo.LOAN_CreditContranct");
             DropForeignKey("dbo.LOAN_PaymentHistory", "LoanId", "dbo.LOAN_Loan");
             DropForeignKey("dbo.LOAN_GuarantyContract", "CreditId", "dbo.LOAN_CreditContranct");
             DropForeignKey("dbo.LOAN_Guarantor", "GuarantyContractId", "dbo.LOAN_GuarantyContract");
             DropIndex("dbo.LOAN_PaymentHistory", new[] { "LoanId" });
+            DropIndex("dbo.LOAN_Loan", new[] { "CreditId" });
             DropIndex("dbo.LOAN_Guarantor", new[] { "GuarantyContractId" });
             DropIndex("dbo.LOAN_GuarantyContract", new[] { "CreditId" });
             DropTable("dbo.LOAN_PaymentHistory");

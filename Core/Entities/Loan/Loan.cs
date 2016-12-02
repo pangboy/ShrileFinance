@@ -53,6 +53,11 @@
         }
 
         /// <summary>
+        /// 授信合同标识
+        /// </summary>
+        public Guid CreditId { get; private set; }
+
+        /// <summary>
         /// 借据金额
         /// </summary>
         public decimal Principle { get; private set; }

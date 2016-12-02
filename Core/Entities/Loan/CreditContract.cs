@@ -6,7 +6,7 @@
     using Customers.Enterprise;
     using Exceptions;
 
-    public enum StatusEnum : byte
+    public enum CreditContractStatusEnum : byte
     {
         生效 = 0,
         失效 = 1,
@@ -60,7 +60,7 @@
         /// <summary>
         /// 合同有效状态
         /// </summary>
-        public StatusEnum ValidStatus { get; set; }
+        public CreditContractStatusEnum ValidStatus { get; set; }
 
         /// <summary>
         /// 是否有担保
@@ -73,6 +73,11 @@
         public virtual ICollection<GuarantyContract> GuarantyContract { get; set; }
 
         /// <summary>
+        /// 借据信息
+        /// </summary>
+        public virtual ICollection<Loan> Loans { get; set; }
+
+        /// <summary>
         /// 组织机构
         /// </summary>
         public virtual Organization Organization { get; set; }
@@ -83,7 +88,7 @@
         /// <param name="limit">新授信额度</param>
         public void ChangeLimit(decimal limit)
         {
-            if (ValidStatus != StatusEnum.失效)
+            if (ValidStatus != CreditContractStatusEnum.失效)
             {
                 CreditLimit = limit;
             }
@@ -122,7 +127,7 @@
         /// </summary>
         public void ChangeStutus()
         {
-            ValidStatus = StatusEnum.失效;
+            ValidStatus = CreditContractStatusEnum.失效;
         }
 
         /// <summary>
@@ -163,7 +168,7 @@
         {
             var result = true;
 
-            if (IsEffectiveDate() == true && ValidStatus == StatusEnum.失效)
+            if (IsEffectiveDate() == true && ValidStatus == CreditContractStatusEnum.失效)
             {
                 result = false;
             }
@@ -175,7 +180,7 @@
         /// 更改合同有效状态
         /// </summary>
         /// <param name="status">合同状态</param>
-        private void ChangeEffective(StatusEnum status)
+        private void ChangeEffective(CreditContractStatusEnum status)
         {
             ValidStatus = status;
         }

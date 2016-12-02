@@ -4,7 +4,7 @@
     using System.Data.Entity.ModelConfiguration;
     using Core.Entities.Loan;
 
-    public class CreditContractConfiguration: EntityTypeConfiguration<CreditContract>
+    public class CreditContractConfiguration : EntityTypeConfiguration<CreditContract>
     {
         public CreditContractConfiguration()
         {
@@ -18,7 +18,11 @@
             Property(m => m.CreditBalance);
             Property(m => m.ValidStatus);
             Property(m => m.IsGuarantee);
-            HasMany(m => m.GuarantyContract).WithOptional().Map(m => m.MapKey("CreditId")).WillCascadeOnDelete();
+
+            HasMany(m => m.GuarantyContract).WithOptional()
+                .Map(m => m.MapKey("CreditId")).WillCascadeOnDelete();
+            HasMany(m => m.Loans).WithOptional()
+                .HasForeignKey(m => m.CreditId).WillCascadeOnDelete();
 
             ToTable("LOAN_CreditContranct");
         }
