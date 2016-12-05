@@ -41,7 +41,7 @@
 
             // 显示/隐藏 担保合同列表
             var isGuarantee = $("fieldset#CreditContract #IsGuarantee").combobox("getValue");
-            debugger
+
             if (isGuarantee != undefined) {
                 if (isGuarantee == true || isGuarantee == 1) {
                     isGuarantee = 1;
@@ -50,8 +50,7 @@
                     isGuarantee = 0;
                 }
 
-                debugger
-                $("#IsGuarantee").combobox('setValue', isGuarantee).combobox("unselect", isGuarantee).combobox('select', isGuarantee);
+                $("fieldset#CreditContract #IsGuarantee").combobox('setValue', isGuarantee).combobox("unselect", isGuarantee).combobox('select', isGuarantee);
             }
 
             if (IsGuarantee == 1 && data.GuranteeContract != null) {
@@ -112,13 +111,19 @@
                 return false;
             }
 
+            if (data.IsGuarantee == 1 && data.GuranteeContract.length == 0) {
+                $.messager.show({ msg: '请添加担保合同！' });
+
+                return false;
+            }
+
             return true;
         }
 
         function Submit() {
-            $("div#btn #sava").linkbutton("disable");
-            var url = "";
-            var model = BuildData(); //$("#ff").serializeJson();
+            $("div#btn #save").linkbutton("disable");
+
+            var model = BuildData();
 
             if (model.IsGuarantee == "0") {
                 model.IsGuarantee = false;
@@ -127,6 +132,7 @@
             }
 
             if (!ValidData(model)) {
+                $("div#btn #save").linkbutton("enable");
                 return false;
             }
             if (query.id != null) {
@@ -150,15 +156,11 @@
                 }
             });
 
-            //$("div#btn #sava").linkbutton("enable");
+            $("div#btn #save").linkbutton("enable");
         }
+
         function ChooseGuarantee() {
-            ////if ($("#IsGuarantee").textbox("getValue") == "1" || $("#IsGuarantee").textbox("getValue") == "true") {
-            ////    $("#panelID").panel("open");
-            ////}
-            ////else {
-            ////    $("#panelID").panel("close");
-            ////}
+            $("fieldset#GuarantorContract table#GuarantorContract_dg").datagrid("loadData", { total: 0, rows: [] });
 
             if ($("#IsGuarantee").combobox("getValue") == "1") {
                 $("fieldset#GuarantorContract").show();
@@ -185,6 +187,20 @@
                     }
                 });
             }
+        }
+        }
+
+        function UpdateCreditLimit() {
+            var CreditLimit = $("fieldset#CreditContract input[textboxname=CreditLimit]").textbox('getValue');
+
+            $($("fieldset#GuarantorContract table#GuarantorContract_dg").datagrid("getRows")).each(function (i, e) {
+                e.MarginTxt = CreditLimit;
+
+                $("fieldset#GuarantorContract table#GuarantorContract_dg").datagrid("updateRow", {
+                    index: i,
+                    row: e
+                });
+            });
         }
     </script>
 </head>
@@ -214,6 +230,7 @@
                 <div class="col-6">
                     <label>授信额度:</label>
                     <input name="CreditLimit" id="CreditLimit" class="easyui-textbox" data-options="required:true,onChange:GetCreditBalance" />
+                    <input name="CreditLimit" id="CreditLimit" class="easyui-textbox" data-options="required:true,onChange:UpdateCreditLimit" />
                     <span class="unit">元</span>
                 </div>
 
@@ -249,7 +266,6 @@
 
         <fieldset id="GuarantorContract" style="display:none">
             <legend>担保合同</legend>
-            <!--担保合同-->
             <table id="GuarantorContract_dg" class="easyui-datagrid" style="width:890px;" data-options="toolbar: '#GuarantorContract_tb',
                    rownumbers:true,
                    singleSelect:true,
@@ -322,32 +338,7 @@
                 <iframe id="GuarantorContract_frame" name="family_frame" src="about:blank" style="width:100%;height:99%; border:0;"></iframe>
             </div>
         </fieldset>
-        <!--<!--<div id="panelID" class="easyui-panel" data-options="closed:true">
-            <table id="dg" hidden="hidden" class="easyui-datagrid" data-options="height:330,hidden:true,toolbar:'#tb',rownumbers:true,
-        singleSelect: true,
-        ">
-                <thead>
-                    <tr>
-                        <th data-options="field:'Id',hidden:true">ProduceId</th>
-                        <th data-options="field:'LoanCode',width:150,align:'center'">合同编码</th>
-                        <th data-options="field:'CreditLimit',width:100,align:'center'">授信额度</th>
-                        <th data-options="field:'CreditBalance',width:100,align:'center'">授信余额</th>
-                        <th data-options="field:'EffectiveDate',width:150,align:'center'">合同生效日期</th>
-                        <th data-options="field:'ExpirationDate',width:150,align:'center'">合同终止日期</th>
-                        <th data-options="field:'ValidStatus',width:60,align:'center'">合同状态</th>
-                    </tr>
-                </thead>
-            </table>
-            <div id="tb">
-                <div style="height:30px;">
-                    <div style="height:30px; width:auto;">
-                        <a id="add" class="easyui-linkbutton" href="javascript:void(0)" style="height:25px; margin-top:3px;" data-options="iconCls:'icon-add',plain:true">添加</a>
-                        <a id="mod" class="easyui-linkbutton" href="javascript:void(0)" style="height:25px; margin-top:3px;" data-options="iconCls:'icon-edit',plain:true">修改</a>
-                        <a id="del" class="easyui-linkbutton" href="javascript:void(0)" style="height:25px; margin-top:3px;" data-options="iconCls:'icon-remove',plain:true">删除</a>
-                    </div>
-                </div>
-            </div>
-        </div>-->
+
         <div id="btn">
             <a id="save" class="easyui-linkbutton" href="javascript:void(0)" data-options="iconCls:'icon-save',onClick:Submit">保存</a>
         </div>
