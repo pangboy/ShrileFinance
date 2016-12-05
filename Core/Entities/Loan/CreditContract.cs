@@ -18,16 +18,6 @@
     {
         public CreditContract()
         {
-            if (EffectiveDate < ExpirationDate)
-            {
-                throw new ArgumentOutOfRangeAppException(nameof(ExpirationDate), "合同终止日期必须小于生效日期.");
-            }
-
-            if (CreditBalance > CreditLimit)
-            {
-                throw new ArgumentOutOfRangeAppException(nameof(CreditBalance), "授信余额不能大于授信额度.");
-            }
-
             GuarantyContract = new HashSet<GuarantyContract>();
             Loans = new HashSet<Loan>();
         }
@@ -37,7 +27,7 @@
         /// <summary>
         /// 合同编码
         /// </summary>
-        public string LoanCode { get; set; }
+        public string CreditContractCode { get; set; }
 
         /// <summary>
         /// 授信合同生效日期
@@ -57,17 +47,24 @@
         /// <summary>
         /// 授信余额
         /// </summary>
-        public decimal CreditBalance { get; set; }
+        public decimal CreditBalance { get
+            {
+                return CalculateCreditBalance();
+            }
+        }
 
         /// <summary>
         /// 合同有效状态
         /// </summary>
-        public CreditContractStatusEnum ValidStatus { get; set; }
+        public CreditContractStatusEnum EffectiveStatus { get; set; }
 
         /// <summary>
         /// 是否有担保
         /// </summary>
-        public bool IsGuarantee { get; set; }
+        public bool HasGuarantee { get
+            { return GuarantyContract.Count > 0;
+            }
+        }
 
         /// <summary>
         /// 担保合同
@@ -84,19 +81,32 @@
         /// </summary>
         public virtual Organization Organization { get; set; }
 
+        public void ValidateEffective(CreditContract creditContract)
+        {
+            if (creditContract.EffectiveDate < creditContract.ExpirationDate)
+            {
+                throw new ArgumentOutOfRangeAppException(nameof(ExpirationDate), "合同终止日期必须小于生效日期.");
+            }
+
+            if (creditContract.CreditBalance > creditContract.CreditLimit)
+            {
+                throw new ArgumentOutOfRangeAppException(nameof(CreditBalance), "授信余额不能大于授信额度.");
+            }
+        }
+
         /// <summary>
         /// 额度变更
         /// </summary>
         /// <param name="limit">新授信额度</param>
         public void ChangeLimit(decimal limit)
         {
-            if (ValidStatus != CreditContractStatusEnum.失效)
+            if (EffectiveStatus != CreditContractStatusEnum.失效)
             {
                 CreditLimit = limit;
             }
             else
             {
-                throw new ArgumentOutOfRangeAppException(nameof(ValidStatus), "合同已失效不允许额度变更.");
+                throw new ArgumentOutOfRangeAppException(nameof(EffectiveStatus), "合同已失效不允许额度变更.");
             }
         }
 
@@ -129,7 +139,7 @@
         /// </summary>
         public void ChangeStutus()
         {
-            ValidStatus = CreditContractStatusEnum.失效;
+            EffectiveStatus = CreditContractStatusEnum.失效;
         }
 
         /// <summary>
@@ -140,6 +150,7 @@
         {
             return CreditLimit - Loans.Sum(m => m.Balance);
         }
+
         /// <summary>
         ///  融资额度是否充足
         /// </summary>
@@ -170,6 +181,22 @@
         }
 
         /// <summary>
+        /// 判断合同状态是否有效
+        /// </summary>
+        /// <returns></returns>
+        private bool IsEffectiveContract()
+        {
+            var result = true;
+
+            if (EffectiveStatus == CreditContractStatusEnum.失效)
+            {
+                result = false;
+            }
+
+            return result;
+        }
+
+        /// <summary>
         /// 授信协议是否有效
         /// </summary>
         /// <returns></returns>
@@ -177,7 +204,8 @@
         {
             var result = true;
 
-            if (IsEffectiveDate() == true && ValidStatus == CreditContractStatusEnum.失效)
+            // 不在有效期内并且状态为失效
+            if (IsEffectiveDate() == false && IsEffectiveContract() == false)
             {
                 result = false;
             }
@@ -191,7 +219,7 @@
         /// <param name="status">合同状态</param>
         private void ChangeEffective(CreditContractStatusEnum status)
         {
-            ValidStatus = status;
+            EffectiveStatus = status;
         }
     }
 }

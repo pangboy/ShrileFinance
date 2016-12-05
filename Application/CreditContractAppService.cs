@@ -26,6 +26,7 @@
             {
                 throw new ArgumentOutOfRangeAppException("", "授信余额不正确.");
             }
+            credit.ValidateEffective(credit);
             repository.Create(credit);
             repository.Commit();
         }
@@ -131,7 +132,7 @@
             var creditContract = repository.GetAll();
             if (!string.IsNullOrEmpty(serach))
             {
-                creditContract = creditContract.Where(m => m.LoanCode.Contains(serach) || m.Organization.CustomerNumber.Contains(serach));
+                creditContract = creditContract.Where(m => m.CreditContractCode.Contains(serach) || m.Organization.CustomerNumber.Contains(serach));
             }
 
             creditContract = creditContract.OrderByDescending(m => m.Id);

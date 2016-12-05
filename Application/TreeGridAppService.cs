@@ -47,7 +47,7 @@
 
                     creditCountList.Add(new CreditCountViewModel
                     {
-                        Code = credit.LoanCode,
+                        Code = credit.CreditContractCode,
                         Amount = credit.CreditLimit,
                         Balance = credit.CalculateCreditBalance(),
                         CreateDate = credit.EffectiveDate,
