@@ -39,7 +39,8 @@
                                 Balance = loan.Balance,
                                 Code = loan.ContractNumber,
                                 CreateDate = loan.SpecialDate,
-                                EndDate = loan.MatureDate
+                                EndDate = loan.MatureDate,
+                                Type = CreditCountType.借据.ToString(),
                             });
                         }
                     }
@@ -48,12 +49,13 @@
                     {
                         Code = credit.LoanCode,
                         Amount = credit.CreditLimit,
-                        Balance = credit.CreditBalance,
+                        Balance = credit.CalculateCreditBalance(),
                         CreateDate = credit.EffectiveDate,
                         EndDate = credit.ExpirationDate,
                         Id = credit.Id,
-                        children = children,
-                        state = "closed"
+                        Children = children,
+                        Type = CreditCountType.授信.ToString(),
+                        State = "closed"
                     });
                 }
             }

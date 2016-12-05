@@ -4,7 +4,6 @@
     using System.Collections.Generic;
     using System.Linq;
     using AutoMapper;
-    using Core.Entities.Customers.Enterprise;
     using Core.Interfaces.Repositories;
     using ViewModels;
     using ViewModels.OrganizationViewModels;
@@ -26,14 +25,7 @@
             customer = Mapper.Map(model, customer);
             repository.Create(customer);
 
-            try
-            {
-                repository.Commit();
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
+            repository.Commit();
         }
 
         public void Modify(OrganizationViewModel model)
@@ -70,6 +62,7 @@
                     });
                 }
             }
+
             return custviewmodelList;
         }
 
@@ -83,9 +76,14 @@
         /// <returns></returns>
         public PagedListViewModel<OragnizateListItemViewModel> GetPageList(string serach, int pageNumber, int pageSize)
         {
+            if (string.IsNullOrEmpty(serach))
+            {
+                serach = string.Empty;
+            }
+
             var pagedlist =
                 repository
-                .PagedList(m => m.Property.InstitutionChName == serach, pageNumber, pageSize);
+                .PagedList(m => m.Property.InstitutionChName.Contains(serach), pageNumber, pageSize);
 
             var list = pagedlist.Select(m =>
                 new OragnizateListItemViewModel

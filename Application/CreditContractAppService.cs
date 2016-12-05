@@ -1,12 +1,11 @@
 ﻿namespace Application
 {
     using System;
-    using System.Collections.Generic;
     using System.Linq;
     using AutoMapper;
     using Core.Entities.Loan;
+    using Core.Exceptions;
     using Core.Interfaces.Repositories;
-    using ViewModels.Loan;
     using ViewModels.Loan.CreditViewModel;
     using X.PagedList;
 
@@ -22,6 +21,11 @@
         public void Create(CreditContractViewModel model)
         {
             var credit = Mapper.Map<CreditContract>(model);
+
+            if (credit.CreditBalance != credit.CalculateCreditBalance())
+            {
+                throw new ArgumentOutOfRangeAppException("", "授信余额不正确.");
+            }
             repository.Create(credit);
             repository.Commit();
         }

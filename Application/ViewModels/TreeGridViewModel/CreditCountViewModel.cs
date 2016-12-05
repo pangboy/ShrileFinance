@@ -1,8 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Application.ViewModels.TreeGrid
+﻿namespace Application.ViewModels.TreeGrid
 {
+    using System;
+    using System.Collections.Generic;
+    using Newtonsoft.Json;
+
+    public enum CreditCountType:byte
+    {
+        授信 = 1,
+        借据 = 2
+    }
+
     public class CreditCountViewModel
     {
         public Guid Id { get; set; }
@@ -30,10 +37,20 @@ namespace Application.ViewModels.TreeGrid
         /// <summary>
         /// 到期时间
         /// </summary>
-        public DateTime  EndDate { get; set; }
+        public DateTime EndDate { get; set; }
 
-        public string state { get; set; }
+        /// <summary>
+        /// 状态
+        /// </summary>
+        [JsonProperty(PropertyName = "state")]
+        public string State { get; set; }
 
-        public ICollection<CreditCountViewModel> children { get; set; }
+        /// <summary>
+        /// 类型
+        /// </summary>
+        public string Type { get; set; }
+
+        [JsonProperty(PropertyName = "children")]
+        public ICollection<CreditCountViewModel> Children { get; set; }
     }
 }

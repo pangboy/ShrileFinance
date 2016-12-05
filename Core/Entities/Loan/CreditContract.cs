@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using Core.Interfaces;
     using Customers.Enterprise;
     using Exceptions;
@@ -28,6 +29,7 @@
             }
 
             GuarantyContract = new HashSet<GuarantyContract>();
+            Loans = new HashSet<Loan>();
         }
 
         public Guid OrganizationId { get; set; }
@@ -131,6 +133,14 @@
         }
 
         /// <summary>
+        /// 计算授信余额
+        /// </summary>
+        /// <returns></returns>
+        public decimal CalculateCreditBalance()
+        {
+            return CreditLimit - Loans.Sum(m => m.Balance);
+        }
+        /// <summary>
         ///  融资额度是否充足
         /// </summary>
         /// <param name="amount">贷款金额</param>
@@ -139,7 +149,7 @@
         {
             if (CreditBalance < amount)
             {
-                throw new ArgumentOutOfRangeAppException(nameof(CreditBalance), "授信余额不足.");
+                return false;
             }
 
             return true;
@@ -153,8 +163,7 @@
         {
             if (ExpirationDate < DateTime.Now)
             {
-                throw new InvalidOperationAppException("不在合同有效期内.");
-                throw new ArgumentOutOfRangeAppException("当前时间", "不在合同有效期内.");
+                return false;
             }
 
             return true;
