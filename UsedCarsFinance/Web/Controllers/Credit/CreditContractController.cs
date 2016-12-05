@@ -15,6 +15,7 @@
             this.service = service;
         }
 
+        [HttpPost]
         public IHttpActionResult Create(CreditContractViewModel model)
         {
             service.Create(model);
@@ -22,6 +23,7 @@
             return Ok();
         }
 
+        [HttpPost]
         public IHttpActionResult Modify(CreditContractViewModel model)
         {
             service.Modify(model);
@@ -32,7 +34,15 @@
         public IHttpActionResult Get(Guid id)
         {
             var creditContract = service.Get(id);
-              return Ok(creditContract);
+
+            return Ok(creditContract);
+        }
+
+        public IHttpActionResult GetCreditBalance(Guid id,decimal limit)
+        {
+            var getCreditBalanc = service.GetCreditBalanc(id,limit);
+
+            return Ok(getCreditBalanc);
         }
 
         [HttpGet]

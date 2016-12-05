@@ -18,7 +18,7 @@
         /// <summary>
         /// 合同编码
         /// </summary>
-        public string LoanCode { get; set; }
+        public string CreditContractCode { get; set; }
 
         /// <summary>
         /// 授信合同生效日期
@@ -43,7 +43,7 @@
         /// <summary>
         /// 合同有效状态
         /// </summary>
-        public StatusEnum ValidStatus { get; set; }
+        public StatusEnum EffectiveStatus { get; set; }
 
         /// <summary>
         /// 是否有担保
@@ -53,6 +53,6 @@
         /// <summary>
         /// 担保合同
         /// </summary>
-        public ICollection<GuranteeContractViewModel> GuranteeContract { get; set; }
+        public virtual ICollection<GuranteeContractViewModel> GuranteeContract { get; set; }
     }
 }

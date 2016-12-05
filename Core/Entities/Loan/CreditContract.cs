@@ -83,9 +83,9 @@
 
         public void ValidateEffective(CreditContract creditContract)
         {
-            if (creditContract.EffectiveDate < creditContract.ExpirationDate)
+            if (creditContract.EffectiveDate > creditContract.ExpirationDate)
             {
-                throw new ArgumentOutOfRangeAppException(nameof(ExpirationDate), "合同终止日期必须小于生效日期.");
+                throw new ArgumentOutOfRangeAppException(nameof(ExpirationDate), "合同终止日期必须小于等于生效日期.");
             }
 
             if (creditContract.CreditBalance > creditContract.CreditLimit)

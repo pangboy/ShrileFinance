@@ -11,15 +11,19 @@
     <script src="../Scripts/easyui/locale/easyui-lang-zh_CN.js"></script>
     <script src="../Scripts/usedcars.js"></script>
     <script>
+        var query = uc.GetParams();
+
         $(function () {
-            Init();
+            if (query.id != null) {
+                Init();
+            }
         });
 
         function Init() {
             $.ajax({
                 async: false,
                 method: "GET",
-                data: { id: "C6750644-A9B7-E611-80C7-507B9DE4A488" },
+                data: { id: query.id },
                 url: "../api/CreditContract/Get",
                 success: function (data) {
                     LoadData(data);
@@ -131,12 +135,17 @@
                 $("div#btn #save").linkbutton("enable");
                 return false;
             }
-
+            if (query.id != null) {
+                url = "../api/CreditContract/Modify";
+            }
+            else {
+                url = "../api/CreditContract/Create";
+            }
             $.ajax({
                 async: false,
                 method: "POST",
                 data: model,
-                url: "../api/CreditContract/Create",
+                url: url,
                 statusCode: {
                     200: function (data) {
                         top.$.messager.show({ msg: "提交成功" });
@@ -161,6 +170,26 @@
             }
         }
 
+        function GetCreditBalance() {
+            if ($("#id").val() == "") {
+                $("#CreditBalance").textbox("setValue", $("#CreditLimit").textbox("getValue") + 1)
+            }
+            else {
+                $.ajax({
+                    async: false,
+                    method: "GET",
+                    data: { id: query.id, limit: $("#CreditLimit").textbox("getValue") },
+                    url: "../api/CreditContract/GetCreditBalance",
+                    statusCode: {
+                        200: function (data) {
+                            $("#CreditBalance").textbox("setValue", data)
+                        },
+                    }
+                });
+            }
+        }
+        }
+
         function UpdateCreditLimit() {
             var CreditLimit = $("fieldset#CreditContract input[textboxname=CreditLimit]").textbox('getValue');
 
@@ -180,16 +209,16 @@
         <fieldset id="CreditContract">
             <legend>贷款合同</legend>
             <input id="id" name="Id" hidden />
-            <input id="OrganizationId" name="OrganizationId" hidden value="F1BA3A48-65B8-E611-80C7-507B9DE4A488">
+            <input id="OrganizationId" name="OrganizationId" hidden value="6271B4F7-BEBA-E611-80C7-507B9DE4A488">
             <div class="row">
                 <div class="col-6">
                     <label>合同编码:</label>
-                    <input name="LoanCode" id="LoanCode" class="easyui-textbox" data-options="required:true" />
+                    <input name="CreditContractCode" id="CreditContractCode" class="easyui-textbox" data-options="required:true" />
                 </div>
 
                 <div class="col-6">
                     <label>合同有效状态:</label>
-                    <select id="ValidStatus" name="ValidStatus" class="easyui-combobox" data-options="required:true,editable:false">
+                    <select id="EffectiveStatus" name="EffectiveStatus" class="easyui-combobox" data-options="required:true,editable:false">
                         <option value="0">生效</option>
                         <option value="1">失效</option>
                         <option value="2">未结清</option>
@@ -200,13 +229,14 @@
             <div class="row">
                 <div class="col-6">
                     <label>授信额度:</label>
+                    <input name="CreditLimit" id="CreditLimit" class="easyui-textbox" data-options="required:true,onChange:GetCreditBalance" />
                     <input name="CreditLimit" id="CreditLimit" class="easyui-textbox" data-options="required:true,onChange:UpdateCreditLimit" />
                     <span class="unit">元</span>
                 </div>
 
                 <div class="col-6">
                     <label>授信余额:</label>
-                    <input name="CreditBalance" id="CreditBalance" class="easyui-textbox" data-options="required:true" />
+                    <input name="CreditBalance" id="CreditBalance" class="easyui-textbox" data-options="required:true" readonly />
                     <span class="unit">元</span>
                 </div>
             </div>
