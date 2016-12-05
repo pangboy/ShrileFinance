@@ -21,9 +21,18 @@
         }
 
         function CreditEdit() {
-            var url = "";
+            var url = "Loan/CreditContractEdit.html";
             if (this.id == "creditadd") {
-                url = "Loan/CreditContractEdit.html";
+                url =url
+            }
+            else if (this.id == "creditmod") {
+                var row = $("#dg").datagrid("getSelected");
+                if (row == null) {
+                    top.$.messager.show({ msg: "请选择一行" });
+                }
+                else {
+                    url = url + "?id=" + row.Id+"&status=1";
+                }
             }
             uc.ShowWindow("授信申请", url);
         }
@@ -43,12 +52,12 @@
         <thead>
             <tr>
                 <th data-options="field:'Id',hidden:true">Id</th>
-                <th data-options="field:'LoanCode',width:150,align:'center'">合同编码</th>
+                <th data-options="field:'CreditContractCode',width:150,align:'center'">合同编码</th>
                 <th data-options="field:'CreditLimit',width:100,align:'center'">授信额度</th>
                 <th data-options="field:'CreditBalance',width:200,align:'center'">授信余额</th>
                 <th data-options="field:'EffectiveDate',width:120,align:'center'">合同生效日期</th>
                 <th data-options="field:'ExpirationDate',width:120,align:'center'">合同终止日期</th>
-                <th data-options="field:'ValidStatus',width:120,align:'center'">合同状态</th>
+                <th data-options="field:'EffectiveStatus',width:120,align:'center'">合同状态</th>
             </tr>
         </thead>
     </table>
