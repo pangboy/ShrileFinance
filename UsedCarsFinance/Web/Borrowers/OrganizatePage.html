@@ -12,6 +12,7 @@
     <script src="../Scripts/easyui/locale/easyui-lang-zh_CN.js"></script>
     <script src="JS/BorrowerMethod.js"></script>
     <script src="JS/validType.js"></script>
+    <script src="../Scripts/usedcars.js"></script>
 
     <style type="text/css">
         div.easyui-accordion div.panel div.accordion-header {
@@ -127,7 +128,7 @@
             //data["AssociatedEnterprises"] = FieldsetSerializeFactory('AssociatedEnterprises', 'table');
 
             $(['Base', 'Property', 'State', 'Contact']).each(function (i, e) {
-                data[e] = FieldsetSerializeFactory(e,'text');
+                data[e] = FieldsetSerializeFactory(e, 'text');
             });
 
             $(['Managers', 'Shareholders', 'AssociatedEnterprises']).each(function (i, e) {
@@ -300,7 +301,7 @@
                     $("#submit").linkbutton("disable");
                 }
             }
-            }
+        }
 
         // 提交按钮
         function OrganizateSubmit() {
@@ -359,9 +360,8 @@
         function OrganizateCancel() {
             // 清空表单，避免再次打开时闪现之前填入的数据
             $('input[type=reset]').click();
-
-            // 关闭弹窗
-            self.parent.$("#Organizate_dd").dialog({ closed: true });
+            
+            self.parent.uc.CloseWindow();
         }
 
         // 数据校验

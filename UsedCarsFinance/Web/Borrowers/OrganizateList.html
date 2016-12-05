@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>机构信息列表</title>
     <meta charset="utf-8" />
     <link href="../Content/easyui/themes/bootstrap/easyui.css" rel="stylesheet" />
@@ -53,63 +53,67 @@
         <div style="height:30px;">
             <div style="height:30px; width:100%;">
                 <input id="search" name="Search" class="easyui-textbox" style="width: 200px;height:25px; margin-top:3px;" data-options="prompt:'请输入机构名称'" />
-                <a  class="easyui-linkbutton" href="javascript:void(0)" style="width: auto;height:25px; margin-top:3px;" data-options="iconCls:'icon-search',onClick:Reload">搜索</a>
+                <a class="easyui-linkbutton" href="javascript:void(0)" style="width: auto;height:25px; margin-top:3px;" data-options="iconCls:'icon-search',onClick:Reload">搜索</a>
             </div>
         </div>
 
         <div>
-            <a id="add" class="easyui-linkbutton" href="javascript:void(0)" data-options="iconCls:'icon-add',plain:true,onClick:PrganizateEdit," >添加</a>
-            <a id="mod" class="easyui-linkbutton" href="javascript:void(0)" data-options="iconCls:'icon-edit',plain:true,onClick:PrganizateEdit," >修改</a>
-            <a id="view" class="easyui-linkbutton" href="javascript:void(0)" data-options="iconCls:'icon-search',plain:true,onClick:PrganizateEdit," >查看详情</a>
+            <a id="add" class="easyui-linkbutton" href="javascript:void(0)" data-options="iconCls:'icon-add',plain:true,onClick:PrganizateEdit,">添加</a>
+            <a id="mod" class="easyui-linkbutton" href="javascript:void(0)" data-options="iconCls:'icon-edit',plain:true,onClick:PrganizateEdit,">修改</a>
+            <a id="view" class="easyui-linkbutton" href="javascript:void(0)" data-options="iconCls:'icon-search',plain:true,onClick:PrganizateEdit,">查看详情</a>
         </div>
     </div>
 
     <script type="text/javascript">
-                    // table onSelect事件
-                    function PrganizateSelect(index, row) {
-                        if (row) {
-                            $("#mod").linkbutton("enable");
-                            $("#del").linkbutton("enable");
-                            $("#view").linkbutton("enable");
-                        }
+        // table onSelect事件
+        function PrganizateSelect(index, row) {
+            if (row) {
+                $("#mod").linkbutton("enable");
+                $("#del").linkbutton("enable");
+                $("#view").linkbutton("enable");
+            }
+        }
+
+        // table 删除按钮
+        function PrganizateDelete() {
+            var row = $('#dg').datagrid('getSelected');
+
+            if (row) {
+                $.messager.confirm('确认', '确认删除该家族成员信息?', function (r) {
+                    if (r) {
+                        var rowIndex = $('#dg').datagrid('getRowIndex', row);
+
+                        $('#dg').datagrid('deleteRow', rowIndex);
                     }
+                })
+            }
+        }
 
-                    // table 删除按钮
-                    function PrganizateDelete() {
-                        var row = $('#dg').datagrid('getSelected');
+        uc.grid = new UCGrid("#dg");
 
-                        if (row) {
-                            $.messager.confirm('确认', '确认删除该家族成员信息?', function (r) {
-                                if (r) {
-                                    var rowIndex = $('#dg').datagrid('getRowIndex', row);
+        // table 添加/编辑按钮
+        function PrganizateEdit() {
+            var url = "Borrowers/OrganizatePage.html?method=" + this.id;
 
-                                    $('#dg').datagrid('deleteRow', rowIndex);
-                                }
-                            })
-                        }
-                    }
+            if (this.id != "add") {
+                var row = $('#dg').datagrid('getSelected');
+                if (row) {
+                    url += "&Id=" + row.Id;
+                }
+                else {
+                    return false;
+                }
+            }
+            uc.ShowWindow("机构信息", url);
 
-                    // table 添加/编辑按钮
-                    function PrganizateEdit() {
-                        var url = "OrganizatePage.html?method=" + this.id;
+            //$("#Organizate_frame").attr("src", url);
 
-                        if (this.id != "add") {
-                            var row = $('#dg').datagrid('getSelected');
-                            if (row) {
-                                url += "&Id=" + row.Id;
-                            }
-                            else {
-                                return false;
-                            }
-                        }
-
-                        $("#Organizate_frame").attr("src", url);
-
-                        // 打开弹窗
-                        $("#Organizate_dd").dialog({ closed: false });
-                    }
+            //// 打开弹窗
+            ////$("#Organizate_dd").dialog({ closed: false });
+            //$("#Organizate_dd").window("open");
+        }
     </script>
-    <div id="Organizate_dd" class="easyui-dialog" data-options="title:'机构信息',width:'100%',height:'700px',top:0,modal:true,closed:true">
+    <div id="Organizate_dd" class="easyui-window" data-options="title:'机构信息',width:'100%',height:'100%',top:0,modal:true,closed:true">
         <iframe id="Organizate_frame" name="Prganizate_frame" src="about:blank" style="width:100%;height:100%; border:0;"></iframe>
     </div>
 </body>
