@@ -91,14 +91,20 @@
             return value;
         }
 
-        function ValidData() {
-            var validResult = $("form").form("validate");
-
-            if (!validResult) {
+        function ValidData(data) {
+            if (!$("form").form("validate")) {
                 $.messager.show({ msg: "请填写完必填项！" });
+                return false;
             }
 
-            return validResult;
+            if (data.MortgageGuarantyContractViewModel) {
+                if (data.MortgageGuarantyContractViewModel.SigningDate < data.MortgageGuarantyContractViewModel.AssessmentDate) {
+                    $.messager.show({ msg: "合同签订日期不得在抵押物评估日期之前！" });
+                    return false;
+                }
+            }
+
+            return true;
         }
     </script>
 
@@ -175,8 +181,8 @@
             });
 
             if (GetQueryString("method") == "GuarantorContract_add") {
-                $("form input[textboxname=PledgeNumber]").textbox({ validType: ["NumberLimit["+[1,1]+"]", "N", "length[2,2]"] });
-                $("form input[textboxname=MortgageNumber]").textbox({ validType: ["NumberLimit["+[2,1]+"]", "N", "length[2,2]"] });
+                $("form input[textboxname=PledgeNumber]").textbox({ validType: ["NumberLimit[" + [1, 1] + "]", "N", "length[2,2]"] });
+                $("form input[textboxname=MortgageNumber]").textbox({ validType: ["NumberLimit[" + [2, 1] + "]", "N", "length[2,2]"] });
             }
             else if (GetQueryString("method") == "GuarantorContract_mod") {
                 $("form input[textboxname=PledgeNumber]").textbox({ validType: ["NumberLimit[" + [1, 2] + "]", "N", "length[2,2]"] });
@@ -201,13 +207,16 @@
         }
 
         function Submit() {
-            if (!ValidData()) {
-                return false;
-            }
+            $("div#btn #sava").linkbutton("disable");
 
             // 更新担保合同表
             var method = GetQueryString("method");
             var data = BuildData();
+
+            if (!ValidData(data)) {
+                $("div#btn #sava").linkbutton("enable");
+                return false;
+            }
 
             if (method == "GuarantorContract_mod") {
                 //获取选中行
@@ -341,7 +350,7 @@
                     </div>
                     <div class="col-6">
                         <label>评估机构组织机构代码：</label>
-                        <input name="AssessmentOrganizationCode" class="easyui-textbox" data-options="required:false,value:'',validType:['length[0,10]','OrganizateCode']" />
+                        <input name="AssessmentOrganizationCode" class="easyui-textbox" data-options="required:false,value:'',validType:['length[0,10]','OrganizateCode[true]']" />
                     </div>
                     <div class="col-6">
                         <label>抵押物评估日期：</label>
@@ -368,6 +377,7 @@
                     <label>保证人名称：</label>
                     <input name="Name" class="easyui-textbox" data-options="validType:['length[0,80]'],required:true" />
                 </div>
+                
                 <template id="GuarantorInfo_Person">
                     <div class="col-6">
                         <label>证件类型：</label>

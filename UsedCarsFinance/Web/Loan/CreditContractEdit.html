@@ -82,7 +82,7 @@
         }
 
         function BuildData() {
-            var value = $("#ff fieldset#CreditContract").serializeJson();
+            var value = $("form#ff fieldset#CreditContract").serializeJson();
 
             if (value.IsGuarantee == 1)
             {
@@ -109,9 +109,13 @@
 
                 return false;
             }
+
+            return true;
         }
 
         function Submit() {
+            $("div#btn #sava").linkbutton("disable");
+
             var model = BuildData(); //$("#ff").serializeJson();
 
             if (model.IsGuarantee == "0") {
@@ -123,16 +127,18 @@
             if (!ValidData(model)) {
                 return false;
             }
-
+            debugger
             $.ajax({
                 async: false,
                 method: "POST",
-                data: model,
+                data: { model:model},
                 url: "../api/CreditContract/Create",
                 success: function (data) {
                     top.$.messager.show({ msg: "提交成功！" });
                 }
             });
+
+            //$("div#btn #sava").linkbutton("enable");
         }
         function ChooseGuarantee() {
             ////if ($("#IsGuarantee").textbox("getValue") == "1" || $("#IsGuarantee").textbox("getValue") == "true") {
@@ -281,7 +287,7 @@
                     $("#GuarantorContract_dd").dialog({ closed: false, top: $(this).offset().top });
                 }
             </script>
-            <div id="GuarantorContract_dd" class="easyui-dialog" data-options="title:'担保合同',width:'1100px',height:'700px',top:0,modal:true,closed:true">
+            <div id="GuarantorContract_dd" class="easyui-dialog" data-options="title:'担保合同',width:'1130px',height:'700px',top:0,modal:true,closed:true">
                 <iframe id="GuarantorContract_frame" name="family_frame" src="about:blank" style="width:100%;height:99%; border:0;"></iframe>
             </div>
         </fieldset>
