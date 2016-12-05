@@ -18,11 +18,19 @@
             param.organizateId = $("#InstitutionChName").combobox("getValue");
         }
         function OnLoadSuccess(data) {
+            //数据加载成功之后移除图标
             $(".tree-icon.tree-folder ").remove();
             $(".tree-icon.tree-file").remove();
         }
+        //当结点展开时移除文件夹图标
         function OnCollapse() {
             $(".tree-title.tree-folder-open").removeClass("tree-folder-open")
+        }
+
+        function OnExpand(row) {
+            if (row.children.length == 0) {
+                return false;
+            }
         }
     </script>
 </head>
@@ -39,11 +47,13 @@
             url: '../api/Customer/TreeGridPageList',
             onBeforeLoad: BeforeLoad,
             onExpand:OnCollapse,
+           onBeforeExpand:OnExpand,
             onLoadSuccess:OnLoadSuccess
            ">
         <thead>
             <tr>
                 <th data-options="field:'Code',width:180">编号</th>
+                <th data-options="field:'Type',width:80">类型</th>
                 <th data-options="field:'Amount',width:80">金额</th>
                 <th data-options="field:'Balance',width:60">余额</th>
                 <th data-options="field:'CreateDate',width:200">生成时间</th>
@@ -54,7 +64,7 @@
 
     <div id="tb">
         <div style="height:40px;">
-            <div style="height:40px; width:auto;">
+            <div style="height:30px; width:auto;">
                 <select name="InstitutionChName" id="InstitutionChName" class="easyui-combobox" data-options="method: 'GET',
                         url: '../api/Customer/GetAll',
                         editable:false,

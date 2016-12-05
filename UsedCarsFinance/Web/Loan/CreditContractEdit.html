@@ -133,8 +133,13 @@
                 method: "POST",
                 data: { model:model},
                 url: "../api/CreditContract/Create",
-                success: function (data) {
-                    top.$.messager.show({ msg: "提交成功！" });
+                statusCode: {
+                    200: function (data) {
+                        top.$.messager.show({ msg: "提交成功" });
+                    },
+                    400: function (data) {
+                        top.$.messager.show({ msg: data.responseJSON.Message });
+                    }
                 }
             });
 
@@ -209,8 +214,8 @@
                 <div class="col-6">
                     <label>是否有担保:</label>
                     <select id="IsGuarantee" name="IsGuarantee" class="easyui-combobox" data-options="required:true,editable:false,onChange:ChooseGuarantee">
-                        <option value="0">否</option>
                         <option value="1">是</option>
+                        <option value="0">否</option>
                     </select>
                 </div>
             </div>

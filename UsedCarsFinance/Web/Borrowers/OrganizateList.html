@@ -11,6 +11,15 @@
     <script src="../Scripts/easyui/jquery.easyui.js"></script>
     <script src="../Scripts/easyui/locale/easyui-lang-zh_CN.js"></script>
     <script src="../Scripts/usedcars.js"></script>
+    <script>
+        uc.grid = new UCGrid("#dg");
+        function Reload() {
+            uc.grid.Reload();
+        }
+        function BeforeLoad(param) {
+            param.Search = $("#search").textbox("getValue");
+        }
+    </script>
 </head>
 <body>
     <table id="dg" class="easyui-datagrid" data-options="height:630,
@@ -23,21 +32,31 @@
            pageList :[10,20,30,40,50],
            method :'GET' ,
            url :'../api/Customer/GetPageList' ,
-           queryParams:{Search:'严冬真'},
-           loadMsg :'正在加载，请稍候...'
+           loadMsg :'正在加载，请稍候...',
+           onBeforeLoad: BeforeLoad
            ">
         <thead>
             <tr>
+                <th data-options="field:'Id',hidden:true">id</th>
                 <th data-options="field:'InstitutionChName',width:500,align:'center'">机构名称</th>
                 <th data-options="field:'CustomerNumber',width:300,align:'center'">客户号</th>
                 <th data-options="field:'ManagementerCode',width:200,align:'center'">管理行代码</th>
                 <th data-options="field:'LoanCardCode',width:200,align:'center'">中征码</th>
                 <th data-options="field:'InstitutionCreditCode',width:200,align:'center'">机构信用代码</th>
+                <th data-options="field:'CreatedDate',width:200,align:'center'">机构信用代码</th>
+
             </tr>
         </thead>
     </table>
 
     <div id="tb">
+        <div style="height:30px;">
+            <div style="height:30px; width:100%;">
+                <input id="search" name="Search" class="easyui-textbox" style="width: 200px;height:25px; margin-top:3px;" data-options="prompt:'请输入机构名称'" />
+                <a  class="easyui-linkbutton" href="javascript:void(0)" style="width: auto;height:25px; margin-top:3px;" data-options="iconCls:'icon-search',onClick:Reload">搜索</a>
+            </div>
+        </div>
+
         <div>
             <a id="add" class="easyui-linkbutton" href="javascript:void(0)" data-options="iconCls:'icon-add',plain:true,onClick:PrganizateEdit," >添加</a>
             <a id="mod" class="easyui-linkbutton" href="javascript:void(0)" data-options="iconCls:'icon-edit',plain:true,onClick:PrganizateEdit," >修改</a>

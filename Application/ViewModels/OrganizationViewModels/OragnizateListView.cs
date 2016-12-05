@@ -33,5 +33,10 @@
         /// 机构信用代码
         /// </summary>
         public string InstitutionCreditCode { get; set; }
+
+        /// <summary>
+        /// 创建时间
+        /// </summary>
+        public DateTime CreatedDate { get; set; }
     }
 }
