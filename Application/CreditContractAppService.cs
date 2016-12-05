@@ -142,5 +142,11 @@
 
             return models;
         }
+
+        public decimal GetCreditBalanc(Guid id,decimal limit)
+        {
+           var creditContract = repository.Get(id);
+            return creditContract.CalculateCreditBalance()+(limit - creditContract.CreditLimit);
+        }
     }
 }
