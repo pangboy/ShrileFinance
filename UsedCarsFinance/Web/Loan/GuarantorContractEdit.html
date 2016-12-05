@@ -71,7 +71,10 @@
                 value.MarginTxt = $("fieldset[name=Contract] input[textboxname=Margin]").combobox('getText');
                 value.EffectiveStateTxt = $("fieldset[name=Contract] select[textboxname=EffectiveState]").combobox('getText');
                 value.SigningDateTxt = $("fieldset[name=Contract] input[textboxname=SigningDate]").combobox('getText');
-                value.ContractNumber = $("fieldset[name=Contract] input[textboxname*=Number]").textbox('getValue');
+
+                if ($("fieldset[name=Contract] input[textboxname*=Number]")[0] != undefined) {
+                    value.ContractNumber = $("fieldset[name=Contract] input[textboxname*=Number]").textbox('getValue');
+                }
             }
 
             // 映射保证人
@@ -190,7 +193,7 @@
             }
         }
 
-        // 保证人类型
+        // 选择保证人类型
         function ChangeGuarantorType() {
             //$.messager.show({ msg: "保证人类型：" + $(this).combobox('getValue') });
 
@@ -207,14 +210,14 @@
         }
 
         function Submit() {
-            $("div#btn #sava").linkbutton("disable");
+            $("div#btn #save").linkbutton("disable");
 
             // 更新担保合同表
             var method = GetQueryString("method");
             var data = BuildData();
 
             if (!ValidData(data)) {
-                $("div#btn #sava").linkbutton("enable");
+                $("div#btn #save").linkbutton("enable");
                 return false;
             }
 
@@ -282,7 +285,7 @@
                 </div>
                 <div class="col-6" id="base">
                     <label>保证金额：</label>
-                    <input name="Margin" class="easyui-textbox" data-options="validType:[],required:false,readonly:true" /><!--validType:['length[0,20]','Amount'],required:false" />-->
+                    <input name="Margin" class="easyui-textbox" data-options="validType:[],required:false,readonly:true" />
                     <span class="unit">元</span>
                 </div>
                 <div class="col-6" id="base">
@@ -315,7 +318,7 @@
                     </div>
                     <div class="col-6">
                         <label>质押物价值：</label>
-                        <input name="CollateralValue" class="easyui-textbox" data-options="required:true,value:'',validType:['length[0,20]','Amount']" />
+                        <input name="CollateralValue" class="easyui-textbox" data-options="required:true,value:'',validType:['length[0,20]','Money']" />
                         <span class="unit">元</span>
                     </div>
                 </template>
@@ -337,7 +340,7 @@
                     </div>
                     <div class="col-6">
                         <label>抵押物评估价值：</label>
-                        <input name="AssessmentValue" class="easyui-textbox" data-options="required:true,value:'',validType:['length[0,20]','Amount']" />
+                        <input name="AssessmentValue" class="easyui-textbox" data-options="required:true,value:'',validType:['length[0,20]','Money']" />
                         <span class="unit">元</span>
                     </div>
                     <div class="col-12">
@@ -377,7 +380,7 @@
                     <label>保证人名称：</label>
                     <input name="Name" class="easyui-textbox" data-options="validType:['length[0,80]'],required:true" />
                 </div>
-                
+
                 <template id="GuarantorInfo_Person">
                     <div class="col-6">
                         <label>证件类型：</label>
