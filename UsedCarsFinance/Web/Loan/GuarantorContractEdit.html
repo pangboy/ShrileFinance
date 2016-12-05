@@ -71,7 +71,10 @@
                 value.MarginTxt = $("fieldset[name=Contract] input[textboxname=Margin]").combobox('getText');
                 value.EffectiveStateTxt = $("fieldset[name=Contract] select[textboxname=EffectiveState]").combobox('getText');
                 value.SigningDateTxt = $("fieldset[name=Contract] input[textboxname=SigningDate]").combobox('getText');
-                value.ContractNumber = $("fieldset[name=Contract] input[textboxname*=Number]").textbox('getValue');
+
+                if ($("fieldset[name=Contract] input[textboxname*=Number]")[0] != undefined) {
+                    value.ContractNumber = $("fieldset[name=Contract] input[textboxname*=Number]").textbox('getValue');
+                }
             }
 
             // 映射保证人
@@ -91,15 +94,20 @@
             return value;
         }
 
-        function ValidData() {
-            var validResult = $("form").form("validate");
-
-            if (!validResult)
-            {
-                $.messager.show({ msg: "验证未通过！" });
+        function ValidData(data) {
+            if (!$("form").form("validate")) {
+                $.messager.show({ msg: "请填写完必填项！" });
+                return false;
             }
 
-            return validResult;
+            if (data.MortgageGuarantyContractViewModel) {
+                if (data.MortgageGuarantyContractViewModel.SigningDate < data.MortgageGuarantyContractViewModel.AssessmentDate) {
+                    $.messager.show({ msg: "合同签订日期不得在抵押物评估日期之前！" });
+                    return false;
+                }
+            }
+
+            return true;
         }
     </script>
 
@@ -109,7 +117,7 @@
 
             if (method == "GuarantorContract_mod" || method == "GuarantorContract_view") {
                 // 获取选中行
-                var row = self.parent.$("#GuarantorContract_dg").datagrid('getSelected');
+                var row = self.parent.$("form table#GuarantorContract_dg").datagrid('getSelected');
                 if (row) {
                     // 加载数据
                     LoadData(row);
@@ -123,12 +131,13 @@
                     $("#save").linkbutton("disable");
                 }
             }
+
+            // 保证金额 = 贷款合同授信额度
+            $("fieldset[name=Contract] input[textboxname=Margin]").textbox("setValue", self.parent.$("fieldset#CreditContract input[textboxname=CreditLimit]").textbox('getValue'));
         }
-        
+
         // 选择合同类型
         function ChangeContractType() {
-            //$.messager.show({ msg: "合同类型：" + $(this).combobox('getValue') });
-
             $("div[name=ContractInfo]>div[id!=base]").remove();
 
             if ($(this).combobox('getValue') == "1") {
@@ -139,9 +148,52 @@
             }
 
             $.parser.parse($("div[name=ContractInfo]>div[id!=base]"));
+
+            // 序号校验
+            $.extend($.fn.validatebox.defaults.rules, {
+                NumberLimit: {
+                    validator: function (value, param) {
+                        var pleNumArray = [];
+                        var morNumArray = [];
+
+                        $(self.parent.$("form table#GuarantorContract_dg").datagrid('getRows')).each(function (i, e) {
+                            if (e.ContractType == 1) {
+                                pleNumArray.push(e.ContractNumber);
+
+                                if (param[1] == 2 && value == e.ContractNumber) {
+                                    pleNumArray.pop();
+                                }
+                            }
+                            else {
+                                morNumArray.push(e.ContractNumber);
+                                if (param[1] == 2 && value == e.ContractNumber) {
+                                    morNumArray.pop();
+                                }
+                            }
+                        });
+
+                        if (param[0] == 1) {
+                            return $.inArray(value, pleNumArray) == -1;
+                        }
+                        else if (param[0] == 2) {
+                            return $.inArray(value, morNumArray) == -1;
+                        }
+                    },
+                    message: '该序号已存在'
+                }
+            });
+
+            if (GetQueryString("method") == "GuarantorContract_add") {
+                $("form input[textboxname=PledgeNumber]").textbox({ validType: ["NumberLimit[" + [1, 1] + "]", "N", "length[2,2]"] });
+                $("form input[textboxname=MortgageNumber]").textbox({ validType: ["NumberLimit[" + [2, 1] + "]", "N", "length[2,2]"] });
+            }
+            else if (GetQueryString("method") == "GuarantorContract_mod") {
+                $("form input[textboxname=PledgeNumber]").textbox({ validType: ["NumberLimit[" + [1, 2] + "]", "N", "length[2,2]"] });
+                $("form input[textboxname=MortgageNumber]").textbox({ validType: ["NumberLimit[" + [2, 2] + "]", "N", "length[2,2]"] });
+            }
         }
 
-        // 保证人类型
+        // 选择保证人类型
         function ChangeGuarantorType() {
             //$.messager.show({ msg: "保证人类型：" + $(this).combobox('getValue') });
 
@@ -158,13 +210,16 @@
         }
 
         function Submit() {
-            if (!ValidData()) {
-                return false;
-            }
+            $("div#btn #save").linkbutton("disable");
 
             // 更新担保合同表
             var method = GetQueryString("method");
             var data = BuildData();
+
+            if (!ValidData(data)) {
+                $("div#btn #save").linkbutton("enable");
+                return false;
+            }
 
             if (method == "GuarantorContract_mod") {
                 //获取选中行
@@ -230,7 +285,7 @@
                 </div>
                 <div class="col-6" id="base">
                     <label>保证金额：</label>
-                    <input name="Margin" class="easyui-textbox" data-options="validType:['length[0,20]','Amount'],required:true" />
+                    <input name="Margin" class="easyui-textbox" data-options="validType:[],required:false,readonly:true" />
                     <span class="unit">元</span>
                 </div>
                 <div class="col-6" id="base">
@@ -263,7 +318,7 @@
                     </div>
                     <div class="col-6">
                         <label>质押物价值：</label>
-                        <input name="CollateralValue" class="easyui-textbox" data-options="required:true,value:'',validType:['length[0,20]','Amount']" />
+                        <input name="CollateralValue" class="easyui-textbox" data-options="required:true,value:'',validType:['length[0,20]','Money']" />
                         <span class="unit">元</span>
                     </div>
                 </template>
@@ -285,20 +340,20 @@
                     </div>
                     <div class="col-6">
                         <label>抵押物评估价值：</label>
-                        <input name="AssessmentValue" class="easyui-textbox" data-options="required:true,value:'',validType:['length[0,20]','Amount']" />
+                        <input name="AssessmentValue" class="easyui-textbox" data-options="required:true,value:'',validType:['length[0,20]','Money']" />
                         <span class="unit">元</span>
                     </div>
                     <div class="col-12">
-                        <label>抵押物说明</label>
+                        <label>抵押物说明：</label>
                         <input name="CollateralInstruction" class="easyui-textbox" data-options="required:true,value:'',validType:['length[0,400]','ANC'],multiline:true,height:80" />
                     </div>
                     <div class="col-12">
                         <label>评估机构名称：</label>
-                        <input name="AssessmentName" class="easyui-textbox" data-options="required:true,value:'',validType:['length[0,80]','ANC']" />
+                        <input name="AssessmentName" class="easyui-textbox" data-options="required:false,value:'',validType:['length[0,80]','ANC']" />
                     </div>
                     <div class="col-6">
                         <label>评估机构组织机构代码：</label>
-                        <input name="AssessmentOrganizationCode" class="easyui-textbox" data-options="required:false,value:'',validType:['length[0,10]','OrganizateCode']" />
+                        <input name="AssessmentOrganizationCode" class="easyui-textbox" data-options="required:false,value:'',validType:['length[0,10]','OrganizateCode[true]']" />
                     </div>
                     <div class="col-6">
                         <label>抵押物评估日期：</label>
@@ -318,12 +373,14 @@
         </fieldset>
 
         <fieldset name="Guarantor">
+            <legend>保证人</legend>
             <div class="row" name="GuarantorInfo">
                 <input name="Id" type="hidden" placeholder="保证人标识" />
                 <div class="col-12" id="base">
                     <label>保证人名称：</label>
                     <input name="Name" class="easyui-textbox" data-options="validType:['length[0,80]'],required:true" />
                 </div>
+
                 <template id="GuarantorInfo_Person">
                     <div class="col-6">
                         <label>证件类型：</label>

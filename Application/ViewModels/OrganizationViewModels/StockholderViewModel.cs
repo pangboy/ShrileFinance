@@ -12,7 +12,7 @@
     [MajorShareholdersPeriod_TR(ErrorMessage = "证件类型/登记注册号类型 值错误")]
     public class StockholderViewModel
     {
-        public Guid Id { get; set; }
+        public Guid? Id { get; set; }
 
         /// <summary>
         /// 股东类型

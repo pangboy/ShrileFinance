@@ -12,49 +12,146 @@
     <script src="../Scripts/usedcars.js"></script>
     <script>
         $(function () {
+            Init();
+        });
+
+        function Init() {
             $.ajax({
                 async: false,
                 method: "GET",
                 data: { id: "C6750644-A9B7-E611-80C7-507B9DE4A488" },
                 url: "../api/CreditContract/Get",
                 success: function (data) {
-                    $("#ff").form("load", data)
+                    LoadData(data);
                 }
             });
+        }
+
+        function LoadData(data) {
+            if (data == null) {
+                return;
+            }
+
+            // 加载贷款合同基本信息
+            $("#ff fieldset#CreditContract").form("load", data);
 
             // 显示/隐藏 担保合同列表
-            var isGuarantee = $("#IsGuarantee").combobox("getValue");
-            if (isGuarantee != undefined)
-            {
-                if (isGuarantee==true || isGuarantee==1) {
+            var isGuarantee = $("fieldset#CreditContract #IsGuarantee").combobox("getValue");
+
+            if (isGuarantee != undefined) {
+                if (isGuarantee == true || isGuarantee == 1) {
                     isGuarantee = 1;
                 }
                 else {
                     isGuarantee = 0;
                 }
-                $("#IsGuarantee").combobox("unselect", isGuarantee).combobox('select', isGuarantee);
+
+                $("fieldset#CreditContract #IsGuarantee").combobox('setValue', isGuarantee).combobox("unselect", isGuarantee).combobox('select', isGuarantee);
             }
-        })
+
+            if (IsGuarantee == 1 && data.GuranteeContract != null) {
+                // 担保合同数据扩展
+                $(data.GuranteeContract).each(function (i, e) {
+                    if (e.ContractType == 1) {
+                        e.ContractTypeTxt = "抵押合同";
+                        e.MarginTxt = e.MortgageGuarantyContractViewModel.Margin;
+                        e.EffectiveStateTxt = e.MortgageGuarantyContractViewModel.EffectiveState;
+                        e.SigningDateTxt = e.MortgageGuarantyContractViewModel.SigningDate;
+                        e.ContractNumber = e.MortgageGuarantyContractViewModel.MortgageNumber;
+                    }
+                    else if (e.ContractType == 2) {
+                        e.ContractTypeTxt = "质押合同";
+                        e.MarginTxt = e.PledgeGuarantyContractViewModel.Margin;
+                        e.EffectiveStateTxt = e.PledgeGuarantyContractViewModel.EffectiveState;
+                        e.SigningDateTxt = e.PledgeGuarantyContractViewModel.SigningDate;
+                        e.ContractNumber = e.PledgeGuarantyContractViewModel.PledgeNumber;
+                    }
+
+                    if (e.GuarantorType == 1) {
+                        e.GuarantorTypeTxt = "自然人";
+                    }
+                    else if (e.GuarantorType == 2) {
+                        e.GuarantorTypeTxt = "机构";
+                    }
+                });
+
+                // 数据存储和展示
+                $("fieldset#GuarantorContract table#GuarantorContract_dg").datagrid('loadData', data.GuranteeContract);
+            }
+        }
+
+        function BuildData() {
+            var value = $("form#ff fieldset#CreditContract").serializeJson();
+
+            if (value.IsGuarantee == 1) {
+                value.GuranteeContract = $("fieldset#GuarantorContract table#GuarantorContract_dg").datagrid('getRows');
+                // 修正担保合同保证金额（贷款授信额度）
+                $(value.GuranteeContract).each(function (i, e) {
+                    e.Margin = $('fieldset#CreditContract input[textboxname=CreditLimit]').textbox('getValue');
+                });
+            }
+
+            return value;
+        }
+
+        function ValidData(data) {
+            if (!$("form").form("validate")) {
+                $.messager.show({ msg: '请填写完必填项！' });
+
+                return false;
+            }
+
+            if (data.EffectiveDate > data.ExpirationDate) {
+                $.messager.show({ msg: '授信合同终止日期不得在生效日期之前！' });
+
+                return false;
+            }
+
+            if (data.IsGuarantee == 1 && data.GuranteeContract.length == 0) {
+                $.messager.show({ msg: '请添加担保合同！' });
+
+                return false;
+            }
+
+            return true;
+        }
+
         function Submit() {
-            var model = $("#ff").serializeJson();
-            if (model.IsGuarantee == "0") model.IsGuarantee = false; else model.IsGuarantee = true
+            $("div#btn #save").linkbutton("disable");
+
+            var model = BuildData();
+
+            if (model.IsGuarantee == "0") {
+                model.IsGuarantee = false;
+            } else {
+                model.IsGuarantee = true
+            }
+
+            if (!ValidData(model)) {
+                $("div#btn #save").linkbutton("enable");
+                return false;
+            }
+
             $.ajax({
                 async: false,
                 method: "POST",
                 data: model,
-                url: "../api/CreditContract/Modify",
-                success: function (data) {
-                    top.$.messager.show({ msg: "提交成功！" });
+                url: "../api/CreditContract/Create",
+                statusCode: {
+                    200: function (data) {
+                        top.$.messager.show({ msg: "提交成功" });
+                    },
+                    400: function (data) {
+                        top.$.messager.show({ msg: data.responseJSON.Message });
+                    }
                 }
             });
+
+            $("div#btn #save").linkbutton("enable");
         }
+
         function ChooseGuarantee() {
-            ////if ($("#IsGuarantee").textbox("getValue") == "1" || $("#IsGuarantee").textbox("getValue") == "true") {
-            ////    $("#panelID").panel("open");
-            ////}
-            ////else {
-            ////    $("#panelID").panel("close");
-            ////}
+            $("fieldset#GuarantorContract table#GuarantorContract_dg").datagrid("loadData", { total: 0, rows: [] });
 
             if ($("#IsGuarantee").combobox("getValue") == "1") {
                 $("fieldset#GuarantorContract").show();
@@ -63,13 +160,27 @@
                 $("fieldset#GuarantorContract").hide();
             }
         }
+
+        function UpdateCreditLimit() {
+            var CreditLimit = $("fieldset#CreditContract input[textboxname=CreditLimit]").textbox('getValue');
+
+            $($("fieldset#GuarantorContract table#GuarantorContract_dg").datagrid("getRows")).each(function (i, e) {
+                e.MarginTxt = CreditLimit;
+
+                $("fieldset#GuarantorContract table#GuarantorContract_dg").datagrid("updateRow", {
+                    index: i,
+                    row: e
+                });
+            });
+        }
     </script>
 </head>
 <body>
     <form id="ff" class="container">
-        <fieldset>
+        <fieldset id="CreditContract">
             <legend>贷款合同</legend>
             <input id="id" name="Id" hidden />
+            <input id="OrganizationId" name="OrganizationId" hidden value="F1BA3A48-65B8-E611-80C7-507B9DE4A488">
             <div class="row">
                 <div class="col-6">
                     <label>合同编码:</label>
@@ -78,7 +189,7 @@
 
                 <div class="col-6">
                     <label>合同有效状态:</label>
-                    <select id="ValidStatus" name="ValidStatus" class="easyui-combobox" data-options="required:true">
+                    <select id="ValidStatus" name="ValidStatus" class="easyui-combobox" data-options="required:true,editable:false">
                         <option value="0">生效</option>
                         <option value="1">失效</option>
                         <option value="2">未结清</option>
@@ -89,41 +200,42 @@
             <div class="row">
                 <div class="col-6">
                     <label>授信额度:</label>
-                    <input name="CreditLimit" id="CreditLimit" class="easyui-textbox" data-options="required:true" />
+                    <input name="CreditLimit" id="CreditLimit" class="easyui-textbox" data-options="required:true,onChange:UpdateCreditLimit" />
+                    <span class="unit">元</span>
                 </div>
 
                 <div class="col-6">
                     <label>授信余额:</label>
                     <input name="CreditBalance" id="CreditBalance" class="easyui-textbox" data-options="required:true" />
+                    <span class="unit">元</span>
                 </div>
             </div>
 
             <div class="row">
                 <div class="col-6">
                     <label>授信合同生效日期:</label>
-                    <input name="EffectiveDate" id="EffectiveDate" class="easyui-datebox" data-options="required:true,width:410" />
+                    <input name="EffectiveDate" id="EffectiveDate" class="easyui-datebox" data-options="required:true,width:410,editable:false" />
                 </div>
 
                 <div class="col-6">
                     <label>授信合同终止日期:</label>
-                    <input name="ExpirationDate" id="ExpirationDate" class="easyui-datebox" data-options="required:true,width:410" />
+                    <input name="ExpirationDate" id="ExpirationDate" class="easyui-datebox" data-options="required:true,width:410,editable:false" />
                 </div>
             </div>
 
             <div class="row">
                 <div class="col-6">
                     <label>是否有担保:</label>
-                    <select id="IsGuarantee" name="IsGuarantee" class="easyui-combobox" data-options="required:true,editable:false,onChange:ChooseGuarantee">
-                        <option value="0">否</option>
+                    <select id="IsGuarantee" name="IsGuarantee" class="easyui-combobox" data-options="required:true,editable:false,value:'',onChange:ChooseGuarantee">
                         <option value="1">是</option>
+                        <option value="0">否</option>
                     </select>
                 </div>
             </div>
         </fieldset>
 
-        <fieldset id="GuarantorContract">
+        <fieldset id="GuarantorContract" style="display:none">
             <legend>担保合同</legend>
-            <!--担保合同-->
             <table id="GuarantorContract_dg" class="easyui-datagrid" style="width:890px;" data-options="toolbar: '#GuarantorContract_tb',
                    rownumbers:true,
                    singleSelect:true,
@@ -189,39 +301,14 @@
                     $("#GuarantorContract_frame").attr("src", url);
 
                     // 打开弹窗
-                    $("#GuarantorContract_dd").dialog({ closed: false });
+                    $("#GuarantorContract_dd").dialog({ closed: false, top: $(this).offset().top });
                 }
             </script>
-            <div id="GuarantorContract_dd" class="easyui-dialog" data-options="title:'担保合同',width:'100%',height:'1000px',top:0,modal:true,closed:true">
+            <div id="GuarantorContract_dd" class="easyui-dialog" data-options="title:'担保合同',width:'1130px',height:'700px',top:0,modal:true,closed:true">
                 <iframe id="GuarantorContract_frame" name="family_frame" src="about:blank" style="width:100%;height:99%; border:0;"></iframe>
             </div>
         </fieldset>
-        <!--<!--<div id="panelID" class="easyui-panel" data-options="closed:true">
-            <table id="dg" hidden="hidden" class="easyui-datagrid" data-options="height:330,hidden:true,toolbar:'#tb',rownumbers:true,
-        singleSelect: true,
-        ">
-                <thead>
-                    <tr>
-                        <th data-options="field:'Id',hidden:true">ProduceId</th>
-                        <th data-options="field:'LoanCode',width:150,align:'center'">合同编码</th>
-                        <th data-options="field:'CreditLimit',width:100,align:'center'">授信额度</th>
-                        <th data-options="field:'CreditBalance',width:100,align:'center'">授信余额</th>
-                        <th data-options="field:'EffectiveDate',width:150,align:'center'">合同生效日期</th>
-                        <th data-options="field:'ExpirationDate',width:150,align:'center'">合同终止日期</th>
-                        <th data-options="field:'ValidStatus',width:60,align:'center'">合同状态</th>
-                    </tr>
-                </thead>
-            </table>
-            <div id="tb">
-                <div style="height:30px;">
-                    <div style="height:30px; width:auto;">
-                        <a id="add" class="easyui-linkbutton" href="javascript:void(0)" style="height:25px; margin-top:3px;" data-options="iconCls:'icon-add',plain:true">添加</a>
-                        <a id="mod" class="easyui-linkbutton" href="javascript:void(0)" style="height:25px; margin-top:3px;" data-options="iconCls:'icon-edit',plain:true">修改</a>
-                        <a id="del" class="easyui-linkbutton" href="javascript:void(0)" style="height:25px; margin-top:3px;" data-options="iconCls:'icon-remove',plain:true">删除</a>
-                    </div>
-                </div>
-            </div>
-        </div>-->
+
         <div id="btn">
             <a id="save" class="easyui-linkbutton" href="javascript:void(0)" data-options="iconCls:'icon-save',onClick:Submit">保存</a>
         </div>

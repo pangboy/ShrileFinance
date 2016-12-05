@@ -4,13 +4,13 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title></title>
 	<meta charset="utf-8" />
-    <link href="../Content/easyui/themes/gray/easyui.css" rel="stylesheet" />
+    <link href="../Content/easyui/themes/bootstrap/easyui.css" rel="stylesheet" />
     <link href="../Content/easyui/themes/icon.css" rel="stylesheet" />
+    <link href="../Content/form-bootstrap.css" rel="stylesheet" />
     <script src="../Scripts/jquery/jquery.js"></script>
     <script src="../Scripts/easyui/jquery.easyui.js"></script>
     <script src="../Scripts/easyui/locale/easyui-lang-zh_CN.js"></script>
     <script src="../Scripts/usedcars.js"></script>
-    <script type="text/javascript"></script>
     <script>
         $(function () {
             var data = [{
@@ -102,18 +102,21 @@
             $("#tt").treegrid("loadData", data);
         });
 
-       
+        function OnLoadSuccess(data) {
+            //$(".tree-icon.tree-folder ").remove();
+            //$(".tree-icon.tree-file").remove();
+        }
     </script>
 </head>
 <body>
     <table id="tt" class="easyui-treegrid" style="width:600px;height:400px"
-           data-options="idField:'id',treeField:'name'">
+           data-options="idField:'id',treeField:'name',  onLoadSuccess:OnLoadSuccess">
         <thead>
             <tr>
                 <th data-options="field:'name',width:180">Task Name</th>
-                <th data-options="field:'persons',width:60,align:'right'">Persons</th>
-                <th data-options="field:'begin',width:80">Begin Date</th>
-                <th data-options="field:'end',width:80">End Date</th>
+                <th data-options="field:'size',width:60,align:'right'">Persons</th>
+                <th data-options="field:'date',width:80">Begin Date</th>
+                <th data-options="field:'type',width:80">End Date</th>
             </tr>
         </thead>
     </table> 

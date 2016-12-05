@@ -10,7 +10,7 @@
     using Core.Entities.Vehicle;
     using ViewModels.AccountViewModels;
     using ViewModels.FinanceViewModels;
-    using ViewModels.LoanViewModels;
+    using ViewModels.Loan.CreditViewModel;
     using ViewModels.OrganizationViewModels;
     using ViewModels.PartnerViewModels;
     using ViewModels.VehicleViewModel;
@@ -59,7 +59,7 @@
             CreateMap<Organization, OrganizationViewModel>();
             CreateMap<OrganizationContact, ContactViewModel>();
             CreateMap<FamilyMember, FamilyMemberViewModel>();
-
+            CreateMap<OrganizateComboViewModel, BaseViewModel>();
             CreateMap<CashFlow, CashFlowViewModel>();
             CreateMap<Liabilities, LiabilitiesViewModel>();
             CreateMap<Litigation, LitigationViewModel>();

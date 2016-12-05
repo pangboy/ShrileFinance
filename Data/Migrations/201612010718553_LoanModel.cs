@@ -13,13 +13,11 @@ namespace Data.Migrations
                     {
                         Id = c.Guid(nullable: false, identity: true),
                         OrganizationId = c.Guid(nullable: false),
-                        LoanCode = c.String(maxLength: 60),
+                        CreditContractCode = c.String(maxLength: 60),
                         EffectiveDate = c.DateTime(nullable: false),
                         ExpirationDate = c.DateTime(nullable: false),
                         CreditLimit = c.Decimal(nullable: false, precision: 18, scale: 2),
-                        CreditBalance = c.Decimal(nullable: false, precision: 18, scale: 2),
-                        ValidStatus = c.Byte(nullable: false),
-                        IsGuarantee = c.Boolean(nullable: false),
+                        EffectiveStatus = c.Byte(nullable: false),
                     })
                 .PrimaryKey(t => t.Id);
             
@@ -107,6 +105,7 @@ namespace Data.Migrations
                 .PrimaryKey(t => t.Id)
                 .ForeignKey("dbo.LOAN_Loan", t => t.LoanId)
                 .Index(t => t.LoanId);
+            
         }
         
         public override void Down()

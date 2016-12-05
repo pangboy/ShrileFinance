@@ -1,6 +1,7 @@
 ﻿namespace Application
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using AutoMapper;
     using Core.Interfaces.Repositories;
@@ -23,6 +24,7 @@
 
             customer = Mapper.Map(model, customer);
             repository.Create(customer);
+
             repository.Commit();
         }
 
@@ -45,6 +47,25 @@
             return model;
         }
 
+        public List<OrganizateComboViewModel> GetAll()
+        {
+            var customer = repository.GetAll();
+            List<OrganizateComboViewModel> custviewmodelList = new List<OrganizateComboViewModel>();
+            if (customer != null)
+            {
+                foreach (var item in customer)
+                {
+                    custviewmodelList.Add(new OrganizateComboViewModel()
+                    {
+                        InstitutionChName = item.Property.InstitutionChName,
+                        Id = item.Id
+                    });
+                }
+            }
+
+            return custviewmodelList;
+        }
+
         /// <summary>
         /// 带分页查询
         /// </summary>
@@ -55,9 +76,14 @@
         /// <returns></returns>
         public PagedListViewModel<OragnizateListItemViewModel> GetPageList(string serach, int pageNumber, int pageSize)
         {
+            if (string.IsNullOrEmpty(serach))
+            {
+                serach = string.Empty;
+            }
+
             var pagedlist =
                 repository
-                .PagedList(m => m.Property.InstitutionChName == serach, pageNumber, pageSize);
+                .PagedList(m => m.Property.InstitutionChName.Contains(serach), pageNumber, pageSize);
 
             var list = pagedlist.Select(m =>
                 new OragnizateListItemViewModel

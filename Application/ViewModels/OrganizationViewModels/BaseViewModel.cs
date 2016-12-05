@@ -10,7 +10,7 @@
     [BasePeriod_TN(ErrorMessage = "基础信息 登记注册号类型和登记注册号码需成对出现")]
     public class BaseViewModel
     {
-        public Guid Id { get; set; }
+        public Guid? Id { get; set; }
 
         /// <summary>
         /// 客户号
@@ -69,7 +69,7 @@
         /// <summary>
         /// 中征码
         /// </summary>
-        [Display(Name = "中征码"), StringLength(16), AN(ErrorMessage = "中征码 类型错误")]
+        [Display(Name = "中征码"), StringLength(16),Required, AN(ErrorMessage = "中征码 类型错误")]
         public string LoanCardCode { get; set; }
 
         /// <summary>
