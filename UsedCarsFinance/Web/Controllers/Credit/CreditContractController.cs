@@ -36,6 +36,12 @@
         }
 
         [HttpGet]
+        public IHttpActionResult Option()
+        {
+            return Ok(service.Option());
+        }
+
+        [HttpGet]
         public IHttpActionResult GetPageList(int page, int rows, string Search)
         {
             var list = service.GetPageList(Search, page, rows);

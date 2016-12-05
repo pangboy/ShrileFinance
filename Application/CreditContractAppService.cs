@@ -1,6 +1,7 @@
 ﻿namespace Application
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using AutoMapper;
     using Core.Entities.Loan;
@@ -70,6 +71,17 @@
         {
             CreditContract credit = new CreditContract();
             return credit.CanApplyLoan(limit);
+        }
+
+        /// <summary>
+        /// 授信合同选项
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<CreditContractViewModel> Option()
+        {
+            var credits = repository.GetAll().AsEnumerable();
+
+            return Mapper.Map<IEnumerable<CreditContractViewModel>>(credits);
         }
 
         public IPagedList<CreditContractViewModel> GetPageList(string serach,int page ,int size)
