@@ -15,6 +15,7 @@
         public Guid? Id { get; set; }
 
         public Guid OrganizationId { get; set; }
+
         /// <summary>
         /// 合同编码
         /// </summary>

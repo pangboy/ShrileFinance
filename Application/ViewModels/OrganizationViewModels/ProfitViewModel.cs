@@ -6,9 +6,10 @@
     /// <summary>
     /// 利润以及利润分配
     /// </summary>
-    public class ProfitViewModel :IEntityViewModel
+    public class ProfitViewModel : IEntityViewModel
     {
         public Guid? Id { get; set; }
+
         /// <summary>
         /// 报表类型
         /// </summary>

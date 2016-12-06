@@ -6,7 +6,7 @@
     /// <summary>
     /// 资产负债
     /// </summary>
-    public class LiabilitiesViewModel :IEntityViewModel
+    public class LiabilitiesViewModel : IEntityViewModel
     {
         public Guid? Id { get; set; }
 

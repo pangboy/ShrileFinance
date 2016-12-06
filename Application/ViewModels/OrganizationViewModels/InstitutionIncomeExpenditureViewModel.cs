@@ -6,9 +6,10 @@
     /// <summary>
     /// 事业单位收入支出
     /// </summary>
-    public class InstitutionIncomeExpenditureViewModel :IEntityViewModel
+    public class InstitutionIncomeExpenditureViewModel : IEntityViewModel
     {
         public Guid? Id { get; set; }
+
         /// <summary>
         /// 报表类型
         /// </summary>

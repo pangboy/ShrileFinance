@@ -8,7 +8,7 @@
     /// 高管及主要关系人段
     /// </summary>
     [ExecutivesMajorParticipantPeriod_NT(ErrorMessage = "高管及主要关系人段 证件号码和证件类型成对出现")]
-    public class ManagerViewModel:IEntityViewModel
+    public class ManagerViewModel : IEntityViewModel
     {
         public Guid? Id { get; set; }
 

@@ -22,7 +22,7 @@
             HasMany(m => m.Loans).WithOptional()
                 .HasForeignKey(m => m.CreditId).WillCascadeOnDelete();
 
-            // Ignore(m => m.Organization);
+            //// Ignore(m => m.Organization);
 
             ToTable("LOAN_CreditContranct");
         }

@@ -3,7 +3,7 @@
     using System;
     using System.ComponentModel.DataAnnotations;
 
-    public class LitigationViewModel:IEntityViewModel
+    public class LitigationViewModel : IEntityViewModel
     {
         public Guid? Id { get; set; }
 

@@ -10,7 +10,7 @@
     {
         public FinancialAffairsViewModel()
         {
-            CashFlow =new HashSet<CashFlowViewModel>();
+            CashFlow = new HashSet<CashFlowViewModel>();
             Liabilities = new HashSet<LiabilitiesViewModel>();
             Profit = new HashSet<ProfitViewModel>();
             IncomeExpenditur = new HashSet<InstitutionIncomeExpenditureViewModel>();

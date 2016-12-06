@@ -6,7 +6,7 @@
     /// <summary>
     /// 事业单位资产负债
     /// </summary>
-    public class InstitutionLiabilitiesViewModel:IEntityViewModel
+    public class InstitutionLiabilitiesViewModel : IEntityViewModel
     {
         public Guid? Id { get; set; }
 

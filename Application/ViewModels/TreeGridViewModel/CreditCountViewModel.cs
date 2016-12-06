@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using Newtonsoft.Json;
 
-    public enum CreditCountType:byte
+    public enum CreditCountType : byte
     {
         授信 = 1,
         借据 = 2

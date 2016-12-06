@@ -118,6 +118,7 @@
                     InstitutionCreditCode = m.InstitutionCreditCode,
                     LoanCardCode = m.LoanCardCode,
                     ManagementerCode = m.ManagementerCode,
+                    CreatedDate = m.CreatedDate
                 });
 
             return new PagedListViewModel<OragnizateListItemViewModel>(new PagedList<OragnizateListItemViewModel>(pagedlist.GetMetaData(), list));

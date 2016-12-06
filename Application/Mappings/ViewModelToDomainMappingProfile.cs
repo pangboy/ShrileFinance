@@ -1,6 +1,5 @@
 ﻿namespace Application.Mappings
 {
-    using System.Linq;
     using AutoMapper;
     using Core.Entities;
     using Core.Entities.Customers.Enterprise;
@@ -10,11 +9,11 @@
     using Core.Entities.Vehicle;
     using ViewModels.AccountViewModels;
     using ViewModels.FinanceViewModels;
+    using ViewModels.Loan.CreditViewModel;
     using ViewModels.OrganizationViewModels;
     using ViewModels.PartnerViewModels;
     using ViewModels.ProduceViewModel;
     using ViewModels.VehicleViewModel;
-    using ViewModels.Loan.CreditViewModel;
 
     public class ViewModelToDomainMappingProfile : Profile
     {
@@ -47,11 +46,11 @@
                 .ForMember(d => d.Profit, opt => opt.Ignore());
             CreateMap<StockholderViewModel, Stockholder>();
             CreateMap<OrganizationViewModel, Organization>()
-                .ForMember(d=>d.BigEvent,opt=>opt.Ignore())
-                .ForMember(d=>d.Litigation,opt=>opt.Ignore())
-                .ForMember(d=>d.Managers,opt=>opt.Ignore())
-                .ForMember(d=>d.Shareholders,opt=>opt.Ignore())
-                .ForMember(d=>d.AssociatedEnterprises,opt=>opt.Ignore());
+                .ForMember(d => d.BigEvent, opt => opt.Ignore())
+                .ForMember(d => d.Litigation, opt => opt.Ignore())
+                .ForMember(d => d.Managers, opt => opt.Ignore())
+                .ForMember(d => d.Shareholders, opt => opt.Ignore())
+                .ForMember(d => d.AssociatedEnterprises, opt => opt.Ignore());
             CreateMap<ContactViewModel, OrganizationContact>();
             CreateMap<FamilyMemberViewModel, FamilyMember>();
             CreateMap<CashFlowViewModel, CashFlow>();
@@ -82,10 +81,10 @@
             // Loan
             CreateMap<ViewModels.Loan.LoanViewModels.LoanViewModel, Loan>();
             CreateMap<GuarantyContractViewModel, GuarantyContract>();
-            CreateMap<GuarantyContractMortgageViewModel,GuarantyContractMortgage>();
-            CreateMap<GuarantyContractPledgeViewModel,GuarantyContractPledge>();
-            CreateMap<GuarantyPersonViewModel,GuarantorPerson>();
-            CreateMap<GuarantyOrganizationViewModel,GuarantorOrganization>();
+            CreateMap<GuarantyContractMortgageViewModel, GuarantyContractMortgage>();
+            CreateMap<GuarantyContractPledgeViewModel, GuarantyContractPledge>();
+            CreateMap<GuarantyPersonViewModel, GuarantorPerson>();
+            CreateMap<GuarantyOrganizationViewModel, GuarantorOrganization>();
             CreateMap<CreditContractViewModel, CreditContract>();
             CreateMap<CreditExamineViewModel, CreditContract>();
         }

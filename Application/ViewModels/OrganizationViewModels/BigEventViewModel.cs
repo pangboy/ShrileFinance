@@ -3,7 +3,7 @@
     using System;
     using System.ComponentModel.DataAnnotations;
 
-    public class BigEventViewModel:IEntityViewModel
+    public class BigEventViewModel : IEntityViewModel
     {
         public Guid? Id { get; set; }
 
