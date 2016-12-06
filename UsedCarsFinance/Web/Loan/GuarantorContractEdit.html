@@ -19,12 +19,11 @@
 
         function LoadData(data) {
             if (data) {
-                debugger
                 if (data.ContractType != undefined) {
                     $("fieldset[name=Contract] select[textboxname=ContractType]").combobox('unselect', data.ContractType).combobox('select', data.ContractType);
 
                     if (data.ContractType == 0) {
-                        $("fieldset[name=Guarantor]").form('load', data.GuarantyContractViewModel);
+                        $("fieldset[name=Contract]").form('load', data.GuarantyContractViewModel);
                     }
                     else if (data.ContractType == 1) {
                         $("fieldset[name=Contract]").form('load', data.PledgeGuarantyContractViewModel);
@@ -33,7 +32,7 @@
                         $("fieldset[name=Contract]").form('load', data.MortgageGuarantyContractViewModel);
                     }
                 }
-                debugger
+                
                 if (data.GuarantorType != undefined) {
                     $("fieldset[name=Contract] select[textboxname=GuarantorType]").combobox('unselect', data.GuarantorType).combobox('select', data.GuarantorType);
 
@@ -59,11 +58,9 @@
             // 映射合同
             if (Contract != undefined && Contract.ContractType != undefined) {
                 if (Contract.ContractType == 0) {
-                    debugger
                     value.ContractType = 0;
                     value.GuarantyContractViewModel = {};
                     TraverseDateFactory(Contract, value.GuarantyContractViewModel, false, null);
-                    debugger
                 }
                 else if (Contract.ContractType == 1) {
                     value.ContractType = 1;
@@ -137,6 +134,8 @@
                 if (method == "GuarantorContract_view") {
                     // 禁用fieldset
                     Disabled($("fieldset"));
+
+                    
 
                     // 禁用保存按钮
                     $("#save").linkbutton("disable");
@@ -311,83 +310,78 @@
                     <label>合同签订日期：</label>
                     <input name="SigningDate" class="easyui-datebox" data-options="required:true,value:'',editable:false,width:410" />
                 </div>
+
                 <template id="ContractInfo_Pledge">
                     <div class="col-6">
                         <label>质押序号：</label>
                         <input name="PledgeNumber" class="easyui-textbox" data-options="required:true,value:'',validType:['length[2,2]'],prompt:'两位数字组成，默认从01开始'" />
                     </div>
+                    <div class="col-6">
+                        <label>质押物种类</label>
+                        <select name="PledgeType" class="easyui-combobox" data-options="required:true,value:'',editable:false">
+                            <option value="1">存单</option>
+                            <option value="2">票据</option>
+                            <option value="3">保单</option>
+                            <option value="4">国债</option>
+                            <option value="5">股权</option>
+                            <option value="6">股票</option>
+                            <option value="7">其他权利</option>
+                        </select>
+                    </div>
+                    <div class="col-6">
+                        <label>质押物价值：</label>
+                        <input name="CollateralValue" class="easyui-textbox" data-options="required:true,value:'',validType:['length[0,20]','Money']" />
+                        <span class="unit">元</span>
+                    </div>
                 </template>
-                    <template id="ContractInfo_Pledge">
-                        <div class="col-6">
-                            <label>质押序号：</label>
-                            <input name="PledgeNumber" class="easyui-textbox" data-options="required:true,value:'',validType:['length[2,2]'],prompt:'两位数字组成，默认从01开始'" />
-                        </div>
-                        <div class="col-6">
-                            <label>质押物种类</label>
-                            <select name="PledgeType" class="easyui-combobox" data-options="required:true,value:'',editable:false">
-                                <option value="1">存单</option>
-                                <option value="2">票据</option>
-                                <option value="3">保单</option>
-                                <option value="4">国债</option>
-                                <option value="5">股权</option>
-                                <option value="6">股票</option>
-                                <option value="7">其他权利</option>
-                            </select>
-                        </div>
-                        <div class="col-6">
-                            <label>质押物价值：</label>
-                            <input name="CollateralValue" class="easyui-textbox" data-options="required:true,value:'',validType:['length[0,20]','Money']" />
-                            <span class="unit">元</span>
-                        </div>
-                    </template>
-                    <template id="ContractInfo_Mortgage">
-                        <div class="col-6">
-                            <label>抵押序号：</label>
-                            <input name="MortgageNumber" class="easyui-textbox" data-options="required:true,value:'',validType:['length[2,2]'],prompt:'两位数字组成，默认从01开始'" />
-                        </div>
-                        <div class="col-6">
-                            <label>抵押物种类：</label>
-                            <select name="CollateralType" class="easyui-combobox" data-options="required:true,value:'',editable:false">
-                                <option value="1">房产</option>
-                                <option value="2">土地使用权</option>
-                                <option value="3">在建工程</option>
-                                <option value="4">交通工具</option>
-                                <option value="5">机器设备</option>
-                                <option value="6">其他类</option>
-                            </select>
-                        </div>
-                        <div class="col-6">
-                            <label>抵押物评估价值：</label>
-                            <input name="AssessmentValue" class="easyui-textbox" data-options="required:true,value:'',validType:['length[0,20]','Money']" />
-                            <span class="unit">元</span>
-                        </div>
-                        <div class="col-12">
-                            <label>抵押物说明：</label>
-                            <input name="CollateralInstruction" class="easyui-textbox" data-options="required:true,value:'',validType:['length[0,400]','ANC'],multiline:true,height:80" />
-                        </div>
-                        <div class="col-12">
-                            <label>评估机构名称：</label>
-                            <input name="AssessmentName" class="easyui-textbox" data-options="required:false,value:'',validType:['length[0,80]','ANC']" />
-                        </div>
-                        <div class="col-6">
-                            <label>评估机构组织机构代码：</label>
-                            <input name="AssessmentOrganizationCode" class="easyui-textbox" data-options="required:false,value:'',validType:['length[0,10]','OrganizateCode[true]']" />
-                        </div>
-                        <div class="col-6">
-                            <label>抵押物评估日期：</label>
-                            <input name="AssessmentDate" class="easyui-datebox" data-options="required:true,value:'',editable:false,width:410" />
-                        </div>
+                <template id="ContractInfo_Mortgage">
+                    <div class="col-6">
+                        <label>抵押序号：</label>
+                        <input name="MortgageNumber" class="easyui-textbox" data-options="required:true,value:'',validType:['length[2,2]'],prompt:'两位数字组成，默认从01开始'" />
+                    </div>
+                    <div class="col-6">
+                        <label>抵押物种类：</label>
+                        <select name="CollateralType" class="easyui-combobox" data-options="required:true,value:'',editable:false">
+                            <option value="1">房产</option>
+                            <option value="2">土地使用权</option>
+                            <option value="3">在建工程</option>
+                            <option value="4">交通工具</option>
+                            <option value="5">机器设备</option>
+                            <option value="6">其他类</option>
+                        </select>
+                    </div>
+                    <div class="col-6">
+                        <label>抵押物评估价值：</label>
+                        <input name="AssessmentValue" class="easyui-textbox" data-options="required:true,value:'',validType:['length[0,20]','Money']" />
+                        <span class="unit">元</span>
+                    </div>
+                    <div class="col-12">
+                        <label>抵押物说明：</label>
+                        <input name="CollateralInstruction" class="easyui-textbox" data-options="required:true,value:'',validType:['length[0,400]','ANC'],multiline:true,height:80" />
+                    </div>
+                    <div class="col-12">
+                        <label>评估机构名称：</label>
+                        <input name="AssessmentName" class="easyui-textbox" data-options="required:false,value:'',validType:['length[0,80]','ANC']" />
+                    </div>
+                    <div class="col-6">
+                        <label>评估机构组织机构代码：</label>
+                        <input name="AssessmentOrganizationCode" class="easyui-textbox" data-options="required:false,value:'',validType:['length[0,10]','OrganizateCode[true]']" />
+                    </div>
+                    <div class="col-6">
+                        <label>抵押物评估日期：</label>
+                        <input name="AssessmentDate" class="easyui-datebox" data-options="required:true,value:'',editable:false,width:410" />
+                    </div>
 
-                        <div class="col-6">
-                            <label>登记机关：</label>
-                            <input name="RegistrateAuthorit" class="easyui-textbox" data-options="required:true,value:'',validType:['length[0,80]','ANC']" />
-                        </div>
-                        <div class="col-6">
-                            <label>登记日期：</label>
-                            <input name="RegistrateDate" class="easyui-datebox" data-options="required:true,value:'',editable:false,width:410" />
-                        </div>
-                    </template>
-</div>
+                    <div class="col-6">
+                        <label>登记机关：</label>
+                        <input name="RegistrateAuthorit" class="easyui-textbox" data-options="required:true,value:'',validType:['length[0,80]','ANC']" />
+                    </div>
+                    <div class="col-6">
+                        <label>登记日期：</label>
+                        <input name="RegistrateDate" class="easyui-datebox" data-options="required:true,value:'',editable:false,width:410" />
+                    </div>
+                </template>
+            </div>
         </fieldset>
 
         <fieldset name="Guarantor">

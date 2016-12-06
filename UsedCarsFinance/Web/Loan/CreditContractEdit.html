@@ -18,6 +18,7 @@
             if (query.id != null) {
                 if (query.status == "0") {
                     uc.form.DisableForm();
+                    
                 }
                 Init();
             }
@@ -93,16 +94,21 @@
                         e.GuarantorTypeTxt = "机构";
                     }
                 });
-                debugger
+                
                 // 数据存储和展示
                 $("fieldset#GuarantorContract table#GuarantorContract_dg").datagrid('loadData', data.GuranteeContract);
+            }
+
+            if (query.status == "0") {
+                // 禁用table
+                $("div#GuarantorContract_tb").remove();
             }
         }
 
         function BuildData() {
             var value = $("form#ff fieldset#CreditContract").serializeJson();
 
-            if (value.IsGuarantee == 1) {
+            if (value.HasGuarantee == 1) {
                 value.GuranteeContract = $("fieldset#GuarantorContract table#GuarantorContract_dg").datagrid('getRows');
                 // 修正担保合同保证金额（贷款授信额度）
                 $(value.GuranteeContract).each(function (i, e) {
@@ -126,7 +132,7 @@
                 return false;
             }
 
-            if (data.IsGuarantee == 1 && data.GuranteeContract.length == 0) {
+            if (data.HasGuarantee == 1 && data.GuranteeContract.length == 0) {
                 $.messager.show({ msg: '请添加担保合同！' });
 
                 return false;
@@ -392,13 +398,13 @@
                    ">
                 <thead>
                     <tr>
+                        <th data-options="field:'ContractNumber',width:120,align:'center'">合同序号</th>
                         <th data-options="field:'ContractTypeTxt',width:120,align:'center'">合同类型</th>
                         <th data-options="field:'GuarantorTypeTxt',width:120,align:'center'">保证人类型</th>
                         <th data-options="field:'GuaranteeFormTxt',width:120,align:'center'">担保形式</th>
                         <th data-options="field:'MarginTxt',width:120,align:'center'">保证金额</th>
                         <th data-options="field:'EffectiveStateTxt',width:120,align:'center'">合同有效状态</th>
                         <th data-options="field:'SigningDateTxt',width:120,align:'center'">合同签订日期</th>
-                        <th data-options="field:'ContractNumber',width:120,align:'center'">合同序号</th>
                     </tr>
                 </thead>
             </table>
