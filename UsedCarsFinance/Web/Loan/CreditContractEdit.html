@@ -51,20 +51,20 @@
             // 加载贷款合同基本信息
             $("#ff fieldset#CreditContract").form("load", data);
             // 显示/隐藏 担保合同列表
-            var isGuarantee = $("fieldset#CreditContract #IsGuarantee").combobox("getValue");
+            var HasGuarantee = $("fieldset#CreditContract #HasGuarantee").combobox("getValue");
 
-            if (isGuarantee != undefined) {
-                if (isGuarantee || isGuarantee == 1) {
-                    isGuarantee = 1;
+            if (HasGuarantee != undefined) {
+                if (HasGuarantee || HasGuarantee == 1) {
+                    HasGuarantee = 1;
                 }
                 else {
-                    isGuarantee = 0;
+                    HasGuarantee = 0;
                 }
 
-                $("fieldset#CreditContract #IsGuarantee").combobox('setValue', isGuarantee).combobox("unselect", isGuarantee).combobox('select', isGuarantee);
+                $("fieldset#CreditContract #HasGuarantee").combobox('setValue', HasGuarantee).combobox("unselect", HasGuarantee).combobox('select', HasGuarantee);
             }
 
-            if (isGuarantee == 1 && data.GuranteeContract != null) {
+            if (HasGuarantee == 1 && data.GuranteeContract != null) {
                 // 担保合同数据扩展
                 $(data.GuranteeContract).each(function (i, e) {
                     if (e.ContractType == 0) {
@@ -152,10 +152,10 @@
 
             var model = BuildData();
 
-            if (model.IsGuarantee == "0") {
-                model.IsGuarantee = false;
+            if (model.HasGuarantee == "0") {
+                model.HasGuarantee = false;
             } else {
-                model.IsGuarantee = true
+                model.HasGuarantee = true
             }
 
             if (!ValidData(model)) {
@@ -191,7 +191,7 @@
         function ChooseGuarantee() {
             $("fieldset#GuarantorContract table#GuarantorContract_dg").datagrid("loadData", { total: 0, rows: [] });
 
-            if ($("#IsGuarantee").combobox("getValue") == "1") {
+            if ($("#HasGuarantee").combobox("getValue") == "1") {
                 $("fieldset#GuarantorContract").show();
             }
             else {
