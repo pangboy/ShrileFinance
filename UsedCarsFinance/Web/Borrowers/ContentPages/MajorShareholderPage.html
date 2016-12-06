@@ -136,13 +136,13 @@
         function ValidDate(obj)
         {
             // 证件类型与证件号码同时出现
-            if (!((obj.RegistraterType != '' && obj.RegistraterCode.length > 0) || (obj.RegistraterType == '' && obj.RegistraterCode.length == 0))) {
+            if (!((obj.RegistraterType.trim() != '' && obj.RegistraterCode.toString().length > 0) || (obj.RegistraterType.trim() == '' && obj.RegistraterCode.toString().length == 0))) {
                 ShowError("“证件类型/登记注册号类型”与“证件号码/登记注册号码”应同时出现！" );
 
                 return false;
             }
 
-            if (obj.RegistraterCode.length + obj.OrganizateCode.length + obj.InstitutionCreditCode.length == 0)
+            if (obj.RegistraterCode.toString().length + obj.OrganizateCode.toString().length + obj.InstitutionCreditCode.toString().length == 0)
             {
                 ShowError("“证件号码/登记注册号码”、“组织机构代码”、“机构信用代码”必填其一！");
 
