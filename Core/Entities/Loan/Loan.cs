@@ -49,6 +49,7 @@
     {
         public Loan()
         {
+            SetFourCategoryAssetsClassification(FourCategoryAssetsClassificationEnum.正常);
             Payments = new HashSet<PaymentHistory>();
         }
 
@@ -78,12 +79,12 @@
         /// <summary>
         /// 到期日期
         /// </summary>
-        public DateTime MatureDate { get; private set; }
+        public DateTime MatureDate { get; set; }
 
         /// <summary>
         /// 日利率
         /// </summary>
-        public decimal InterestRate { get; private set; }
+        public decimal InterestRate { get; set; }
 
         /// <summary>
         /// 四级分类
@@ -108,32 +109,32 @@
         /// <summary>
         /// 贷款业务种类
         /// </summary>
-        public string LoanBusinessTypes { get; private set; }
+        public string LoanBusinessTypes { get; set; }
 
         /// <summary>
         /// 贷款形式
         /// </summary>
-        public string LoanForm { get; private set; }
+        public string LoanForm { get; set; }
 
         /// <summary>
         /// 贷款性质
         /// </summary>
-        public string LoanNature { get; private set; }
+        public string LoanNature { get; set; }
 
         /// <summary>
         /// 贷款投向
         /// </summary>
-        public string LoansTo { get; private set; }
+        public string LoansTo { get; set; }
 
         /// <summary>
         /// 贷款种类
         /// </summary>
-        public string LoanTypes { get; private set; }
+        public string LoanTypes { get; set; }
 
         /// <summary>
         /// 还款记录
         /// </summary>
-        public ICollection<PaymentHistory> Payments { get; set; }
+        public virtual ICollection<PaymentHistory> Payments { get; set; }
 
         /// <summary>
         /// 新增还款记录
@@ -147,7 +148,7 @@
             }
 
             var lastPayment = Payments.LastOrDefault();
-            if (lastPayment != null && payment.DatePayment > lastPayment.DatePayment)
+            if (lastPayment != null && payment.DatePayment < lastPayment.DatePayment)
             {
                 throw new ArgumentOutOfRangeAppException(nameof(payment.ActualPaymentPrincipal), "还款日期必须晚于最后一次还款的日期.");
             }

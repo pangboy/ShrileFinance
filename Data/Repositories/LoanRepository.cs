@@ -24,7 +24,7 @@
             // 状态筛选
             if (status.HasValue)
             {
-                // TODO: Status Filters
+                loans = loans.Where(m => m.Status == status);
             }
 
             // 排序

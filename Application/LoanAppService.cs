@@ -1,7 +1,10 @@
 ﻿namespace Application
 {
+    using System;
+    using System.Collections.Generic;
     using AutoMapper;
     using Core.Entities.Loan;
+    using Core.Exceptions;
     using Core.Interfaces.Repositories;
     using Core.Services.Loan;
     using ViewModels.Loan.LoanViewModels;
@@ -27,12 +30,26 @@
         }
 
         /// <summary>
-        /// 申请贷款
+        /// 获取借据实例
+        /// </summary>
+        /// <param name="id">借据标识</param>
+        /// <returns></returns>
+        public LoanViewModel Get(Guid id)
+        {
+            var loan = repository.Get(id);
+
+            var model = Mapper.Map<LoanViewModel>(loan);
+
+            return model;
+        }
+
+        /// <summary>
+        /// 申请借据
         /// </summary>
         /// <param name="model">借据视图模型</param>
         public void ApplyLoan(LoanViewModel model)
         {
-            var credit = creditRepository.Get(model.CreditContractId);
+            var credit = creditRepository.Get(model.CreditId);
             var loan = Mapper.Map<Loan>(model);
 
             loanService.Loan(loan, credit);
@@ -42,11 +59,50 @@
         }
 
         /// <summary>
+        /// 修改借据
+        /// </summary>
+        /// <param name="model">借据视图模型</param>
+        public void ModifyLoan(LoanViewModel model)
+        {
+            if (!model.Id.HasValue)
+            {
+                throw new ArgumentNullAppException(nameof(model.Id), "借据标识不可为空.");
+            }
+
+            var loan = repository.Get(model.Id.Value);
+            loan.InterestRate = model.InterestRate;
+            loan.MatureDate = model.MatureDate;
+            loan.LoanBusinessTypes = model.LoanBusinessTypes;
+            loan.LoanForm = model.LoanForm;
+            loan.LoanNature = model.LoanNature;
+            loan.LoansTo = model.LoansTo;
+            loan.LoanTypes = model.LoanTypes;
+
+            repository.Modify(loan);
+            repository.Commit();
+        }
+
+        /// <summary>
         /// 还款
         /// </summary>
         /// <param name="model">还款记录视图模型</param>
-        public void Payment(PaymentHistoryViewModel model)
+        public void Payment(PaymentViewModel model)
         {
+            if (model.Payments == null)
+            {
+                throw new ArgumentAppException("还款记录不可为空.");
+            }
+
+            var loan = repository.Get(model.LoanId);
+            var payments = Mapper.Map<IEnumerable<PaymentHistory>>(model.Payments);
+
+            foreach (var payment in payments)
+            {
+                paymentService.Payment(loan, payment);
+            }
+
+            repository.Modify(loan);
+            repository.Commit();
         }
 
         /// <summary>

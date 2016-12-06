@@ -1,0 +1,482 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>借据信息</title>
+    <meta charset="utf-8" />
+    <link href="../Content/easyui/themes/bootstrap/easyui.css" rel="stylesheet" />
+    <link href="../Content/easyui/themes/icon.css" rel="stylesheet" />
+    <link href="../Content/form-bootstrap.css" rel="stylesheet" />
+    <script src="../Scripts/jquery/jquery.js"></script>
+    <script src="../Scripts/easyui/jquery.easyui.js"></script>
+    <script src="../Scripts/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script src="../Scripts/usedcars.js"></script>
+    <style>
+        td > .textbox[style*="height: 22px;"] { height: 22px !important; }
+        td > .textbox[style*="height: 22px;"] > .textbox-text { padding: 0px 4px !important; font-size: 12px !important; line-height: 1.42857143; }
+    </style>
+    <script>
+        uc.form = new UCForm("#ff");
+        var page = new Page();
+
+        $(function () {
+            var query = uc.GetParams();
+
+            // 1.加载选项.
+            $.when(LoadCreditContractNumber()).then(function () {
+                // 2.加载数据
+                if (query.Id) {
+                    page.Load(query.Id);
+                }
+
+                // 3.调整页面
+                Render(query);
+            })
+        });
+
+        function Render(query) {
+            if (query.view == "loan") {
+                LoanView(query.method);
+            } else if (query.view == "payment") {
+                PaymentView();
+            }
+
+            // 申请贷款
+            function LoanView(method) {
+                var buildData = function () {
+                    var loan = $("#loan_info").serializeJson();
+                    loan.CreditId = $("select[comboname='CreditId']").combobox("getValue");
+
+                    return loan;
+                }
+
+                if (method == "add") {
+                    $("#payment_history").hide();
+
+                    page.setSubmit("../api/Loan/Post", "POST", buildData);
+                } else if (method == "mod") {
+                    $("input[textboxname='ContractNumber']").textbox("readonly", true);
+                    $("input[textboxname='Principle']").textbox("readonly", true);
+                    $("input[textboxname='SpecialDate']").textbox("readonly", true);
+                    uc.form.DisableForm("#credit_contract");
+
+                    page.setSubmit("../api/Loan/Put", "PUT", buildData);
+                } else {
+                    $("#save").linkbutton("disable");
+                    uc.form.DisableForm();
+                }
+
+                $("#payment_tb").hide();
+            }
+
+            // 还款
+            function PaymentView() {
+                uc.form.DisableForm("#credit_contract");
+                uc.form.DisableForm("#loan_info");
+
+                page.setSubmit("../api/Loan/PaymentPut", "PUT", function () {
+                    var rows = $("#payment_dg").datagrid("getRows");
+
+                    var addedRows = $(rows).map(function (i, e) {
+                        if (!e.Id) {
+                            return e;
+                        }
+                    });
+
+                    return {
+                        LoanId: $("input[name='Id']").val(),
+                        Payments: addedRows.toArray()
+                    };
+                });
+            }
+        }
+
+        function Page() {
+            this.Load = function (loanId) {
+                uc.form.LoadForm({
+                    async: true,
+                    params: { id: loanId },
+                    url: "../api/Loan/Get",
+                    onLoadSuccess: function (data) {
+                        $("select[comboname='CreditId']").combobox("select", data.CreditId);
+                        $("#payment_dg").datagrid("loadData", data.Payments);
+                    }
+                });
+            }
+
+            var submit = {
+                url: "",
+                method: "",
+                buildData: function () { }
+            };
+
+            this.setSubmit = function (url, method, buildData) {
+                submit.url = url;
+                submit.method = method;
+                submit.buildData = buildData;
+            }
+
+            this.Submit = function () {
+                var data = submit.buildData();
+
+                uc.form.Submit({
+                    url: submit.url,
+                    method: submit.method,
+                    data: data,
+                    statusCode: {
+                        200: function (data) {
+                            top.$.messager.show({ msg: "保存成功！" });
+
+                            uc.form.Cancel();
+                        },
+                        400: uc.E400
+                    }
+                });
+            }
+        }
+    </script>
+</head>
+
+<body>
+    <form id="ff" class="container">
+        <fieldset id="credit_contract">
+            <legend>授信合同</legend>
+
+            <div class="row">
+                <div class="col-6">
+                    <label>授信编号:</label>
+                    <select name="CreditId" class="easyui-combobox" data-options="required:true,editable:false,
+                            valueField:'Id',textField:'CreditContractCode',onSelect:SelectCreditContractNumber"></select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-6">
+                    <label>授信额度:</label>
+                    <input name="CreditLimit" class="easyui-textbox" data-options="readonly:true" />
+                    <span class="unit">元</span>
+                </div>
+
+                <div class="col-6">
+                    <label>授信余额:</label>
+                    <input name="CreditBalance" class="easyui-textbox" data-options="readonly:true" />
+                    <span class="unit">元</span>
+                </div>
+            </div>
+
+            <script>
+                function LoadCreditContractNumber() {
+                    var ded = $.Deferred();
+
+                    $.ajax({
+                        url: "../api/CreditContract/Option",
+                        statusCode: {
+                            200: function (data) {
+                                $("select[comboname='CreditId']").combobox("loadData", data);
+
+                                ded.resolve();
+                            },
+                            400: uc.E400
+                        }
+                    });
+
+                    return ded;
+                }
+
+                function SelectCreditContractNumber(record) {
+                    $("input[textboxname='CreditLimit'").textbox("setValue", record.CreditLimit);
+                    $("input[textboxname='CreditBalance'").textbox("setValue", record.CreditBalance);
+                }
+            </script>
+        </fieldset>
+
+        <fieldset id="loan_info">
+            <legend>借据信息</legend>
+
+            <div class="hidden">
+                <input name="Id" type="hidden" />
+            </div>
+
+            <div class="row">
+                <div class="col-6">
+                    <label>借据编号:</label>
+                    <input name="ContractNumber" class="easyui-textbox" data-options="required:true" />
+                </div>
+
+                <div class="col-6">
+                    <label>日利率:</label>
+                    <input name="InterestRate" class="easyui-textbox" data-options="required:true" />
+                    <span class="unit">%</span>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6">
+                    <label>借据金额:</label>
+                    <input name="Principle" class="easyui-textbox" data-options="required:true" />
+                    <span class="unit">元</span>
+                </div>
+
+                <div class="col-6">
+                    <label>借据余额:</label>
+                    <input name="Balance" class="easyui-textbox" data-options="readonly:true" />
+                    <span class="unit">元</span>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6">
+                    <label>放款日期:</label>
+                    <input name="SpecialDate" class="easyui-datebox" data-options="required:true" />
+                </div>
+
+                <div class="col-6">
+                    <label>到期日期:</label>
+                    <input name="MatureDate" class="easyui-datebox" data-options="required:true" />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6">
+                    <label>贷款业务种类:</label>
+                    <select name="LoanBusinessTypes" class="easyui-combobox" data-options="required:true,editable:false,value:6">
+                        <option value="1">流动资金贷款</option>
+                        <option value="2">固定资产贷款</option>
+                        <option value="3">境外筹资转贷</option>
+                        <option value="4">买方信贷</option>
+                        <option value="5">出口卖方信贷</option>
+                        <option value="6">项目融资</option>
+                        <option value="7">其他贷款</option>
+                        <option value="8">类贷款业务</option>
+                    </select>
+                </div>
+
+                <div class="col-6">
+                    <label>贷款形式:</label>
+                    <select name="LoanForm" class="easyui-combobox" data-options="required:true,editable:false,value:1">
+                        <option value="1">新增贷款</option>
+                        <option value="2">收回再贷</option>
+                        <option value="3">借新还旧</option>
+                        <option value="4">资产重组</option>
+                        <option value="5">转入</option>
+                        <option value="9">其他</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6">
+                    <label>贷款性质:</label>
+                    <select name="LoanNature" class="easyui-combobox" data-options="required:true,editable:false,value:1">
+                        <option value="1">自营贷款</option>
+                        <option value="2">资金来源于金融机构的委托贷款</option>
+                        <option value="3">特定贷款</option>
+                        <option value="4">信托贷款</option>
+                        <option value="5">资金来源于中央及地方政府的委托贷款</option>
+                        <option value="6">资金来源于企事业单位的委托贷款</option>
+                        <option value="7">资金来源于个人的委托贷款</option>
+                    </select>
+                </div>
+
+                <div class="col-6">
+                    <label>贷款投向:</label>
+                    <select name="LoansTo" class="easyui-combobox" data-options="required:true,editable:false">
+                        <option value="f526">汽车、摩托车、燃料及零配件专门零售</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6">
+                    <label>贷款种类:</label>
+                    <select name="LoanTypes" class="easyui-combobox" data-options="required:true,editable:false,value:40">
+                        <option value="10">短期贷款</option>
+                        <option value="11">短期流动资金贷款</option>
+                        <option value="19">短期其他贷款</option>
+                        <option value="20">中期贷款</option>
+                        <option value="21">中期流动资金贷款</option>
+                        <option value="22">中期基建贷款</option>
+                        <option value="23">中期技改贷款</option>
+                        <option value="29">中期其他贷款</option>
+                        <option value="30">长期贷款</option>
+                        <option value="31">长期基建贷款</option>
+                        <option value="32">长期技改贷款</option>
+                        <option value="39">长期其他贷款</option>
+                        <option value="40">融资租赁业务</option>
+                    </select>
+                </div>
+
+                <div class="col-6">
+                    <label>借据状态:</label>
+                    <select name="Status" class="easyui-combobox" data-options="readonly:true">
+                        <option value="1">正常</option>
+                        <option value="3">逾期</option>
+                        <option value="2">已还清</option>
+                    </select>
+                </div>
+            </div>
+        </fieldset>
+
+        <fieldset id="payment_history">
+            <legend>还款记录</legend>
+            
+
+            <table id="payment_dg" class="easyui-datagrid" data-options="singleSelect: true,
+                   rownumbers: true, toolbar: '#payment_tb',
+                   onDblClickRow: onEdit, onEndEdit: onEndEdit, rowStyler: PaymentStyler">
+                <thead>
+                    <tr>
+                        <th data-options="field:'ScheduledPaymentPrincipal',width:150,align:'right',
+                        editor:{
+                            type:'textbox',
+                            options:{
+                                required:true,
+                                validType:'Price'
+                            }
+                        }">应还本金（元）</th>
+                        <th data-options="field:'ActualPaymentPrincipal',width:150,align:'right',
+                        editor:{
+                            type:'textbox',
+                            options:{
+                                required:true,
+                                validType:'Price'
+                            }
+                        }">实际偿还本金（元）</th>
+                        <th data-options="field:'ScheduledPaymentInterest',width:150,align:'right',
+                        editor:{
+                            type:'textbox',
+                            options:{
+                                required:true,
+                                validType:'Price'
+                            }
+                        }">应还利息（元）</th>
+                        <th data-options="field:'ActualPaymentInterest',width:150,align:'right',
+                        editor:{
+                            type:'textbox',
+                            options:{
+                                required:true,
+                                validType:'Price'
+                            }
+                        }">实际偿还利息（元）</th>
+                        <th data-options="field:'DatePayment',width:150,align:'right'">还款日期</th>
+                        <th data-options="field:'PaymentTypes',width:150,align:'right',
+                        formatter:function(value,row){
+                            return row.PaymentTypesDesc;
+                        },
+                        editor:{
+                            type:'combobox',
+                            options:{
+						        editable:false,
+                                required:true,
+                                data:[
+                                    {'value':'01','text':'正常收回'},
+                                    {'value':'02','text':'资产重组'},
+                                    {'value':'03','text':'资产剥离'},
+                                    {'value':'04','text':'以资抵债'},
+                                    {'value':'05','text':'担保代偿'},
+                                    {'value':'06','text':'核损核销'},
+                                    {'value':'07','text':'政策性还款'},
+                                    {'value':'08','text':'债转股'},
+                                    {'value':'09','text':'转出'}
+                                ]
+                            }
+                        }">还款方式</th>
+                    </tr>
+                </thead>
+            </table>
+
+            <div id="payment_tb">
+                <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true,onClick:AppendPayment">添加</a>
+                <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-edit',plain:true,onClick:ModifyPayment">修改</a>
+                <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-remove',plain:true,onClick:RemovePayment">移除</a>
+                <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-save',plain:true,onClick:AcceptPayment">确定</a>
+            </div>
+
+            <script>
+                var editIndex = undefined;
+                function endEditing() {
+                    if (editIndex == undefined) { return true; }
+                    if ($("#payment_dg").datagrid("validateRow", editIndex)) {
+                        $("#payment_dg").datagrid("endEdit", editIndex);
+                        editIndex = undefined;
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
+                function onEdit(index) {
+                    if (editIndex != index) {
+                        if (endEditing()) {
+                            var row = $("#payment_dg").datagrid("selectRow", index)
+                                .datagrid("getSelected");
+
+                            if (!row.Id) {
+                                $("#payment_dg").datagrid("beginEdit", index);
+
+                                editIndex = index;
+                            } else {
+                                $.messager.show({ msg: "已有的还款记录不可更改。" });
+                            }
+                        } else {
+                            setTimeout(function () {
+                                $("#payment_dg").datagrid("selectRow", editIndex);
+                            }, 0);
+                        }
+                    }
+                }
+                function onEndEdit(index, row) {
+                    var ed = $(this).datagrid('getEditor', {
+                        index: index,
+                        field: 'PaymentTypes'
+                    });
+                    row.PaymentTypesDesc = $(ed.target).combobox('getText');
+                }
+                function AppendPayment() {
+                    if (endEditing()) {
+                        $("#payment_dg").datagrid("appendRow", {
+                            ScheduledPaymentPrincipal: 0,
+                            ScheduledPaymentInterest: 0,
+                            ActualPaymentPrincipal: 0,
+                            ActualPaymentInterest: 0,
+                            DatePayment: new Date().toLocaleDateString(),
+                            PaymentTypes: "01"
+                        });
+
+                        editIndex = $("#payment_dg").datagrid("getRows").length - 1;
+
+                        $("#payment_dg").datagrid("selectRow", editIndex)
+                            .datagrid("beginEdit", editIndex);
+                    }
+                }
+                function ModifyPayment() {
+                    var row = $("#payment_dg").datagrid("getSelected");
+                    var index = $("#payment_dg").datagrid("getRowIndex", row);
+
+                    if (index) {
+                        onEdit(index);
+                    }
+                }
+                function RemovePayment() {
+                    if (editIndex == undefined) { return; }
+                    $("#payment_dg").datagrid("cancelEdit", editIndex)
+                            .datagrid("deleteRow", editIndex);
+                    editIndex = undefined;
+                }
+                function AcceptPayment() {
+                    if (endEditing()) {
+                        $("#payment_dg").datagrid("acceptChanges");
+                    }
+                }
+                function PaymentStyler(index, row) {
+                    if (row.Id) {
+                        return "background-color:#F5FFFA;color:#000;";
+                    }
+                }
+            </script>
+        </fieldset>
+
+        <div id="btn">
+            <a href="javascript:void(0)" id="save" class="easyui-linkbutton" data-options="iconCls:'icon-save',onClick:page.Submit">保存</a>
+            <a href="javascript:void(0)" id="back" class="easyui-linkbutton" data-options="iconCls:'icon-redo',onClick:uc.form.Cancel">返回</a>
+        </div>
+    </form>
+</body>
+</html>
