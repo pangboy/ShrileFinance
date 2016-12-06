@@ -109,7 +109,6 @@
                     }
                     return new GuarantyContractViewModel();
                 })
-                .Include<GuarantyContract,GuarantyContractViewModel>()
                 .Include<GuarantyContractPledge, GuarantyContractPledgeViewModel>()
                 .Include<GuarantyContractMortgage, GuarantyContractMortgageViewModel>();
 
