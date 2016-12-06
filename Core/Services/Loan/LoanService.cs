@@ -21,7 +21,7 @@
                 throw new InvalidOperationAppException("申请贷款失败, 请确认授信合同是否有效或授信余额是否充足.");
             }
 
-            throw new NotImplementedException();
+            credit.Loans.Add(loan);
         }
     }
 }

@@ -11,7 +11,6 @@ namespace BLL.BankCredit.Validates
     {
         /// <summary>
         /// 工厂模式
-        /// TODO 补充完所有的信息记录的方法
         /// </summary>
         /// <param name="intoTypeID"></param>
         /// <param name="data"></param>

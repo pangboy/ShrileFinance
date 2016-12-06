@@ -1,16 +1,12 @@
 ﻿namespace Data.Migrations
 {
     using System;
-    using System.Collections.Generic;
-    using System.Data.Entity;
     using System.Data.Entity.Migrations;
-    using System.Linq;
-    using Core.Entities.Produce;
     using Core.Entities;
     using Core.Entities.Flow;
     using Core.Entities.Identity;
+    using Core.Entities.Produce;
     using Microsoft.AspNet.Identity.EntityFramework;
-    using Flow_ = Core.Entities.Flow.Flow;
 
     internal sealed class Configuration : DbMigrationsConfiguration<MyContext>
     {
@@ -34,8 +30,7 @@
                new FinancingProject { Id = new Guid("{0E3C0A6D-ABA4-E611-80C5-507B9DE4A488}"), Name = "延保险", IsFinancing = true },
                new FinancingProject { Id = new Guid("{0F3C0A6D-ABA4-E611-80C5-507B9DE4A488}"), Name = "其他", IsFinancing = true },
                new FinancingProject { Id = new Guid("{103C0A6D-ABA4-E611-80C5-507B9DE4A488}"), Name = "GPS费用", IsFinancing = false },
-               new FinancingProject { Id = new Guid("{113C0A6D-ABA4-E611-80C5-507B9DE4A488}"), Name = "手续费", IsFinancing = false }
-               );
+               new FinancingProject { Id = new Guid("{113C0A6D-ABA4-E611-80C5-507B9DE4A488}"), Name = "手续费", IsFinancing = false });
 
             context.SaveChanges();
         }
@@ -66,7 +61,7 @@
                     UserName = "sysadmin",
                     Name = "系统管理员",
                     Email = "sysadmin@shrile.com",
-                    PasswordHash = "AD/EZNhYovRqhYvh/wAyAwYt2YaBMJCZkRRHXrmycouws7v2CbYu/ik0HOWwL4Pe9Q==",
+                    PasswordHash = "AFTVSgxvNx+xKz3M7mlM2oNXEleZYIshilT7hA139cXW/4GI6sPVt051PL1WEZ4jhQ==",
                     SecurityStamp = "f7ed34ab-484b-4660-aa15-58d8384ef6fb"
                 },
                 new AppUser {
@@ -102,10 +97,10 @@
         /// <param name="context"></param>
         private void FlowSeed(MyContext context)
         {
-            context.Set<Flow_>().AddOrUpdate(
+            context.Set<Flow>().AddOrUpdate(
                 m => m.Id,
-                new Flow_ { Id = new Guid("{228C8C80-06A4-E611-80C5-507B9DE4A488}"), Name = "融资流程" },
-                new Flow_ { Id = new Guid("{238C8C80-06A4-E611-80C5-507B9DE4A488}"), Name = "授信流程" });
+                new Flow { Id = new Guid("{228C8C80-06A4-E611-80C5-507B9DE4A488}"), Name = "融资流程" },
+                new Flow { Id = new Guid("{238C8C80-06A4-E611-80C5-507B9DE4A488}"), Name = "授信流程" });
 
             context.Set<Node>().AddOrUpdate(
                 m => m.Id,
@@ -141,7 +136,7 @@
                 new FAction { Id = new Guid("{364B41DB-14A4-E611-80C5-507B9DE4A488}"), NodeId = new Guid("{0D95D79F-08A4-E611-80C5-507B9DE4A488}"), TransferId = null, Name = "终止", Type = ActionTypeEnum.终止, AllocationType = ActionAllocationEnum.无, Method = null },
                 new FAction { Id = new Guid("{374B41DB-14A4-E611-80C5-507B9DE4A488}"), NodeId = new Guid("{0E95D79F-08A4-E611-80C5-507B9DE4A488}"), TransferId = new Guid("{0F95D79F-08A4-E611-80C5-507B9DE4A488}"), Name = "提交", Type = ActionTypeEnum.流转, AllocationType = ActionAllocationEnum.发起者, Method = "FinanceOperation" },
                 new FAction { Id = new Guid("{384B41DB-14A4-E611-80C5-507B9DE4A488}"), NodeId = new Guid("{0F95D79F-08A4-E611-80C5-507B9DE4A488}"), TransferId = new Guid("{1095D79F-08A4-E611-80C5-507B9DE4A488}"), Name = "提交", Type = ActionTypeEnum.流转, AllocationType = ActionAllocationEnum.发起者, Method = "FinanceCustomer" },
-                new FAction { Id = new Guid("{394B41DB-14A4-E611-80C5-507B9DE4A488}"), NodeId = new Guid("{1095D79F-08A4-E611-80C5-507B9DE4A488}"), TransferId = new Guid("{1195D79F-08A4-E611-80C5-507B9DE4A488}"), Name = "提交", Type = ActionTypeEnum.流转, AllocationType = ActionAllocationEnum.渠道经理, Method = "" },
+                new FAction { Id = new Guid("{394B41DB-14A4-E611-80C5-507B9DE4A488}"), NodeId = new Guid("{1095D79F-08A4-E611-80C5-507B9DE4A488}"), TransferId = new Guid("{1195D79F-08A4-E611-80C5-507B9DE4A488}"), Name = "提交", Type = ActionTypeEnum.流转, AllocationType = ActionAllocationEnum.渠道经理, Method = string.Empty },
                 new FAction { Id = new Guid("{3A4B41DB-14A4-E611-80C5-507B9DE4A488}"), NodeId = new Guid("{1095D79F-08A4-E611-80C5-507B9DE4A488}"), TransferId = null, Name = "撤销", Type = ActionTypeEnum.终止, AllocationType = ActionAllocationEnum.无, Method = null },
                 new FAction { Id = new Guid("{3B4B41DB-14A4-E611-80C5-507B9DE4A488}"), NodeId = new Guid("{1195D79F-08A4-E611-80C5-507B9DE4A488}"), TransferId = new Guid("{1295D79F-08A4-E611-80C5-507B9DE4A488}"), Name = "通过", Type = ActionTypeEnum.流转, AllocationType = ActionAllocationEnum.指定, Method = null },
                 new FAction { Id = new Guid("{3C4B41DB-14A4-E611-80C5-507B9DE4A488}"), NodeId = new Guid("{1195D79F-08A4-E611-80C5-507B9DE4A488}"), TransferId = new Guid("{1095D79F-08A4-E611-80C5-507B9DE4A488}"), Name = "退回", Type = ActionTypeEnum.流转, AllocationType = ActionAllocationEnum.记录, Method = null },

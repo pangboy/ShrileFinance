@@ -132,6 +132,17 @@
         }
 
         /// <summary>
+        /// 授信合同选项
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<CreditContractViewModel> Option()
+        {
+            var credits = repository.GetAll().AsEnumerable();
+
+            return Mapper.Map<IEnumerable<CreditContractViewModel>>(credits);
+        }
+
+        /// <summary>
         /// 根据合同号和机构客户号筛选
         /// </summary>
         /// <param name="serach">筛选条件</param>
@@ -143,9 +154,9 @@
             var creditContract = repository.GetAll();
             if (!string.IsNullOrEmpty(serach))
             {
-                creditContract = creditContract.Where(m => m.CreditContractCode.Contains(serach) || m.Organization.CustomerNumber.Contains(serach));
+                creditContract = creditContract.Where(m => m.CreditContractCode.Contains(serach) || m.Organization.Property.InstitutionChName.Contains(serach));
             }
-
+                
             creditContract = creditContract.OrderByDescending(m => m.Id);
             var pageList = creditContract.ToPagedList(page, size);
 

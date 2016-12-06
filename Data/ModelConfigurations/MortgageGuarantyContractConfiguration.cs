@@ -3,7 +3,7 @@
     using System.Data.Entity.ModelConfiguration;
     using Core.Entities.Loan;
 
-    class MortgageGuarantyContractConfiguration:EntityTypeConfiguration<GuarantyContractMortgage>
+    public class MortgageGuarantyContractConfiguration : EntityTypeConfiguration<GuarantyContractMortgage>
     {
         public MortgageGuarantyContractConfiguration()
         {

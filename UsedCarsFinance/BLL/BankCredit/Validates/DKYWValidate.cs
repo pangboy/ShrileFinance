@@ -52,7 +52,6 @@ namespace BLL.BankCredit.Validates
             }
             if (!string.IsNullOrEmpty(PData.SegmentRules["F525"]) && !string.IsNullOrEmpty(PData.SegmentRules["F526"]))
             {
-                //TODO 还需要根据当前信息记录获取报文文件下的贷款合同生效日期
                 if (Convert.ToInt32(PData.SegmentRules["F525"]) > Convert.ToInt32(PData.SegmentRules["F526"]))
                 {
                     throw new ApplicationException("“借据放款日期”的时间必须小于等于“借据到期日期”");

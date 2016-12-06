@@ -83,6 +83,8 @@
 
             // Loan
             CreateMap<Loan, ViewModels.Loan.LoanViewModels.LoanViewModel>();
+            CreateMap<PaymentHistory, ViewModels.Loan.LoanViewModels.PaymentHistoryViewModel>();
+            CreateMap<GuarantyContract, GuarantyContractViewModel>();
             CreateMap<GuarantyContractMortgage, GuarantyContractMortgageViewModel>();
             CreateMap<GuarantyContractPledge, GuarantyContractPledgeViewModel>();
             CreateMap<GuarantorPerson, GuarantyPersonViewModel>();

@@ -30,7 +30,7 @@
         /// <summary>
         /// 现金流量
         /// </summary>
-        public virtual List<CashFlow> CashFlow { get; set; }
+        public virtual ICollection<CashFlow> CashFlow { get; set; }
 
         /// <summary>
         /// 资产负债
@@ -40,16 +40,16 @@
         /// <summary>
         /// 利润利润分配
         /// </summary>
-        public virtual List<Profit> Profit { get; set; }
+        public virtual ICollection<Profit> Profit { get; set; }
 
         /// <summary>
         /// 事业单位收入支出
         /// </summary>
-        public virtual List<InstitutionIncomeExpenditure> IncomeExpenditur { get; set; }
+        public virtual ICollection<InstitutionIncomeExpenditure> IncomeExpenditur { get; set; }
 
         /// <summary>
         /// 事业单位资产负债
         /// </summary>
-        public virtual List<InstitutionLiabilities> InstitutionLiabilities { get; set; }
+        public virtual ICollection<InstitutionLiabilities> InstitutionLiabilities { get; set; }
     }
 }

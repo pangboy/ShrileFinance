@@ -4,6 +4,15 @@
 
     public class OrganizationViewModel
     {
+        public OrganizationViewModel()
+        {
+            Managers = new HashSet<ManagerViewModel>();
+            Shareholders = new HashSet<StockholderViewModel>();
+            AssociatedEnterprises = new HashSet<AssociatedEnterpriseViewModel>();
+            Litigation = new HashSet<LitigationViewModel>();
+            BigEvent = new HashSet<BigEventViewModel>();
+        }
+
         /// <summary>
         /// 机构基础
         /// </summary>

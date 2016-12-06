@@ -1,9 +1,12 @@
 ﻿namespace Application.ViewModels.OrganizationViewModels
 {
+    using System;
     using System.ComponentModel.DataAnnotations;
 
-    public class BigEventViewModel
+    public class BigEventViewModel : IEntityViewModel
     {
+        public Guid? Id { get; set; }
+
         /// <summary>
         /// 大事件流水号
         /// </summary>

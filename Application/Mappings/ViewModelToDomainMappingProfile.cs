@@ -39,9 +39,19 @@
             CreateMap<StateViewModel, OrganizationState>();
             CreateMap<ManagerViewModel, Manager>();
             CreateMap<BaseViewModel, Organization>();
-            CreateMap<FinancialAffairsViewModel, FinancialAffairs>();
+            CreateMap<FinancialAffairsViewModel, FinancialAffairs>()
+                .ForMember(d => d.Liabilities, opt => opt.Ignore())
+                .ForMember(d => d.CashFlow, opt => opt.Ignore())
+                .ForMember(d => d.IncomeExpenditur, opt => opt.Ignore())
+                .ForMember(d => d.InstitutionLiabilities, opt => opt.Ignore())
+                .ForMember(d => d.Profit, opt => opt.Ignore());
             CreateMap<StockholderViewModel, Stockholder>();
-            CreateMap<OrganizationViewModel, Organization>();
+            CreateMap<OrganizationViewModel, Organization>()
+                .ForMember(d => d.BigEvent, opt => opt.Ignore())
+                .ForMember(d => d.Litigation, opt => opt.Ignore())
+                .ForMember(d => d.Managers, opt => opt.Ignore())
+                .ForMember(d => d.Shareholders, opt => opt.Ignore())
+                .ForMember(d => d.AssociatedEnterprises, opt => opt.Ignore());
             CreateMap<ContactViewModel, OrganizationContact>();
             CreateMap<FamilyMemberViewModel, FamilyMember>();
             CreateMap<CashFlowViewModel, CashFlow>();
@@ -70,6 +80,21 @@
             CreateMap<FinanceProduceViewModel, FinanceProduce>();
 
             // Loan
+            CreateMap<ViewModels.Loan.LoanViewModels.LoanViewModel, Loan>()
+                .ForMember(m => m.Status, opts => opts.Ignore());
+            CreateMap<ViewModels.Loan.LoanViewModels.PaymentHistoryViewModel, PaymentHistory>()
+                .ConstructUsing(m => new PaymentHistory(
+                    m.ScheduledPaymentPrincipal,
+                    m.ScheduledPaymentInterest,
+                    m.ActualPaymentPrincipal,
+                    m.ActualPaymentInterest))
+                .IgnoreAllPropertiesWithAnInaccessibleSetter();
+            CreateMap<GuarantyContractViewModel, GuarantyContract>();
+            CreateMap<GuarantyContractMortgageViewModel, GuarantyContractMortgage>();
+            CreateMap<GuarantyContractPledgeViewModel, GuarantyContractPledge>();
+            CreateMap<GuarantyPersonViewModel, GuarantorPerson>();
+            CreateMap<GuarantyOrganizationViewModel, GuarantorOrganization>();
+            CreateMap<CreditContractViewModel, CreditContract>();
             CreateMap<ViewModels.Loan.LoanViewModels.LoanViewModel, Loan>();
             CreateMap<GuarantyContractMortgageViewModel, GuarantyContractMortgage>();
             CreateMap<GuarantyContractPledgeViewModel, GuarantyContractPledge>();

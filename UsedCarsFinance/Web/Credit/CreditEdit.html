@@ -20,13 +20,13 @@
         uc.form = new UCForm("#credit_ff");
 
         $(function () {
-            Init();
+            Render().then(function () {
+                setTimeout(Init, 300);
+            });
         });
 
         function Init() {
             var query = uc.GetParams();
-
-            LoadProcessUser();
 
             if (query.method == "mod" || query.method == "view") {
                 if (query.method == "mod") {
@@ -44,6 +44,16 @@
                     onLoad: Load
                 });
             }
+        }
+
+        function Render() {
+            return $.when(
+                LoadCombobox("select[comboname='User1']", { RoleId: 'BD42BEE1-05A4-E611-80C5-507B9DE4A488' }),
+                LoadCombobox("select[comboname='User2']", { RoleId: 'BE42BEE1-05A4-E611-80C5-507B9DE4A488' }),
+                LoadCombobox("select[comboname='User3']", { RoleId: 'BF42BEE1-05A4-E611-80C5-507B9DE4A488' }),
+                LoadCombobox("select[comboname='User4']", { RoleId: 'C042BEE1-05A4-E611-80C5-507B9DE4A488' }),
+                LoadCombobox("select[comboname='User5']", { RoleId: 'C142BEE1-05A4-E611-80C5-507B9DE4A488' })
+            );
         }
 
         function Load(data) {
@@ -262,25 +272,15 @@
             </div>
 
             <script>
-                function LoadProcessUser() {
-                    LoadCombobox("select[comboname='User1']", { RoleId: 'BD42BEE1-05A4-E611-80C5-507B9DE4A488' });
-                    LoadCombobox("select[comboname='User2']", { RoleId: 'BE42BEE1-05A4-E611-80C5-507B9DE4A488' });
-                    LoadCombobox("select[comboname='User3']", { RoleId: 'BF42BEE1-05A4-E611-80C5-507B9DE4A488' });
-                    LoadCombobox("select[comboname='User4']", { RoleId: 'C042BEE1-05A4-E611-80C5-507B9DE4A488' });
-                    LoadCombobox("select[comboname='User5']", { RoleId: 'C142BEE1-05A4-E611-80C5-507B9DE4A488' });
-
-                    function LoadCombobox(selector, params) {
-                        $.ajax({
-                            async: false,
-                            method: "GET",
-                            url: "../api/User/Option",
-                            data: params,
-                            statusCode: {
-                                200: function (data) { $(selector).combobox("loadData", data); },
-                                400: uc.E400
-                            }
-                        });
-                    }
+                function LoadCombobox(selector, params) {
+                    return $.ajax({
+                        url: "../api/User/Option",
+                        data: params,
+                        statusCode: {
+                            200: function (data) { $(selector).combobox("loadData", data); },
+                            400: uc.E400
+                        }
+                    });
                 }
             </script>
         </fieldset>
