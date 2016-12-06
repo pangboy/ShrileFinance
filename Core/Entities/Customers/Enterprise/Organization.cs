@@ -100,17 +100,17 @@
         /// <summary>
         /// 高级主管
         /// </summary>
-        public virtual List<Manager> Managers { get; set; }
+        public virtual ICollection<Manager> Managers { get; set; }
 
         /// <summary>
         /// 重要股东
         /// </summary>
-        public virtual List<Stockholder> Shareholders { get; set; }
+        public virtual ICollection<Stockholder> Shareholders { get; set; }
 
         /// <summary>
         /// 关联企业
         /// </summary>
-        public virtual List<AssociatedEnterprise> AssociatedEnterprises { get; set; }
+        public virtual ICollection<AssociatedEnterprise> AssociatedEnterprises { get; set; }
 
         /// <summary>
         /// 财务信息
@@ -120,11 +120,11 @@
         /// <summary>
         /// 大事件
         /// </summary>
-        public virtual List<BigEvent> BigEvent { get; set; }
+        public virtual ICollection<BigEvent> BigEvent { get; set; }
 
         /// <summary>
         /// 诉讼事件
         /// </summary>
-        public virtual List<Litigation> Litigation { get; set; }
+        public virtual ICollection<Litigation> Litigation { get; set; }
     }
 }

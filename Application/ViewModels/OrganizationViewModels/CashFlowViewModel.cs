@@ -1,12 +1,15 @@
 ﻿namespace Application.ViewModels.OrganizationViewModels
 {
+    using System;
     using System.ComponentModel.DataAnnotations;
 
     /// <summary>
     /// 现金流
     /// </summary>
-    public class CashFlowViewModel 
+    public class CashFlowViewModel : IEntityViewModel
     {
+        public Guid? Id { get; set; }
+
         /// <summary>
         /// 报表类型
         /// </summary>

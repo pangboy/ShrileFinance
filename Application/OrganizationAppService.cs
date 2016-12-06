@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using AutoMapper;
+    using Core.Entities.Customers.Enterprise;
     using Core.Interfaces.Repositories;
     using ViewModels;
     using ViewModels.OrganizationViewModels;
@@ -21,8 +22,19 @@
         public void Create(OrganizationViewModel model)
         {
             var customer = Mapper.Map<Core.Entities.Customers.Enterprise.Organization>(model.Base);
-
             customer = Mapper.Map(model, customer);
+
+            customer.AssociatedEnterprises = Mapper.Map<ICollection<AssociatedEnterprise>>(model.AssociatedEnterprises);
+            customer.BigEvent = Mapper.Map<ICollection<BigEvent>>(model.BigEvent);
+            customer.Litigation = Mapper.Map<ICollection<Litigation>>(model.Litigation);
+            customer.Managers = Mapper.Map<ICollection<Manager>>(model.Managers);
+            customer.Shareholders = Mapper.Map<ICollection<Stockholder>>(model.Shareholders);
+            customer.FinancialAffairs.IncomeExpenditur = Mapper.Map<ICollection<InstitutionIncomeExpenditure>>(model.FinancialAffairs.IncomeExpenditur);
+            customer.FinancialAffairs.InstitutionLiabilities = Mapper.Map<ICollection<InstitutionLiabilities>>(model.FinancialAffairs.InstitutionLiabilities);
+            customer.FinancialAffairs.Liabilities = Mapper.Map<ICollection<Liabilities>>(model.FinancialAffairs.Liabilities);
+            customer.FinancialAffairs.Profit = Mapper.Map<ICollection<Profit>>(model.FinancialAffairs.Profit);
+            customer.FinancialAffairs.CashFlow = Mapper.Map<ICollection<CashFlow>>(model.FinancialAffairs.CashFlow);
+           
             repository.Create(customer);
 
             repository.Commit();
@@ -33,10 +45,18 @@
             var customer = repository.Get(model.Base.Id.Value);
             Mapper.Map(model.Base, customer);
             Mapper.Map(model, customer);
-            //var customer = Mapper.Map<Core.Entities.Customers.Enterprise.Organization>(model.Base);
-            //customer = Mapper.Map(model, customer);
 
             new UpdateBind().Bind(customer.FinancialAffairs.Liabilities, model.FinancialAffairs.Liabilities);
+            new UpdateBind().Bind(customer.FinancialAffairs.CashFlow, model.FinancialAffairs.CashFlow);
+            new UpdateBind().Bind(customer.FinancialAffairs.IncomeExpenditur, model.FinancialAffairs.IncomeExpenditur);
+            new UpdateBind().Bind(customer.FinancialAffairs.InstitutionLiabilities, model.FinancialAffairs.InstitutionLiabilities);
+            new UpdateBind().Bind(customer.FinancialAffairs.Profit, model.FinancialAffairs.Profit);
+            new UpdateBind().Bind(customer.BigEvent, model.BigEvent);
+            new UpdateBind().Bind(customer.Litigation, model.Litigation);
+            new UpdateBind().Bind(customer.Managers, model.Managers);
+            new UpdateBind().Bind(customer.Shareholders, model.Shareholders);
+            new UpdateBind().Bind(customer.AssociatedEnterprises, model.AssociatedEnterprises);
+
             repository.Modify(customer);
             repository.Commit();
         }

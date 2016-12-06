@@ -1,12 +1,14 @@
 ﻿namespace Application.ViewModels.OrganizationViewModels
 {
+    using System;
     using System.ComponentModel.DataAnnotations;
 
     /// <summary>
     /// 事业单位收入支出
     /// </summary>
-    public class InstitutionIncomeExpenditureViewModel 
+    public class InstitutionIncomeExpenditureViewModel :IEntityViewModel
     {
+        public Guid? Id { get; set; }
         /// <summary>
         /// 报表类型
         /// </summary>
