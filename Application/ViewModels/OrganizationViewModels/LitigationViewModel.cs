@@ -22,7 +22,7 @@
         /// <summary>
         /// 判决执行金额
         /// </summary>
-        [Required]
+        [Display(Name = "判决执行金额"), Required, StringLength(20), MoneyAttribute(ErrorMessage = "判决执行金额数据不正确")]
         public decimal Money { get; set; }
 
         /// <summary>

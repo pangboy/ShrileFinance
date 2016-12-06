@@ -147,7 +147,6 @@
                 // 加载现金流量、资产负债、利润利润分配、事业单位收入支出、事业单位资产负债
                 $(["CashFlow", "Liabilities", "Profit", "IncomeExpenditur", "InstitutionLiabilities"]).each(function (index, item) {
                     var itemValue = FieldsetSerializeFactory(item, "table");
-                    debugger
                     if (itemValue.length > 0) {
                         data.FinancialAffairs[item] = itemValue;
                     }
@@ -347,7 +346,10 @@
                             $.messager.alert('错误', data.responseJSON.ExceptionMessage);
                         },
                         400: function (data) {
-                            $.messager.alert('错误', data.responseJSON.Message, "info");
+                            var result = ""
+                            $.each(data.responseJSON.ModelState, function () {
+                                $.messager.alert('错误', this, "info");
+                            });
                         }
                     }
                 });
@@ -1411,7 +1413,6 @@
 
                             // table 添加/编辑按钮
                             function CashFlowEdit() {
-                                debugger
                                 $(this).offset().top;
 
                                 var url = "ContentPages/CashFlowPage.html?method=" + this.id;

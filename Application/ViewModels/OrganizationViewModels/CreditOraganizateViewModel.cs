@@ -1,10 +1,9 @@
-﻿using System;
-
-namespace Application.ViewModels.OrganizationViewModels
+﻿namespace Application.ViewModels.OrganizationViewModels
 {
+    using System;
+
     public class CreditOraganizateViewModel
     {
-
         /// <summary>
         /// 客户号
         /// </summary>

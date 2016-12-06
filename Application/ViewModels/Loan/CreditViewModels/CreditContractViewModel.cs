@@ -52,7 +52,7 @@
         /// <summary>
         /// 是否有担保
         /// </summary>
-        public bool IsGuarantee { get; set; }
+        public bool HasGuarantee { get; set; }
 
         /// <summary>
         /// 担保合同

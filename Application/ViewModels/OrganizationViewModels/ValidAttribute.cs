@@ -66,6 +66,29 @@
     }
 
     /// <summary>
+    /// 金额类型校验
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Property, AllowMultiple = true)]
+    public class MoneyAttribute : ValidationAttribute
+    {
+        public override bool IsValid(object value)
+        {
+            var valueStr = value == null ? string.Empty : value.ToString();
+
+            var regResult = false;
+            if (new Regex(@"^-?\d+\.\d{2}$").IsMatch(valueStr)|| new Regex(@"^\d+$").IsMatch(valueStr))
+            {
+                if(valueStr.Length>2&&new Regex(@"^[0][0-9]*$").IsMatch(valueStr.Substring(0, 2)))
+                {
+                    regResult = false;
+                }
+                regResult = true;
+            }
+            return regResult;
+        }
+    }
+
+    /// <summary>
     /// 组织机构代码验证特性
     /// </summary>
     /// zouql   16.10.20
@@ -774,6 +797,184 @@
             }
 
             return false;
+        }
+    }
+    #endregion
+
+    #region 资产负债
+    public class LiabilitiesAttribute : ValidationAttribute
+    {
+        public override bool IsValid(object value)
+        {
+            if (value == null)
+            {
+                return true;
+            }
+
+            var liabilitites = value as LiabilitiesViewModel;
+            liabilitites.TotalLiabilities = liabilitites.TotalLiabilities ?? decimal.Parse("0.00");
+            liabilitites.TotalOwnersEquity = liabilitites.TotalOwnersEquity ?? decimal.Parse("0.00");
+
+            if (liabilitites.TotalLiabilitiesCapital != liabilitites.TotalLiabilities + liabilitites.TotalOwnersEquity)
+            {
+                ErrorMessage ="2007资产负债中：负债所有者权益=负债合计+所有者权益合计,正确值应为：" + (liabilitites.TotalLiabilities + liabilitites.TotalOwnersEquity);
+
+                return false;
+            }
+            else if (liabilitites.TotalAssets != liabilitites.TotalLiabilitiesCapital)
+            {
+                ErrorMessage = "2007资产负债中：资产总计=负债和所有者权益,正确值应为：" + liabilitites.TotalLiabilitiesCapital;
+
+                return false;
+            }
+
+            return true;
+        }
+    }
+    #endregion
+
+    #region 现金流
+    public class CashFlowAttribute : ValidationAttribute
+    {
+        public override bool IsValid(object value)
+        {
+            if (value == null)
+            {
+                return true;
+            }
+
+            var cash = value as CashFlowViewModel;
+
+            cash.OperatingActivitiesCashInflows = cash.OperatingActivitiesCashInflows ?? decimal.Parse("0.00");
+            cash.OperatingActivitiesCashOutflows = cash.OperatingActivitiesCashOutflows ?? decimal.Parse("0.00");
+            cash.CashInInvestmentActivities = cash.CashInInvestmentActivities ?? decimal.Parse("0.00");
+            cash.InvestmentCashOutflow = cash.InvestmentCashOutflow ?? decimal.Parse("0.00");
+            cash.FinancingCashInflow = cash.FinancingCashInflow ?? decimal.Parse("0.00");
+            cash.FinancingCashOutflow = cash.FinancingCashOutflow ?? decimal.Parse("0.00");
+            cash.OperatingActivitieCashNet = cash.OperatingActivitieCashNet ?? decimal.Parse("0.00");
+            cash.InvestmentCashInflow = cash.InvestmentCashInflow ?? decimal.Parse("0.00");
+            cash.FinancingNetCash = cash.FinancingNetCash ?? decimal.Parse("0.00");
+            cash.ExchangeRateChangeCash = cash.ExchangeRateChangeCash ?? decimal.Parse("0.00");
+            cash.CashIncrease5 = cash.CashIncrease5 ?? decimal.Parse("0.00");
+            cash.BeginCashBalance = cash.BeginCashBalance ?? decimal.Parse("0.00");
+
+            if (cash.OperatingActivitieCashNet != cash.OperatingActivitiesCashInflows - cash.OperatingActivitiesCashOutflows)
+            {
+                ErrorMessage = "2007现金流中：经营活动产生的现金流量净额=经营活动现金流入小计-经营活动现金流出小计,正确值应为：" + (cash.OperatingActivitiesCashInflows - cash.OperatingActivitiesCashOutflows);
+
+                return false;
+            }
+            else if (cash.InvestmentCashInflow != cash.CashInInvestmentActivities - cash.InvestmentCashOutflow)
+            {
+                ErrorMessage = "2007现金流中：投资活动产生的现金流量净额=投资活动现金流入小计-投资活动现金流出小计,正确值应为：" + (cash.CashInInvestmentActivities - cash.InvestmentCashOutflow);
+
+                return false;
+            }
+            else if (cash.FinancingNetCash != cash.FinancingCashInflow - cash.FinancingCashOutflow)
+            {
+                ErrorMessage = "2007现金流中：筹集活动产生的现金流量净额= 筹资活动现金流入小计-筹资活动现金流出小计,正确值应为：" + (cash.FinancingCashInflow - cash.FinancingCashOutflow);
+
+                return false;
+            }
+            else if (cash.CashIncrease5 != cash.OperatingActivitieCashNet + cash.InvestmentCashInflow + cash.FinancingNetCash + cash.ExchangeRateChangeCash)
+            {
+                ErrorMessage = "2007现金流中：现金及现金等价物净增加额(五)=经营活动产生的现金流量净额+投资活动产生的现金流量净额+筹集活动产生的现金流量净额+汇率变动对现金及现金等价物的影响,正确值应为：" + (cash.OperatingActivitieCashNet + cash.InvestmentCashInflow + cash.FinancingNetCash + cash.ExchangeRateChangeCash);
+
+                return false;
+            }
+            else if (cash.FinalCashBalance6 != cash.CashIncrease5 + cash.BeginCashBalance)
+            {
+                ErrorMessage = "2007现金流中：期末现金及现金等价物余额(六)=现金及现金等价物净增加额(五)+期初现金及现金等价物余额,正确值应为：" + (cash.CashIncrease5 + cash.BeginCashBalance);
+
+                return false;
+            }
+
+            return true;
+        }
+    }
+    #endregion
+
+    #region 事业单位资产负债
+    public class InstitutionLiabilitiesAttribute : ValidationAttribute
+    {
+        public override bool IsValid(object value)
+        {
+            if (value == null)
+            {
+                return true;
+            }
+
+            var ii = value as InstitutionLiabilitiesViewModel;
+
+            ii.资产合计 = ii.资产合计 ?? decimal.Parse("0.00");
+            ii.支出合计 = ii.支出合计 ?? decimal.Parse("0.00");
+            ii.负债合计 = ii.负债合计 ?? decimal.Parse("0.00");
+            ii.净资产合计 = ii.净资产合计 ?? decimal.Parse("0.00");
+            ii.收入合计 = ii.收入合计 ?? decimal.Parse("0.00");
+
+            if (ii.资产部类总计 != ii.资产合计 + ii.支出合计)
+            {
+                ErrorMessage = "事业单位资产负债：资产部类总计=资产合计+支出合计,正确值应为：" + (ii.资产合计 + ii.支出合计);
+
+                return false;
+            }
+            else if (ii.负债部类总计 != ii.负债合计 + ii.净资产合计 + ii.收入合计)
+            {
+                ErrorMessage = "事业单位资产负债：负债部类总计=负债合计+净资产合计+收入合计,正确值应为：" + (ii.负债合计 + ii.净资产合计 + ii.收入合计);
+
+                return false;
+            }
+
+            return true;
+        }
+    }
+    #endregion
+
+    #region 事业单位收入支出
+    public class InstitutionIncomeExpenditureAttribute : ValidationAttribute
+    {
+        public override bool IsValid(object value)
+        {
+            if (value == null)
+            {
+                return true;
+            }
+
+            var iie = value as InstitutionIncomeExpenditureViewModel;
+
+            iie.事业收入小计 = iie.事业收入小计 ?? decimal.Parse("0.00");
+            iie.经营收入小计 = iie.经营收入小计 ?? decimal.Parse("0.00");
+            iie.拨入专款小计 = iie.拨入专款小计 ?? decimal.Parse("0.00");
+            iie.事业支出小计 = iie.事业支出小计 ?? decimal.Parse("0.00");
+            iie.经营支出小计 = iie.经营支出小计 ?? decimal.Parse("0.00");
+            iie.专款小计 = iie.专款小计 ?? decimal.Parse("0.00");
+
+            if (iie.收入总计 != iie.事业收入小计 + iie.经营收入小计 + iie.拨入专款小计)
+            {
+                ErrorMessage = "事业单位收入支出：收入总计=事业收入小计+经营收入小计+拨入专款小计,正确值应为：" + (iie.事业收入小计 + iie.经营收入小计 + iie.拨入专款小计);
+
+                return false;
+            }
+            else if (iie.支出总计 != iie.事业支出小计 + iie.经营支出小计 + iie.专款小计)
+            {
+                ErrorMessage = "事业单位收入支出：支出总计=事业支出小计+经营支出小计+专款小计,正确值应为：" + (iie.事业支出小计 + iie.经营支出小计 + iie.专款小计);
+
+                return false;
+            }
+            else if (iie.事业结余 != iie.专款小计 - iie.事业支出小计)
+            {
+                ErrorMessage = "事业单位收入支出：事业结余=专款小计-事业支出小计,正确值应为：" + (iie.专款小计 - iie.事业支出小计);
+
+                return false;
+            }
+            else if (iie.经营结余 != iie.经营收入小计 - iie.经营支出小计)
+            {
+                ErrorMessage = "事业单位收入支出：经营结余=经营收入小计-经营支出小计,正确值应为：" + (iie.经营收入小计 - iie.经营支出小计);
+
+                return false;
+            }
+
+            return true;
         }
     }
     #endregion
