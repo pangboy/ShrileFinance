@@ -105,7 +105,6 @@ namespace Data.Migrations
                 .PrimaryKey(t => t.Id)
                 .ForeignKey("dbo.LOAN_Loan", t => t.LoanId)
                 .Index(t => t.LoanId);
-            
         }
         
         public override void Down()

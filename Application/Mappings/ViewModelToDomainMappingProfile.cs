@@ -38,9 +38,19 @@
             CreateMap<StateViewModel, OrganizationState>();
             CreateMap<ManagerViewModel, Manager>();
             CreateMap<BaseViewModel, Organization>();
-            CreateMap<FinancialAffairsViewModel, FinancialAffairs>();
+            CreateMap<FinancialAffairsViewModel, FinancialAffairs>()
+                .ForMember(d => d.Liabilities, opt => opt.Ignore())
+                .ForMember(d => d.CashFlow, opt => opt.Ignore())
+                .ForMember(d => d.IncomeExpenditur, opt => opt.Ignore())
+                .ForMember(d => d.InstitutionLiabilities, opt => opt.Ignore())
+                .ForMember(d => d.Profit, opt => opt.Ignore());
             CreateMap<StockholderViewModel, Stockholder>();
-            CreateMap<OrganizationViewModel, Organization>();
+            CreateMap<OrganizationViewModel, Organization>()
+                .ForMember(d => d.BigEvent, opt => opt.Ignore())
+                .ForMember(d => d.Litigation, opt => opt.Ignore())
+                .ForMember(d => d.Managers, opt => opt.Ignore())
+                .ForMember(d => d.Shareholders, opt => opt.Ignore())
+                .ForMember(d => d.AssociatedEnterprises, opt => opt.Ignore());
             CreateMap<ContactViewModel, OrganizationContact>();
             CreateMap<FamilyMemberViewModel, FamilyMember>();
             CreateMap<CashFlowViewModel, CashFlow>();

@@ -7,7 +7,7 @@
     /// 主要关联企业段
     /// </summary>
     [MainAssociatedEnterprisePerid_ROI(ErrorMessage = "主要关联企业段 登记注册号码、组织机构代码和机构信用代码不能同时为空")]
-    public class AssociatedEnterpriseViewModel
+    public class AssociatedEnterpriseViewModel : IEntityViewModel
     {
         public Guid? Id { get; set; }
 

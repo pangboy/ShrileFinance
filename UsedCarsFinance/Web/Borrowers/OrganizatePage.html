@@ -147,7 +147,7 @@
                 // 加载现金流量、资产负债、利润利润分配、事业单位收入支出、事业单位资产负债
                 $(["CashFlow", "Liabilities", "Profit", "IncomeExpenditur", "InstitutionLiabilities"]).each(function (index, item) {
                     var itemValue = FieldsetSerializeFactory(item, "table");
-
+                    debugger
                     if (itemValue.length > 0) {
                         data.FinancialAffairs[item] = itemValue;
                     }
@@ -568,140 +568,6 @@
             return data;
         }
     </script>
-
-    <!--<script type="text/javascript">
-        function TempleSubmit() {
-            var base = {
-                CustomerNumber: "123123", ManagementerCode: "11111111111111111111", CustomerType: "1", InstitutionCreditCode: "123123123123123123",
-                OrganizateCode: "", RegistraterType: "01", RegistraterCode: "123123", TaxpayerIdentifyIrsNumber: "123123123", TaxpayerIdentifyLandNumber: "123133213", LoanCardCode: "1111111111112222", HasParent: "false"
-            }
-            var Property = {
-                InstitutionChName: "yandong", RegisterAddress: "杭州", RegisterAdministrativeDivision: "100101", SetupDate: "2016-01-01", CertificateDueDate: "2016-01-01", BusinessScope: "上面啊司法考试更多",
-                RegisterCapital: "10000.23", OrganizationCategory: "1", OrganizationCategorySubdivision: "10", EconomicSectorsClassification: "g2560", EconomicType: "10"
-            }
-            var State = { EnterpriseScale: "2", InstitutionsState: "1" }
-            var Contact = { OfficeAddress: "12345643213", ContactPhone: "13111111111", FinancialContactPhone: "13111111111" }
-            var Manager = [{
-                Type: "1",
-                name: "zhangsan",
-                CertificateType: "1",
-                CertificateCode: "123123123",
-                FamilyMembers: [{
-                    Relationship: "1",
-                    Name: "xiaozhangsan",
-                    CertificateType: "1",
-                    CertificateCode: "222222"
-                },
-                 {
-                     Relationship: "2",
-                     Name: "xiaozhangsan2",
-                     CertificateType: "2",
-                     CertificateCode: "11111"
-                 }]
-             },
-                {
-                    Type: "2",
-                    name: "lisi",
-                    CertificateType: "2",
-                    CertificateCode: "111111",
-                    FamilyMembers: [{
-                        Relationship: "3",
-                        Name: "xiaolisi",
-                        CertificateType: "3",
-                        CertificateCode: "3333333"
-                    },
-                     {
-                         Relationship: "4",
-                         Name: "xiaolisi2",
-                         CertificateType: "4",
-                         CertificateCode: "44444"
-                     }]
-                }
-            ];
-            var Stockholder = [{
-                ShareholdersType: "1",
-                ShareholdersName: "股东1",
-                RegistraterType: "10",
-                RegistraterCode: "123123123123",
-                SharesProportion: "10.00",
-                FamilyMembers: [{
-                    Relationship: "3",
-                    Name: "xiaolisi",
-                    CertificateType: "3",
-                    CertificateCode: "3333333"
-                },
-                 {
-                     Relationship: "4",
-                     Name: "xiaolisi2",
-                     CertificateType: "4",
-                     CertificateCode: "44444"
-                 }]
-            },
-            {
-                ShareholdersType: "2",
-                ShareholdersName: "股东2",
-                RegistraterType: "2",
-                RegistraterCode: "222222",
-                OrganizateCode: "L1832212-3",
-                InstitutionCreditCode: "124124124124123433",
-                SharesProportion: "10.00"
-            }]
-
-            var AssociatedEnterprise = [{ AssociatedType: "01", Name: "晟融", RegistraterType: "02", RegistraterCode: "2222222222", OrganizateCode: "L1832212-3", InstitutionCreditCode: "123123123123123111" },
-            { AssociatedType: "01", Name: "云为", RegistraterType: "02", RegistraterCode: "3333333333", OrganizateCode: "L1832212-3", InstitutionCreditCode: "333333333333333322" }]
-            var Parent = { SuperInstitutionsName: "晟融", RegistraterType: "01", RegistraterCode: "1111111111", OrganizateCode: "2222222222", InstitutionCreditCode: "333333333333333333" }
-
-            //if (!$("#content").form("validate")) {
-            //    $.messager.show({ msg: "填写剩下的必填内容!" });
-            //    return false;
-            //}
-
-            var data = {};
-            data["Base"] = base;//$("#base").serializeJson();
-            data["Property"] = Property;// $("#Properties").serializeJson();
-            data["State"] = State;//$("#State").serializeJson();
-            data["Contact"] = Contact;// $("#Contact").serializeJson();
-            data["Managers"] = Manager;//$("#Manager").serializeJson();//高管
-            data["Shareholders"] = Stockholder;//$("#Stockholder").serializeJson();//重要股东
-            data["AssociatedEnterprises"] = AssociatedEnterprise;//主要关联企业
-            data["Parent"] = Parent;// $("#AssociatedEnterprise").serializeJson();上级机构
-            $.ajax({
-                async: true,
-                data: data,
-                type: "POST",
-                url: "../api/Customer/Add",
-                statusCode: {
-                    200: function (data) {
-                    },
-                    500: function (data) {
-                        $.messager.alert('错误', data.responseJSON.ExceptionMessage);
-                    },
-                    400: function (data) {
-                        $.messager.alert('错误', data.responseJSON.Message, "info");
-                    }
-                }
-            })
-        }
-
-        $(function () {
-            $.ajax({
-                async: true,
-                data: { Id: "CF6D5D97-2D9C-E611-80C5-507B9DE4A488" },
-                type: "GET",
-                url: "../api/Customer/Get",
-                statusCode: {
-                    200: function (data) {
-                    },
-                    500: function (data) {
-                        $.messager.alert('错误', data.responseJSON.ExceptionMessage);
-                    },
-                    400: function (data) {
-                        $.messager.alert('错误', data.responseJSON.Message, "info");
-                    }
-                }
-            });
-        })
-    </script>-->
 </head>
 <body>
     <a id="top" name="top">&nbsp;</a>
@@ -1086,7 +952,7 @@
                     <div style="background-color:#afe3fa;height:30px ;width:95%;display:none">
                         <div float="right" style="width:100%">
                             <a style="margin-top: 2px; margin-right: 10px; float: right; font-size: 24px; text-decoration: none" id="Eadd" onclick="Add(this.id)" href="javascript:void(0)">+</a>
-                            <a style=" margin-right: 20px; float: right; font-size: 24px; text-decoration: none" id="Eminus" onclick="Minus(this)" href="javascript:void(0)" hidden="hidden">-</a>
+                            <a style="margin-right: 20px; float: right; font-size: 24px; text-decoration: none" id="Eminus" onclick="Minus(this)" href="javascript:void(0)" hidden="hidden">-</a>
                         </div>
                     </div>
 
@@ -1442,7 +1308,7 @@
                     <div style="background-color:#afe3fa;height:30px ;width:95%;display:none">
                         <div float="right" style="width:100%">
                             <a style="margin-top: 2px; margin-right: 10px; float: right; font-size: 24px; text-decoration: none" id="Jadd" onclick="Add(this.id)" href="javascript:void(0)">+</a>
-                            <a style=" margin-right: 20px; float: right; font-size: 24px; text-decoration: none" id="Jminus" onclick="Minus(this)" href="javascript:void(0)" hidden="hidden">-</a>
+                            <a style="margin-right: 20px; float: right; font-size: 24px; text-decoration: none" id="Jminus" onclick="Minus(this)" href="javascript:void(0)" hidden="hidden">-</a>
                         </div>
                     </div>
 
@@ -1564,7 +1430,7 @@
                                 $("#CashFlow_dd").dialog({ closed: false, top: $(this).offset().top });
                             }
                         </script>
-                        <div id="CashFlow_dd" class="easyui-dialog" data-options="title:'主要关联企业',width:'1100',height:'600px',top:0,modal:true,closed:true">
+                        <div id="CashFlow_dd" class="easyui-dialog" data-options="title:'现金流量',width:'1100',height:'600px',top:0,modal:true,closed:true">
                             <iframe id="CashFlow_frame" name="CashFlow_frame" src="about:blank" style="width:100%;height:99%; border:0;"></iframe>
                         </div>
                     </fieldset>
@@ -1640,7 +1506,7 @@
                                 $("#Liabilities_dd").dialog({ closed: false, top: $(this).offset().top });
                             }
                         </script>
-                        <div id="Liabilities_dd" class="easyui-dialog" data-options="title:'主要关联企业',width:'1100',height:'600px',top:2100,modal:true,closed:true">
+                        <div id="Liabilities_dd" class="easyui-dialog" data-options="title:'资产负债',width:'1100',height:'600px',top:2100,modal:true,closed:true">
                             <iframe id="Liabilities_frame" name="Liabilities_frame" src="about:blank" style="width:100%;height:99%; border:0;"></iframe>
                         </div>
                     </fieldset>
@@ -1716,7 +1582,7 @@
                                 $("#Profit_dd").dialog({ closed: false, top: $(this).offset().top });
                             }
                         </script>
-                        <div id="Profit_dd" class="easyui-dialog" data-options="title:'主要关联企业',width:'1100',height:'600px',top:2100,modal:true,closed:true">
+                        <div id="Profit_dd" class="easyui-dialog" data-options="title:'利润以及利润分配',width:'1100',height:'600px',top:2100,modal:true,closed:true">
                             <iframe id="Profit_frame" name="Profit_frame" src="about:blank" style="width:100%;height:99%; border:0;"></iframe>
                         </div>
                     </fieldset>
@@ -1792,13 +1658,13 @@
                                 $("#IncomeExpenditur_dd").dialog({ closed: false, top: $(this).offset().top });
                             }
                         </script>
-                        <div id="IncomeExpenditur_dd" class="easyui-dialog" data-options="title:'主要关联企业',width:'1100',height:'600px',top:2100,modal:true,closed:true">
+                        <div id="IncomeExpenditur_dd" class="easyui-dialog" data-options="title:'事业单位收入支出',width:'1100',height:'600px',top:2100,modal:true,closed:true">
                             <iframe id="IncomeExpenditur_frame" name="IncomeExpenditur_frame" src="about:blank" style="width:100%;height:99%; border:0;"></iframe>
                         </div>
                     </fieldset>
 
                     <fieldset id="J5" name="InstitutionLiabilities">
-                        <!--事业单位资产负债-->
+                        <!--事业单位收入支出-->
                         <table id="InstitutionLiabilities_dg" class="easyui-datagrid" style="width:890px;" data-options="toolbar: '#InstitutionLiabilities_tb',
                    rownumbers:true,
                    singleSelect:true,
@@ -1869,7 +1735,7 @@
                                 $("#InstitutionLiabilities_dd").dialog({ closed: false, top: $(this).offset().top });
                             }
                         </script>
-                        <div id="InstitutionLiabilities_dd" class="easyui-dialog" data-options="title:'主要关联企业',width:'1100',height:'600px',top:2100,modal:true,closed:true">
+                        <div id="InstitutionLiabilities_dd" class="easyui-dialog" data-options="title:'事业单位收入支出',width:'1100',height:'600px',top:2100,modal:true,closed:true">
                             <iframe id="InstitutionLiabilities_frame" name="InstitutionLiabilities_frame" src="about:blank" style="width:100%;height:99%; border:0;"></iframe>
                         </div>
                     </fieldset>
@@ -1949,7 +1815,7 @@
                                 $("#Litigation_dd").dialog({ closed: false, top: $(this).offset().top });
                             }
                         </script>
-                        <div id="Litigation_dd" class="easyui-dialog" data-options="title:'主要关联企业',width:'1100',height:'600px',top:2100,modal:true,closed:true">
+                        <div id="Litigation_dd" class="easyui-dialog" data-options="title:'诉讼事件',width:'1100',height:'600px',top:2100,modal:true,closed:true">
                             <iframe id="Litigation_frame" name="Litigation_frame" src="about:blank" style="width:100%;height:99%; border:0;"></iframe>
                         </div>
                     </fieldset>
@@ -2025,7 +1891,7 @@
                                 $("#BigEvent_dd").dialog({ closed: false, top: $(this).offset().top });
                             }
                         </script>
-                        <div id="BigEvent_dd" class="easyui-dialog" data-options="title:'主要关联企业',width:'1100',height:'600px',top:2100,modal:true,closed:true">
+                        <div id="BigEvent_dd" class="easyui-dialog" data-options="title:'大事件',width:'1100',height:'600px',top:2100,modal:true,closed:true">
                             <iframe id="BigEvent_frame" name="BigEvent_frame" src="about:blank" style="width:100%;height:99%; border:0;"></iframe>
                         </div>
                     </fieldset>

@@ -10,7 +10,7 @@
     [MajorShareholdersPeriod_NT(ErrorMessage = "重要股东段 证件号码/登记注册号码和证件类型/登记注册号类型成对出现")]
     [MajorShareholdersPeriod_ROI(ErrorMessage = "重要股东段 当股东类型为机构时，登记注册号码、组织机构代码、机构信用代码必填其一")]
     [MajorShareholdersPeriod_TR(ErrorMessage = "证件类型/登记注册号类型 值错误")]
-    public class StockholderViewModel
+    public class StockholderViewModel : IEntityViewModel
     {
         public Guid? Id { get; set; }
 

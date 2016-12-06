@@ -38,12 +38,12 @@
         <thead>
             <tr>
                 <th data-options="field:'Id',hidden:true">id</th>
-                <th data-options="field:'InstitutionChName',width:500,align:'center'">机构名称</th>
-                <th data-options="field:'CustomerNumber',width:300,align:'center'">客户号</th>
-                <th data-options="field:'ManagementerCode',width:200,align:'center'">管理行代码</th>
-                <th data-options="field:'LoanCardCode',width:200,align:'center'">中征码</th>
-                <th data-options="field:'InstitutionCreditCode',width:200,align:'center'">机构信用代码</th>
-                <th data-options="field:'CreatedDate',width:200,align:'center'">机构信用代码</th>
+                <th data-options="field:'InstitutionChName',width:250,align:'center'">机构名称</th>
+                <th data-options="field:'CustomerNumber',width:150,align:'center'">客户号</th>
+                <th data-options="field:'ManagementerCode',width:150,align:'center'">管理行代码</th>
+                <th data-options="field:'LoanCardCode',width:150,align:'center'">中征码</th>
+                <th data-options="field:'InstitutionCreditCode',width:150,align:'center'">机构信用代码</th>
+                <th data-options="field:'CreatedDate',width:200,align:'center'">创建日期</th>
 
             </tr>
         </thead>
@@ -104,6 +104,7 @@
                     return false;
                 }
             }
+            debugger
             uc.ShowWindow("机构信息", url);
 
             //$("#Organizate_frame").attr("src", url);

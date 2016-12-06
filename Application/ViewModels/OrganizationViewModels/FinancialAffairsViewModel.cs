@@ -1,12 +1,22 @@
 ﻿namespace Application.ViewModels.OrganizationViewModels
 {
     using System.Collections.Generic;
+    using Core.Entities.Customers.Enterprise;
 
     /// <summary>
     /// 财务
     /// </summary>
     public class FinancialAffairsViewModel
     {
+        public FinancialAffairsViewModel()
+        {
+            CashFlow = new HashSet<CashFlowViewModel>();
+            Liabilities = new HashSet<LiabilitiesViewModel>();
+            Profit = new HashSet<ProfitViewModel>();
+            IncomeExpenditur = new HashSet<InstitutionIncomeExpenditureViewModel>();
+            InstitutionLiabilities = new HashSet<InstitutionLiabilitiesViewModel>();
+        }
+
         /// <summary>
         /// 报表年份
         /// </summary>
