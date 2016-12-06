@@ -306,6 +306,9 @@
                     // 禁用fieldset
                     Disabled($("fieldset"));
 
+                    // 禁用table
+                    $("div[id*=_tb]").remove();
+
                     // 禁用保存按钮
                     $("#submit").linkbutton("disable");
                 }
