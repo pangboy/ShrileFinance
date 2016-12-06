@@ -54,7 +54,7 @@
         /// 持股比例
         /// </summary>
         [Display(Name = "持股比例"), DataType(DataType.Currency)]
-        public decimal SharesProportion { get; set; }
+        public decimal? SharesProportion { get; set; }
 
         /// <summary>
         /// 家族成员

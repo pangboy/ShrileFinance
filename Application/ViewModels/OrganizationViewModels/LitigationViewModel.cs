@@ -23,7 +23,7 @@
         /// 判决执行金额
         /// </summary>
         [Required]
-        public decimal Money { get; set; }
+        public decimal? Money { get; set; }
 
         /// <summary>
         /// 判决执行日期

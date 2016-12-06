@@ -4,9 +4,9 @@
     using Core.Entities.Loan;
 
     /// <summary>
-    /// 担保合同
+    /// 担保合同(协调后台)
     /// </summary>
-    public abstract class GuarantyContractViewModel 
+    public class GuarantyContractViewModel:IEntityViewModel
     {
         /// <summary>
         /// 标识
@@ -36,6 +36,6 @@
         /// <summary>
         /// 担保人
         /// </summary>
-        public Guarantor Guarantor { get; set; }
+        public GuarantorViewModel Guarantor { get; set; }
     }
 }
