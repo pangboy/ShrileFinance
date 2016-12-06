@@ -25,13 +25,20 @@
             if (this.id == "creditadd") {
                 url =url
             }
-            else if (this.id == "creditmod") {
+            else if (this.id == "creditmod" || this.id == "creditview") {
                 var row = $("#dg").datagrid("getSelected");
                 if (row == null) {
                     top.$.messager.show({ msg: "请选择一行" });
+                    return false;
                 }
                 else {
-                    url = url + "?id=" + row.Id+"&status=1";
+                    if (this.id == "creditmod") {
+                        url = url + "?id=" + row.Id + "&status=1";
+                    }
+                    else {
+                        url = url + "?id=" + row.Id + "&status=0";
+                    }
+
                 }
             }
             uc.ShowWindow("授信申请", url);
@@ -64,7 +71,7 @@
     <div id="tb">
         <div style="height:30px;">
             <div style="height:30px; width:100%;">
-                <input id="LoanCode" name="LoanCode" class="easyui-textbox" style="width: 200px;height:25px; margin-top:3px;" data-options="prompt:'请输入合同号或客户号'" />
+                <input id="LoanCode" name="LoanCode" class="easyui-textbox" style="width: 200px;height:25px; margin-top:3px;" data-options="prompt:'请输入合同号或机构名'" />
                 <a id="search" class="easyui-linkbutton" href="javascript:void(0)" style="width: auto;height:25px; margin-top:3px;" data-options="iconCls:'icon-search',onClick:Reload">搜索</a>
             </div>
         </div>

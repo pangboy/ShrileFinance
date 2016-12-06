@@ -132,9 +132,9 @@
             var creditContract = repository.GetAll();
             if (!string.IsNullOrEmpty(serach))
             {
-                creditContract = creditContract.Where(m => m.CreditContractCode.Contains(serach) || m.Organization.CustomerNumber.Contains(serach));
+                creditContract = creditContract.Where(m => m.CreditContractCode.Contains(serach) || m.Organization.Property.InstitutionChName.Contains(serach));
             }
-
+                
             creditContract = creditContract.OrderByDescending(m => m.Id);
             var pageList = creditContract.ToPagedList(page, size);
 

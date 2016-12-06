@@ -34,7 +34,7 @@
             customer.FinancialAffairs.Liabilities = Mapper.Map<ICollection<Liabilities>>(model.FinancialAffairs.Liabilities);
             customer.FinancialAffairs.Profit = Mapper.Map<ICollection<Profit>>(model.FinancialAffairs.Profit);
             customer.FinancialAffairs.CashFlow = Mapper.Map<ICollection<CashFlow>>(model.FinancialAffairs.CashFlow);
-           
+
             repository.Create(customer);
 
             repository.Commit();
@@ -67,6 +67,23 @@
 
             var model = Mapper.Map<OrganizationViewModel>(customer);
             model.Base = Mapper.Map<BaseViewModel>(customer);
+
+            return model;
+        }
+
+        public CreditOraganizateViewModel GetCreditOrganizate(Guid id)
+        {
+            Organization customer = repository.Get(id);
+            CreditOraganizateViewModel model = new CreditOraganizateViewModel()
+            {
+                CustomerNumber = customer.CustomerNumber,
+                LoanCardCode = customer.LoanCardCode,
+                InstitutionChName = customer.Property.InstitutionChName,
+                ManagementerCode = customer.ManagementerCode,
+                RegisterAddress = customer.Property.RegisterAddress,
+                RegisterCapital = customer.Property.RegisterCapital,
+                SetupDate = customer.Property.SetupDate
+            };
 
             return model;
         }

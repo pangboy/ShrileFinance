@@ -2,10 +2,12 @@
 {
     using System;
     using System.Collections.Generic;
+    using Newtonsoft.Json;
+    using Newtonsoft.Json.Converters;
 
     public class CreditContractViewModel
     {
-        public enum StatusEnum : byte
+        public enum CreditContractStatusEnum : byte
         {
             生效 = 0,
             失效 = 1,
@@ -44,7 +46,8 @@
         /// <summary>
         /// 合同有效状态
         /// </summary>
-        public StatusEnum EffectiveStatus { get; set; }
+        [JsonConverter(typeof(StringEnumConverter))]
+        public CreditContractStatusEnum EffectiveStatus { get; set; }
 
         /// <summary>
         /// 是否有担保

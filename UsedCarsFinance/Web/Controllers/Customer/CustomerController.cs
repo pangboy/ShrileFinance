@@ -72,6 +72,7 @@
 
             return org;
         }
+
         public IHttpActionResult GetAll()
         {
             var cusCombo = customerAppService.GetAll();
@@ -79,6 +80,17 @@
             return Ok(cusCombo);
         }
 
+        /// <summary>
+        /// 授信页面机构信息
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public IHttpActionResult GetCreditOriagenizate(Guid id)
+        {
+            var creditOrganizate = customerAppService.GetCreditOrganizate(id);
+
+            return Ok(creditOrganizate);
+        }
 
         /// <summary>
         /// 查询带分页

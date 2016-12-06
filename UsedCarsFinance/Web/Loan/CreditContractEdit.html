@@ -12,9 +12,13 @@
     <script src="../Scripts/usedcars.js"></script>
     <script>
         var query = uc.GetParams();
-
+        uc.form = new UCForm(".container");
         $(function () {
+            LoadAllOrgainzate();
             if (query.id != null) {
+                if (query.status == "0") {
+                    uc.form.DisableForm();
+                }
                 Init();
             }
         });
@@ -27,6 +31,7 @@
                 url: "../api/CreditContract/Get",
                 success: function (data) {
                     LoadData(data);
+                    OrganizateInfo(data.OrganizationId)
                 }
             });
         }
@@ -38,7 +43,6 @@
 
             // 加载贷款合同基本信息
             $("#ff fieldset#CreditContract").form("load", data);
-
             // 显示/隐藏 担保合同列表
             var isGuarantee = $("fieldset#CreditContract #IsGuarantee").combobox("getValue");
 
@@ -148,6 +152,7 @@
                 url: url,
                 statusCode: {
                     200: function (data) {
+                        uc.form.Cancel();
                         top.$.messager.show({ msg: "提交成功" });
                     },
                     400: function (data) {
@@ -172,7 +177,7 @@
 
         function GetCreditBalance() {
             if ($("#id").val() == "") {
-                $("#CreditBalance").textbox("setValue", $("#CreditLimit").textbox("getValue") + 1)
+                $("#CreditBalance").textbox("setValue", $("#CreditLimit").textbox("getValue"))
             }
             else {
                 $.ajax({
@@ -203,14 +208,97 @@
                 });
             });
         }
+
+        // 加载所有机构
+        function LoadAllOrgainzate() {
+            $('#InstitutionChName').combobox({
+                method:"GET",
+                url: '../api/Customer/GetAll',
+                valueField: 'Id',
+                textField: 'InstitutionChName'
+            });
+        }
+
+        function OrganizateInfo(id) {
+            $.ajax({
+                method: "GET",
+                data: { id: id},
+                url: "../api/Customer/GetCreditOriagenizate",
+                statusCode: {
+                    200: function (data) {
+                        $("#org").form("load", data);
+                    },
+                }
+            });
+        }
+
+        //加载对应的机构信息
+        function ChooseOrganizate() {
+            $("#OrganizationId").val($('#InstitutionChName').combobox("getValue"));
+            $.ajax({
+                method: "GET",
+                data: { id: $('#InstitutionChName').combobox("getValue") },
+                url: "../api/Customer/GetCreditOriagenizate",
+                statusCode: {
+                    200: function (data) {
+                        $("#org").form("load", data);
+                    },
+                }
+            });
+        }
     </script>
 </head>
 <body>
     <form id="ff" class="container">
+        <fieldset id="org">
+            <legend>机构信息</legend>
+            <div class="row">
+                <div class="col-6">
+                    <label>机构名称:</label>
+                    <select id="InstitutionChName" name="InstitutionChName" class="easyui-combobox" data-options="required:true,editable:false,onSelect:ChooseOrganizate">
+                    </select>
+                </div>
+
+                <div class="col-6">
+                    <label>客户号:</label>
+                    <input name="CustomerNumber" id="CustomerNumber" class="easyui-textbox"readonly />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6">
+                    <label>管理行代码:</label>
+                    <input name="ManagementerCode" id="ManagementerCode" class="easyui-textbox" readonly />
+                </div>
+                <div class="col-6">
+                    <label>中征码:</label>
+                    <input name="LoanCardCode" id="LoanCardCode" class="easyui-textbox" readonly/>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6">
+                    <label>注册资本:</label>
+                    <input name="RegisterCapital" id="RegisterCapital" class="easyui-textbox" readonly/><span>万元</span>
+                </div>
+                <div class="col-6">
+                    <label>成立日期:</label>
+                    <input name="SetupDate" id="SetupDate" class="easyui-textbox" readonly/>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12">
+                    <label>注册登记地址:</label>
+                    <input name="RegisterAddress" id="RegisterAddress" class="easyui-textbox"readonly/>
+                </div>
+            </div>
+        </fieldset>
+
         <fieldset id="CreditContract">
             <legend>贷款合同</legend>
             <input id="id" name="Id" hidden />
-            <input id="OrganizationId" name="OrganizationId" hidden value="6271B4F7-BEBA-E611-80C7-507B9DE4A488">
+            <input id="OrganizationId" name="OrganizationId" hidden>
             <div class="row">
                 <div class="col-6">
                     <label>合同编码:</label>
