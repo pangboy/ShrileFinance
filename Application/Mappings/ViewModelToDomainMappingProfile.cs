@@ -7,6 +7,7 @@
     using Core.Entities.Loan;
     using Core.Entities.Produce;
     using Core.Entities.Vehicle;
+    using System.Linq;
     using ViewModels.AccountViewModels;
     using ViewModels.FinanceViewModels;
     using ViewModels.Loan.CreditViewModel;
@@ -94,7 +95,53 @@
             CreateMap<GuarantyPersonViewModel, GuarantorPerson>();
             CreateMap<GuarantyOrganizationViewModel, GuarantorOrganization>();
             CreateMap<CreditContractViewModel, CreditContract>();
+            CreateMap<ViewModels.Loan.LoanViewModels.LoanViewModel, Loan>();
+            CreateMap<GuarantyContractMortgageViewModel, GuarantyContractMortgage>();
+            CreateMap<GuarantyContractPledgeViewModel, GuarantyContractPledge>();
+            CreateMap<GuarantyPersonViewModel, GuarantorPerson>();
+            CreateMap<GuarantyOrganizationViewModel, GuarantorOrganization>();
             CreateMap<CreditExamineViewModel, CreditContract>();
+            CreateMap<CreditContractViewModel, CreditContract>()
+                .ForMember(d => d.GuarantyContract, o => o.Ignore());
+
+            CreateMap<GuarantyContractViewModel, GuarantyContract>()
+                .ForMember(d => d.Guarantor, o => o.MapFrom(t => t.Guarantor))
+                .ConstructUsing(m =>
+                {
+                    if (m is GuarantyContractPledgeViewModel)
+                    {
+                        return new GuarantyContractPledge();
+                    }
+                    else if (m is GuarantyContractMortgageViewModel)
+                    {
+                        return new GuarantyContractMortgage();
+                    }
+                    else
+                    {
+                        return new GuarantyContract();
+                    }
+                })
+                .Include<GuarantyContractPledgeViewModel, GuarantyContractPledge>()
+                .Include<GuarantyContractMortgageViewModel, GuarantyContractMortgage>();
+
+            CreateMap<GuarantorViewModel, Guarantor>()
+                .ConstructUsing(m =>
+                {
+                    if (m is GuarantyOrganizationViewModel)
+                    {
+                        return new GuarantorOrganization();
+                    }
+                    else if (m is GuarantyPersonViewModel)
+                    {
+                        return new GuarantorPerson();
+                    }
+                    else
+                    {
+                        return null;
+                    }
+                })
+                .Include<GuarantyOrganizationViewModel, GuarantorOrganization>()
+                .Include<GuarantyPersonViewModel, GuarantorPerson>();
         }
     }
 }

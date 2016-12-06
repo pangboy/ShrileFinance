@@ -79,7 +79,7 @@
             var row = $('#dg').datagrid('getSelected');
 
             if (row) {
-                $.messager.confirm('确认', '确认删除该家族成员信息?', function (r) {
+                $.messager.confirm('确认', '确认删除该机构信息?', function (r) {
                     if (r) {
                         var rowIndex = $('#dg').datagrid('getRowIndex', row);
 
@@ -87,6 +87,12 @@
                     }
                 })
             }
+        }
+
+        // table 双击单元格
+        function DblClickCell()
+        {
+            $("div#dg,.datagrid-toolbar a#mod").click();
         }
 
         uc.grid = new UCGrid("#dg");

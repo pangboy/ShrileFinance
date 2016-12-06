@@ -92,7 +92,6 @@ namespace BLL.BankCredit
         /// <returns></returns>
         public string BuildMessageTop(int fileId, int messageTypeId, int i)
         {
-            //TODO:个人报文头需要获取“最早结算/应还款日期”和“最晚结算/应还款日期”获取联系人和联系电话
             string Name = "严冬";
             int GBlength = System.Text.Encoding.GetEncoding("GB2312").GetByteCount(Name);//用于获取字符串转换成GB2312的长度
             int EncLength = Name.Length;

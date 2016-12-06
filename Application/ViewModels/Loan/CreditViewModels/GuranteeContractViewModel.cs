@@ -1,14 +1,22 @@
-﻿namespace Application.ViewModels.Loan.CreditViewModel
+﻿using System;
+
+namespace Application.ViewModels.Loan.CreditViewModel
 {
-    public class GuranteeContractViewModel
+    /// <summary>
+    /// 担保合同(服务页面)
+    /// </summary>
+    public class GuranteeContractViewModel : IEntityViewModel
     {
+        public Guid? Id { get; set; }
+
         /// <summary>
         /// 合同类型
         /// </summary>
         public enum ContractTypeEnum : byte
         {
-            抵押 = 1,
-            质押 = 2
+            保证 = 0,
+            质押 = 1,
+            抵押 = 2
         }
 
         /// <summary>
@@ -19,6 +27,11 @@
             自然人 = 1,
             机构 = 2
         }
+
+        /// <summary>
+        /// 保证
+        /// </summary>
+        public GuarantyContractViewModel GuarantyContractViewModel { get; set; }
 
         /// <summary>
         /// 抵押

@@ -19,6 +19,7 @@
                 if (query.status == "0") {
                     $("#save").hide();
                     uc.form.DisableForm();
+                    
                 }
                 else if (query.status == "1") {
                     $("#EffectiveStatus").combobox({ "readonly": true })
@@ -53,7 +54,7 @@
             var isGuarantee = $("fieldset#CreditContract #IsGuarantee").combobox("getValue");
 
             if (isGuarantee != undefined) {
-                if (isGuarantee == true || isGuarantee == 1) {
+                if (isGuarantee || isGuarantee == 1) {
                     isGuarantee = 1;
                 }
                 else {
@@ -63,23 +64,34 @@
                 $("fieldset#CreditContract #IsGuarantee").combobox('setValue', isGuarantee).combobox("unselect", isGuarantee).combobox('select', isGuarantee);
             }
 
-            if (IsGuarantee == 1 && data.GuranteeContract != null) {
+            if (isGuarantee == 1 && data.GuranteeContract != null) {
                 // 担保合同数据扩展
                 $(data.GuranteeContract).each(function (i, e) {
-                    if (e.ContractType == 1) {
-                        e.ContractTypeTxt = "抵押合同";
-                        e.MarginTxt = e.MortgageGuarantyContractViewModel.Margin;
-                        e.EffectiveStateTxt = e.MortgageGuarantyContractViewModel.EffectiveState;
-                        e.SigningDateTxt = e.MortgageGuarantyContractViewModel.SigningDate;
-                        e.ContractNumber = e.MortgageGuarantyContractViewModel.MortgageNumber;
+                    if (e.ContractType == 0) {
+                        e.ContractTypeTxt = "保证合同";
+                        e.GuaranteeFormTxt = getGuaranteeFormTxt(e.GuarantyContractViewModel.GuaranteeForm);
+                        e.MarginTxt = e.GuarantyContractViewModel.Margin;
+                        e.EffectiveStateTxt = e.GuarantyContractViewModel.EffectiveState;
+                        e.SigningDateTxt = e.GuarantyContractViewModel.SigningDate;
+                        e.ContractNumber = e.GuarantyContractViewModel.MortgageNumber;
                     }
-                    else if (e.ContractType == 2) {
+                    else if (e.ContractType == 1) {
                         e.ContractTypeTxt = "质押合同";
+                        e.GuaranteeFormTxt = getGuaranteeFormTxt(e.PledgeGuarantyContractViewModel.GuaranteeForm);
                         e.MarginTxt = e.PledgeGuarantyContractViewModel.Margin;
                         e.EffectiveStateTxt = e.PledgeGuarantyContractViewModel.EffectiveState;
                         e.SigningDateTxt = e.PledgeGuarantyContractViewModel.SigningDate;
                         e.ContractNumber = e.PledgeGuarantyContractViewModel.PledgeNumber;
                     }
+                    else if (e.ContractType == 2) {
+                        e.ContractTypeTxt = "抵押合同";
+                        e.GuaranteeFormTxt = getGuaranteeFormTxt(e.MortgageGuarantyContractViewModel.GuaranteeForm);
+                        e.MarginTxt = e.MortgageGuarantyContractViewModel.Margin;
+                        e.EffectiveStateTxt = e.MortgageGuarantyContractViewModel.EffectiveState;
+                        e.SigningDateTxt = e.MortgageGuarantyContractViewModel.SigningDate;
+                        e.ContractNumber = e.MortgageGuarantyContractViewModel.MortgageNumber;
+                    }
+
 
                     if (e.GuarantorType == 1) {
                         e.GuarantorTypeTxt = "自然人";
@@ -88,16 +100,21 @@
                         e.GuarantorTypeTxt = "机构";
                     }
                 });
-
+                
                 // 数据存储和展示
                 $("fieldset#GuarantorContract table#GuarantorContract_dg").datagrid('loadData', data.GuranteeContract);
+            }
+
+            if (query.status == "0") {
+                // 禁用table
+                $("div#GuarantorContract_tb").remove();
             }
         }
 
         function BuildData() {
             var value = $("form#ff fieldset#CreditContract").serializeJson();
 
-            if (value.IsGuarantee == 1) {
+            if (value.HasGuarantee == 1) {
                 value.GuranteeContract = $("fieldset#GuarantorContract table#GuarantorContract_dg").datagrid('getRows');
                 // 修正担保合同保证金额（贷款授信额度）
                 $(value.GuranteeContract).each(function (i, e) {
@@ -121,7 +138,7 @@
                 return false;
             }
 
-            if (data.IsGuarantee == 1 && data.GuranteeContract.length == 0) {
+            if (data.HasGuarantee == 1 && data.GuranteeContract.length == 0) {
                 $.messager.show({ msg: '请添加担保合同！' });
 
                 return false;
@@ -151,6 +168,7 @@
             else {
                 url = "../api/CreditContract/Create";
             }
+            
             $.ajax({
                 async: false,
                 method: "POST",
@@ -201,7 +219,6 @@
             }
         }
         
-
         function UpdateCreditLimit() {
             var CreditLimit = $("fieldset#CreditContract input[textboxname=CreditLimit]").textbox('getValue');
 
@@ -251,6 +268,25 @@
                     },
                 }
             });
+        }
+
+        function getGuaranteeFormTxt(value)
+        {
+            if (value == null)
+            {
+                return "";
+            }
+
+            if (value.toString() == "1")
+            {
+                return "单人担保";
+            }
+            else if (value.toString() == "2") {
+                return "多人联保";
+            }
+            else if (value.toString() == "3") {
+                return "多人分保";
+            }
         }
     </script>
 </head>
@@ -368,13 +404,13 @@
                    ">
                 <thead>
                     <tr>
+                        <th data-options="field:'ContractNumber',width:120,align:'center'">合同序号</th>
                         <th data-options="field:'ContractTypeTxt',width:120,align:'center'">合同类型</th>
                         <th data-options="field:'GuarantorTypeTxt',width:120,align:'center'">保证人类型</th>
                         <th data-options="field:'GuaranteeFormTxt',width:120,align:'center'">担保形式</th>
                         <th data-options="field:'MarginTxt',width:120,align:'center'">保证金额</th>
                         <th data-options="field:'EffectiveStateTxt',width:120,align:'center'">合同有效状态</th>
                         <th data-options="field:'SigningDateTxt',width:120,align:'center'">合同签订日期</th>
-                        <th data-options="field:'ContractNumber',width:120,align:'center'">合同序号</th>
                     </tr>
                 </thead>
             </table>
@@ -425,10 +461,10 @@
                     $("#GuarantorContract_frame").attr("src", url);
 
                     // 打开弹窗
-                    $("#GuarantorContract_dd").dialog({ closed: false, top: $(this).offset().top });
+                    $("#GuarantorContract_dd").dialog({ closed: false, top: $(document).scrollTop() + ($(window).height() - 618) * 0.5 });
                 }
             </script>
-            <div id="GuarantorContract_dd" class="easyui-dialog" data-options="title:'担保合同',width:'1130px',height:'700px',top:0,modal:true,closed:true">
+            <div id="GuarantorContract_dd" class="easyui-dialog" data-options="title:'担保合同',width:'1130px',height:'698.38px',top:0,modal:true,closed:true">
                 <iframe id="GuarantorContract_frame" name="family_frame" src="about:blank" style="width:100%;height:99%; border:0;"></iframe>
             </div>
         </fieldset>

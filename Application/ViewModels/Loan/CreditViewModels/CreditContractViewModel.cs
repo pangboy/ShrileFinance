@@ -55,8 +55,13 @@
         public bool HasGuarantee { get; set; }
 
         /// <summary>
-        /// 担保合同
+        /// 担保合同(服务页面)
         /// </summary>
         public virtual ICollection<GuranteeContractViewModel> GuranteeContract { get; set; }
+
+        /// <summary>
+        /// 担保合同(协调后台)
+        /// </summary>
+        public virtual ICollection<GuarantyContractViewModel> GuarantyContract { get; set; }
     }
 }

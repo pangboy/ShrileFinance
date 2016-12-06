@@ -205,6 +205,8 @@
         [Display(Name = "资产总计"),MoneyAttribute(ErrorMessage = "资产总计数据不正确")]
         public decimal? TotalAssets { get; set; }
 
+        public decimal TotalAssets { get; set; }
+
         /// <summary>
         /// 短期借款
         /// </summary>

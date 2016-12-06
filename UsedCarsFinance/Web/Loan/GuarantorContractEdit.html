@@ -22,14 +22,17 @@
                 if (data.ContractType != undefined) {
                     $("fieldset[name=Contract] select[textboxname=ContractType]").combobox('unselect', data.ContractType).combobox('select', data.ContractType);
 
-                    if (data.ContractType == 1) {
+                    if (data.ContractType == 0) {
+                        $("fieldset[name=Contract]").form('load', data.GuarantyContractViewModel);
+                    }
+                    else if (data.ContractType == 1) {
                         $("fieldset[name=Contract]").form('load', data.PledgeGuarantyContractViewModel);
                     }
                     else if (data.ContractType == 2) {
                         $("fieldset[name=Contract]").form('load', data.MortgageGuarantyContractViewModel);
                     }
                 }
-
+                
                 if (data.GuarantorType != undefined) {
                     $("fieldset[name=Contract] select[textboxname=GuarantorType]").combobox('unselect', data.GuarantorType).combobox('select', data.GuarantorType);
 
@@ -54,7 +57,12 @@
 
             // 映射合同
             if (Contract != undefined && Contract.ContractType != undefined) {
-                if (Contract.ContractType == 1) {
+                if (Contract.ContractType == 0) {
+                    value.ContractType = 0;
+                    value.GuarantyContractViewModel = {};
+                    TraverseDateFactory(Contract, value.GuarantyContractViewModel, false, null);
+                }
+                else if (Contract.ContractType == 1) {
                     value.ContractType = 1;
                     value.PledgeGuarantyContractViewModel = {};
                     TraverseDateFactory(Contract, value.PledgeGuarantyContractViewModel, false, null);
@@ -127,6 +135,8 @@
                     // 禁用fieldset
                     Disabled($("fieldset"));
 
+                    
+
                     // 禁用保存按钮
                     $("#save").linkbutton("disable");
                 }
@@ -143,7 +153,7 @@
             if ($(this).combobox('getValue') == "1") {
                 $("div[name=ContractInfo]").append($("div[name=ContractInfo] template#ContractInfo_Pledge").html());
             }
-            else {
+            else if ($(this).combobox('getValue') == "2") {
                 $("div[name=ContractInfo]").append($("div[name=ContractInfo] template#ContractInfo_Mortgage").html());
             }
 
@@ -164,7 +174,7 @@
                                     pleNumArray.pop();
                                 }
                             }
-                            else {
+                            else if (e.ContractType == 2) {
                                 morNumArray.push(e.ContractNumber);
                                 if (param[1] == 2 && value == e.ContractNumber) {
                                     morNumArray.pop();
@@ -202,7 +212,7 @@
             if ($(this).combobox('getValue') == "1") {
                 $("div[name=GuarantorInfo]").append($("div[name=GuarantorInfo] template#GuarantorInfo_Person").html());
             }
-            else {
+            else if ($(this).combobox('getValue') == "2") {
                 $("div[name=GuarantorInfo]").append($("div[name=GuarantorInfo] template#GuarantorInfo_Organization").html());
             }
 
@@ -261,6 +271,7 @@
                 <div class="col-6">
                     <label>合同类型：</label>
                     <select name="ContractType" class="easyui-combobox" data-options="required:true,value:'',editable:false,onChange:ChangeContractType">
+                        <option value="0">保证合同</option>
                         <option value="1">质押合同</option>
                         <option value="2">抵押合同</option>
                     </select>
@@ -299,10 +310,11 @@
                     <label>合同签订日期：</label>
                     <input name="SigningDate" class="easyui-datebox" data-options="required:true,value:'',editable:false,width:410" />
                 </div>
+
                 <template id="ContractInfo_Pledge">
                     <div class="col-6">
                         <label>质押序号：</label>
-                        <input name="PledgeNumber" class="easyui-textbox" data-options="required:true,value:'',validType:['length[2,2]']" />
+                        <input name="PledgeNumber" class="easyui-textbox" data-options="required:true,value:'',validType:['length[2,2]'],prompt:'两位数字组成，默认从01开始'" />
                     </div>
                     <div class="col-6">
                         <label>质押物种类</label>
@@ -325,7 +337,7 @@
                 <template id="ContractInfo_Mortgage">
                     <div class="col-6">
                         <label>抵押序号：</label>
-                        <input name="MortgageNumber" class="easyui-textbox" data-options="required:true,value:'',validType:['length[2,2]']" />
+                        <input name="MortgageNumber" class="easyui-textbox" data-options="required:true,value:'',validType:['length[2,2]'],prompt:'两位数字组成，默认从01开始'" />
                     </div>
                     <div class="col-6">
                         <label>抵押物种类：</label>
@@ -376,7 +388,7 @@
             <legend>保证人</legend>
             <div class="row" name="GuarantorInfo">
                 <input name="Id" type="hidden" placeholder="保证人标识" />
-                <div class="col-12" id="base">
+                <div class="col-6" id="base">
                     <label>保证人名称：</label>
                     <input name="Name" class="easyui-textbox" data-options="validType:['length[0,80]'],required:true" />
                 </div>
