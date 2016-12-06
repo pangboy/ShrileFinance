@@ -153,7 +153,7 @@
     <Content Include="Account\PasswordEdit.html" />
     <Content Include="Account\UserEdit.html" />
     <Content Include="Account\UserInfo.html" />
-    <Content Include="Borrowers\OrganizateCount.html" />
+    <Content Include="Statistics\LoanCount.html" />
     <Content Include="Finance\FinanceApproval.html" />
     <Content Include="Finance\Unused\FinanceCustomer.html" />
     <Content Include="Finance\images\add.png" />
@@ -948,6 +948,7 @@
     <Compile Include="Controllers\Finance\BorrowController.cs" />
     <Compile Include="Controllers\Credit\CreditContractController.cs" />
     <Compile Include="Controllers\Loan\LoanController.cs" />
+    <Compile Include="Controllers\Statistics\StatisticsController.cs" />
     <Compile Include="Controllers\Unused\CreditExamineReportController.cs" />
     <Compile Include="Controllers\Finance\FinanceAuidtController.cs" />
     <Compile Include="Controllers\Finance\FinanceController.cs" />

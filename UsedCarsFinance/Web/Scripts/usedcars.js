@@ -239,7 +239,6 @@ function UCForm(formId) {
 
 	this.Cancel = function () {
 		getForm().form("reset");
-
 		uc.CloseWindow();
 	}
 
@@ -408,5 +407,19 @@ $.extend($.fn.validatebox.defaults.rules, {
 			return /^[a-z\_]{1}\w{1,18}$/i.test(value);
 		},
 		message: "请输入正确的用户名，由字母、数字和下划线组成。不可以数字开头,长度在2-18位之间!"
-	}
+	},
+    Money: {
+        validator: function (value) {
+            if (/^-?\d+\.\d{2}$/.test(value) || /^\d+$/.test(value)) {
+                if (value.length >= 2 && /^[0][0-9]*$/.test(value.substr(0, 2))) {
+                    return false;
+                }
+
+                return true;
+            }
+
+            return false;
+        },
+        message: '请输入整数或两位小数！'
+    }
 });

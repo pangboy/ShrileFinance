@@ -8,9 +8,9 @@
     public class CustomerController : ApiController
     {
         private readonly OrganizationAppService customerAppService;
-        private readonly TreeGridAppService treeGridService;
+        private readonly StatisticsAppService treeGridService;
 
-        public CustomerController(OrganizationAppService service , TreeGridAppService treeGridService)
+        public CustomerController(OrganizationAppService service , StatisticsAppService treeGridService)
         {
             this.customerAppService = service;
             this.treeGridService = treeGridService;
@@ -107,19 +107,5 @@
             return Ok(list);
         }
 
-        /// <summary>
-        /// 统计
-        /// </summary>
-        /// <param name="orgaizateId"></param>
-        /// <param name="page"></param>
-        /// <param name="rows"></param>
-        /// <returns></returns>
-        [HttpGet]
-        public IHttpActionResult TreeGridPageList(Guid? organizateId, int page ,int rows)
-        {
-            var list = treeGridService.TreeGridPageList(organizateId, page, rows);
-
-            return Ok(list);
-        }
     }
 }

@@ -73,7 +73,7 @@
     {
         public override bool IsValid(object value)
         {
-            var valueStr = value == null ? string.Empty : value.ToString();
+            var valueStr = value == null ? "0" : value.ToString();
 
             var regResult = false;
             if (new Regex(@"^-?\d+\.\d{2}$").IsMatch(valueStr)|| new Regex(@"^\d+$").IsMatch(valueStr))
@@ -814,6 +814,8 @@
             var liabilitites = value as LiabilitiesViewModel;
             liabilitites.TotalLiabilities = liabilitites.TotalLiabilities ?? decimal.Parse("0.00");
             liabilitites.TotalOwnersEquity = liabilitites.TotalOwnersEquity ?? decimal.Parse("0.00");
+            liabilitites.TotalLiabilitiesCapital = liabilitites.TotalLiabilitiesCapital ?? decimal.Parse("0.00");
+            liabilitites.TotalAssets = liabilitites.TotalAssets ?? decimal.Parse("0.00");
 
             if (liabilitites.TotalLiabilitiesCapital != liabilitites.TotalLiabilities + liabilitites.TotalOwnersEquity)
             {
@@ -857,6 +859,7 @@
             cash.ExchangeRateChangeCash = cash.ExchangeRateChangeCash ?? decimal.Parse("0.00");
             cash.CashIncrease5 = cash.CashIncrease5 ?? decimal.Parse("0.00");
             cash.BeginCashBalance = cash.BeginCashBalance ?? decimal.Parse("0.00");
+            cash.FinalCashBalance6 = cash.FinalCashBalance6 ?? decimal.Parse("0.00");
 
             if (cash.OperatingActivitieCashNet != cash.OperatingActivitiesCashInflows - cash.OperatingActivitiesCashOutflows)
             {
@@ -911,6 +914,8 @@
             ii.负债合计 = ii.负债合计 ?? decimal.Parse("0.00");
             ii.净资产合计 = ii.净资产合计 ?? decimal.Parse("0.00");
             ii.收入合计 = ii.收入合计 ?? decimal.Parse("0.00");
+            ii.资产部类总计 = ii.资产部类总计 ?? decimal.Parse("0.00");
+            ii.负债部类总计 = ii.负债部类总计 ?? decimal.Parse("0.00");
 
             if (ii.资产部类总计 != ii.资产合计 + ii.支出合计)
             {
@@ -942,6 +947,10 @@
 
             var iie = value as InstitutionIncomeExpenditureViewModel;
 
+            iie.收入总计 = iie.收入总计 ?? decimal.Parse("0.00");
+            iie.支出总计 = iie.支出总计 ?? decimal.Parse("0.00");
+            iie.事业结余 = iie.事业结余 ?? decimal.Parse("0.00");
+            iie.经营结余 = iie.经营结余 ?? decimal.Parse("0.00");
             iie.事业收入小计 = iie.事业收入小计 ?? decimal.Parse("0.00");
             iie.经营收入小计 = iie.经营收入小计 ?? decimal.Parse("0.00");
             iie.拨入专款小计 = iie.拨入专款小计 ?? decimal.Parse("0.00");

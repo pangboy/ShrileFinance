@@ -17,7 +17,13 @@
             LoadAllOrgainzate();
             if (query.id != null) {
                 if (query.status == "0") {
+                    $("#save").hide();
                     uc.form.DisableForm();
+                }
+                else if (query.status == "1") {
+                    $("#EffectiveStatus").combobox({ "readonly": true })
+                    $("#ExpirationDate").textbox({ "readonly": true });
+                    $("#CreditContractCode").textbox({ "readonly": true });
                 }
                 Init();
             }
@@ -301,7 +307,7 @@
             <input id="OrganizationId" name="OrganizationId" hidden>
             <div class="row">
                 <div class="col-6">
-                    <label>合同编码:</label>
+                    <label>合同编号:</label>
                     <input name="CreditContractCode" id="CreditContractCode" class="easyui-textbox" data-options="required:true" />
                 </div>
 
@@ -318,13 +324,13 @@
             <div class="row">
                 <div class="col-6">
                     <label>授信额度:</label>
-                    <input name="CreditLimit" id="CreditLimit" class="easyui-textbox" data-options="required:true,onChange:GetCreditBalance" />
+                    <input name="CreditLimit" id="CreditLimit" class="easyui-textbox" data-options="required:true,onChange:GetCreditBalance,validType:'Money'" />
                     <span class="unit">元</span>
                 </div>
 
                 <div class="col-6">
                     <label>授信余额:</label>
-                    <input name="CreditBalance" id="CreditBalance" class="easyui-textbox" data-options="required:true" readonly />
+                    <input name="CreditBalance" id="CreditBalance" class="easyui-textbox"  readonly />
                     <span class="unit">元</span>
                 </div>
             </div>
@@ -429,6 +435,7 @@
 
         <div id="btn">
             <a id="save" class="easyui-linkbutton" href="javascript:void(0)" data-options="iconCls:'icon-save',onClick:Submit">保存</a>
+            <a id="cancel" class="easyui-linkbutton" data-options="iconCls: 'icon-redo',onClick:uc.form.Cancel" style="margin:0 auto">取消</a>
         </div>
     </form>
 </body>

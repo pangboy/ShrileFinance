@@ -108,7 +108,7 @@
     </Compile>
     <Compile Include="Startup.cs" />
     <Compile Include="AccountAppService.cs" />
-    <Compile Include="TreeGridAppService.cs" />
+    <Compile Include="StatisticsAppService.cs" />
     <Compile Include="UpdateBind.cs" />
     <Compile Include="ViewModels\AccountViewModels\ChangePasswordViewModel.cs" />
     <Compile Include="ViewModels\AccountViewModels\LoginViewModel.cs" />

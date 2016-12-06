@@ -340,6 +340,7 @@
                     url: url,
                     statusCode: {
                         200: function (data) {
+                            OrganizateCancel();
                             $.messager.show({ msg: "提交成功！" });
                         },
                         500: function (data) {
