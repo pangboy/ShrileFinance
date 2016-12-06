@@ -57,6 +57,7 @@
                     $("input[textboxname='ContractNumber']").textbox("readonly", true);
                     $("input[textboxname='Principle']").textbox("readonly", true);
                     $("input[textboxname='SpecialDate']").textbox("readonly", true);
+                    $("input[textboxname='MatureDate']").textbox("readonly", true);
                     uc.form.DisableForm("#credit_contract");
 
                     page.setSubmit("../api/Loan/Put", "PUT", buildData);

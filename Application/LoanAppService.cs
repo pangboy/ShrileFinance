@@ -71,7 +71,6 @@
 
             var loan = repository.Get(model.Id.Value);
             loan.InterestRate = model.InterestRate;
-            loan.MatureDate = model.MatureDate;
             loan.LoanBusinessTypes = model.LoanBusinessTypes;
             loan.LoanForm = model.LoanForm;
             loan.LoanNature = model.LoanNature;
