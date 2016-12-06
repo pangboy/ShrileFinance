@@ -1,6 +1,5 @@
 ﻿namespace Application.Mappings
 {
-    using System.Linq;
     using AutoMapper;
     using Core.Entities;
     using Core.Entities.Customers.Enterprise;
@@ -10,11 +9,11 @@
     using Core.Entities.Vehicle;
     using ViewModels.AccountViewModels;
     using ViewModels.FinanceViewModels;
+    using ViewModels.Loan.CreditViewModel;
     using ViewModels.OrganizationViewModels;
     using ViewModels.PartnerViewModels;
     using ViewModels.ProduceViewModel;
     using ViewModels.VehicleViewModel;
-    using ViewModels.Loan.CreditViewModel;
 
     public class ViewModelToDomainMappingProfile : Profile
     {
@@ -72,11 +71,18 @@
             // Loan
             CreateMap<ViewModels.Loan.LoanViewModels.LoanViewModel, Loan>()
                 .ForMember(m => m.Status, opts => opts.Ignore());
+            CreateMap<ViewModels.Loan.LoanViewModels.PaymentHistoryViewModel, PaymentHistory>()
+                .ConstructUsing(m => new PaymentHistory(
+                    m.ScheduledPaymentPrincipal,
+                    m.ScheduledPaymentInterest,
+                    m.ActualPaymentPrincipal,
+                    m.ActualPaymentInterest))
+                .IgnoreAllPropertiesWithAnInaccessibleSetter();
             CreateMap<GuarantyContractViewModel, GuarantyContract>();
-            CreateMap<GuarantyContractMortgageViewModel,GuarantyContractMortgage>();
-            CreateMap<GuarantyContractPledgeViewModel,GuarantyContractPledge>();
-            CreateMap<GuarantyPersonViewModel,GuarantorPerson>();
-            CreateMap<GuarantyOrganizationViewModel,GuarantorOrganization>();
+            CreateMap<GuarantyContractMortgageViewModel, GuarantyContractMortgage>();
+            CreateMap<GuarantyContractPledgeViewModel, GuarantyContractPledge>();
+            CreateMap<GuarantyPersonViewModel, GuarantorPerson>();
+            CreateMap<GuarantyOrganizationViewModel, GuarantorOrganization>();
             CreateMap<CreditContractViewModel, CreditContract>();
             CreateMap<CreditExamineViewModel, CreditContract>();
         }

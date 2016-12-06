@@ -25,37 +25,32 @@
             $.extend(params, searchParams);
         }
 
-        function Start() {
-            $.ajax({
-                method: "POST",
-                url: "../api/Instance/StartProcess",
-                statusCode: {
-                    200: function (data) {
-                        uc.ShowWindow("详情页", "Flow/Frame.html?instanceId=" + data);
-                    }
+        function Open() {
+            var view = $(this).data("view");
+            var method = $(this).data("method");
+
+            var url = "Loan/LoanEdit.html" + "?view=" + view + "&method=" + method;
+
+            if (method != "add") {
+                var row = uc.grid.GetSelected();
+                if (row) {
+                    url += "&Id=" + row.Id;
+                } else {
+                    return;
                 }
-            });
-        }
-
-        function Process() {
-            var url = "Flow/Frame.html";
-
-            var row = uc.grid.GetSelected();
-            if (row) {
-                url += "?instanceId=" + row.Id;
-
-                uc.ShowWindow("详情页", url);
             }
+
+            uc.ShowWindow("借据详情", url);
         }
     </script>
 </head>
 
 <body>
-    <table id="dg" class="easyui-datagrid" data-options="toolbar: '#tb', 
-           rownumbers: true, singleSelect: true, 
+    <table id="dg" class="easyui-datagrid" data-options="toolbar: '#tb',
+           rownumbers: true, singleSelect: true,
            fitColumns: true, nowrap: true, height: 630, striped: true,
            pagination: true, pageSize: 20, pageList: [10,20,30,40,50],
-           url: '../api/Instance/DoingList', method: 'GET', onBeforeLoad: SetFilters, loadMsg: '正在加载，请稍候...'">
+           url: '../api/Loan/SearchList', method: 'GET', onBeforeLoad: SetFilters, loadMsg: '正在加载，请稍候...'">
         <thead>
             <tr>
                 <th data-options="field:'ContractNumber',width:150,align:'left'">借据编号</th>
@@ -73,7 +68,7 @@
             <input name="searchString" class="easyui-textbox" data-options="width:200,prompt: '输入借据编号查询'" />
             <label for="status">借据状态:</label>
             <select name="status" class="easyui-combobox" data-options="width:120,editable:false">
-                <option>全部</option>
+                <option value="">全部</option>
                 <option value="1">正常</option>
                 <option value="3">逾期</option>
                 <option value="2">已还清</option>
@@ -84,9 +79,10 @@
         </form>
 
         <div>
-            <a id="add" class="easyui-linkbutton" href="javascript:void(0)" data-options="onClick:Start,iconCls:'icon-add',plain:true">新增借据</a>
-            <a id="edit" class="easyui-linkbutton" href="javascript:void(0)" data-options="onClick:Process,iconCls:'icon-edit',plain:true">编辑</a>
-            <a id="view" class="easyui-linkbutton" href="javascript:void(0)" data-options="onClick:Process,iconCls:'icon-search',plain:true">查看</a>
+            <a class="easyui-linkbutton" href="javascript:void(0)" data-view="loan" data-method="add" data-options="onClick:Open,iconCls:'icon-add',plain:true">新增借据</a>
+            <a class="easyui-linkbutton" href="javascript:void(0)" data-view="payment" data-method="mod" data-options="onClick:Open,iconCls:'icon-add',plain:true">还款</a>
+            <a class="easyui-linkbutton" href="javascript:void(0)" data-view="loan" data-method="mod" data-options="onClick:Open,iconCls:'icon-edit',plain:true">编辑</a>
+            <a class="easyui-linkbutton" href="javascript:void(0)" data-view="loan" data-method="view" data-options="onClick:Open,iconCls:'icon-search',plain:true">查看</a>
         </div>
     </div>
 </body>

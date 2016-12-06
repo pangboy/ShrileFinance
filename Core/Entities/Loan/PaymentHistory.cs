@@ -1,6 +1,7 @@
 ﻿namespace Core.Entities.Loan
 {
     using System;
+    using Exceptions;
     using Interfaces;
 
     /// <summary>
@@ -8,13 +9,27 @@
     /// </summary>
     public class PaymentHistory : Entity, IAggregateRoot
     {
+        public PaymentHistory()
+        {
+        }
+
         public PaymentHistory(
-            decimal schedulePaymentPrincipal,
+            decimal scheduledPaymentPrincipal,
             decimal scheduledPaymentInterest,
             decimal actualPaymentPrincipal,
             decimal actualPaymentInterest)
         {
-            ScheduledPaymentPrincipal = ScheduledPaymentPrincipal;
+            if (scheduledPaymentPrincipal < actualPaymentPrincipal)
+            {
+                throw new ArgumentOutOfRangeAppException(message: "应还本金必须大于等于实际偿还本金.");
+            }
+
+            if (actualPaymentInterest < scheduledPaymentInterest)
+            {
+                throw new ArgumentOutOfRangeAppException(message: "应还利息必须大于等于实际偿还利息.");
+            }
+
+            ScheduledPaymentPrincipal = scheduledPaymentPrincipal;
             ScheduledPaymentInterest = scheduledPaymentInterest;
             ActualPaymentPrincipal = actualPaymentPrincipal;
             ActualPaymentInterest = actualPaymentInterest;
@@ -54,6 +69,6 @@
         /// <summary>
         /// 还款方式
         /// </summary>
-        public string PaymentTypes { get; private set; }
+        public string PaymentTypes { get; set; }
     }
 }

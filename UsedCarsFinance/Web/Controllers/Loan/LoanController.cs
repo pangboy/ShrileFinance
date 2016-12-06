@@ -1,10 +1,6 @@
 ﻿namespace Web.Controllers.Loan
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Net;
-    using System.Net.Http;
     using System.Web.Http;
     using Application;
     using Application.ViewModels;
@@ -21,9 +17,9 @@
         }
 
         [HttpGet]
-        public IHttpActionResult Get(Guid Id)
+        public IHttpActionResult Get(Guid id)
         {
-            var model = service.Get(Id);
+            var model = service.Get(id);
 
             if (model == null)
             {
@@ -42,6 +38,27 @@
             }
 
             service.ApplyLoan(model);
+
+            return Ok();
+        }
+
+        [HttpPut]
+        public IHttpActionResult Put(LoanViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            service.ModifyLoan(model);
+
+            return Ok();
+        }
+
+        [HttpPut]
+        public IHttpActionResult PaymentPut(PaymentViewModel model)
+        {
+            service.Payment(model);
 
             return Ok();
         }
