@@ -38,38 +38,49 @@
 
             // 加载贷款合同基本信息
             $("#ff fieldset#CreditContract").form("load", data);
-
+            
             // 显示/隐藏 担保合同列表
             var isGuarantee = $("fieldset#CreditContract #IsGuarantee").combobox("getValue");
-
+            
             if (isGuarantee != undefined) {
-                if (isGuarantee == true || isGuarantee == 1) {
+                if (isGuarantee || isGuarantee == 1) {
                     isGuarantee = 1;
                 }
                 else {
                     isGuarantee = 0;
                 }
-
+                
                 $("fieldset#CreditContract #IsGuarantee").combobox('setValue', isGuarantee).combobox("unselect", isGuarantee).combobox('select', isGuarantee);
             }
 
-            if (IsGuarantee == 1 && data.GuranteeContract != null) {
+            if (isGuarantee == 1 && data.GuranteeContract != null) {
                 // 担保合同数据扩展
                 $(data.GuranteeContract).each(function (i, e) {
-                    if (e.ContractType == 1) {
-                        e.ContractTypeTxt = "抵押合同";
-                        e.MarginTxt = e.MortgageGuarantyContractViewModel.Margin;
-                        e.EffectiveStateTxt = e.MortgageGuarantyContractViewModel.EffectiveState;
-                        e.SigningDateTxt = e.MortgageGuarantyContractViewModel.SigningDate;
-                        e.ContractNumber = e.MortgageGuarantyContractViewModel.MortgageNumber;
+                    if (e.ContractType == 0) {
+                        e.ContractTypeTxt = "保证合同";
+                        e.GuaranteeFormTxt = getGuaranteeFormTxt(e.GuarantyContractViewModel.GuaranteeForm);
+                        e.MarginTxt = e.GuarantyContractViewModel.Margin;
+                        e.EffectiveStateTxt = e.GuarantyContractViewModel.EffectiveState;
+                        e.SigningDateTxt = e.GuarantyContractViewModel.SigningDate;
+                        e.ContractNumber = e.GuarantyContractViewModel.MortgageNumber;
                     }
-                    else if (e.ContractType == 2) {
+                    else if (e.ContractType == 1) {
                         e.ContractTypeTxt = "质押合同";
+                        e.GuaranteeFormTxt = getGuaranteeFormTxt(e.PledgeGuarantyContractViewModel.GuaranteeForm);
                         e.MarginTxt = e.PledgeGuarantyContractViewModel.Margin;
                         e.EffectiveStateTxt = e.PledgeGuarantyContractViewModel.EffectiveState;
                         e.SigningDateTxt = e.PledgeGuarantyContractViewModel.SigningDate;
                         e.ContractNumber = e.PledgeGuarantyContractViewModel.PledgeNumber;
                     }
+                    else if (e.ContractType == 2) {
+                        e.ContractTypeTxt = "抵押合同";
+                        e.GuaranteeFormTxt = getGuaranteeFormTxt(e.MortgageGuarantyContractViewModel.GuaranteeForm);
+                        e.MarginTxt = e.MortgageGuarantyContractViewModel.Margin;
+                        e.EffectiveStateTxt = e.MortgageGuarantyContractViewModel.EffectiveState;
+                        e.SigningDateTxt = e.MortgageGuarantyContractViewModel.SigningDate;
+                        e.ContractNumber = e.MortgageGuarantyContractViewModel.MortgageNumber;
+                    }
+                    
 
                     if (e.GuarantorType == 1) {
                         e.GuarantorTypeTxt = "自然人";
@@ -78,7 +89,7 @@
                         e.GuarantorTypeTxt = "机构";
                     }
                 });
-
+                debugger
                 // 数据存储和展示
                 $("fieldset#GuarantorContract table#GuarantorContract_dg").datagrid('loadData', data.GuranteeContract);
             }
@@ -141,6 +152,7 @@
             else {
                 url = "../api/CreditContract/Create";
             }
+            
             $.ajax({
                 async: false,
                 method: "POST",
@@ -189,7 +201,6 @@
                 });
             }
         }
-        
 
         function UpdateCreditLimit() {
             var CreditLimit = $("fieldset#CreditContract input[textboxname=CreditLimit]").textbox('getValue');
@@ -202,6 +213,25 @@
                     row: e
                 });
             });
+        }
+
+        function getGuaranteeFormTxt(value)
+        {
+            if (value == null)
+            {
+                return "";
+            }
+
+            if (value.toString() == "1")
+            {
+                return "单人担保";
+            }
+            else if (value.toString() == "2") {
+                return "多人联保";
+            }
+            else if (value.toString() == "3") {
+                return "多人分保";
+            }
         }
     </script>
 </head>
@@ -256,7 +286,7 @@
             <div class="row">
                 <div class="col-6">
                     <label>是否有担保:</label>
-                    <select id="IsGuarantee" name="IsGuarantee" class="easyui-combobox" data-options="required:true,editable:false,value:'',onChange:ChooseGuarantee">
+                    <select id="IsGuarantee" name="HasGuarantee" class="easyui-combobox" data-options="required:true,editable:false,value:'',onChange:ChooseGuarantee">
                         <option value="1">是</option>
                         <option value="0">否</option>
                     </select>
@@ -331,10 +361,10 @@
                     $("#GuarantorContract_frame").attr("src", url);
 
                     // 打开弹窗
-                    $("#GuarantorContract_dd").dialog({ closed: false, top: $(this).offset().top });
+                    $("#GuarantorContract_dd").dialog({ closed: false, top: $(document).scrollTop() + ($(window).height() - 618) * 0.5 });
                 }
             </script>
-            <div id="GuarantorContract_dd" class="easyui-dialog" data-options="title:'担保合同',width:'1130px',height:'700px',top:0,modal:true,closed:true">
+            <div id="GuarantorContract_dd" class="easyui-dialog" data-options="title:'担保合同',width:'1130px',height:'698.38px',top:0,modal:true,closed:true">
                 <iframe id="GuarantorContract_frame" name="family_frame" src="about:blank" style="width:100%;height:99%; border:0;"></iframe>
             </div>
         </fieldset>

@@ -28,7 +28,7 @@
         {
             service.Modify(model);
 
-            return Ok();
+            return Ok(model);
         }
 
         public IHttpActionResult Get(Guid id)

@@ -1,23 +1,10 @@
 ﻿namespace Application.ViewModels.Loan.CreditViewModel
 {
-    using System;
-    using Core.Entities.Loan;
-
     /// <summary>
     /// 自然人（继承于担保人）
     /// </summary>
-    public class GuarantyPersonViewModel
+    public class GuarantyPersonViewModel:GuarantorViewModel
     {
-        /// <summary>
-        /// 标识
-        /// </summary>
-        public Guid? Id { get; set; }
-
-        /// <summary>
-        /// 姓名
-        /// </summary>
-        public string Name { get; set; }
-
         /// <summary>
         /// 证件类型
         /// </summary>

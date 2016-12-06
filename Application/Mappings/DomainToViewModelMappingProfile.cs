@@ -83,12 +83,53 @@
 
             // Loan
             CreateMap<Loan, ViewModels.Loan.LoanViewModels.LoanViewModel>();
-            CreateMap<GuarantyContract, GuarantyContractViewModel>();
             CreateMap<GuarantyContractMortgage, GuarantyContractMortgageViewModel>();
             CreateMap<GuarantyContractPledge, GuarantyContractPledgeViewModel>();
             CreateMap<GuarantorPerson, GuarantyPersonViewModel>();
             CreateMap<GuarantorOrganization, GuarantyOrganizationViewModel>();
-            CreateMap<CreditContract, CreditContractViewModel>();
+            CreateMap<CreditContract, CreditContractViewModel>()
+                .ForMember(d => d.GuranteeContract, o => o.Ignore())
+                .ForMember(d => d.GuarantyContract, o => o.Ignore())
+                ;
+
+
+
+            CreateMap<GuarantyContract, GuarantyContractViewModel>()
+                .ForMember(d => d.Guarantor, o => o.MapFrom(t => t.Guarantor))
+                .ConstructUsing(m=> {
+                    if (m is GuarantyContractPledge)
+                    {
+                        return new GuarantyContractPledgeViewModel();
+                    }
+                    else if (m is GuarantyContractMortgage)
+                    {
+                        return new GuarantyContractMortgageViewModel();
+                    }
+                    return new GuarantyContractViewModel();
+                })
+                .Include<GuarantyContract,GuarantyContractViewModel>()
+                .Include<GuarantyContractPledge, GuarantyContractPledgeViewModel>()
+                .Include<GuarantyContractMortgage, GuarantyContractMortgageViewModel>();
+
+            CreateMap<Guarantor, GuarantorViewModel>()
+                .ConstructUsing(m =>
+                {
+                    if (m is GuarantorOrganization)
+                    {
+                        return new GuarantyOrganizationViewModel();
+                    }
+                    else if (m is GuarantorPerson)
+                    {
+                        return new GuarantyPersonViewModel();
+                    }
+                    else
+                    {
+                        return null;
+                    }
+                })
+
+            .Include<GuarantorOrganization, GuarantyOrganizationViewModel>()
+            .Include<GuarantorPerson, GuarantyPersonViewModel>();
         }
     }
 }
