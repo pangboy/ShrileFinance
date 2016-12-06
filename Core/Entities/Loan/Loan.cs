@@ -43,7 +43,7 @@
     }
 
     /// <summary>
-    /// 贷款 / 借据
+    /// 借据
     /// </summary>
     public class Loan : Entity, IAggregateRoot
     {
@@ -79,7 +79,7 @@
         /// <summary>
         /// 到期日期
         /// </summary>
-        public DateTime MatureDate { get; set; }
+        public DateTime MatureDate { get; private set; }
 
         /// <summary>
         /// 日利率
