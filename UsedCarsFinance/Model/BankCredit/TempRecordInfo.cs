@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 
 namespace Models.BankCredit
 {
-    // TODO: TempRecordInfo Migrations
     /// <summary>
     /// 信息草稿实体
     /// yangj   2016.09.21
