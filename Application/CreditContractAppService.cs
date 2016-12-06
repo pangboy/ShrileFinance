@@ -47,30 +47,30 @@
 
             Mapper.Map(model, credit);
 
-            model.GuranteeContract.ToList().ForEach(item=> {
-                if (item.ContractType == GuranteeContractViewModel.ContractTypeEnum.抵押)
-                {
-                    if (item.GuarantorType == GuranteeContractViewModel.GuarantorTypeEnum.机构)
-                    {
-                        item.MortgageGuarantyContractViewModel.Guarantor = item.GuarantyOrganizationViewModel;
-                    }
-                    else if (item.GuarantorType == GuranteeContractViewModel.GuarantorTypeEnum.自然人)
-                    {
-                        item.MortgageGuarantyContractViewModel.Guarantor = item.GuarantyPersonViewModel;
-                    }
-                }
-                else if (item.ContractType == GuranteeContractViewModel.ContractTypeEnum.质押)
-                {
-                    if (item.GuarantorType == GuranteeContractViewModel.GuarantorTypeEnum.机构)
-                    {
-                        item.MortgageGuarantyContractViewModel.Guarantor = item.GuarantyOrganizationViewModel;
-                    }
-                    else if (item.GuarantorType == GuranteeContractViewModel.GuarantorTypeEnum.自然人)
-                    {
-                        item.MortgageGuarantyContractViewModel.Guarantor = item.GuarantyPersonViewModel;
-                    }
-                }
-            });
+            //model.GuranteeContract.ToList().ForEach(item=> {
+            //    if (item.ContractType == GuranteeContractViewModel.ContractTypeEnum.抵押)
+            //    {
+            //        if (item.GuarantorType == GuranteeContractViewModel.GuarantorTypeEnum.机构)
+            //        {
+            //            item.MortgageGuarantyContractViewModel.Guarantor = item.GuarantyOrganizationViewModel;
+            //        }
+            //        else if (item.GuarantorType == GuranteeContractViewModel.GuarantorTypeEnum.自然人)
+            //        {
+            //            item.MortgageGuarantyContractViewModel.Guarantor = item.GuarantyPersonViewModel;
+            //        }
+            //    }
+            //    else if (item.ContractType == GuranteeContractViewModel.ContractTypeEnum.质押)
+            //    {
+            //        if (item.GuarantorType == GuranteeContractViewModel.GuarantorTypeEnum.机构)
+            //        {
+            //            item.MortgageGuarantyContractViewModel.Guarantor = item.GuarantyOrganizationViewModel;
+            //        }
+            //        else if (item.GuarantorType == GuranteeContractViewModel.GuarantorTypeEnum.自然人)
+            //        {
+            //            item.MortgageGuarantyContractViewModel.Guarantor = item.GuarantyPersonViewModel;
+            //        }
+            //    }
+            //});
 
            // new UpdateBind().Bind(credit.GuarantyContract,model.GuranteeContract);
 

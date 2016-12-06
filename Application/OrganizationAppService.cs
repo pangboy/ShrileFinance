@@ -30,9 +30,13 @@
 
         public void Modify(OrganizationViewModel model)
         {
-            var customer = Mapper.Map<Core.Entities.Customers.Enterprise.Organization>(model.Base);
-            customer = Mapper.Map(model, customer);
+            var customer = repository.Get(model.Base.Id.Value);
+            Mapper.Map(model.Base, customer);
+            Mapper.Map(model, customer);
+            //var customer = Mapper.Map<Core.Entities.Customers.Enterprise.Organization>(model.Base);
+            //customer = Mapper.Map(model, customer);
 
+            new UpdateBind().Bind(customer.FinancialAffairs.Liabilities, model.FinancialAffairs.Liabilities);
             repository.Modify(customer);
             repository.Commit();
         }

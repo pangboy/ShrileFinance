@@ -47,7 +47,9 @@
         /// <summary>
         /// 授信余额
         /// </summary>
-        public decimal CreditBalance { get
+        public decimal CreditBalance
+        {
+            get
             {
                 return CalculateCreditBalance();
             }
@@ -61,8 +63,11 @@
         /// <summary>
         /// 是否有担保
         /// </summary>
-        public bool HasGuarantee { get
-            { return GuarantyContract.Count > 0;
+        public bool HasGuarantee
+        {
+            get
+            {
+                return GuarantyContract.Count > 0;
             }
         }
 

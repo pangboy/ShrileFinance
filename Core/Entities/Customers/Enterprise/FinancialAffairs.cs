@@ -35,7 +35,7 @@
         /// <summary>
         /// 资产负债
         /// </summary>
-        public virtual List<Liabilities> Liabilities { get; set; }
+        public virtual ICollection<Liabilities> Liabilities { get; set; }
 
         /// <summary>
         /// 利润利润分配

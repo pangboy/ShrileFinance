@@ -183,12 +183,13 @@
                     statusCode: {
                         200: function (data) {
                             $("#CreditBalance").textbox("setValue", data)
+                            UpdateCreditLimit();
                         },
                     }
                 });
             }
         }
-        }
+        
 
         function UpdateCreditLimit() {
             var CreditLimit = $("fieldset#CreditContract input[textboxname=CreditLimit]").textbox('getValue');
@@ -230,7 +231,6 @@
                 <div class="col-6">
                     <label>授信额度:</label>
                     <input name="CreditLimit" id="CreditLimit" class="easyui-textbox" data-options="required:true,onChange:GetCreditBalance" />
-                    <input name="CreditLimit" id="CreditLimit" class="easyui-textbox" data-options="required:true,onChange:UpdateCreditLimit" />
                     <span class="unit">元</span>
                 </div>
 

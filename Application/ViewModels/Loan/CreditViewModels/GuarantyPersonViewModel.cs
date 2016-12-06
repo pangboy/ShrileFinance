@@ -6,17 +6,17 @@
     /// <summary>
     /// 自然人（继承于担保人）
     /// </summary>
-    public class GuarantyPersonViewModel:Guarantor
+    public class GuarantyPersonViewModel
     {
         /// <summary>
         /// 标识
         /// </summary>
-        public new Guid? Id { get; set; }
+        public Guid? Id { get; set; }
 
         /// <summary>
         /// 姓名
         /// </summary>
-        public new string Name { get; set; }
+        public string Name { get; set; }
 
         /// <summary>
         /// 证件类型
