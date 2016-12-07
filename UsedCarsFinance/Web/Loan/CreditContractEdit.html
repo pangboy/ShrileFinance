@@ -19,7 +19,7 @@
                 if (query.status == "0") {
                     $("#save").hide();
                     uc.form.DisableForm();
-                    
+
                 }
                 else if (query.status == "1") {
                     $("#EffectiveStatus").combobox({ "readonly": true })
@@ -54,7 +54,7 @@
             var HasGuarantee = $("fieldset#CreditContract #HasGuarantee").combobox("getValue");
 
             if (HasGuarantee != undefined) {
-                if (HasGuarantee || HasGuarantee == 1) {
+                if ($.inArray(HasGuarantee.toString(), ["true", "1"]) != -1) {
                     HasGuarantee = 1;
                 }
                 else {
@@ -71,7 +71,7 @@
                         e.ContractTypeTxt = "保证合同";
                         e.GuaranteeFormTxt = getGuaranteeFormTxt(e.GuarantyContractViewModel.GuaranteeForm);
                         e.MarginTxt = e.GuarantyContractViewModel.Margin;
-                        e.EffectiveStateTxt = e.GuarantyContractViewModel.EffectiveState;
+                        e.EffectiveStateTxt = e.GuarantyContractViewModel.EffectiveState == 1 ? "是" : "否";
                         e.SigningDateTxt = e.GuarantyContractViewModel.SigningDate;
                         e.ContractNumber = e.GuarantyContractViewModel.MortgageNumber;
                     }
@@ -79,7 +79,7 @@
                         e.ContractTypeTxt = "质押合同";
                         e.GuaranteeFormTxt = getGuaranteeFormTxt(e.PledgeGuarantyContractViewModel.GuaranteeForm);
                         e.MarginTxt = e.PledgeGuarantyContractViewModel.Margin;
-                        e.EffectiveStateTxt = e.PledgeGuarantyContractViewModel.EffectiveState;
+                        e.EffectiveStateTxt = e.PledgeGuarantyContractViewModel.EffectiveState == 1 ? "是" : "否";
                         e.SigningDateTxt = e.PledgeGuarantyContractViewModel.SigningDate;
                         e.ContractNumber = e.PledgeGuarantyContractViewModel.PledgeNumber;
                     }
@@ -87,7 +87,7 @@
                         e.ContractTypeTxt = "抵押合同";
                         e.GuaranteeFormTxt = getGuaranteeFormTxt(e.MortgageGuarantyContractViewModel.GuaranteeForm);
                         e.MarginTxt = e.MortgageGuarantyContractViewModel.Margin;
-                        e.EffectiveStateTxt = e.MortgageGuarantyContractViewModel.EffectiveState;
+                        e.EffectiveStateTxt = e.MortgageGuarantyContractViewModel.EffectiveState == 1 ? "是" : "否";
                         e.SigningDateTxt = e.MortgageGuarantyContractViewModel.SigningDate;
                         e.ContractNumber = e.MortgageGuarantyContractViewModel.MortgageNumber;
                     }
@@ -100,7 +100,7 @@
                         e.GuarantorTypeTxt = "机构";
                     }
                 });
-                
+
                 // 数据存储和展示
                 $("fieldset#GuarantorContract table#GuarantorContract_dg").datagrid('loadData', data.GuranteeContract);
             }
@@ -127,7 +127,7 @@
 
         function ValidData(data) {
             if (!$("form").form("validate")) {
-                $.messager.show({ msg: '请填写完必填项！' });
+                $.messager.show({ msg: '请正确填写完必填项！' });
 
                 return false;
             }
@@ -138,10 +138,28 @@
                 return false;
             }
 
-            if (data.HasGuarantee == 1 && data.GuranteeContract.length == 0) {
-                $.messager.show({ msg: '请添加担保合同！' });
+            if (data.HasGuarantee == 1) {
+                if (data.GuranteeContract.length == 0) {
+                    $.messager.show({ msg: '请添加担保合同！' });
 
-                return false;
+                    return false;
+                }
+                else {
+                    var expirationDate = $("form input[textboxname=ExpirationDate]").datebox("getValue");
+
+                    $($("fieldset#GuarantorContract table#GuarantorContract_dg").datagrid('getRows')).each(function (i, e) {
+                        if (e.SigningDateTxt > expirationDate) {
+                            // $.messager.show({ msg: '担保合同签订日期均不得晚于授信合同终止日期！' });
+                            expirationDate = "";
+                        }
+                    });
+
+                    if (expirationDate.toString().length == 0) {
+                        $.messager.show({ msg: '担保合同签订日期均不得晚于授信合同终止日期！' });
+
+                        return false;
+                    }
+                }
             }
 
             return true;
@@ -168,7 +186,7 @@
             else {
                 url = "../api/CreditContract/Create";
             }
-            
+
             $.ajax({
                 async: false,
                 method: "POST",
@@ -218,7 +236,7 @@
                 });
             }
         }
-        
+
         function UpdateCreditLimit() {
             var CreditLimit = $("fieldset#CreditContract input[textboxname=CreditLimit]").textbox('getValue');
 
@@ -235,7 +253,7 @@
         // 加载所有机构
         function LoadAllOrgainzate() {
             $('#InstitutionChName').combobox({
-                method:"GET",
+                method: "GET",
                 url: '../api/Customer/GetAll',
                 valueField: 'Id',
                 textField: 'InstitutionChName'
@@ -245,7 +263,7 @@
         function OrganizateInfo(id) {
             $.ajax({
                 method: "GET",
-                data: { id: id},
+                data: { id: id },
                 url: "../api/Customer/GetCreditOriagenizate",
                 statusCode: {
                     200: function (data) {
@@ -270,15 +288,12 @@
             });
         }
 
-        function getGuaranteeFormTxt(value)
-        {
-            if (value == null)
-            {
+        function getGuaranteeFormTxt(value) {
+            if (value == null) {
                 return "";
             }
 
-            if (value.toString() == "1")
-            {
+            if (value.toString() == "1") {
                 return "单人担保";
             }
             else if (value.toString() == "2") {
@@ -297,13 +312,12 @@
             <div class="row">
                 <div class="col-6">
                     <label>机构名称:</label>
-                    <select id="InstitutionChName" name="InstitutionChName" class="easyui-combobox" data-options="required:true,editable:false,onSelect:ChooseOrganizate">
-                    </select>
+                    <select id="InstitutionChName" name="InstitutionChName" class="easyui-combobox" data-options="required:true,editable:false,onSelect:ChooseOrganizate"></select>
                 </div>
 
                 <div class="col-6">
                     <label>客户号:</label>
-                    <input name="CustomerNumber" id="CustomerNumber" class="easyui-textbox"readonly />
+                    <input name="CustomerNumber" id="CustomerNumber" class="easyui-textbox" readonly />
                 </div>
             </div>
 
@@ -314,25 +328,25 @@
                 </div>
                 <div class="col-6">
                     <label>中征码:</label>
-                    <input name="LoanCardCode" id="LoanCardCode" class="easyui-textbox" readonly/>
+                    <input name="LoanCardCode" id="LoanCardCode" class="easyui-textbox" readonly />
                 </div>
             </div>
 
             <div class="row">
                 <div class="col-6">
                     <label>注册资本:</label>
-                    <input name="RegisterCapital" id="RegisterCapital" class="easyui-textbox" readonly/><span>万元</span>
+                    <input name="RegisterCapital" id="RegisterCapital" class="easyui-textbox" readonly /><span>万元</span>
                 </div>
                 <div class="col-6">
                     <label>成立日期:</label>
-                    <input name="SetupDate" id="SetupDate" class="easyui-textbox" readonly/>
+                    <input name="SetupDate" id="SetupDate" class="easyui-textbox" readonly />
                 </div>
             </div>
 
             <div class="row">
                 <div class="col-12">
                     <label>注册登记地址:</label>
-                    <input name="RegisterAddress" id="RegisterAddress" class="easyui-textbox"readonly/>
+                    <input name="RegisterAddress" id="RegisterAddress" class="easyui-textbox" readonly />
                 </div>
             </div>
         </fieldset>
@@ -366,7 +380,7 @@
 
                 <div class="col-6">
                     <label>授信余额:</label>
-                    <input name="CreditBalance" id="CreditBalance" class="easyui-textbox"  readonly />
+                    <input name="CreditBalance" id="CreditBalance" class="easyui-textbox" readonly />
                     <span class="unit">元</span>
                 </div>
             </div>
@@ -461,7 +475,7 @@
                     $("#GuarantorContract_frame").attr("src", url);
 
                     // 打开弹窗
-                    $("#GuarantorContract_dd").dialog({ closed: false, top: $(document).scrollTop() + ($(window).height() - 618) * 0.5 });
+                    $("#GuarantorContract_dd").dialog({ closed: false, top: $(document).scrollTop() + ($(window).height() - 700) * 0.5 });
                 }
             </script>
             <div id="GuarantorContract_dd" class="easyui-dialog" data-options="title:'担保合同',width:'1130px',height:'698.38px',top:0,modal:true,closed:true">
