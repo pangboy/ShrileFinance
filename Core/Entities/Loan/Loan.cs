@@ -52,6 +52,30 @@
             SetFourCategoryAssetsClassification(FourCategoryAssetsClassificationEnum.正常);
             Payments = new HashSet<PaymentHistory>();
         }
+        public Loan(decimal principle, DateTime specialDate, DateTime matureDate, string contractNumber)
+            : this()
+        {
+            if (principle <= 0)
+            {
+                throw new ArgumentOutOfRangeAppException(paramName: nameof(principle), message: "借据金额必须大于 0 。");
+
+            }
+
+            if (specialDate > matureDate)
+            {
+                throw new ArgumentOutOfRangeAppException(message: "借据放款日期必须小于等于借据到期日期。");
+            }
+
+            if (string.IsNullOrEmpty(contractNumber))
+            {
+                throw new ArgumentNullAppException(paramName: nameof(contractNumber), message: "借据编号不可为空。");
+            }
+
+            Principle = principle;
+            SpecialDate = specialDate;
+            MatureDate = matureDate;
+            ContractNumber = contractNumber;
+        }
 
         /// <summary>
         /// 授信合同标识
@@ -145,6 +169,11 @@
             if (payment.ActualPaymentPrincipal > Balance)
             {
                 throw new ArgumentOutOfRangeAppException(nameof(payment.ActualPaymentPrincipal), "实际偿还本金必须少于借据余额.");
+            }
+
+            if (payment.DatePayment < SpecialDate)
+            {
+                throw new ArgumentOutOfRangeAppException(nameof(payment.DatePayment), "还款日期必须晚于放款日期.");
             }
 
             var lastPayment = Payments.LastOrDefault();
