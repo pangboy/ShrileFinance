@@ -5,7 +5,6 @@
     <title>机构统计</title>
     <link href="../Content/easyui/themes/bootstrap/easyui.css" rel="stylesheet" />
     <link href="../Content/easyui/themes/icon.css" rel="stylesheet" />
-    <link href="../Content/form-bootstrap.css" rel="stylesheet" />
     <script src="../Scripts/jquery/jquery.js"></script>
     <script src="../Scripts/easyui/jquery.easyui.js"></script>
     <script src="../Scripts/easyui/locale/easyui-lang-zh_CN.js"></script>
@@ -32,6 +31,16 @@
                 return false;
             }
         }
+
+        function Reset() {
+            $("#InstitutionChName").combobox("clear");
+            Reload();
+        }
+        function RowStyler(row){
+            if (row.Type == "借据") {
+                return 'background-color:#f0fffa;';
+            }
+        }
     </script>
 </head>
 <body>
@@ -44,35 +53,38 @@
             pageSize: 20,
             pageList: [10,20,30,40,50],
             method: 'GET',
-            url: '../api/Customer/TreeGridPageList',
+            url: '../api/Statistics/TreeGridPageList',
             onBeforeLoad: BeforeLoad,
             onExpand:OnCollapse,
             onBeforeExpand:OnExpand,
+            rowStyler:RowStyler,
             onLoadSuccess:OnLoadSuccess
            ">
         <thead>
             <tr>
-                <th data-options="field:'Code',width:180">编号</th>
-                <th data-options="field:'Type',width:80">类型</th>
-                <th data-options="field:'Amount',width:80">金额</th>
-                <th data-options="field:'Balance',width:60">余额</th>
-                <th data-options="field:'CreateDate',width:200">生成时间</th>
-                <th data-options="field:'EndDate',width:200">到期时间</th>
+                <th data-options="field:'Code',width:180,align:'left'">授信编号/借据编号</th>
+                <th data-options="field:'Type',width:80,align:'center'">类型</th>
+                <th data-options="field:'Amount',width:150,align:'right'">授信/借据金额</th>
+                <th data-options="field:'Balance',width:150,align:'right'">授信/借据余额</th>
+                <th data-options="field:'CreateDate',width:200,align:'center'">合同生效时间/借据放款时间</th>
+                <th data-options="field:'EndDate',width:200,align:'center'">合同失效时间/借据到期日期</th>
             </tr>
         </thead>
     </table>
 
     <div id="tb">
-        <div style="height:40px;">
+        <div style="height:30px;">
             <div style="height:30px; width:auto;">
                 <select name="InstitutionChName" id="InstitutionChName" class="easyui-combobox" data-options="method: 'GET',
                         url: '../api/Customer/GetAll',
                         editable:false,
-                        width:315,
+                        width:265,
                         valueField:'Id',
+                        onSelect:Reload,
                         textField:'InstitutionChName'
                     "></select>
-                <a id="search" class="easyui-linkbutton" href="javascript:void(0)" style="width: auto;height:30px; margin-top:3px;" data-options="iconCls:'icon-search',onClick:Reload">搜索</a>
+                <a id="search" class="easyui-linkbutton" href="javascript:void(0)" style="width: auto;height:30px; margin-top:3px;" data-options="iconCls:'icon-search',onClick:Reload,plain:true">搜索</a>
+                <a id="reset" class="easyui-linkbutton" href="javascript:void(0)" style="width: auto;height:30px; margin-top:3px;" data-options="iconCls:'icon-reload',onClick:Reset,plain:true">重置</a>
             </div>
         </div>
     </div>

@@ -9,11 +9,11 @@
     using ViewModels;
     using X.PagedList;
 
-    public class TreeGridAppService
+    public class StatisticsAppService
     {
         private readonly ICreditContractRepository repository;
 
-        public TreeGridAppService(ICreditContractRepository repository)
+        public StatisticsAppService(ICreditContractRepository repository)
         {
             this.repository = repository;
         }

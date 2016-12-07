@@ -105,12 +105,15 @@
                 var row = $('#dg').datagrid('getSelected');
                 if (row) {
                     url += "&Id=" + row.Id;
+                    if (this.id == "view") {
+                        url += "&method=" + this.id;
+                    }
                 }
                 else {
+                    top.$.messager.show({ msg: "请选择一行" });
                     return false;
                 }
             }
-            debugger
             uc.ShowWindow("机构信息", url);
 
             //$("#Organizate_frame").attr("src", url);
