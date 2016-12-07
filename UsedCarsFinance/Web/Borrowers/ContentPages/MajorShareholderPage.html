@@ -12,6 +12,7 @@
     <script src="../../Scripts/easyui/locale/easyui-lang-zh_CN.js"></script>
     <script src="../JS/BorrowerMethod.js"></script>
     <script src="../JS/validType.js"></script>
+    <script src="../../Scripts/usedcars.js"></script>
 
     <script type="text/javascript">
         var query = new Object();
@@ -354,7 +355,7 @@
                         <label>
                             持股比例：<a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="股东持有该机构股份的百分率，保留两位小数">　</a>
                         </label>
-                        <input class="easyui-textbox textbox-f" data-options="required:true,validType:['AN','length[1,10]','SharesProportion']" name="SharesProportion">%
+                        <input class="easyui-textbox textbox-f" data-options="required:true,validType:['AN','length[1,10]','Money']" name="SharesProportion">%
                     </div>
                 </div>
 
