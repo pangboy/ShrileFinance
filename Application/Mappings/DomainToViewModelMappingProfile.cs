@@ -91,14 +91,12 @@
             CreateMap<GuarantorOrganization, GuarantyOrganizationViewModel>();
             CreateMap<CreditContract, CreditContractViewModel>()
                 .ForMember(d => d.GuranteeContract, o => o.Ignore())
-                .ForMember(d => d.GuarantyContract, o => o.Ignore())
-                ;
-
-
+                .ForMember(d => d.GuarantyContract, o => o.Ignore());
 
             CreateMap<GuarantyContract, GuarantyContractViewModel>()
                 .ForMember(d => d.Guarantor, o => o.MapFrom(t => t.Guarantor))
-                .ConstructUsing(m=> {
+                .ConstructUsing(m =>
+                {
                     if (m is GuarantyContractPledge)
                     {
                         return new GuarantyContractPledgeViewModel();
@@ -107,6 +105,7 @@
                     {
                         return new GuarantyContractMortgageViewModel();
                     }
+
                     return new GuarantyContractViewModel();
                 })
                 .Include<GuarantyContractPledge, GuarantyContractPledgeViewModel>()

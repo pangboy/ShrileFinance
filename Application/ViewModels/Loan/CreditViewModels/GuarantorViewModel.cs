@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace Application.ViewModels.Loan.CreditViewModel
+﻿namespace Application.ViewModels.Loan.CreditViewModel
 {
+    using System;
+
     /// <summary>
     /// 担保人
     /// </summary>

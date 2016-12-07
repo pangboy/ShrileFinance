@@ -238,7 +238,6 @@
                 var guranteeContractViewModel = new GuranteeContractViewModel();
 
                 // 区分 保证/质押/抵押
-
                 if (item is GuarantyContractPledgeViewModel)
                 {
                     guranteeContractViewModel.ContractType = GuranteeContractViewModel.ContractTypeEnum.质押;

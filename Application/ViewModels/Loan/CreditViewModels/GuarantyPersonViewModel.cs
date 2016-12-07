@@ -3,7 +3,7 @@
     /// <summary>
     /// 自然人（继承于担保人）
     /// </summary>
-    public class GuarantyPersonViewModel:GuarantorViewModel
+    public class GuarantyPersonViewModel : GuarantorViewModel
     {
         /// <summary>
         /// 证件类型

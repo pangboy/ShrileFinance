@@ -1,5 +1,6 @@
 ﻿namespace Application.Mappings
 {
+    using System.Linq;
     using AutoMapper;
     using Core.Entities;
     using Core.Entities.Customers.Enterprise;
@@ -7,7 +8,6 @@
     using Core.Entities.Loan;
     using Core.Entities.Produce;
     using Core.Entities.Vehicle;
-    using System.Linq;
     using ViewModels.AccountViewModels;
     using ViewModels.FinanceViewModels;
     using ViewModels.Loan.CreditViewModel;

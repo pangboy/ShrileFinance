@@ -6,7 +6,7 @@
     /// <summary>
     /// 担保合同(协调后台)
     /// </summary>
-    public class GuarantyContractViewModel:IEntityViewModel
+    public class GuarantyContractViewModel : IEntityViewModel
     {
         /// <summary>
         /// 标识
