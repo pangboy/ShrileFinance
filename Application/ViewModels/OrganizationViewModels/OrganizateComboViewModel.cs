@@ -4,7 +4,7 @@
 
     public class OrganizateComboViewModel
     {
-        public Guid Id { get; set; }
+        public Guid? Id { get; set; }
 
         /// <summary>
         /// 客户号

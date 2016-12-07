@@ -156,7 +156,7 @@
             {
                 creditContract = creditContract.Where(m => m.CreditContractCode.Contains(serach) || m.Organization.Property.InstitutionChName.Contains(serach));
             }
-                
+
             creditContract = creditContract.OrderByDescending(m => m.Id);
             var pageList = creditContract.ToPagedList(page, size);
 
@@ -238,13 +238,8 @@
                 var guranteeContractViewModel = new GuranteeContractViewModel();
 
                 // 区分 保证/质押/抵押
-                if (item is GuarantyContractViewModel)
-                {
-                    guranteeContractViewModel.ContractType = GuranteeContractViewModel.ContractTypeEnum.保证;
 
-                    guranteeContractViewModel.GuarantyContractViewModel = item as GuarantyContractViewModel;
-                }
-                else if (item is GuarantyContractPledgeViewModel)
+                if (item is GuarantyContractPledgeViewModel)
                 {
                     guranteeContractViewModel.ContractType = GuranteeContractViewModel.ContractTypeEnum.质押;
 
@@ -255,6 +250,12 @@
                     guranteeContractViewModel.ContractType = GuranteeContractViewModel.ContractTypeEnum.抵押;
 
                     guranteeContractViewModel.MortgageGuarantyContractViewModel = item as GuarantyContractMortgageViewModel;
+                }
+                else if (item is GuarantyContractViewModel)
+                {
+                    guranteeContractViewModel.ContractType = GuranteeContractViewModel.ContractTypeEnum.保证;
+
+                    guranteeContractViewModel.GuarantyContractViewModel = item as GuarantyContractViewModel;
                 }
 
                 // 区分 机构/自然人

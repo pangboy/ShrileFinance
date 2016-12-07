@@ -7,7 +7,7 @@
         /// <summary>
         /// GuidId
         /// </summary>
-        public Guid Id { get; set; }
+        public Guid? Id { get; set; }
 
         /// <summary>
         /// 客户号
@@ -37,6 +37,6 @@
         /// <summary>
         /// 创建时间
         /// </summary>
-        public DateTime CreatedDate { get; set; }
+        public DateTime? CreatedDate { get; set; }
     }
 }

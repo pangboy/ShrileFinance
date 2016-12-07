@@ -23,13 +23,13 @@
         /// 判决执行金额
         /// </summary>
         [Display(Name = "判决执行金额"), Required, MoneyAttribute(ErrorMessage = "判决执行金额数据不正确")]
-        public decimal Money { get; set; }
+        public decimal? Money { get; set; }
 
         /// <summary>
         /// 判决执行日期
         /// </summary>
         [Required]
-        public DateTime DateTime { get; set; }
+        public DateTime? DateTime { get; set; }
 
         /// <summary>
         /// 执行结果

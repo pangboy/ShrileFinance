@@ -174,7 +174,7 @@
             setTimeout(function () {
                 // 数据初始化
                 DataInit();
-            }, 500);
+            }, 200);
         };
 
         // 页面初始化
@@ -383,6 +383,21 @@
         function ValidDate(data) {
             if (data == null) {
                 return false;
+            }
+
+            // 组织机构代码和登记注册号码不能同时为空
+            if (data.Base.OrganizateCode.toString().length == 0 && data.Base.RegistraterCode.toString().length == 0) {
+                ShowError("基础信息 组织机构代码和登记注册号码不能同时为空");
+                return false;
+            }
+            // 基础信息 登记注册号类型和登记注册号码需成对出现
+            if (!(data.Base.RegistraterType.toString().length == 0 && data.Base.RegistraterCode.toString().length == 0)) {
+                debugger
+                if (!(data.Base.RegistraterType.toString().length > 0 && data.Base.RegistraterCode.toString().length > 0))
+                {
+                    ShowError("基础信息 登记注册号类型和登记注册号码需成对出现");
+                    return false;
+                }
             }
 
             if (data.Managers.length == 0) {
@@ -614,9 +629,6 @@
                                 </label>
                                 <input class="easyui-textbox textbox-f" data-options="required:true,validType:['AN','length[1,20]']" name="ManagementerCode">
                             </div>
-                        </div>
-
-                        <div class="row">
                             <div class="col-6">
                                 <label>
                                     客户类型：
@@ -632,15 +644,19 @@
                                 </label>
                                 <input class="easyui-textbox textbox-f" data-options="required:false,validType:['AN','length[1,18]']" name="InstitutionCreditCode">
                             </div>
-                        </div>
-
-                        <div class="row">
                             <div class="col-6">
                                 <label>
                                     组织机构代码：
                                     <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('img/InfoImg.png') no-repeat scroll 0 0" title="质检部门颁发的组织机构代码">　</a>
                                 </label>
                                 <input class="easyui-textbox textbox-f" data-options="required:false,validType:['AN','length[1,10]','OrganizateCode[true]']" name="OrganizateCode">
+                            </div>
+                            <div class="col-6">
+                                <label>
+                                    中征码：
+                                    <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('img/InfoImg.png') no-repeat scroll 0 0" title="人民银行颁发的16位贷款卡编码">　</a>
+                                </label>
+                                <input class="easyui-textbox textbox-f" data-options="required:true,validType:['AN','length[1,16]']" name="LoanCardCode">
                             </div>
                             <div class="col-6">
                                 <label>
@@ -660,9 +676,6 @@
                                     <option value="99">其他</option>
                                 </select>
                             </div>
-                        </div>
-
-                        <div class="row">
                             <div class="col-6">
                                 <label>
                                     登记注册号码：
@@ -677,9 +690,6 @@
                                 </label>
                                 <input class="easyui-textbox textbox-f" data-options="required:false,validType:['ANC','length[1,20]']" name="TaxpayerIdentifyIrsNumber">
                             </div>
-                        </div>
-
-                        <div class="row">
                             <div class="col-6">
                                 <label>
                                     纳税人识别号（地税）：
@@ -694,16 +704,7 @@
                                 </label>
                                 <input class="easyui-textbox textbox-f" data-options="required:false,validType:['ANC','length[1,20]']" name="NewaccountlicenseNumber">
                             </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-6">
-                                <label>
-                                    中征码：
-                                    <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('img/InfoImg.png') no-repeat scroll 0 0" title="人民银行颁发的16位贷款卡编码">　</a>
-                                </label>
-                                <input class="easyui-textbox textbox-f" data-options="required:true,validType:['AN','length[1,16]']" name="LoanCardCode">
-                            </div>
+                            
                         </div>
 
                         <div class="row" style="display:block" id="showSecton">
@@ -909,7 +910,7 @@
                                     注册资本：
                                     <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('img/InfoImg.png') no-repeat scroll 0 0" title="机构登记登记注册证书或签发的批文上的注册资本、开办资金、原始基金数额，四舍五入保留2位小数，单位为万元">　</a>
                                 </label>
-                                <input class="easyui-textbox textbox-f" data-options="required:false,validType:['AN','length[1,10]','PositiveNumber','Amount']" name="RegisterCapital"><span>万元</span>
+                                <input class="easyui-textbox textbox-f" data-options="required:false,validType:['AN','length[1,10]','PositiveNumber','Money']" name="RegisterCapital"><span>万元</span>
                             </div>
                         </div>
                     </template>

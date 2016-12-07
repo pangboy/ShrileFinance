@@ -235,7 +235,7 @@
         /// <summary>
         /// 净利润
         /// </summary>
-        [Display(Name = "期末现金及现金等价物余额(六)"), Required, MoneyAttribute(ErrorMessage = "期末现金及现金等价物余额(六)数据不正确")]
+        [Display(Name = "净利润"), Required, MoneyAttribute(ErrorMessage = "净利润数据不正确")]
         public decimal? NetProfit { get; set; }
 
         /// <summary>

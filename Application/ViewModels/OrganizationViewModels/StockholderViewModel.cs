@@ -41,7 +41,7 @@
         /// <summary>
         /// 组织机构代码
         /// </summary>
-        [Display(Name = "组织机构代码"), StringLength(10), MinLength(10), AN(ErrorMessage = "组织机构代码 类型错误")]
+        [Display(Name = "组织机构代码"), StringLength(10), MinLength(10), AN(ErrorMessage = "组织机构代码 类型错误"),OrganizateCode(ErrorMessage ="组织机构代码不合法")]
         public string OrganizateCode { get; set; }
 
         /// <summary>
