@@ -32,7 +32,7 @@
             DatePayment = DateTime.Now;
         }
 
-        private PaymentHistory()
+        protected PaymentHistory()
         {
         }
 

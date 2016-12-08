@@ -71,7 +71,7 @@
             ContractNumber = contractNumber;
         }
 
-        private Loan()
+        protected Loan()
         {
             SetFourCategoryAssetsClassification(FourCategoryAssetsClassificationEnum.正常);
             Payments = new HashSet<PaymentHistory>();
