@@ -47,12 +47,6 @@
     /// </summary>
     public class Loan : Entity, IAggregateRoot
     {
-        public Loan()
-        {
-            SetFourCategoryAssetsClassification(FourCategoryAssetsClassificationEnum.正常);
-            Payments = new HashSet<PaymentHistory>();
-        }
-
         public Loan(decimal principle, DateTime specialDate, DateTime matureDate, string contractNumber)
             : this()
         {
@@ -75,6 +69,12 @@
             SpecialDate = specialDate;
             MatureDate = matureDate;
             ContractNumber = contractNumber;
+        }
+
+        protected Loan()
+        {
+            SetFourCategoryAssetsClassification(FourCategoryAssetsClassificationEnum.正常);
+            Payments = new HashSet<PaymentHistory>();
         }
 
         /// <summary>
