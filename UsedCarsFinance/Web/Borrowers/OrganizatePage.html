@@ -392,7 +392,6 @@
             }
             // 基础信息 登记注册号类型和登记注册号码需成对出现
             if (!(data.Base.RegistraterType.toString().length == 0 && data.Base.RegistraterCode.toString().length == 0)) {
-                debugger
                 if (!(data.Base.RegistraterType.toString().length > 0 && data.Base.RegistraterCode.toString().length > 0))
                 {
                     ShowError("基础信息 登记注册号类型和登记注册号码需成对出现");
@@ -408,6 +407,16 @@
             if (data.Shareholders.length == 0) {
                 ShowError("重要股东 必填");
                 return false;
+            }
+
+            // 上级机构（主管单位） 登记注册号类型和登记注册号码需成对出现
+            if (data.Parent!=undefined) {
+                if (!(data.Parent.RegistraterType.toString().length == 0 && data.Parent.RegistraterCode.toString().length == 0)) {
+                    if (!(data.Parent.RegistraterType.toString().length > 0 && data.Parent.RegistraterCode.toString().length > 0)) {
+                        ShowError("上级机构（主管单位） 登记注册号类型和登记注册号需成对出现");
+                        return false;
+                    }
+                }
             }
 
             if (data.AssociatedEnterprises.length == 0) {
