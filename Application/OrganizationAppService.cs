@@ -51,11 +51,16 @@
             Mapper.Map(model.Base, customer);
             Mapper.Map(model, customer);
 
-            new UpdateBind().Bind(customer.FinancialAffairs.Liabilities, model.FinancialAffairs.Liabilities);
-            new UpdateBind().Bind(customer.FinancialAffairs.CashFlow, model.FinancialAffairs.CashFlow);
-            new UpdateBind().Bind(customer.FinancialAffairs.IncomeExpenditur, model.FinancialAffairs.IncomeExpenditur);
-            new UpdateBind().Bind(customer.FinancialAffairs.InstitutionLiabilities, model.FinancialAffairs.InstitutionLiabilities);
-            new UpdateBind().Bind(customer.FinancialAffairs.Profit, model.FinancialAffairs.Profit);
+            // 映射财务
+            if (model.FinancialAffairs != null)
+            {
+                new UpdateBind().Bind(customer.FinancialAffairs.Liabilities, model.FinancialAffairs.Liabilities);
+                new UpdateBind().Bind(customer.FinancialAffairs.CashFlow, model.FinancialAffairs.CashFlow);
+                new UpdateBind().Bind(customer.FinancialAffairs.IncomeExpenditur, model.FinancialAffairs.IncomeExpenditur);
+                new UpdateBind().Bind(customer.FinancialAffairs.InstitutionLiabilities, model.FinancialAffairs.InstitutionLiabilities);
+                new UpdateBind().Bind(customer.FinancialAffairs.Profit, model.FinancialAffairs.Profit);
+            }
+            
             new UpdateBind().Bind(customer.BigEvent, model.BigEvent);
             new UpdateBind().Bind(customer.Litigation, model.Litigation);
             new UpdateBind().Bind(customer.Managers, model.Managers);
