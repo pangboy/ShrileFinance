@@ -9,10 +9,6 @@
     /// </summary>
     public class PaymentHistory : Entity, IAggregateRoot
     {
-        public PaymentHistory()
-        {
-        }
-
         public PaymentHistory(
             decimal scheduledPaymentPrincipal,
             decimal scheduledPaymentInterest,
@@ -34,6 +30,10 @@
             ActualPaymentPrincipal = actualPaymentPrincipal;
             ActualPaymentInterest = actualPaymentInterest;
             DatePayment = DateTime.Now;
+        }
+
+        private PaymentHistory()
+        {
         }
 
         /// <summary>
