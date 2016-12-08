@@ -12,9 +12,9 @@
             Property(m => m.AssessmentDate).IsRequired();
             Property(m => m.AssessmentName).IsRequired().HasMaxLength(80);
             Property(m => m.AssessmentOrganizationCode).IsRequired().HasMaxLength(10);
-            Property(m => m.CollateralType).IsRequired();
+            Property(m => m.CollateralType).IsOptional();
             Property(m => m.RegistrateAuthorit).IsRequired().HasMaxLength(80);
-            Property(m => m.RegistrateDate).IsRequired();
+            Property(m => m.RegistrateDate).IsOptional();
             Property(m => m.CollateralInstruction).IsRequired().HasMaxLength(400);
         }
     }

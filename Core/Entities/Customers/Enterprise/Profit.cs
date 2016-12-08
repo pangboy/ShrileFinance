@@ -18,22 +18,22 @@
         /// <summary>
         /// 营业成本
         /// </summary>
-        public decimal OperatingCost { get; set; }
+        public decimal? OperatingCost { get; set; }
 
         /// <summary>
         /// 营业税金及附加
         /// </summary>
-        public decimal SalesTax { get; set; }
+        public decimal? SalesTax { get; set; }
 
         /// <summary>
         /// 销售费用
         /// </summary>
-        public decimal SellingExpenses { get; set; }
+        public decimal? SellingExpenses { get; set; }
 
         /// <summary>
         /// 管理费用
         /// </summary>
-        public decimal ManagementExpenses { get; set; }
+        public decimal? ManagementExpenses { get; set; }
 
         /// <summary>
         /// 财务费用
@@ -43,22 +43,22 @@
         /// <summary>
         /// 资产减值损失
         /// </summary>
-        public decimal AssetsimpairmentLoss { get; set; }
+        public decimal? AssetsimpairmentLoss { get; set; }
 
         /// <summary>
         /// 公允价值变动净收益
         /// </summary>
-        public decimal FairIncome { get; set; }
+        public decimal? FairIncome { get; set; }
 
         /// <summary>
         /// 投资净收益
         /// </summary>
-        public decimal NetInvestmentIncome { get; set; }
+        public decimal? NetInvestmentIncome { get; set; }
 
         /// <summary>
         /// 对联营企业和合营企业的投资收益
         /// </summary>
-        public decimal EnterpriseInvestmentIncome { get; set; }
+        public decimal? EnterpriseInvestmentIncome { get; set; }
 
         /// <summary>
         /// 营业利润
@@ -68,17 +68,17 @@
         /// <summary>
         /// 营业外收入
         /// </summary>
-        public decimal OperatingIncome { get; set; }
+        public decimal? OperatingIncome { get; set; }
 
         /// <summary>
         /// 营业外支出
         /// </summary>
-        public decimal OperatingExpenditure { get; set; }
+        public decimal? OperatingExpenditure { get; set; }
 
         /// <summary>
         /// 非流动资产损失
         /// </summary>
-        public decimal NonCurrentAssetsLoss { get; set; }
+        public decimal? NonCurrentAssetsLoss { get; set; }
 
         /// <summary>
         /// 利润总额
@@ -88,7 +88,7 @@
         /// <summary>
         /// 所得税费用
         /// </summary>
-        public decimal IncomeTaxExpense { get; set; }
+        public decimal? IncomeTaxExpense { get; set; }
 
         /// <summary>
         /// 净利润
@@ -98,11 +98,11 @@
         /// <summary>
         /// 基本每股收益
         /// </summary>
-        public decimal BasicEarningsShare { get; set; }
+        public decimal? BasicEarningsShare { get; set; }
 
         /// <summary>
         /// 稀释每股收益
         /// </summary>
-        public decimal DilutedEarningsShare { get; set; }
+        public decimal? DilutedEarningsShare { get; set; }
     }
 }

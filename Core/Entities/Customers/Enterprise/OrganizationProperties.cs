@@ -40,7 +40,7 @@
         /// <summary>
         /// 注册资本（万元）
         /// </summary>
-        public decimal RegisterCapital { get; set; }
+        public decimal? RegisterCapital { get; set; }
 
         /// <summary>
         /// 组织机构类别
