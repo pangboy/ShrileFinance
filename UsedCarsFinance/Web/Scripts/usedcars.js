@@ -421,5 +421,18 @@ $.extend($.fn.validatebox.defaults.rules, {
             return false;
         },
         message: '请输入整数或两位小数！'
+    },
+    ScaleRange: {
+        validator: function (value, param) {
+            if (param == undefined) {
+                return value <= 100 && value >= 0;
+            }
+            else {
+                return value <= param[1] && value >= param[0];
+            }
+
+            return false;
+        },
+        message: '比例区间超出边界！'
     }
 });
