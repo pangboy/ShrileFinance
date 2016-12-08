@@ -104,7 +104,7 @@
 
         function ValidData(data) {
             if (!$("form").form("validate")) {
-                $.messager.show({ msg: "请填写完必填项！" });
+                $.messager.show({ msg: "请正确填写完必填项！" });
                 return false;
             }
 
@@ -135,11 +135,29 @@
                     // 禁用fieldset
                     Disabled($("fieldset"));
 
-                    
-
                     // 禁用保存按钮
                     $("#save").linkbutton("disable");
                 }
+            }
+
+            // 担保合同签订日期校验
+            if (method != "GuarantorContract_view" && self.parent.$("form input[textboxname=ExpirationDate]").datebox("getValue").toString().length > 0) {
+                // 担保合同签订日期 <= 授信合同终止日期
+                $.extend($.fn.validatebox.defaults.rules, {
+                    SigningDate: {
+                        validator: function (value) {
+                            var expirationDate = self.parent.$("form input[textboxname=ExpirationDate]").datebox("getValue");
+                            if (expirationDate.toString().trim().length > 0) {
+                                return value <= expirationDate;
+                            }
+                            return true;
+                        },
+                        message: '担保合同签订日期不得晚于授信合同终止日期：' + self.parent.$("form input[textboxname=ExpirationDate]").datebox("getValue")
+                    },
+                });
+
+                var signingDate = $("fieldset[name=Contract] input[textboxname=SigningDate]").datebox("getValue");
+                $("fieldset[name=Contract] input[textboxname=SigningDate]").datebox({ validType: ['SigningDate'] }).datebox('setValue', signingDate);
             }
 
             // 保证金额 = 贷款合同授信额度
@@ -217,6 +235,20 @@
             }
 
             $.parser.parse($("div[name=GuarantorInfo]>div[id!=base]"));
+        }
+
+        // 选择身份证类型
+        function ChangeCertificateType() {
+            var value = $("fieldset[name=Guarantor] select[textboxname=CertificateType]").combobox("getValue");
+            var certificateNumber = $("fieldset[name=Guarantor] input[textboxname=CertificateNumber]");
+
+            if ($.inArray(value,["0","7"])!=-1) {
+                // 身份证、临时身份证
+                certificateNumber.textbox({ validType: ['IdCard'] });
+            }
+            else{
+                certificateNumber.textbox({ validType: ['length[0,18]', 'AN'] });
+            }
         }
 
         function Submit() {
@@ -396,7 +428,7 @@
                 <template id="GuarantorInfo_Person">
                     <div class="col-6">
                         <label>证件类型：</label>
-                        <select name="CertificateType" class="easyui-combobox" data-options="required:true,value:'',editable:false">
+                        <select name="CertificateType" class="easyui-combobox" data-options="required:true,value:'',editable:false,onChange:ChangeCertificateType">
                             <option value="0">身份证</option>
                             <option value="1">户口簿</option>
                             <option value="2">护照</option>
@@ -418,7 +450,7 @@
                     </div>
                     <div class="col-6">
                         <label>证件号码：</label>
-                        <input name="CertificateNumber" class="easyui-textbox" data-options="validType:['length[0,18]','ANC'],required:true" />
+                        <input name="CertificateNumber" class="easyui-textbox" data-options="validType:['length[0,18]','AN'],required:true" />
                     </div>
                 </template>
                 <template id="GuarantorInfo_Organization">

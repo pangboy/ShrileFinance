@@ -38,9 +38,9 @@
             return Ok(creditContract);
         }
 
-        public IHttpActionResult GetCreditBalance(Guid id,decimal limit)
+        public IHttpActionResult GetCreditBalance(Guid id, decimal limit)
         {
-            var getCreditBalanc = service.GetCreditBalanc(id,limit);
+            var getCreditBalanc = service.GetCreditBalanc(id, limit);
 
             return Ok(getCreditBalanc);
         }

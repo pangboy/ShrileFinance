@@ -1,5 +1,6 @@
 ﻿namespace Application.Mappings
 {
+    using System.Linq;
     using AutoMapper;
     using Core.Entities;
     using Core.Entities.Customers.Enterprise;

@@ -1,14 +1,12 @@
-﻿using System;
-
-namespace Application.ViewModels.Loan.CreditViewModel
+﻿namespace Application.ViewModels.Loan.CreditViewModel
 {
+    using System;
+
     /// <summary>
     /// 担保合同(服务页面)
     /// </summary>
     public class GuranteeContractViewModel : IEntityViewModel
     {
-        public Guid? Id { get; set; }
-
         /// <summary>
         /// 合同类型
         /// </summary>
@@ -27,6 +25,8 @@ namespace Application.ViewModels.Loan.CreditViewModel
             自然人 = 1,
             机构 = 2
         }
+
+        public Guid? Id { get; set; }
 
         /// <summary>
         /// 保证

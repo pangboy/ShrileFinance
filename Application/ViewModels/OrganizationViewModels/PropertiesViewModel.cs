@@ -30,13 +30,13 @@
         /// 成立日期
         /// </summary>
         [Display(Name = "成立日期")]
-        public DateTime SetupDate { get; set; }
+        public DateTime? SetupDate { get; set; }
 
         /// <summary>
         /// 证书到期日期
         /// </summary>
         [Display(Name = "证书到期日期")]
-        public DateTime CertificateDueDate { get; set; }
+        public DateTime? CertificateDueDate { get; set; }
 
         /// <summary>
         /// 经营（业务）范围

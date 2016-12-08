@@ -3,7 +3,7 @@
     /// <summary>
     /// 机构（继承于担保人）
     /// </summary>
-    public class GuarantyOrganizationViewModel: GuarantorViewModel
+    public class GuarantyOrganizationViewModel : GuarantorViewModel
     {
         /// <summary>
         /// 贷款卡编码

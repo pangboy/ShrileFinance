@@ -64,6 +64,7 @@
                     model.FinancingItems.Add(item);
                 }
             }
+
             if (model.FinancingItems.Count > 0)
             {
                 new UpdateBind().Bind(produce.FinancingItems, model.FinancingItems);

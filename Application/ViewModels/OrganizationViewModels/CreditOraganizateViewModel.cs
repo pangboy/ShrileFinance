@@ -32,11 +32,11 @@
         /// <summary>
         /// 成立时间
         /// </summary>
-        public DateTime SetupDate { get; set; }
+        public DateTime? SetupDate { get; set; }
 
         /// <summary>
         /// 注册资本
         /// </summary>
-        public decimal RegisterCapital { get; set; }
+        public decimal? RegisterCapital { get; set; }
     }
 }
