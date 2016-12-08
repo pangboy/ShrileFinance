@@ -410,14 +410,15 @@
             }
 
             // 上级机构（主管单位） 登记注册号类型和登记注册号码需成对出现
-            if (data.Parent!=undefined) {
-                if (!(data.Parent.RegistraterType.toString().length == 0 && data.Parent.RegistraterCode.toString().length == 0)) {
-                    if (!(data.Parent.RegistraterType.toString().length > 0 && data.Parent.RegistraterCode.toString().length > 0)) {
-                        ShowError("上级机构（主管单位） 登记注册号类型和登记注册号需成对出现");
-                        return false;
-                    }
-                }
-            }
+            //if (data.Parent != undefined) {
+            //    debugger
+            //    if (!(data.Parent.RegistraterType.toString().length == 0 && data.Parent.RegistraterCode.toString().length == 0)) {
+            //        if (!(data.Parent.RegistraterType.toString().length > 0 && data.Parent.RegistraterCode.toString().length > 0)) {
+            //            ShowError("上级机构（主管单位） 登记注册号类型和登记注册号需成对出现");
+            //            return false;
+            //        }
+            //    }
+            //}
 
             if (data.AssociatedEnterprises.length == 0) {
                 ShowError("主要关联企业 必填");
