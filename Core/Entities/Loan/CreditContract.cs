@@ -177,7 +177,7 @@
         /// <returns></returns>
         private bool IsEffectiveDate()
         {
-            if (ExpirationDate < DateTime.Now)
+            if (ExpirationDate <= DateTime.Now)
             {
                 return false;
             }
