@@ -8,10 +8,10 @@
         public MortgageGuarantyContractConfiguration()
         {
             Property(m => m.MortgageNumber).IsRequired().HasMaxLength(2);
-            Property(m => m.AssessmentValue).IsRequired();
-            Property(m => m.AssessmentDate).IsRequired();
-            Property(m => m.AssessmentName).IsRequired().HasMaxLength(80);
-            Property(m => m.AssessmentOrganizationCode).IsRequired().HasMaxLength(10);
+            Property(m => m.AssessmentValue).IsOptional();
+            Property(m => m.AssessmentDate).IsOptional();
+            Property(m => m.AssessmentName).IsOptional().HasMaxLength(80);
+            Property(m => m.AssessmentOrganizationCode).IsOptional().HasMaxLength(10);
             Property(m => m.CollateralType).IsOptional();
             Property(m => m.RegistrateAuthorit).IsRequired().HasMaxLength(80);
             Property(m => m.RegistrateDate).IsOptional();
