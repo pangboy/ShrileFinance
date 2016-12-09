@@ -172,17 +172,15 @@
         }
 
         /// <summary>
-        /// 判断申请是否在合同有效期内
+        /// 合同是否在有效期内
         /// </summary>
         /// <returns></returns>
         private bool IsEffectiveDate()
         {
-            if (ExpirationDate <= DateTime.Now)
-            {
-                return false;
-            }
+            var today = DateTime.Now.Date;
 
-            return true;
+            return (EffectiveDate <= today) 
+                && (today <= ExpirationDate);
         }
 
         /// <summary>
