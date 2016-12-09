@@ -109,9 +109,9 @@
             var _9158 = $("section input[id=J9158]").textbox("getValue");
 
             if (_9152.toString().length > 0 && _9158.toString().length > 0 && isNaN(_9152) == false && isNaN(_9158) == false) {
-                $("section input[id=J9159]").textbox("setValue", parseFloat(_9152) + parseFloat(_9158));
+                $("section input[id=J9159]").textbox("setValue", parseFloat(parseFloat(_9152) + parseFloat(_9158)).toFixed(2));
 
-                $("section input[id=J9130]").textbox("setValue", parseFloat(_9152) + parseFloat(_9158));
+                $("section input[id=J9130]").textbox("setValue", parseFloat(parseFloat(_9152) + parseFloat(_9158)).toFixed(2));
             }
         }
     </script>
@@ -632,7 +632,7 @@
                             <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="负债和所有者权益合计">　</a>
                         </label>
                         <!--<input name="TotalLiabilitiesCapital" class="easyui-textbox" data-options="required:true,validType:['PositiveNumber','Money','length[0,20]']" />-->
-                        <input name="TotalLiabilitiesCapital" id="J9159" class="easyui-textbox" data-options="required:false,readonly:true" />
+                        <input name="TotalLiabilitiesCapital" id="J9159" class="easyui-textbox" data-options="required:false,readonly:true,value:''" />
                     </div>
                 </div>
 

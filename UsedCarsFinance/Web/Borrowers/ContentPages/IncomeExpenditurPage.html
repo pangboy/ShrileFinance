@@ -67,7 +67,7 @@
 
             // 序列化fieldset 事业单位收入支出
             var obj = $("fieldset[id=IncomeExpenditur]").serializeJson();
-            
+
             // 更新事业单位收入支出表
             if (query.method == "IncomeExpenditur_mod") {
 
@@ -104,86 +104,106 @@
     </script>
 
     <script type="text/javascript">
-        // 9341 = 9336 + 9338 + 9340
-        function Cal_9336_9338_9340() {
-            var _9336 = $("section input[id=J9336]").textbox("getValue");
-            var _9338 = $("section input[id=J9338]").textbox("getValue");
-            var _9340 = $("section input[id=J9340]").textbox("getValue");
-
-            if (isNaN(_9336) == false && isNaN(_9338) == false && isNaN(_9340) == false) {
-                if (_9336.toString().length == 0) {
-                    _9336 = 0;
-                }
-
-                if (_9338.toString().length == 0) {
-                    _9338 = 0;
-                }
-
-                if (_9340.toString().length == 0) {
-                    _9340 = 0;
-                }
-
-                $("section input[id=J9341]").textbox("setValue", parseFloat(_9336) + parseFloat(_9338) + parseFloat(_9340));
+        function Calculate(array, ch, result) {
+            var r = 0;
+            if (array == null || array.length == 0 || $.inArray(ch, ['+', '-']) == -1) {
+                return r;
             }
+            else {
+                $(array).each(function (i, e) {
+                    if (!isNaN(parseFloat($("section input[id=" + e + "]").textbox('getValue')))) {
+                        if (i == 0) {
+                            r = parseFloat($("section input[id=" + e + "]").textbox('getValue'));
+                        }
+                        else {
+                            if (ch == '+') {
+                                r += parseFloat($("section input[id=" + e + "]").textbox('getValue'));
+                            }
+                            else if (ch == '-') {
+                                r -= parseFloat($("section input[id=" + e + "]").textbox('getValue'));
+                            }
+                        }
+                    }
+                });
+            }
+
+            $("section input[id=" + result + "]").textbox('setValue', parseFloat(r).toFixed(2));
+
+            return r;
         }
 
-        // 9357 =  9350 + 9353 + 9356
-        function Cal_9350_9353_9356() {
-            var _9350 = $("section input[id=J9350]").textbox("getValue");
-            var _9353 = $("section input[id=J9353]").textbox("getValue");
-            var _9356 = $("section input[id=J9356]").textbox("getValue");
+        // 收入总计 J9341 = 事业收入小计 J9336 + 经营收入小计 J9338 + 拨入专款小计 J9340
+        function Cal_S_J9341() {
+            var array = ['J9336', 'J9338', 'J9340'];
+            var ch = '+';
+            var result = 'J9341';
 
-            if (isNaN(_9350) == false && isNaN(_9353) == false && isNaN(_9356) == false) {
-                if (_9350.toString().length == 0) {
-                    _9350 = 0;
-                }
-
-                if (_9353.toString().length == 0) {
-                    _9353 = 0;
-                }
-
-                if (_9356.toString().length == 0) {
-                    _9356 = 0;
-                }
-
-                $("section input[id=J9357]").textbox("setValue", parseFloat(_9336) + parseFloat(_9338) + parseFloat(_9356));
-            }
+            Calculate(array, ch, result);
         }
 
-        // 9358 = 9336 - 9350
-        function Cal_9336_9350() {
-            var _9336 = $("section input[id=J9336]").textbox("getValue");
-            var _9350 = $("section input[id=J9350]").textbox("getValue");
+        // 支出总计 J9357 = 事业支出小计 J9350 + 经营支出小计 J9353 + 专款小计 J9356
+        function Cal_S_J9357() {
+            var array = ['J9350', 'J9353', 'J9356'];
+            var ch = '+';
+            var result = 'J9357';
 
-            if (isNaN(_9336) == false && isNaN(_9350) == false) {
-                if (_9336.toString().length == 0) {
-                    _9336 = 0;
-                }
-
-                if (_9350.toString().length == 0) {
-                    _9350 = 0;
-                }
-
-                $("section input[id=J9358]").textbox("setValue", parseFloat(_9336) - parseFloat(_9350));
-            }
+            Calculate(array, ch, result);
         }
 
-        // 9361 = 9338 - 9353
-        function Cal_9336_9350() {
-            var _9338 = $("section input[id=J9338]").textbox("getValue");
-            var _9353 = $("section input[id=J9353]").textbox("getValue");
+        // 事业结余 J9358 = 专款小计 J9356 - 事业支出小计 J9350
+        function Cal_S_J9358() {
+            var array = ['J9356', 'J9350'];
+            var ch = '-';
+            var result = 'J9358';
 
-            if (isNaN(_9338) == false && isNaN(_9353) == false) {
-                if (_9338.toString().length == 0) {
-                    _9338 = 0;
-                }
+            Calculate(array, ch, result);
+        }
 
-                if (_9353.toString().length == 0) {
-                    _9353 = 0;
-                }
+        // 经营结余 J9361 = 经营收入小计 J9338 - 经营支出小计 J9353
+        function Cal_S_J9361() {
+            var array = ['J9338', 'J9353'];
+            var ch = '-';
+            var result = 'J9361';
 
-                $("section input[id=J9361]").textbox("setValue", parseFloat(_9338) - parseFloat(_9353));
-            }
+            Calculate(array, ch, result);
+        }
+
+        // 事业收入小计
+        function Cal_J9336() {
+            Cal_S_J9341();
+        }
+
+        // 经营收入小计
+        function Cal_J9338() {
+            Cal_S_J9341();
+
+            Cal_S_J9361();
+        }
+
+        // 拨入专款小计
+        function Cal_J9340() {
+            Cal_S_J9341();
+        }
+
+        // 事业支出小计
+        function Cal_J9350() {
+            Cal_S_J9357();
+
+            Cal_S_J9358();
+        }
+
+        // 经营支出小计
+        function Cal_J9353() {
+            Cal_S_J9357();
+
+            Cal_S_J9361();
+        }
+
+        // 专款小计
+        function Cal_J9356() {
+            Cal_S_J9357();
+
+            Cal_S_J9358();
         }
     </script>
 </head>
@@ -251,7 +271,7 @@
                             事业收入小计：
                             <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="事业收入小计">　</a>
                         </label>
-                        <input name="事业收入小计" id="J9336" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Money','length[0,20]'],onChange:Cal_9336_9338_9340" />
+                        <input name="事业收入小计" id="J9336" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Money','length[0,20]'],onChange:Cal_J9336" />
                     </div>
                     <div class="col-6">
                         <label>
@@ -268,7 +288,7 @@
                             经营收入小计：
                             <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="经营收入小计">　</a>
                         </label>
-                        <input name="经营收入小计" id="J9338" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Money','length[0,20]'],onChange:Cal_9336_9338_9340" />
+                        <input name="经营收入小计" id="J9338" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Money','length[0,20]'],onChange:Cal_J9338" />
                     </div>
                     <div class="col-6">
                         <label>
@@ -285,14 +305,14 @@
                             拨入专款小计：
                             <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="拨入专款小计">　</a>
                         </label>
-                        <input name="拨入专款小计" id="J9340" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Money','length[0,20]'],onChange:Cal_9336_9338_9340" />
+                        <input name="拨入专款小计" id="J9340" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Money','length[0,20]'],onChange:Cal_J9340" />
                     </div>
                     <div class="col-6">
                         <label>
                             收入总计：
                             <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="收入总计">　</a>
                         </label>
-                        <input name="收入总计" id="J9341" class="easyui-textbox" data-options="required:false,readonly:true" />
+                        <input name="收入总计" id="J9341" class="easyui-textbox" data-options="required:false,readonly:true,value:0" />
                     </div>
                 </div>
 
@@ -370,7 +390,7 @@
                             事业支出小计：
                             <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="事业支出小计">　</a>
                         </label>
-                        <input name="事业支出小计" id="J9350" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Money','length[0,20]'],onChange:Cal_9350_9353_9356" />
+                        <input name="事业支出小计" id="J9350" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Money','length[0,20]'],onChange:Cal_J9350" />
                     </div>
                     <div class="col-6">
                         <label>
@@ -394,7 +414,7 @@
                             经营支出小计：
                             <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="经营支出小计">　</a>
                         </label>
-                        <input name="经营支出小计" id="9353" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Money','length[0,20]'],onChange:Cal_9350_9353_9356" />
+                        <input name="经营支出小计" id="J9353" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Money','length[0,20]'],onChange:Cal_J9353" />
                     </div>
                 </div>
 
@@ -421,14 +441,14 @@
                             专款小计：
                             <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="专款小计">　</a>
                         </label>
-                        <input name="专款小计" id="9356" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Money','length[0,20]'],onChange:Cal_9350_9353_9356" />
+                        <input name="专款小计" id="J9356" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Money','length[0,20]'],onChange:Cal_J9356" />
                     </div>
                     <div class="col-6">
                         <label>
                             支出总计：
                             <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="支出总计">　</a>
                         </label>
-                        <input name="支出总计" id="J9357" class="easyui-textbox" data-options="required:false,readonly:true" />
+                        <input name="支出总计" id="J9357" class="easyui-textbox" data-options="required:false,readonly:true,value:0" />
                     </div>
                 </div>
 
@@ -438,7 +458,7 @@
                             事业结余：
                             <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="事业结余">　</a>
                         </label>
-                        <input name="事业结余" class="easyui-textbox" data-options="required:true,validType:['PositiveNumber','Money','length[0,20]']" />
+                        <input name="事业结余" id="J9358" class="easyui-textbox" data-options="required:false,readonly:true,value:0" />
                     </div>
                     <div class="col-6">
                         <label>
@@ -462,7 +482,7 @@
                             经营结余：
                             <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="经营结余">　</a>
                         </label>
-                        <input name="经营结余" class="easyui-textbox" data-options="required:true,validType:['PositiveNumber','Money','length[0,20]']" />
+                        <input name="经营结余" id="J9361" class="easyui-textbox" data-options="required:false,readonly:true,value:0" />
                     </div>
                 </div>
 
