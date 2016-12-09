@@ -75,6 +75,10 @@
             // 加载 机构属性、机构状态、机构联络、上级机构（主管单位）
             $(["Property", "State", "Contact", "Parent"]).each(function (index, item) {
                 FieldsetLoadDateFactory(item, "text", resultDate[item]);
+
+                if(item=="Property" && resultDate[item].EconomicSectorsClassification==undefined){
+                    $("select[textboxname=EconomicSectorsClassification]").combotree("setValue",'');
+                }
             });
 
             //加载 高级主管、重要股东、主要关联企业
@@ -119,16 +123,13 @@
         function BuidDate() {
             var data = new Object();
 
-            //data["Base"] = FieldsetSerializeFactory('Base', 'text');
-            //data["Property"] = FieldsetSerializeFactory('Property', 'text');
-            //data["State"] = FieldsetSerializeFactory('State', 'text');
-            //data["Contact"] = FieldsetSerializeFactory('Contact', 'text');
-            //data["Managers"] = FieldsetSerializeFactory('Managers', 'table');
-            //data["Shareholders"] = FieldsetSerializeFactory('Shareholders', 'table');
-            //data["AssociatedEnterprises"] = FieldsetSerializeFactory('AssociatedEnterprises', 'table');
-
             $(['Base', 'Property', 'State', 'Contact']).each(function (i, e) {
                 data[e] = FieldsetSerializeFactory(e, 'text');
+
+                if (e == "" && data[e].EconomicSectorsClassification == "null")
+                {
+                    data[e].EconomicSectorsClassification = "";
+                }
             });
 
             $(['Managers', 'Shareholders', 'AssociatedEnterprises']).each(function (i, e) {
@@ -395,8 +396,7 @@
             }
             // 基础信息 登记注册号类型和登记注册号码需成对出现
             if (!(data.Base.RegistraterType.toString().length == 0 && data.Base.RegistraterCode.toString().length == 0)) {
-                if (!(data.Base.RegistraterType.toString().length > 0 && data.Base.RegistraterCode.toString().length > 0))
-                {
+                if (!(data.Base.RegistraterType.toString().length > 0 && data.Base.RegistraterCode.toString().length > 0)) {
                     ShowError("基础信息 登记注册号类型和登记注册号码需成对出现");
                     return false;
                 }
@@ -617,6 +617,9 @@
             return data;
         }
     </script>
+
+    
+
 </head>
 <body>
     <a id="top" name="top">&nbsp;</a>
@@ -753,7 +756,6 @@
                             <a style="margin-right: 20px; float: right; font-size: 24px; text-decoration: none" id="Cminus" onclick="Minus(this)" href="javascript:void(0)" hidden="hidden">-</a>
                         </div>
                     </div>
-                    
 
                     <template id="templateC">
                         <input type="hidden" name="InformationCategories" value="C" placeholder="信息类别">
@@ -786,16 +788,16 @@
                                     <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('img/InfoImg.png') no-repeat scroll 0 0" title="注册（登记）地址所在地行政区划">　</a>
                                 </label>
                                 <!--<input class="easyui-textbox textbox-f" data-options="required:false,validType:['N','length[1,6]']" name="RegisterAdministrativeDivision">-->
-                                <select class="easyui-combobox  combobox-f combo-f textbox-f" name="RegisterAdministrativeDivision" data-options="editable:false,required:false,value:'',
+                                <select class="easyui-combobox  combobox-f combo-f textbox-f" name="RegisterAdministrativeDivision" data-options="editable:false,required:false,
                                 async: false,
                                 method: 'GET',
                                 idField: 'id',
                                 textField: 'text',
-                                url: '../api/Method/GetAdministration'
+                                 url: '../api/Method/GetAdministration',
                                 ">
                                     <option value="">　</option>
-                                </select>
 
+                                </select>
                             </div>
                             <div class="col-6">
                                 <label>
@@ -826,6 +828,7 @@
                                 <input class="easyui-textbox textbox-f" data-options="required:false,validType:['ANC','length[1,400]']" name="BusinessScope">
                             </div>
                         </div>
+
 
                         <div class="row">
                             <div class="col-6">
@@ -876,7 +879,6 @@
                             </div>
 
                         </div>
-
                         <div class="row">
                             <div class="col-6">
                                 <label>
@@ -889,22 +891,18 @@
                                 idField: 'id',
                                 textField: 'text',
                                 url: '../api/Method/GetIndustry',
-                                onSelect:onSelect
+                                onBeforeSelect:combotreeOnSelect
                                 "></select>
                             </div>
                             <script type="text/javascript">
-                                //判断是否是子类
-                                function onSelect(node) {
+                                function combotreeOnSelect(node) {
                                     if (node.children != undefined) {
-                                        $("select[textboxname=EconomicSectorsClassification]").combotree("setValue", '');
-                                        debugger
+                                        //$("select[textboxname=EconomicSectorsClassification]").combotree("setValue",'');
+                                        $.messager.show({ msg: '请选择子类！' });
                                         return false;
                                     }
-
-                                    //return true;
                                 }
                             </script>
-                            
                             <div class="col-6">
                                 <label>
                                     经济类型：
@@ -1084,7 +1082,7 @@
                                 var row = $('#Managers_dg').datagrid('getSelected');
 
                                 if (row) {
-                                    $.messager.confirm('确认', '确认删除该家族成员信息?', function (r) {
+                                    $.messager.confirm('确认', '确认删除该高管及主要关系人信息?', function (r) {
                                         if (r) {
                                             var rowIndex = $('#Managers_dg').datagrid('getRowIndex', row);
 
@@ -1169,7 +1167,7 @@
                                 var row = $('#Shareholders_dg').datagrid('getSelected');
 
                                 if (row) {
-                                    $.messager.confirm('确认', '确认删除该家族成员信息?', function (r) {
+                                    $.messager.confirm('确认', '确认删除该重要股东信息?', function (r) {
                                         if (r) {
                                             var rowIndex = $('#Shareholders_dg').datagrid('getRowIndex', row);
 
@@ -1252,7 +1250,7 @@
                                 var row = $('#AssociatedEnterprises_dg').datagrid('getSelected');
 
                                 if (row) {
-                                    $.messager.confirm('确认', '确认删除该家族成员信息?', function (r) {
+                                    $.messager.confirm('确认', '确认删除该主要关联企业信息?', function (r) {
                                         if (r) {
                                             var rowIndex = $('#AssociatedEnterprises_dg').datagrid('getRowIndex', row);
 
@@ -1447,7 +1445,7 @@
                                 var row = $('#CashFlow_dg').datagrid('getSelected');
 
                                 if (row) {
-                                    $.messager.confirm('确认', '确认删除该家族成员信息?', function (r) {
+                                    $.messager.confirm('确认', '确认删除该现金流量信息?', function (r) {
                                         if (r) {
                                             var rowIndex = $('#CashFlow_dg').datagrid('getRowIndex', row);
 
@@ -1522,7 +1520,7 @@
                                 var row = $('#Liabilities_dg').datagrid('getSelected');
 
                                 if (row) {
-                                    $.messager.confirm('确认', '确认删除该家族成员信息?', function (r) {
+                                    $.messager.confirm('确认', '确认删除该资产负债信息?', function (r) {
                                         if (r) {
                                             var rowIndex = $('#Liabilities_dg').datagrid('getRowIndex', row);
 
@@ -1597,7 +1595,7 @@
                                 var row = $('#Profit_dg').datagrid('getSelected');
 
                                 if (row) {
-                                    $.messager.confirm('确认', '确认删除该家族成员信息?', function (r) {
+                                    $.messager.confirm('确认', '确认删除该利润以及利润分配信息?', function (r) {
                                         if (r) {
                                             var rowIndex = $('#Profit_dg').datagrid('getRowIndex', row);
 
@@ -1673,7 +1671,7 @@
                                 var row = $('#IncomeExpenditur_dg').datagrid('getSelected');
 
                                 if (row) {
-                                    $.messager.confirm('确认', '确认删除该家族成员信息?', function (r) {
+                                    $.messager.confirm('确认', '确认删除该事业单位收入支出信息?', function (r) {
                                         if (r) {
                                             var rowIndex = $('#IncomeExpenditur_dg').datagrid('getRowIndex', row);
 
@@ -1750,7 +1748,7 @@
                                 var row = $('#InstitutionLiabilities_dg').datagrid('getSelected');
 
                                 if (row) {
-                                    $.messager.confirm('确认', '确认删除该家族成员信息?', function (r) {
+                                    $.messager.confirm('确认', '确认删除该事业单位资产负债信息?', function (r) {
                                         if (r) {
                                             var rowIndex = $('#InstitutionLiabilities_dg').datagrid('getRowIndex', row);
 
@@ -1830,7 +1828,7 @@
                                 var row = $('#Litigation_dg').datagrid('getSelected');
 
                                 if (row) {
-                                    $.messager.confirm('确认', '确认删除该家族成员信息?', function (r) {
+                                    $.messager.confirm('确认', '确认删除该诉讼事件信息?', function (r) {
                                         if (r) {
                                             var rowIndex = $('#Litigation_dg').datagrid('getRowIndex', row);
 
