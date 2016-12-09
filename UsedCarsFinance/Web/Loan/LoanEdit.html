@@ -120,6 +120,12 @@
             }
 
             this.Submit = function () {
+                if (!endEditing()) {
+                    $.messager.show({ msg: "请先保存正在编辑的还款记录。" });
+
+                    return false;
+                }
+
                 var data = submit.buildData();
 
                 uc.form.Submit({
