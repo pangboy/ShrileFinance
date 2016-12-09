@@ -723,7 +723,7 @@
                                 </label>
                                 <input class="easyui-textbox textbox-f" data-options="required:false,validType:['ANC','length[1,20]']" name="NewaccountlicenseNumber">
                             </div>
-                            
+
                         </div>
 
                         <div class="row" style="display:block" id="showSecton">
@@ -887,9 +887,22 @@
                                 method: 'GET',
                                 idField: 'id',
                                 textField: 'text',
-                                url: '../api/Method/GetIndustry'
+                                url: '../api/Method/GetIndustry',
+                                onSelect:onSelect
                                 "></select>
                             </div>
+                            <script type="text/javascript">
+                                //判断是否是子类
+                                function onSelect(node) {
+                                    if (node.children != undefined) {
+                                        //$(this).combotree("setValue", '').combotree("expand", node);
+                                        debugger
+                                        return false;
+                                    }
+                                    
+                                    //return true;
+                                }
+                            </script>
                             <div class="col-6">
                                 <label>
                                     经济类型：
