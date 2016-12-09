@@ -36,7 +36,7 @@
             Property(m => m.Property.RegisterCapital).HasPrecision(10, 2);
             Property(m => m.Property.OrganizationCategory).HasMaxLength(1);
             Property(m => m.Property.OrganizationCategorySubdivision).HasMaxLength(2);
-            Property(m => m.Property.EconomicSectorsClassification).HasMaxLength(5);
+            Property(m => m.Property.EconomicSectorsClassification).IsOptional().HasMaxLength(5);
             Property(m => m.Property.EconomicType).HasMaxLength(2);
 
             // 机构状态

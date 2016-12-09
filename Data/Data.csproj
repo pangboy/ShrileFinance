@@ -96,9 +96,9 @@
     </Compile>
     <Compile Include="ModelConfigurations\ActionConfiguration.cs" />
     <Compile Include="ModelConfigurations\ApplicantConfiguration.cs" />
-    <Compile Include="ModelConfigurations\AssociatedEnterpriseConfiguration.cs" />
-    <Compile Include="ModelConfigurations\BigEventConfiguration.cs" />
-    <Compile Include="ModelConfigurations\CashFlowConfiguration.cs" />
+    <Compile Include="ModelConfigurations\Customer\AssociatedEnterpriseConfiguration.cs" />
+    <Compile Include="ModelConfigurations\Customer\BigEventConfiguration.cs" />
+    <Compile Include="ModelConfigurations\Customer\CashFlowConfiguration.cs" />
     <Compile Include="ModelConfigurations\ContactConfiguration.cs" />
     <Compile Include="ModelConfigurations\CreditExamineConfiguration.cs" />
     <Compile Include="ModelConfigurations\DraftConfiguration.cs" />
@@ -106,7 +106,7 @@
     <Compile Include="ModelConfigurations\FinanceExtensionConfiguration.cs" />
     <Compile Include="ModelConfigurations\FinanceProduceConfiguration.cs" />
     <Compile Include="ModelConfigurations\FinancingProjectConfigration.cs" />
-    <Compile Include="ModelConfigurations\FinancialAffairsConfiguration.cs" />
+    <Compile Include="ModelConfigurations\Customer\FinancialAffairsConfiguration.cs" />
     <Compile Include="ModelConfigurations\FlowConfiguration.cs" />
     <Compile Include="ModelConfigurations\FormConfiguration.cs" />
     <Compile Include="ModelConfigurations\FormNodeConfiguration.cs" />
@@ -116,30 +116,30 @@
     <Compile Include="ModelConfigurations\Loan\GuarantyOrganizationConfiguration.cs" />
     <Compile Include="ModelConfigurations\Loan\GuarantyPersonConfiguration.cs" />
     <Compile Include="ModelConfigurations\InstanceConfiguration.cs" />
-    <Compile Include="ModelConfigurations\LiabilitiesConfiguration.cs" />
-    <Compile Include="ModelConfigurations\LitigationConfigruation.cs" />
+    <Compile Include="ModelConfigurations\Customer\LiabilitiesConfiguration.cs" />
+    <Compile Include="ModelConfigurations\Customer\LitigationConfigruation.cs" />
     <Compile Include="ModelConfigurations\Loan\CreditContractConfiguration.cs" />
     <Compile Include="ModelConfigurations\Loan\LoanConfiguration.cs" />
     <Compile Include="ModelConfigurations\Loan\PaymentHistoryConfiguration.cs" />
     <Compile Include="ModelConfigurations\LogConfiguration.cs" />
-    <Compile Include="ModelConfigurations\ManagerConfiguration.cs" />
-    <Compile Include="ModelConfigurations\FamilyMemberConfiguration.cs" />
-    <Compile Include="ModelConfigurations\MortgageGuarantyContractConfiguration.cs" />
+    <Compile Include="ModelConfigurations\Customer\ManagerConfiguration.cs" />
+    <Compile Include="ModelConfigurations\Customer\FamilyMemberConfiguration.cs" />
+    <Compile Include="ModelConfigurations\Loan\MortgageGuarantyContractConfiguration.cs" />
     <Compile Include="ModelConfigurations\NodeConfiguration.cs" />
-    <Compile Include="ModelConfigurations\OrganizationConfiguration.cs">
+    <Compile Include="ModelConfigurations\Customer\OrganizationConfiguration.cs">
       <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
     </Compile>
-    <Compile Include="ModelConfigurations\ParentConfigration.cs" />
+    <Compile Include="ModelConfigurations\Customer\ParentConfigration.cs" />
     <Compile Include="ModelConfigurations\PartnerConfiguration.cs" />
     <Compile Include="ModelConfigurations\FinancingItemConfigration.cs" />
-    <Compile Include="ModelConfigurations\PledgeGuarantyContractConfiguration.cs" />
-    <Compile Include="ModelConfigurations\ProfitConfiguration.cs" />
+    <Compile Include="ModelConfigurations\Loan\PledgeGuarantyContractConfiguration.cs" />
+    <Compile Include="ModelConfigurations\Customer\ProfitConfiguration.cs" />
     <Compile Include="ModelConfigurations\ProduceConfigration.cs" />
-    <Compile Include="ModelConfigurations\StockholderConfiguration.cs" />
+    <Compile Include="ModelConfigurations\Customer\StockholderConfiguration.cs" />
     <Compile Include="ModelConfigurations\TypeConfigurationExtensions.cs" />
     <Compile Include="ModelConfigurations\AppUserConfiguration.cs" />
-    <Compile Include="ModelConfigurations\InstitutionIncomeExpenditureConfiguration.cs" />
-    <Compile Include="ModelConfigurations\InstitutionLiabilitiesConfiguration.cs" />
+    <Compile Include="ModelConfigurations\Customer\InstitutionIncomeExpenditureConfiguration.cs" />
+    <Compile Include="ModelConfigurations\Customer\InstitutionLiabilitiesConfiguration.cs" />
     <Compile Include="ModelConfigurations\VehicleConfigration.cs" />
     <Compile Include="Models\CRET_Cities.cs">
       <ExcludeFromStyleCop>True</ExcludeFromStyleCop>

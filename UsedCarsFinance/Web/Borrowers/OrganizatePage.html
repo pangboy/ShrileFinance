@@ -753,6 +753,7 @@
                             <a style="margin-right: 20px; float: right; font-size: 24px; text-decoration: none" id="Cminus" onclick="Minus(this)" href="javascript:void(0)" hidden="hidden">-</a>
                         </div>
                     </div>
+                    
 
                     <template id="templateC">
                         <input type="hidden" name="InformationCategories" value="C" placeholder="信息类别">
@@ -785,16 +786,16 @@
                                     <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('img/InfoImg.png') no-repeat scroll 0 0" title="注册（登记）地址所在地行政区划">　</a>
                                 </label>
                                 <!--<input class="easyui-textbox textbox-f" data-options="required:false,validType:['N','length[1,6]']" name="RegisterAdministrativeDivision">-->
-                                <select class="easyui-combobox  combobox-f combo-f textbox-f" name="RegisterAdministrativeDivision" data-options="editable:false,required:false,
+                                <select class="easyui-combobox  combobox-f combo-f textbox-f" name="RegisterAdministrativeDivision" data-options="editable:false,required:false,value:'',
                                 async: false,
                                 method: 'GET',
                                 idField: 'id',
                                 textField: 'text',
-                                 url: '../api/Method/GetAdministration',
+                                url: '../api/Method/GetAdministration'
                                 ">
                                     <option value="">　</option>
-
                                 </select>
+
                             </div>
                             <div class="col-6">
                                 <label>
@@ -825,7 +826,6 @@
                                 <input class="easyui-textbox textbox-f" data-options="required:false,validType:['ANC','length[1,400]']" name="BusinessScope">
                             </div>
                         </div>
-
 
                         <div class="row">
                             <div class="col-6">
@@ -876,6 +876,7 @@
                             </div>
 
                         </div>
+
                         <div class="row">
                             <div class="col-6">
                                 <label>
@@ -895,14 +896,15 @@
                                 //判断是否是子类
                                 function onSelect(node) {
                                     if (node.children != undefined) {
-                                        //$(this).combotree("setValue", '').combotree("expand", node);
+                                        $("select[textboxname=EconomicSectorsClassification]").combotree("setValue", '');
                                         debugger
                                         return false;
                                     }
-                                    
+
                                     //return true;
                                 }
                             </script>
+                            
                             <div class="col-6">
                                 <label>
                                     经济类型：
