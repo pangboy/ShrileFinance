@@ -76,9 +76,15 @@
             var valueStr = value == null ? "0" : value.ToString();
 
             var regResult = false;
-            if (new Regex(@"^-?\d+\.\d{2}$").IsMatch(valueStr)|| new Regex(@"^\d+$").IsMatch(valueStr))
+
+            if (valueStr.IndexOf('-') != -1)
             {
-                if(valueStr.Length>2&&new Regex(@"^[0][0-9]*$").IsMatch(valueStr.Substring(0, 2)))
+                valueStr = valueStr.Remove(0,1);
+            }
+
+            if (new Regex(@"^-?\d+\.\d{2}$").IsMatch(valueStr) || new Regex(@"^\d+$").IsMatch(valueStr))
+            {
+                if (valueStr.Length > 2 && new Regex(@"^[0][0-9]*$").IsMatch(valueStr.Substring(0, 2)))
                 {
                     regResult = false;
                 }
@@ -815,7 +821,7 @@
 
             if (liabilitites.TotalLiabilitiesCapital != liabilitites.TotalLiabilities + liabilitites.TotalOwnersEquity)
             {
-                ErrorMessage ="2007资产负债中：负债所有者权益=负债合计+所有者权益合计,正确值应为：" + (liabilitites.TotalLiabilities + liabilitites.TotalOwnersEquity);
+                ErrorMessage = "2007资产负债中：负债所有者权益=负债合计+所有者权益合计,正确值应为：" + (liabilitites.TotalLiabilities + liabilitites.TotalOwnersEquity);
 
                 return false;
             }
