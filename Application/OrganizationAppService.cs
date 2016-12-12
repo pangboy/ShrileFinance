@@ -37,7 +37,7 @@
                     Id = Guid.Empty,
                     Year = model.FinancialAffairs.Year,
                     TypeSubdivision = model.FinancialAffairs.TypeSubdivision,
-                    AuditFirm = model.FinancialAffairs.AuditorName,
+                    AuditFirm = model.FinancialAffairs.AuditFirm,
                     AuditorName = model.FinancialAffairs.AuditorName
                 };
 
