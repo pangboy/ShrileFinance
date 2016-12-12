@@ -138,3 +138,19 @@ function Disabled(selector) {
     //$(selector + " select.easyui-combobox").combobox("disable");
 }
 
+// 最多保留2位小数
+function Fixed(num) {
+    if (isNaN(num)) {
+        return 0;
+    }
+
+    if (num.toString().indexOf('.') == -1) {
+        return parseFloat(num);
+    }
+    else if (true) {
+        return parseFloat(num).toFixed(1);
+    }
+    else{
+        return parseFloat(num).toFixed(2);
+    }
+}

@@ -35,32 +35,8 @@
         });
 
         // 加载数据
-        function LoadDate(Id) {
-            if (Id == null) {
-                return;
-            }
-
-            // 通过Id获取数据
-            var resultDate;
-            $.ajax({
-                async: false,
-                data: { Id: Id },
-                type: "GET",
-                url: "../api/Customer/Get",
-                statusCode: {
-                    200: function (data) {
-                        resultDate = data;
-                    },
-                    500: function (data) {
-                        $.messager.alert('错误', data.responseJSON.ExceptionMessage);
-                    },
-                    400: function (data) {
-                        $.messager.alert('错误', data.responseJSON.Message, "info");
-                    }
-                }
-            });
-
-            if (!resultDate) {
+        function LoadDate(resultDate) {
+            if (!resultDate || resultDate == null) {
                 return null;
             }
 
@@ -76,8 +52,8 @@
             $(["Property", "State", "Contact", "Parent"]).each(function (index, item) {
                 FieldsetLoadDateFactory(item, "text", resultDate[item]);
 
-                if(item=="Property" && resultDate[item].EconomicSectorsClassification==undefined){
-                    $("select[textboxname=EconomicSectorsClassification]").combotree("setValue",'');
+                if (item == "Property" && resultDate[item].EconomicSectorsClassification == undefined) {
+                    $("select[textboxname=EconomicSectorsClassification]").combotree("setValue", '');
                 }
             });
 
@@ -126,7 +102,7 @@
             $(['Base', 'Property', 'State', 'Contact']).each(function (i, e) {
                 data[e] = FieldsetSerializeFactory(e, 'text');
 
-                if (e == "" && data[e].EconomicSectorsClassification == "null")
+                if (e == "Property" && data[e].EconomicSectorsClassification == "null")
                 {
                     data[e].EconomicSectorsClassification = "";
                 }
@@ -303,7 +279,7 @@
                 query.Id = GetQueryString("Id");
 
                 // 加载数据
-                LoadDate(query.Id);
+                LoadDate(LoadDateForId(query.Id));
 
                 if (query.Method == "view") {
                     // 禁用fieldset
@@ -318,6 +294,35 @@
             }
         }
 
+        // 查询数据
+        function LoadDateForId(Id) {
+            if (Id == null) {
+                return;
+            }
+
+            // 通过Id获取数据
+            var resultDate;
+            $.ajax({
+                async: false,
+                data: { Id: Id },
+                type: "GET",
+                url: "../api/Customer/Get",
+                statusCode: {
+                    200: function (data) {
+                        resultDate = data;
+                    },
+                    500: function (data) {
+                        $.messager.alert('错误', data.responseJSON.ExceptionMessage);
+                    },
+                    400: function (data) {
+                        $.messager.alert('错误', data.responseJSON.Message, "info");
+                    }
+                }
+            });
+
+            return resultDate;
+        }
+        
         // 提交按钮
         function OrganizateSubmit() {
             if ($("#content").form("validate")) {
@@ -617,6 +622,8 @@
             return data;
         }
     </script>
+
+
 </head>
 <body>
     <a id="top" name="top">&nbsp;</a>
