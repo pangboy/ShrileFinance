@@ -20,7 +20,7 @@
                 throw new ArgumentOutOfRangeAppException(message: "应还本金必须大于等于实际偿还本金.");
             }
 
-            if (actualPaymentInterest < scheduledPaymentInterest)
+            if (scheduledPaymentInterest < actualPaymentInterest)
             {
                 throw new ArgumentOutOfRangeAppException(message: "应还利息必须大于等于实际偿还利息.");
             }
