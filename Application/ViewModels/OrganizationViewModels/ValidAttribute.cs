@@ -4,6 +4,7 @@
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
+    using System.Linq;
     using System.Text.RegularExpressions;
     #endregion
 
@@ -79,7 +80,7 @@
 
             if (valueStr.IndexOf('-') != -1)
             {
-                valueStr = valueStr.Remove(0,1);
+                valueStr = valueStr.Remove(0, 1);
             }
 
             if (new Regex(@"^-?\d+\.\d{1}$").IsMatch(valueStr) || new Regex(@"^-?\d+\.\d{2}$").IsMatch(valueStr) || new Regex(@"^\d+$").IsMatch(valueStr))
@@ -88,7 +89,8 @@
                 {
                     regResult = false;
                 }
-                else {
+                else
+                {
                     regResult = true;
                 }
             }
@@ -806,6 +808,56 @@
     }
     #endregion
 
+    #region
+    /// <summary>
+    /// 计算器
+    /// </summary>
+    public class Calculator
+    {
+
+        /// <summary>
+        /// 计算
+        /// </summary>
+        /// <param name="items">运算项</param>
+        /// <param name="fn">运算符</param>
+        /// <returns>计算结果</returns>
+        internal static decimal Calculate(decimal?[] items, char fn = '+')
+        {
+            var result = decimal.Parse("0.00");
+
+            for (var i = 0; i < items.Length; i++)
+            {
+                items[i] = items[i] ?? decimal.Parse("0.00");
+
+                if (i == 0)
+                {
+                    result = items[i].Value;
+                }
+                else
+                {
+                    switch (fn)
+                    {
+                        case '+': result += items[i].Value; break;
+                        case '-': result -= items[i].Value; break;
+                        default: throw new NotImplementedException();
+                    }
+                }
+            }
+
+            return result;
+        }
+
+        internal static bool ValueEqual(decimal? value1, decimal? value2 = null)
+        {
+            value1 = value1 ?? decimal.Parse("0.00");
+            value2 = value2 ?? decimal.Parse("0.00");
+
+            return value1.Value.Equals(value2.Value);
+        }
+
+    }
+    #endregion
+
     #region 资产负债
     public class LiabilitiesAttribute : ValidationAttribute
     {
@@ -816,23 +868,38 @@
                 return true;
             }
 
-            var liabilitites = value as LiabilitiesViewModel;
-            liabilitites.TotalLiabilities = liabilitites.TotalLiabilities ?? decimal.Parse("0.00");
-            liabilitites.TotalOwnersEquity = liabilitites.TotalOwnersEquity ?? decimal.Parse("0.00");
-            liabilitites.TotalLiabilitiesCapital = liabilitites.TotalLiabilitiesCapital ?? decimal.Parse("0.00");
-            liabilitites.TotalAssets = liabilitites.TotalAssets ?? decimal.Parse("0.00");
+            ////var liabilitites = value as LiabilitiesViewModel;
+            ////liabilitites.TotalLiabilities = liabilitites.TotalLiabilities ?? decimal.Parse("0.00");
+            ////liabilitites.TotalOwnersEquity = liabilitites.TotalOwnersEquity ?? decimal.Parse("0.00");
+            ////liabilitites.TotalLiabilitiesCapital = liabilitites.TotalLiabilitiesCapital ?? decimal.Parse("0.00");
+            ////liabilitites.TotalAssets = liabilitites.TotalAssets ?? decimal.Parse("0.00");
 
-            if (liabilitites.TotalLiabilitiesCapital != liabilitites.TotalLiabilities + liabilitites.TotalOwnersEquity)
+            ////if (liabilitites.TotalLiabilitiesCapital != liabilitites.TotalLiabilities + liabilitites.TotalOwnersEquity)
+            ////{
+            ////    ErrorMessage = "2007资产负债中：负债所有者权益=负债合计+所有者权益合计,正确值应为：" + (liabilitites.TotalLiabilities + liabilitites.TotalOwnersEquity);
+
+            ////    return false;
+            ////}
+            ////else if (liabilitites.TotalAssets != liabilitites.TotalLiabilitiesCapital)
+            ////{
+            ////    ErrorMessage = "2007资产负债中：资产总计=负债和所有者权益,正确值应为：" + liabilitites.TotalLiabilitiesCapital;
+
+            ////    return false;
+            ////}
+
+            var data = value as LiabilitiesViewModel;
+
+            // 负债和所有者权益合计 9159  =  负债合计 9152 + 所有者权益合计 9158 
+            if (!Calculator.ValueEqual(data.TotalLiabilitiesCapital.Value, Calculator.Calculate(new decimal?[] { data.TotalLiabilities, data.TotalOwnersEquity })))
             {
-                ErrorMessage = "2007资产负债中：负债所有者权益=负债合计+所有者权益合计,正确值应为：" + (liabilitites.TotalLiabilities + liabilitites.TotalOwnersEquity);
-
-                return false;
+                ErrorMessage = "2007资产负债中：负债所有者权益 = 负债合计 + 所有者权益合计";
             }
-            else if (liabilitites.TotalAssets != liabilitites.TotalLiabilitiesCapital)
-            {
-                ErrorMessage = "2007资产负债中：资产总计=负债和所有者权益,正确值应为：" + liabilitites.TotalLiabilitiesCapital;
 
-                return false;
+            // 资产总计 9130 =  负债和所有者权益合计 9159
+
+            if (!Calculator.ValueEqual(data.TotalAssets, data.TotalLiabilitiesCapital))
+            {
+                ErrorMessage = "2007资产负债中：资产总计 = 负债和所有者权益";
             }
 
             return true;
@@ -850,49 +917,92 @@
                 return true;
             }
 
-            var cash = value as CashFlowViewModel;
+            ///var cash = value as CashFlowViewModel;
 
-            cash.OperatingActivitiesCashInflows = cash.OperatingActivitiesCashInflows ?? decimal.Parse("0.00");
-            cash.OperatingActivitiesCashOutflows = cash.OperatingActivitiesCashOutflows ?? decimal.Parse("0.00");
-            cash.CashInInvestmentActivities = cash.CashInInvestmentActivities ?? decimal.Parse("0.00");
-            cash.InvestmentCashOutflow = cash.InvestmentCashOutflow ?? decimal.Parse("0.00");
-            cash.FinancingCashInflow = cash.FinancingCashInflow ?? decimal.Parse("0.00");
-            cash.FinancingCashOutflow = cash.FinancingCashOutflow ?? decimal.Parse("0.00");
-            cash.OperatingActivitieCashNet = cash.OperatingActivitieCashNet ?? decimal.Parse("0.00");
-            cash.InvestmentCashInflow = cash.InvestmentCashInflow ?? decimal.Parse("0.00");
-            cash.FinancingNetCash = cash.FinancingNetCash ?? decimal.Parse("0.00");
-            cash.ExchangeRateChangeCash = cash.ExchangeRateChangeCash ?? decimal.Parse("0.00");
-            cash.CashIncrease5 = cash.CashIncrease5 ?? decimal.Parse("0.00");
-            cash.BeginCashBalance = cash.BeginCashBalance ?? decimal.Parse("0.00");
-            cash.FinalCashBalance6 = cash.FinalCashBalance6 ?? decimal.Parse("0.00");
+            ////cash.OperatingActivitiesCashInflows = cash.OperatingActivitiesCashInflows ?? decimal.Parse("0.00");
+            ////cash.OperatingActivitiesCashOutflows = cash.OperatingActivitiesCashOutflows ?? decimal.Parse("0.00");
+            ////cash.CashInInvestmentActivities = cash.CashInInvestmentActivities ?? decimal.Parse("0.00");
+            ////cash.InvestmentCashOutflow = cash.InvestmentCashOutflow ?? decimal.Parse("0.00");
+            ////cash.FinancingCashInflow = cash.FinancingCashInflow ?? decimal.Parse("0.00");
+            ////cash.FinancingCashOutflow = cash.FinancingCashOutflow ?? decimal.Parse("0.00");
+            ////cash.OperatingActivitieCashNet = cash.OperatingActivitieCashNet ?? decimal.Parse("0.00");
+            ////cash.InvestmentCashInflow = cash.InvestmentCashInflow ?? decimal.Parse("0.00");
+            ////cash.FinancingNetCash = cash.FinancingNetCash ?? decimal.Parse("0.00");
+            ////cash.ExchangeRateChangeCash = cash.ExchangeRateChangeCash ?? decimal.Parse("0.00");
+            ////cash.CashIncrease5 = cash.CashIncrease5 ?? decimal.Parse("0.00");
+            ////cash.BeginCashBalance = cash.BeginCashBalance ?? decimal.Parse("0.00");
+            ////cash.FinalCashBalance6 = cash.FinalCashBalance6 ?? decimal.Parse("0.00");
 
-            if (cash.OperatingActivitieCashNet != cash.OperatingActivitiesCashInflows - cash.OperatingActivitiesCashOutflows)
+            ////if (cash.OperatingActivitieCashNet != cash.OperatingActivitiesCashInflows - cash.OperatingActivitiesCashOutflows)
+            ////{
+            ////    ErrorMessage = "2007现金流中：经营活动产生的现金流量净额=经营活动现金流入小计-经营活动现金流出小计,正确值应为：" + (cash.OperatingActivitiesCashInflows - cash.OperatingActivitiesCashOutflows);
+
+            ////    return false;
+            ////}
+            ////else if (cash.InvestmentCashInflow != cash.CashInInvestmentActivities - cash.InvestmentCashOutflow)
+            ////{
+            ////    ErrorMessage = "2007现金流中：投资活动产生的现金流量净额=投资活动现金流入小计-投资活动现金流出小计,正确值应为：" + (cash.CashInInvestmentActivities - cash.InvestmentCashOutflow);
+
+            ////    return false;
+            ////}
+            ////else if (cash.FinancingNetCash != cash.FinancingCashInflow - cash.FinancingCashOutflow)
+            ////{
+            ////    ErrorMessage = "2007现金流中：筹集活动产生的现金流量净额= 筹资活动现金流入小计-筹资活动现金流出小计,正确值应为：" + (cash.FinancingCashInflow - cash.FinancingCashOutflow);
+
+            ////    return false;
+            ////}
+            ////else if (cash.CashIncrease5 != cash.OperatingActivitieCashNet + cash.InvestmentCashInflow + cash.FinancingNetCash + cash.ExchangeRateChangeCash)
+            ////{
+            ////    ErrorMessage = "2007现金流中：现金及现金等价物净增加额(五)=经营活动产生的现金流量净额+投资活动产生的现金流量净额+筹集活动产生的现金流量净额+汇率变动对现金及现金等价物的影响,正确值应为：" + (cash.OperatingActivitieCashNet + cash.InvestmentCashInflow + cash.FinancingNetCash + cash.ExchangeRateChangeCash);
+
+            ////    return false;
+            ////}
+            ////else if (cash.FinalCashBalance6 != cash.CashIncrease5 + cash.BeginCashBalance)
+            ////{
+            ////    ErrorMessage = "2007现金流中：期末现金及现金等价物余额(六)=现金及现金等价物净增加额(五)+期初现金及现金等价物余额,正确值应为：" + (cash.CashIncrease5 + cash.BeginCashBalance);
+
+            ////    return false;
+            ////}
+
+            var data = value as CashFlowViewModel;
+
+            // 经营活动产生的现金流量净额 9208 = 经营活动现金流入小计 9202 - 经营活动现金流出小计 9207
+            if (!Calculator.ValueEqual(data.OperatingActivitieCashNet, Calculator.Calculate(new decimal?[] {data.OperatingActivitiesCashInflows,data.OperatingActivitiesCashOutflows }, '-')))
             {
-                ErrorMessage = "2007现金流中：经营活动产生的现金流量净额=经营活动现金流入小计-经营活动现金流出小计,正确值应为：" + (cash.OperatingActivitiesCashInflows - cash.OperatingActivitiesCashOutflows);
+                ErrorMessage = "2007现金流中：经营活动产生的现金流量净额 = 经营活动现金流入小计 - 经营活动现金流出小计";
 
                 return false;
             }
-            else if (cash.InvestmentCashInflow != cash.CashInInvestmentActivities - cash.InvestmentCashOutflow)
+
+
+            // 投资活动产生的现金流量净额 9220 = 投资活动现金流入小计 9214 - 投资活动现金流出小计 9219
+            if (!Calculator.ValueEqual(data.InvestmentCashInflow, Calculator.Calculate(new decimal?[] { data.CashInInvestmentActivities, data.InvestmentCashOutflow }, '-')))
             {
-                ErrorMessage = "2007现金流中：投资活动产生的现金流量净额=投资活动现金流入小计-投资活动现金流出小计,正确值应为：" + (cash.CashInInvestmentActivities - cash.InvestmentCashOutflow);
+                ErrorMessage = "2007现金流中：投资活动产生的现金流量净额 = 投资活动现金流入小计 - 投资活动现金流出小计";
 
                 return false;
             }
-            else if (cash.FinancingNetCash != cash.FinancingCashInflow - cash.FinancingCashOutflow)
+
+            // 筹集活动产生的现金流量净额 9229 = 筹资活动现金流入小计 9224 - 筹资活动现金流出小计 9228
+            if (!Calculator.ValueEqual(data.FinancingNetCash, Calculator.Calculate(new decimal?[] { data.FinancingCashInflow, data.FinancingCashOutflow }, '-')))
             {
-                ErrorMessage = "2007现金流中：筹集活动产生的现金流量净额= 筹资活动现金流入小计-筹资活动现金流出小计,正确值应为：" + (cash.FinancingCashInflow - cash.FinancingCashOutflow);
+                ErrorMessage = "2007现金流中：筹集活动产生的现金流量净额 = 筹资活动现金流入小计 - 筹资活动现金流出小计";
 
                 return false;
             }
-            else if (cash.CashIncrease5 != cash.OperatingActivitieCashNet + cash.InvestmentCashInflow + cash.FinancingNetCash + cash.ExchangeRateChangeCash)
+
+            // 现金及现金等价物净增加额(五) 9231 = 经营活动产生的现金流量净额 9208 + 投资活动产生的现金流量净额 9220 + 筹集活动产生的现金流量净额 9229 + 汇率变动对现金及现金等价物的影响 9230
+            if (!Calculator.ValueEqual(data.CashIncrease5, Calculator.Calculate(new decimal?[] {data.OperatingActivitieCashNet, data.InvestmentCashInflow,data.FinancingNetCash,data.ExchangeRateChangeCash })))
             {
-                ErrorMessage = "2007现金流中：现金及现金等价物净增加额(五)=经营活动产生的现金流量净额+投资活动产生的现金流量净额+筹集活动产生的现金流量净额+汇率变动对现金及现金等价物的影响,正确值应为：" + (cash.OperatingActivitieCashNet + cash.InvestmentCashInflow + cash.FinancingNetCash + cash.ExchangeRateChangeCash);
+                ErrorMessage = "2007现金流中：现金及现金等价物净增加额(五) = 经营活动产生的现金流量净额 + 投资活动产生的现金流量净额+筹集活动产生的现金流量净额 + 汇率变动对现金及现金等价物的影响";
 
                 return false;
             }
-            else if (cash.FinalCashBalance6 != cash.CashIncrease5 + cash.BeginCashBalance)
+
+            // 期末现金及现金等价物余额(六) 9233 = 现金及现金等价物净增加额(五) 9231 + 期初现金及现金等价物余额 9232
+            if (!Calculator.ValueEqual(data.FinalCashBalance6, Calculator.Calculate(new decimal?[] { data.CashIncrease5,data.BeginCashBalance})))
             {
-                ErrorMessage = "2007现金流中：期末现金及现金等价物余额(六)=现金及现金等价物净增加额(五)+期初现金及现金等价物余额,正确值应为：" + (cash.CashIncrease5 + cash.BeginCashBalance);
+                ErrorMessage = "2007现金流中：期末现金及现金等价物余额(六)=现金及现金等价物净增加额(五)+期初现金及现金等价物余额";
 
                 return false;
             }
@@ -912,25 +1022,43 @@
                 return true;
             }
 
-            var ii = value as InstitutionLiabilitiesViewModel;
+            ////var ii = value as InstitutionLiabilitiesViewModel;
 
-            ii.资产合计 = ii.资产合计 ?? decimal.Parse("0.00");
-            ii.支出合计 = ii.支出合计 ?? decimal.Parse("0.00");
-            ii.负债合计 = ii.负债合计 ?? decimal.Parse("0.00");
-            ii.净资产合计 = ii.净资产合计 ?? decimal.Parse("0.00");
-            ii.收入合计 = ii.收入合计 ?? decimal.Parse("0.00");
-            ii.资产部类总计 = ii.资产部类总计 ?? decimal.Parse("0.00");
-            ii.负债部类总计 = ii.负债部类总计 ?? decimal.Parse("0.00");
+            ////ii.资产合计 = ii.资产合计 ?? decimal.Parse("0.00");
+            ////ii.支出合计 = ii.支出合计 ?? decimal.Parse("0.00");
+            ////ii.负债合计 = ii.负债合计 ?? decimal.Parse("0.00");
+            ////ii.净资产合计 = ii.净资产合计 ?? decimal.Parse("0.00");
+            ////ii.收入合计 = ii.收入合计 ?? decimal.Parse("0.00");
+            ////ii.资产部类总计 = ii.资产部类总计 ?? decimal.Parse("0.00");
+            ////ii.负债部类总计 = ii.负债部类总计 ?? decimal.Parse("0.00");
 
-            if (ii.资产部类总计 != ii.资产合计 + ii.支出合计)
+            ////if (ii.资产部类总计 != ii.资产合计 + ii.支出合计)
+            ////{
+            ////    ErrorMessage = "事业单位资产负债：资产部类总计=资产合计+支出合计,正确值应为：" + (ii.资产合计 + ii.支出合计);
+
+            ////    return false;
+            ////}
+            ////else if (ii.负债部类总计 != ii.负债合计 + ii.净资产合计 + ii.收入合计)
+            ////{
+            ////    ErrorMessage = "事业单位资产负债：负债部类总计=负债合计+净资产合计+收入合计,正确值应为：" + (ii.负债合计 + ii.净资产合计 + ii.收入合计);
+
+            ////    return false;
+            ////}
+
+            var data = value as InstitutionLiabilitiesViewModel;
+
+            // 资产部类总计 9294 = 资产合计 9282 + 支出合计 9293  
+            if (!Calculator.ValueEqual(data.资产部类总计, Calculator.Calculate(new decimal?[] { data.资产合计,data.支出合计 })))
             {
-                ErrorMessage = "事业单位资产负债：资产部类总计=资产合计+支出合计,正确值应为：" + (ii.资产合计 + ii.支出合计);
+                ErrorMessage = "事业单位资产负债：资产部类总计 = 资产合计 + 支出合计";
 
                 return false;
             }
-            else if (ii.负债部类总计 != ii.负债合计 + ii.净资产合计 + ii.收入合计)
+
+            // 负债部类总计 9320 = 负债合计 9303 + 净资产合计 9311 + 收入合计 9319          
+            if (!Calculator.ValueEqual(data.负债部类总计, Calculator.Calculate(new decimal?[] {data.负债合计,data.净资产合计,data.收入合计})))
             {
-                ErrorMessage = "事业单位资产负债：负债部类总计=负债合计+净资产合计+收入合计,正确值应为：" + (ii.负债合计 + ii.净资产合计 + ii.收入合计);
+                ErrorMessage = "事业单位资产负债：负债部类总计 = 负债合计 + 净资产合计 + 收入合计";
 
                 return false;
             }
@@ -952,38 +1080,72 @@
 
             var iie = value as InstitutionIncomeExpenditureViewModel;
 
-            iie.收入总计 = iie.收入总计 ?? decimal.Parse("0.00");
-            iie.支出总计 = iie.支出总计 ?? decimal.Parse("0.00");
-            iie.事业结余 = iie.事业结余 ?? decimal.Parse("0.00");
-            iie.经营结余 = iie.经营结余 ?? decimal.Parse("0.00");
-            iie.事业收入小计 = iie.事业收入小计 ?? decimal.Parse("0.00");
-            iie.经营收入小计 = iie.经营收入小计 ?? decimal.Parse("0.00");
-            iie.拨入专款小计 = iie.拨入专款小计 ?? decimal.Parse("0.00");
-            iie.事业支出小计 = iie.事业支出小计 ?? decimal.Parse("0.00");
-            iie.经营支出小计 = iie.经营支出小计 ?? decimal.Parse("0.00");
-            iie.专款小计 = iie.专款小计 ?? decimal.Parse("0.00");
+            ////iie.收入总计 = iie.收入总计 ?? decimal.Parse("0.00");
+            ////iie.支出总计 = iie.支出总计 ?? decimal.Parse("0.00");
+            ////iie.事业结余 = iie.事业结余 ?? decimal.Parse("0.00");
+            ////iie.经营结余 = iie.经营结余 ?? decimal.Parse("0.00");
+            ////iie.事业收入小计 = iie.事业收入小计 ?? decimal.Parse("0.00");
+            ////iie.经营收入小计 = iie.经营收入小计 ?? decimal.Parse("0.00");
+            ////iie.拨入专款小计 = iie.拨入专款小计 ?? decimal.Parse("0.00");
+            ////iie.事业支出小计 = iie.事业支出小计 ?? decimal.Parse("0.00");
+            ////iie.经营支出小计 = iie.经营支出小计 ?? decimal.Parse("0.00");
+            ////iie.专款小计 = iie.专款小计 ?? decimal.Parse("0.00");
 
-            if (iie.收入总计 != iie.事业收入小计 + iie.经营收入小计 + iie.拨入专款小计)
+            ////if (iie.收入总计 != iie.事业收入小计 + iie.经营收入小计 + iie.拨入专款小计)
+            ////{
+            ////    ErrorMessage = "事业单位收入支出：收入总计=事业收入小计+经营收入小计+拨入专款小计,正确值应为：" + (iie.事业收入小计 + iie.经营收入小计 + iie.拨入专款小计);
+
+            ////    return false;
+            ////}
+            ////else if (iie.支出总计 != iie.事业支出小计 + iie.经营支出小计 + iie.专款小计)
+            ////{
+            ////    ErrorMessage = "事业单位收入支出：支出总计=事业支出小计+经营支出小计+专款小计,正确值应为：" + (iie.事业支出小计 + iie.经营支出小计 + iie.专款小计);
+
+            ////    return false;
+            ////}
+            ////else if (iie.事业结余 != iie.专款小计 - iie.事业支出小计)
+            ////{
+            ////    ErrorMessage = "事业单位收入支出：事业结余=专款小计-事业支出小计,正确值应为：" + (iie.专款小计 - iie.事业支出小计);
+
+            ////    return false;
+            ////}
+            ////else if (iie.经营结余 != iie.经营收入小计 - iie.经营支出小计)
+            ////{
+            ////    ErrorMessage = "事业单位收入支出：经营结余=经营收入小计-经营支出小计,正确值应为：" + (iie.经营收入小计 - iie.经营支出小计);
+
+            ////    return false;
+            ////}
+
+            var data = value as InstitutionIncomeExpenditureViewModel;
+
+            // 收入总计 9341 = 事业收入小计 9336 + 经营收入小计 9338 + 拨入专款小计 9340  
+            if (!Calculator.ValueEqual(data.收入总计, Calculator.Calculate(new decimal?[] {data.事业收入小计,data.经营收入小计,data.拨入专款小计 })))
             {
-                ErrorMessage = "事业单位收入支出：收入总计=事业收入小计+经营收入小计+拨入专款小计,正确值应为：" + (iie.事业收入小计 + iie.经营收入小计 + iie.拨入专款小计);
+                ErrorMessage = "事业单位收入支出：收入总计 = 事业收入小计 + 经营收入小计 + 拨入专款小计";
 
                 return false;
             }
-            else if (iie.支出总计 != iie.事业支出小计 + iie.经营支出小计 + iie.专款小计)
+
+            // 支出总计 9357 = 事业支出小计 9350 + 经营支出小计 9353 + 专款小计 9356  
+            if (!Calculator.ValueEqual(data.支出总计, Calculator.Calculate(new decimal?[] {data.事业支出小计,data.经营支出小计, data.专款小计 })))
             {
-                ErrorMessage = "事业单位收入支出：支出总计=事业支出小计+经营支出小计+专款小计,正确值应为：" + (iie.事业支出小计 + iie.经营支出小计 + iie.专款小计);
+                ErrorMessage = "事业单位收入支出：支出总计 = 事业支出小计 + 经营支出小计 + 专款小计";
 
                 return false;
             }
-            else if (iie.事业结余 != iie.专款小计 - iie.事业支出小计)
+
+            // 事业结余 9358 = 事业收入小计 9336 - 事业支出小计 9350 
+            if (!Calculator.ValueEqual(data.事业结余, Calculator.Calculate(new decimal?[] {data.事业收入小计, data.事业支出小计 },'-')))
             {
-                ErrorMessage = "事业单位收入支出：事业结余=专款小计-事业支出小计,正确值应为：" + (iie.专款小计 - iie.事业支出小计);
+                ErrorMessage = "事业单位收入支出：事业结余 = 事业收入小计 - 事业支出小计";
 
                 return false;
             }
-            else if (iie.经营结余 != iie.经营收入小计 - iie.经营支出小计)
+
+            // 经营结余 9361 = 经营收入小计 9338 - 经营支出小计 9353
+            if (!Calculator.ValueEqual(data.经营结余, Calculator.Calculate(new decimal?[] { data.经营收入小计, data.经营支出小计},'-')))
             {
-                ErrorMessage = "事业单位收入支出：经营结余=经营收入小计-经营支出小计,正确值应为：" + (iie.经营收入小计 - iie.经营支出小计);
+                ErrorMessage = "事业单位收入支出：经营结余 = 经营收入小计 - 经营支出小计";
 
                 return false;
             }
