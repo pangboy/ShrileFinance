@@ -104,34 +104,6 @@
     </script>
 
     <script type="text/javascript">
-        function Calculate(array, ch, result) {
-            var r = 0;
-            if (array == null || array.length == 0 || $.inArray(ch, ['+', '-']) == -1) {
-                return r;
-            }
-            else {
-                $(array).each(function (i, e) {
-                    if (!isNaN(parseFloat($("section input[id=" + e + "]").textbox('getValue')))) {
-                        if (i == 0) {
-                            r = parseFloat($("section input[id=" + e + "]").textbox('getValue'));
-                        }
-                        else {
-                            if (ch == '+') {
-                                r += parseFloat($("section input[id=" + e + "]").textbox('getValue'));
-                            }
-                            else if (ch == '-') {
-                                r -= parseFloat($("section input[id=" + e + "]").textbox('getValue'));
-                            }
-                        }
-                    }
-                });
-            }
-
-            $("section input[id=" + result + "]").textbox('setValue', parseFloat(r).toFixed(2));
-
-            return r;
-        }
-
         // 收入总计 J9341 = 事业收入小计 J9336 + 经营收入小计 J9338 + 拨入专款小计 J9340
         function Cal_S_J9341() {
             var array = ['J9336', 'J9338', 'J9340'];

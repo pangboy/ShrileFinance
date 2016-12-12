@@ -35,63 +35,63 @@
         });
 
         // 加载数据
-        function LoadDate(resultDate) {
-            if (!resultDate || resultDate == null) {
+        function LoadDate(data) {
+            if (!data || data == null) {
                 return null;
             }
 
             // 加载基础信息
-            FieldsetLoadDateFactory("Base", "text", resultDate.Base);
+            FieldsetLoadDateFactory("Base", "text", data.Base);
 
-            if (resultDate.Base != undefined && resultDate.Base.HasParent != undefined && resultDate.Base.HasParent == true) {
+            if (data.Base != undefined && data.Base.HasParent != undefined && data.Base.HasParent == true) {
                 // 显示上级机构（主管单位）
                 $("fieldset[id=Base]").find("input[name=HasParent]:hidden").click();
             }
 
             // 加载 机构属性、机构状态、机构联络、上级机构（主管单位）
             $(["Property", "State", "Contact", "Parent"]).each(function (index, item) {
-                FieldsetLoadDateFactory(item, "text", resultDate[item]);
+                FieldsetLoadDateFactory(item, "text", data[item]);
 
-                if (item == "Property" && resultDate[item].EconomicSectorsClassification == undefined) {
+                if (item == "Property" && data[item].EconomicSectorsClassification == undefined) {
                     $("select[textboxname=EconomicSectorsClassification]").combotree("setValue", '');
                 }
             });
 
             //加载 高级主管、重要股东、主要关联企业
             $(["Managers", "Shareholders", "AssociatedEnterprises"]).each(function (index, item) {
-                FieldsetLoadDateFactory(item, "table", resultDate[item]);
+                FieldsetLoadDateFactory(item, "table", data[item]);
             });
 
             // 加载财务信息
-            if (resultDate.FinancialAffairs != undefined && resultDate.FinancialAffairs != null) {
+            if (data.FinancialAffairs != undefined && data.FinancialAffairs != null) {
                 // 显示财务 fieldset
                 $("fieldset[id=Base]").find("input[id=TF_J]").click();
 
                 // 加载财务基本信息
-                FieldsetLoadDateFactory("FinancialAffairsBase", "text", resultDate.FinancialAffairs);
+                FieldsetLoadDateFactory("FinancialAffairsBase", "text", data.FinancialAffairs);
 
                 // 加载现金流量、资产负债、利润利润分配、事业单位收入支出、事业单位资产负债
                 $(["CashFlow", "Liabilities", "Profit", "IncomeExpenditur", "InstitutionLiabilities"]).each(function (index, item) {
-                    FieldsetLoadDateFactory(item, "table", resultDate.FinancialAffairs[item]);
+                    FieldsetLoadDateFactory(item, "table", data.FinancialAffairs[item]);
                 });
             }
 
             // 加载诉讼事件
-            if (resultDate.Litigation != undefined && resultDate.Litigation.length > 0) {
+            if (data.Litigation != undefined && data.Litigation.length > 0) {
                 // 显示诉讼事件 fieldset
                 $("fieldset[id=Base]").find("input[id=TF_K]").click();
 
                 // 加载诉讼事件
-                FieldsetLoadDateFactory("Litigation", "table", resultDate.Litigation);
+                FieldsetLoadDateFactory("Litigation", "table", data.Litigation);
             }
 
             // 加载大事件
-            if (resultDate.BigEvent != undefined && resultDate.BigEvent.length > 0) {
+            if (data.BigEvent != undefined && data.BigEvent.length > 0) {
                 // 显示大事件 fieldset
                 $("fieldset[id=Base]").find("input[id=TF_L]").click();
 
                 // 加载大事件
-                FieldsetLoadDateFactory("BigEvent", "table", resultDate.BigEvent);
+                FieldsetLoadDateFactory("BigEvent", "table", data.BigEvent);
             }
         }
 
@@ -102,8 +102,7 @@
             $(['Base', 'Property', 'State', 'Contact']).each(function (i, e) {
                 data[e] = FieldsetSerializeFactory(e, 'text');
 
-                if (e == "Property" && data[e].EconomicSectorsClassification == "null")
-                {
+                if (e == "Property" && data[e].EconomicSectorsClassification == "null") {
                     data[e].EconomicSectorsClassification = "";
                 }
             });
@@ -286,7 +285,9 @@
                     Disabled($("fieldset"));
 
                     // 禁用table
-                    $("div[id*=_tb]").remove();
+                    $("div[id*=_tb]>a").addClass("Remove").hide();
+                    $("div[id*=_tb]>a[id*=view]").removeClass("Remove").show();
+                    $("div[id*=_tb]>a.Remove").remove();
 
                     // 禁用保存按钮
                     $("#submit").linkbutton("disable");
@@ -322,7 +323,7 @@
 
             return resultDate;
         }
-        
+
         // 提交按钮
         function OrganizateSubmit() {
             if ($("#content").form("validate")) {
@@ -622,13 +623,9 @@
             return data;
         }
     </script>
-
-
 </head>
 <body>
-    <a id="top" name="top">&nbsp;</a>
     <form class="" id="content" style="text-align:center">
-        <a id="top" name="top">&nbsp;</a>
         <h1 style="text-align:center">
             机构基本信息记录
         </h1>
@@ -916,21 +913,27 @@
                                     经济行业分类：
                                     <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('img/InfoImg.png') no-repeat scroll 0 0" title="请填写机构登记注册时的所属行业分类，尽量细化">　</a>
                                 </label>
-                                <select class="easyui-combotree combobox-f combo-f textbox-f" name="EconomicSectorsClassification" data-options="editable:false,required:false,width:407,
+                                <select class="easyui-combotree combobox-f combo-f textbox-f" name="EconomicSectorsClassification" data-options="editable:false,required:false,width:407,value:'',
                                 async: false,
                                 method: 'GET',
                                 idField: 'id',
                                 textField: 'text',
                                 url: '../api/Method/GetIndustry',
-                                onBeforeSelect:combotreeOnSelect
+                                onBeforeSelect:combotreeonBeforeSelect,
+                                onSelect:combotreeOnSelect
                                 "></select>
                             </div>
                             <script type="text/javascript">
-                                function combotreeOnSelect(node) {
+                                function combotreeonBeforeSelect(node) {
                                     if (node.children != undefined) {
-                                        //$("select[textboxname=EconomicSectorsClassification]").combotree("setValue",'');
                                         $.messager.show({ msg: '请选择子类！' });
                                         return false;
+                                    }
+                                }
+
+                                function combotreeOnSelect(node) {
+                                    if (node.Text == "null") {
+                                        $("select[textboxname=EconomicSectorsClassification]").combotree("setValue", '');
                                     }
                                 }
                             </script>
