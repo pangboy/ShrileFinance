@@ -293,6 +293,12 @@
                     $("#submit").linkbutton("disable");
                 }
             }
+            else {
+                // 机构属性 经济行业分类异常处理
+                var data = {};
+                data.EconomicSectorsClassification = "";
+                $("fieldset[name=Property]").form("load",data);
+            }
         }
 
         // 查询数据
@@ -919,8 +925,7 @@
                                 idField: 'id',
                                 textField: 'text',
                                 url: '../api/Method/GetIndustry',
-                                onBeforeSelect:combotreeonBeforeSelect,
-                                onSelect:combotreeOnSelect
+                                onBeforeSelect:combotreeonBeforeSelect
                                 "></select>
                             </div>
                             <script type="text/javascript">
@@ -928,12 +933,6 @@
                                     if (node.children != undefined) {
                                         $.messager.show({ msg: '请选择子类！' });
                                         return false;
-                                    }
-                                }
-
-                                function combotreeOnSelect(node) {
-                                    if (node.Text == "null") {
-                                        $("select[textboxname=EconomicSectorsClassification]").combotree("setValue", '');
                                     }
                                 }
                             </script>
