@@ -103,16 +103,37 @@
     </script>
 
     <script type="text/javascript">
-        // 9159=9152+9158 9130=9159
-        function Cal_9159_9130() {
-            var _9152 = $("section input[id=J9152]").textbox("getValue");
-            var _9158 = $("section input[id=J9158]").textbox("getValue");
+        // 负债和所有者权益合计 9159  =  负债合计 9152 + 所有者权益合计 9158 
+        function Cal_S_9159() {
+            var array = ["J9152","J9158"];
+            var ch = '+';
+            var result = 'J9159';
 
-            if (_9152.toString().length > 0 && _9158.toString().length > 0 && isNaN(_9152) == false && isNaN(_9158) == false) {
-                $("section input[id=J9159]").textbox("setValue", Fixed(parseFloat(_9152) + parseFloat(_9158)));
+            Calculate(array, ch, result);
+        }
 
-                $("section input[id=J9130]").textbox("setValue", Fixed(parseFloat(_9152) + parseFloat(_9158)));
-            }
+
+        // 资产总计 9130 =  负债和所有者权益合计 9159
+        function Cal_S_9130() {
+            var array = ["J9152","J9158"];
+            var ch = '+';
+            var result = 'J9130';
+
+            Calculate(array, ch, result);
+        }
+
+        // 负债合计
+        function Cal_J9152() {
+            Cal_S_9159();
+
+            Cal_S_9130();
+        }
+
+        // 所有者权益合计
+        function Cal_J9158() {
+            Cal_S_9159();
+
+            Cal_S_9130();
         }
     </script>
 </head>
@@ -385,7 +406,7 @@
                             <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="资产总计">　</a>
                         </label>
                         <!--<input name="TotalAssets" id="_9130" class="easyui-textbox" data-options="required:true,validType:['PositiveNumber','Money','length[0,20]']" />-->
-                        <input name="TotalAssets" id="J9130" class="easyui-textbox" data-options="required:false,readonly:true" />
+                        <input name="TotalAssets" id="J9130" class="easyui-textbox" data-options="required:false,readonly:true,value:'0'" />
                     </div>
                     <div class="col-6">
                         <label>
@@ -573,7 +594,7 @@
                             负债合计：
                             <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="负债合计">　</a>
                         </label>
-                        <input name="TotalLiabilities" id="J9152" class="easyui-textbox" data-options="required:true,validType:['PositiveNumber','Money','length[0,20]'],onChange:Cal_9159_9130" />
+                        <input name="TotalLiabilities" id="J9152" class="easyui-textbox" data-options="required:true,validType:['PositiveNumber','Money','length[0,20]'],onChange:Cal_J9152" />
                     </div>
                     <div class="col-6">
                         <label>
@@ -624,7 +645,7 @@
                             所有者权益合计：
                             <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="所有者权益合计">　</a>
                         </label>
-                        <input name="TotalOwnersEquity" id="J9158" class="easyui-textbox" data-options="required:true,validType:['PositiveNumber','Money','length[0,20]'],onChange:Cal_9159_9130" />
+                        <input name="TotalOwnersEquity" id="J9158" class="easyui-textbox" data-options="required:true,validType:['PositiveNumber','Money','length[0,20]'],onChange:Cal_J9158" />
                     </div>
                     <div class="col-6">
                         <label>
@@ -632,7 +653,7 @@
                             <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="负债和所有者权益合计">　</a>
                         </label>
                         <!--<input name="TotalLiabilitiesCapital" class="easyui-textbox" data-options="required:true,validType:['PositiveNumber','Money','length[0,20]']" />-->
-                        <input name="TotalLiabilitiesCapital" id="J9159" class="easyui-textbox" data-options="required:false,readonly:true,value:''" />
+                        <input name="TotalLiabilitiesCapital" id="J9159" class="easyui-textbox" data-options="required:false,readonly:true,value:'0'" />
                     </div>
                 </div>
 

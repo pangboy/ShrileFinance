@@ -104,7 +104,7 @@
     </script>
 
     <script type="text/javascript">
-        // 收入总计 J9341 = 事业收入小计 J9336 + 经营收入小计 J9338 + 拨入专款小计 J9340
+        // 收入总计 9341 = 事业收入小计 9336 + 经营收入小计 9338 + 拨入专款小计 9340  
         function Cal_S_J9341() {
             var array = ['J9336', 'J9338', 'J9340'];
             var ch = '+';
@@ -113,7 +113,7 @@
             Calculate(array, ch, result);
         }
 
-        // 支出总计 J9357 = 事业支出小计 J9350 + 经营支出小计 J9353 + 专款小计 J9356
+        // 支出总计 9357 = 事业支出小计 9350 + 经营支出小计 9353 + 专款小计 9356  
         function Cal_S_J9357() {
             var array = ['J9350', 'J9353', 'J9356'];
             var ch = '+';
@@ -122,16 +122,16 @@
             Calculate(array, ch, result);
         }
 
-        // 事业结余 J9358 = 专款小计 J9356 - 事业支出小计 J9350
+        // 事业结余 9358 = 事业收入小计 9336 - 事业支出小计 9350 
         function Cal_S_J9358() {
-            var array = ['J9356', 'J9350'];
+            var array = ['J9336', 'J9350'];
             var ch = '-';
             var result = 'J9358';
 
             Calculate(array, ch, result);
         }
 
-        // 经营结余 J9361 = 经营收入小计 J9338 - 经营支出小计 J9353
+        // 经营结余 9361 = 经营收入小计 9338 - 经营支出小计 9353
         function Cal_S_J9361() {
             var array = ['J9338', 'J9353'];
             var ch = '-';
@@ -143,6 +143,8 @@
         // 事业收入小计
         function Cal_J9336() {
             Cal_S_J9341();
+
+            Cal_S_J9358();
         }
 
         // 经营收入小计
@@ -174,8 +176,6 @@
         // 专款小计
         function Cal_J9356() {
             Cal_S_J9357();
-
-            Cal_S_J9358();
         }
     </script>
 </head>

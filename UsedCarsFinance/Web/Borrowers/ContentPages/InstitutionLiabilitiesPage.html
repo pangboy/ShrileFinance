@@ -103,45 +103,47 @@
     </script>
 
     <script type="text/javascript">
-        // 9294 = 9282 + 9293
-        function Cal_9282_9293() {
-            var _9282 = $("section input[id=J9282]").textbox("getValue");
-            var _9293 = $("section input[id=J9293]").textbox("getValue");
+        // 资产部类总计 9294 = 资产合计 9282 + 支出合计 9293  
+        function Cal_S_9294() {
+            var array = ["J9282", "J9293"];
+            var ch = '+';
+            var result = 'J9294';
 
-            if (isNaN(_9282) == false && isNaN(_9293) == false) {
-                if (_9282.toString().length == 0) {
-                    _9282 = 0;
-                }
-
-                if (_9293.toString().length == 0) {
-                    _9293 = 0;
-                }
-
-                $("section input[id=J9294]").textbox("setValue", Fixed(parseFloat(_9282) + parseFloat(_9293)));
-            }
+            Calculate(array, ch, result);
         }
 
-        // 9320=9303+9311+9319
-        function Cal_9303_9311_9319() {
-            var _9303 = $("section input[id=J9303]").textbox("getValue");
-            var _9311 = $("section input[id=J9311]").textbox("getValue");
-            var _9319 = $("section input[id=J9319]").textbox("getValue");
+        // 负债部类总计 9320 = 负债合计 9303 + 净资产合计 9311 + 收入合计 9319          
+        function Cal_S_9159() {
+            var array = ["J9303", "J9311", "J9319"];
+            var ch = '+';
+            var result = 'J9320';
 
-            if (isNaN(_9303) == false && isNaN(_9311) == false && isNaN(_9319) == false) {
-                if (_9303.toString().length == 0) {
-                    _9303 = 0;
-                }
+            Calculate(array, ch, result);
+        }
 
-                if (_9311.toString().length == 0) {
-                    _9311 = 0;
-                }
+        // 资产合计
+        function Cal_J9282() {
+            Cal_S_9294();
+        }
 
-                if (_9319.toString().length == 0) {
-                    _9319 = 0;
-                }
+        // 支出合计
+        function Cal_J9293() {
+            Cal_S_9294();
+        }
 
-                $("section input[id=J9320]").textbox("setValue", Fixed(parseFloat(_9303) + parseFloat(_9311) + parseFloat(_9319)));
-            }
+        // 负债合计
+        function Cal_J9303() {
+            Cal_S_9159();
+        }
+
+        // 净资产合计
+        function Cal_J9311() {
+            Cal_S_9159();
+        }
+
+        // 收入合计
+        function Cal_J9319() {
+            Cal_S_9159();
         }
     </script>
 </head>
@@ -250,7 +252,7 @@
                             资产合计：
                             <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="资产合计">　</a>
                         </label>
-                        <input name="资产合计" id="J9282" class="easyui-textbox" data-options="required:true,validType:['PositiveNumber','Money','length[0,20]'],onChange:Cal_9282_9293" />
+                        <input name="资产合计" id="J9282" class="easyui-textbox" data-options="required:true,validType:['PositiveNumber','Money','length[0,20]'],onChange:Cal_J9282" />
                     </div>
                 </div>
 
@@ -345,14 +347,14 @@
                             支出合计：
                             <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="支出合计">　</a>
                         </label>
-                        <input name="支出合计" id="J9293" class="easyui-textbox" data-options="required:true,validType:['PositiveNumber','Money','length[0,20]'],onChange:Cal_9282_9293" />
+                        <input name="支出合计" id="J9293" class="easyui-textbox" data-options="required:true,validType:['PositiveNumber','Money','length[0,20]'],onChange:Cal_J9293" />
                     </div>
                     <div class="col-6">
                         <label>
                             资产部类总计：
                             <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="资产部类总计">　</a>
                         </label>
-                        <input name="资产部类总计" id="J9294" class="easyui-textbox" data-options="required:false,readonly:true" />
+                        <input name="资产部类总计" id="J9294" class="easyui-textbox" data-options="required:false,readonly:true,value:0" />
                     </div>
                 </div>
 
@@ -430,7 +432,7 @@
                             负债合计：
                             <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="负债合计">　</a>
                         </label>
-                        <input name="负债合计" id="J9303" class="easyui-textbox" data-options="required:true,validType:['PositiveNumber','Money','length[0,20]'],onChange:Cal_9303_9311_9319" />
+                        <input name="负债合计" id="J9303" class="easyui-textbox" data-options="required:true,validType:['PositiveNumber','Money','length[0,20]'],onChange:Cal_J9303" />
                     </div>
                     <div class="col-6">
                         <label>
@@ -498,7 +500,7 @@
                             净资产合计：
                             <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="净资产合计">　</a>
                         </label>
-                        <input name="净资产合计" id="J9311" class="easyui-textbox" data-options="required:true,validType:['PositiveNumber','Money','length[0,20]'],onChange:Cal_9303_9311_9319" />
+                        <input name="净资产合计" id="J9311" class="easyui-textbox" data-options="required:true,validType:['PositiveNumber','Money','length[0,20]'],onChange:Cal_J9311" />
                     </div>
                     <div class="col-6">
                         <label>
@@ -566,14 +568,14 @@
                             收入合计：
                             <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="收入合计">　</a>
                         </label>
-                        <input name="收入合计" id="J9319" class="easyui-textbox" data-options="required:true,validType:['PositiveNumber','Money','length[0,20]'],onChange:Cal_9303_9311_9319" />
+                        <input name="收入合计" id="J9319" class="easyui-textbox" data-options="required:true,validType:['PositiveNumber','Money','length[0,20]'],onChange:Cal_J9319" />
                     </div>
                     <div class="col-6">
                         <label>
                             负债部类总计：
                             <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="负债部类总计">　</a>
                         </label>
-                        <input name="负债部类总计" id="J9320" class="easyui-textbox" data-options="required:false,readonly:true" />
+                        <input name="负债部类总计" id="J9320" class="easyui-textbox" data-options="required:false,readonly:true,value:0" />
                     </div>
                 </div>
 

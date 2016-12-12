@@ -108,104 +108,109 @@
     </script>
 
     <script type="text/javascript">
-        // 9208=9202-9207
-        function Cal_9202_9207() {
-            var _9202 = $("section input[id=J9202]").textbox("getValue");
-            var _9207 = $("section input[id=J9207]").textbox("getValue");
+        // 经营活动产生的现金流量净额 9208 = 经营活动现金流入小计 9202 - 经营活动现金流出小计 9207
+        function Cal_S_9208() {
+            var array = ["J9202", "J9207"];
+            var ch = '-';
+            var result = 'J9208';
 
-            if (isNaN(_9202) == false && isNaN(_9207) == false) {
-                if(_9202.toString().length == 0){
-                    _9202=0;
-                }
-
-                if(_9207.toString().length==0){
-                    _9207=0;
-                }
-
-                $("section input[id=J9208]").textbox("setValue", Fixed(parseFloat(parseFloat(_9202) - parseFloat(_9207))));
-            }
+            Calculate(array, ch, result);
         }
 
-        // 9220 = 9214 - 9219
-        function Cal_9214_9219() {
-            var _9214 = $("section input[id=J9214]").textbox("getValue");
-            var _9219 = $("section input[id=J9219]").textbox("getValue");
-            
-            if (isNaN(_9214) == false && isNaN(_9219) == false) {
-                if (_9214.toString().length == 0) {
-                    _9214 = 0;
-                }
+        // 投资活动产生的现金流量净额 9220 = 投资活动现金流入小计 9214 - 投资活动现金流出小计 9219
+        function Cal_S_9220() {
+            var array = ["J9214", "J9219"];
+            var ch = '-';
+            var result = 'J9220';
 
-                if (_9219.toString().length == 0) {
-                    _9219 = 0;
-                }
-
-                $("section input[id=J9220]").textbox("setValue", Fixed(parseFloat(parseFloat(_9214) - parseFloat(_9219))));
-            }
+            Calculate(array, ch, result);
         }
 
-        // 9229 = 9224 - 9228
-        function Cal_9224_9228() {
-            var _9224 = $("section input[id=J9224]").textbox("getValue");
-            var _9228 = $("section input[id=J9228]").textbox("getValue");
+        // 筹集活动产生的现金流量净额 9229 = 筹资活动现金流入小计 9224 - 筹资活动现金流出小计 9228
+        function Cal_S_9229() {
+            var array = ["J9224", "J9228"];
+            var ch = '-';
+            var result = 'J9229';
 
-            if (isNaN(_9224) == false && isNaN(_9228) == false) {
-                if (_9224.toString().length == 0) {
-                    _9224 = 0;
-                }
-
-                if (_9228.toString().length == 0) {
-                    _9228 = 0;
-                }
-
-                $("section input[id=J9229]").textbox("setValue", Fixed(parseFloat(parseFloat(_9224) - parseFloat(_9228))));
-            }
+            Calculate(array, ch, result);
         }
 
-        // 9231 = 9208 + 9220 + 9229 + 9230
-        function Cal_9208_9220_9229_9230() {
-            var _9208 = $("section input[id=J9208]").textbox("getValue");
-            var _9220 = $("section input[id=J9220]").textbox("getValue");
-            var _9229 = $("section input[id=J9229]").textbox("getValue");
-            var _9230 = $("section input[id=J9230]").textbox("getValue");
+        // 现金及现金等价物净增加额(五) 9231 = 经营活动产生的现金流量净额 9208 + 投资活动产生的现金流量净额 9220 + 筹集活动产生的现金流量净额 9229 + 汇率变动对现金及现金等价物的影响 9230
+        function Cal_S_9231() {
+            var array = ["J9208", "J9220","J9229","J9230"];
+            var ch = '+';
+            var result = 'J9231';
 
-            if (isNaN(_9208) == false && isNaN(_9220) == false && isNaN(_9229) == false && isNaN(_9230) == false) {
-                if (_9208.toString().length == 0) {
-                    _9208 = 0;
-                }
-
-                if (_9220.toString().length == 0) {
-                    _9220 = 0;
-                }
-
-                if (_9229.toString().length == 0) {
-                    _9229 = 0;
-                }
-
-                if (_9230.toString().length == 0) {
-                    _9230 = 0;
-                }
-
-                $("section input[id=J9231]").textbox("setValue", Fixed(parseFloat(parseFloat(_9208) + parseFloat(_9220) + parseFloat(_9229) + parseFloat(_9230))));
-            }
+            Calculate(array, ch, result);
         }
 
-        // 9233 = 9231 + 9232
-        function Cal_9231_9232() {
-            var _9231 = $("section input[id=J9231]").textbox("getValue");
-            var _9232 = $("section input[id=J9232]").textbox("getValue");
+        // 期末现金及现金等价物余额(六) 9233 = 现金及现金等价物净增加额(五) 9231 + 期初现金及现金等价物余额 9232
+        function Cal_S_9233() {
+            var array = ["J9231", "J9232"];
+            var ch = '+';
+            var result = 'J9233';
 
-            if (isNaN(_9231) == false && isNaN(_9232) == false) {
-                if (_9231.toString().length == 0) {
-                    _9231 = 0;
-                }
+            Calculate(array, ch, result);
+        }
 
-                if (_9232.toString().length == 0) {
-                    _9232 = 0;
-                }
+        // 经营活动现金流入小计
+        function Cal_J9202() {
+            Cal_S_9208();
+        }
 
-                $("section input[id=J9233]").textbox("setValue", Fixed(parseFloat(parseFloat(_9231) + parseFloat(_9232))));
-            }
+        // 经营活动现金流出小计
+        function Cal_J9207() {
+            Cal_S_9208();
+        }
+
+        // 投资活动现金流入小计
+        function Cal_J9214() {
+            Cal_S_9220();
+        }
+
+        // 投资活动现金流出小计
+        function Cal_J9219() {
+            Cal_S_9220();
+        }
+
+        // 筹资活动现金流入小计
+        function Cal_J9224() {
+            Cal_S_9229();
+        }
+
+        // 筹资活动现金流出小计
+        function Cal_J9228() {
+            Cal_S_9229();
+        }
+
+        // 经营活动产生的现金流量净额
+        function Cal_J9208() {
+            Cal_S_9231();
+        }
+
+        // 投资活动产生的现金流量净额
+        function Cal_J9220() {
+            Cal_S_9231();
+        }
+
+        // 筹集活动产生的现金流量净额
+        function Cal_J9229() {
+            Cal_S_9231();
+        }
+
+        // 汇率变动对现金及现金等价物的影响
+        function Cal_J9230() {
+            Cal_S_9231();
+        }
+
+        // 现金及现金等价物净增加额(五)
+        function Cal_J9231() {
+            Cal_S_9233();
+        }
+
+        // 期初现金及现金等价物余额
+        function Cal_J9232() {
+            Cal_S_9233();
         }
     </script>
 </head>
@@ -246,7 +251,7 @@
                             经营活动现金流入小计：
                             <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="经营活动现金流入小计">　</a>
                         </label>
-                        <input name="OperatingActivitiesCashInflows" id="J9202" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Money','length[0,20]'],onChange:Cal_9202_9207" />
+                        <input name="OperatingActivitiesCashInflows" id="J9202" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Money','length[0,20]'],onChange:Cal_J9202" />
                     </div>
                 </div>
 
@@ -290,14 +295,14 @@
                             经营活动现金流出小计：
                             <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="经营活动现金流出小计">　</a>
                         </label>
-                        <input name="OperatingActivitiesCashOutflows" id="J9207" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Money','length[0,20]'],onChange:Cal_9202_9207" />
+                        <input name="OperatingActivitiesCashOutflows" id="J9207" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Money','length[0,20]'],onChange:Cal_J9207" />
                     </div>
                     <div class="col-6">
                         <label>
                             经营活动产生的现金流量净额：
                             <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="经营活动产生的现金流量净额">　</a>
                         </label>
-                        <input name="OperatingActivitieCashNet" id="J9208" class="easyui-textbox" data-options="required:false,readonly:true,value:0,onChange:Cal_9208_9220_9229_9230" />
+                        <input name="OperatingActivitieCashNet" id="J9208" class="easyui-textbox" data-options="required:false,readonly:true,value:0,onChange:Cal_J9208" />
                     </div>
                 </div>
 
@@ -348,7 +353,7 @@
                             投资活动现金流入小计：
                             <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="投资活动现金流入小计">　</a>
                         </label>
-                        <input name="CashInInvestmentActivities" id="J9214" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Money','length[0,20]'],onChange:Cal_9214_9219" />
+                        <input name="CashInInvestmentActivities" id="J9214" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Money','length[0,20]'],onChange:Cal_J9214" />
                     </div>
                 </div>
 
@@ -393,14 +398,14 @@
                             投资活动现金流出小计：
                             <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="投资活动现金流出小计">　</a>
                         </label>
-                        <input name="InvestmentCashOutflow" id="J9219" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Money','length[0,20]'],onChange:Cal_9214_9219" />
+                        <input name="InvestmentCashOutflow" id="J9219" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Money','length[0,20]'],onChange:Cal_J9219" />
                     </div>
                     <div class="col-6">
                         <label>
                             投资活动产生的现金流量净额：
                             <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="投资活动产生的现金流量净额">　</a>
                         </label>
-                        <input name="InvestmentCashInflow" id="J9220" class="easyui-textbox" data-options="required:false,readonly:true,value:0,onChange:Cal_9208_9220_9229_9230" />
+                        <input name="InvestmentCashInflow" id="J9220" class="easyui-textbox" data-options="required:false,readonly:true,value:0,onChange:Cal_J9220" />
                     </div>
                 </div>
 
@@ -434,7 +439,7 @@
                             筹资活动现金流入小计：
                             <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="筹资活动现金流入小计">　</a>
                         </label>
-                        <input name="FinancingCashInflow" id="J9224" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Money','length[0,20]'],onChange:Cal_9224_9228" />
+                        <input name="FinancingCashInflow" id="J9224" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Money','length[0,20]'],onChange:Cal_J9224" />
                     </div>
                 </div>
 
@@ -468,7 +473,7 @@
                             筹资活动现金流出小计：
                             <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="筹资活动现金流出小计">　</a>
                         </label>
-                        <input name="FinancingCashOutflow" id="J9228" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Money','length[0,20]'],onChange:Cal_9224_9228" />
+                        <input name="FinancingCashOutflow" id="J9228" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Money','length[0,20]'],onChange:Cal_J9228" />
                     </div>
                 </div>
 
@@ -478,14 +483,14 @@
                             筹集活动产生的现金流量净额：
                             <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="筹集活动产生的现金流量净额">　</a>
                         </label>
-                        <input name="FinancingNetCash" id="J9229" class="easyui-textbox" data-options="required:false,readonly:true,value:0,onChange:Cal_9208_9220_9229_9230"/>
+                        <input name="FinancingNetCash" id="J9229" class="easyui-textbox" data-options="required:false,readonly:true,value:0,onChange:Cal_J9229"/>
                     </div>
                     <div class="col-6">
                         <label>
                             汇率变动对现金及现金等价物的影响：
                             <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="汇率变动对现金及现金等价物的影响">　</a>
                         </label>
-                        <input name="ExchangeRateChangeCash" id="J9230" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Money','length[0,20]'],onChange:Cal_9208_9220_9229_9230" />
+                        <input name="ExchangeRateChangeCash" id="J9230" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Money','length[0,20]'],onChange:Cal_J9230" />
                     </div>
                 </div>
 
@@ -495,14 +500,14 @@
                             现金及现金等价物净增加额(五)：
                             <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="现金及现金等价物净增加额(五)">　</a>
                         </label>
-                        <input name="CashIncrease5" id="J9231" class="easyui-textbox" data-options="required:false,readonly:true,value:0,onChange:Cal_9231_9232" />
+                        <input name="CashIncrease5" id="J9231" class="easyui-textbox" data-options="required:false,readonly:true,value:0,onChange:Cal_J9231" />
                     </div>
                     <div class="col-6">
                         <label>
                             期初现金及现金等价物余额：
                             <a class="easyui-tooltip tooltip-f" style="background:rgba(0, 0, 0, 0) url('../img/InfoImg.png') no-repeat scroll 0 0" title="期初现金及现金等价物余额">　</a>
                         </label>
-                        <input name="BeginCashBalance" id="J9232" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Money','length[0,20]'],onChange:Cal_9231_9232" />
+                        <input name="BeginCashBalance" id="J9232" class="easyui-textbox" data-options="required:false,validType:['PositiveNumber','Money','length[0,20]'],onChange:Cal_J9232" />
                     </div>
                 </div>
 
