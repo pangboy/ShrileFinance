@@ -147,10 +147,40 @@ function Fixed(num) {
     if (num.toString().indexOf('.') == -1) {
         return parseFloat(num);
     }
-    else if (true) {
+    else if (/^-?\d+\.\d{1}[0]$/.test(parseFloat(num).toFixed(2).toString())) {
         return parseFloat(num).toFixed(1);
     }
     else{
         return parseFloat(num).toFixed(2);
     }
 }
+
+// 计算
+function Calculate(array, ch, result) {
+    var r = 0;
+    if (array == null || array.length == 0 || $.inArray(ch, ['+', '-']) == -1) {
+        return r;
+    }
+    else {
+        $(array).each(function (i, e) {
+            if (!isNaN(parseFloat($("section input[id=" + e + "]").textbox('getValue')))) {
+                if (i == 0) {
+                    r = parseFloat($("section input[id=" + e + "]").textbox('getValue'));
+                }
+                else {
+                    if (ch == '+') {
+                        r += parseFloat($("section input[id=" + e + "]").textbox('getValue'));
+                    }
+                    else if (ch == '-') {
+                        r -= parseFloat($("section input[id=" + e + "]").textbox('getValue'));
+                    }
+                }
+            }
+        });
+    }
+
+    $("section input[id=" + result + "]").textbox('setValue', Fixed(parseFloat(r)));
+
+    return r;
+}
+
