@@ -21,7 +21,7 @@
 
         public void Create(OrganizationViewModel model)
         {
-            var customer = Mapper.Map<Core.Entities.Customers.Enterprise.Organization>(model.Base);
+            var customer = Mapper.Map<Organization>(model.Base);
             customer = Mapper.Map(model, customer);
 
             customer.AssociatedEnterprises = Mapper.Map<ICollection<AssociatedEnterprise>>(model.AssociatedEnterprises);
@@ -32,7 +32,15 @@
 
             if (model.FinancialAffairs != null)
             {
-                customer.FinancialAffairs = new FinancialAffairs();
+                customer.FinancialAffairs = new FinancialAffairs()
+                {
+                    Id = Guid.Empty,
+                    Year = model.FinancialAffairs.Year,
+                    TypeSubdivision = model.FinancialAffairs.TypeSubdivision,
+                    AuditFirm = model.FinancialAffairs.AuditorName,
+                    AuditorName = model.FinancialAffairs.AuditorName
+                };
+
                 customer.FinancialAffairs.IncomeExpenditur = Mapper.Map<ICollection<InstitutionIncomeExpenditure>>(model.FinancialAffairs.IncomeExpenditur);
                 customer.FinancialAffairs.InstitutionLiabilities = Mapper.Map<ICollection<InstitutionLiabilities>>(model.FinancialAffairs.InstitutionLiabilities);
                 customer.FinancialAffairs.Liabilities = Mapper.Map<ICollection<Liabilities>>(model.FinancialAffairs.Liabilities);
@@ -60,7 +68,7 @@
                 new UpdateBind().Bind(customer.FinancialAffairs.InstitutionLiabilities, model.FinancialAffairs.InstitutionLiabilities);
                 new UpdateBind().Bind(customer.FinancialAffairs.Profit, model.FinancialAffairs.Profit);
             }
-            
+
             new UpdateBind().Bind(customer.BigEvent, model.BigEvent);
             new UpdateBind().Bind(customer.Litigation, model.Litigation);
             new UpdateBind().Bind(customer.Managers, model.Managers);
