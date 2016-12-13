@@ -71,5 +71,10 @@
 
             Assert.AreEqual(loan.Payments.Count, 0);
         }
+
+        [TestMethod]
+        public void Test()
+        {
+        }
     }
 }
